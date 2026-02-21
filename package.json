@@ -1,0 +1,13 @@
+{
+  "name": "saju-mvp-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.6.3",
+  "scripts": {
+    "dev:web": "pnpm --filter @saju/web dev",
+    "dev:mobile": "pnpm --filter @saju/mobile dev",
+    "dev:api": "pnpm --filter @saju/api dev",
+    "lint": "pnpm -r --if-present run lint",
+    "typecheck": "pnpm -r --if-present run typecheck"
+  }
+}
