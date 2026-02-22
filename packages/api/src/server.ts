@@ -15,8 +15,7 @@ import type {
   ProductCode,
   ReportDetail,
   ReportPreview
-} from "@saju/shared";
-import { validateFortuneInput } from "@saju/shared";
+} from "../../shared/src/index.ts";
 
 const app = Fastify({ logger: true });
 const port = Number(process.env.PORT ?? 3001);
@@ -41,6 +40,16 @@ const fail = (code: string, message: string, details?: ApiErrorPayload["error"][
   ok: false,
   error: { code, message, details }
 });
+
+const isValidFortuneInput = (input: FortuneInput): boolean => {
+  if (!input || typeof input !== "object") return false;
+  if (!input.name || input.name.trim().length < 1) return false;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.birthDate)) return false;
+  if (input.birthTime && !/^\d{2}:\d{2}$/.test(input.birthTime)) return false;
+  if (!["male", "female", "other"].includes(input.gender)) return false;
+  if (!["solar", "lunar"].includes(input.calendarType)) return false;
+  return true;
+};
 
 app.get("/health", async () => {
   return {
@@ -224,12 +233,11 @@ const buildReport = (order: OrderSummary, input: FortuneInput): ReportDetail => 
 
 app.post<{ Body: FortuneInput }>("/fortune/mock", async (request, reply) => {
   const input = request.body;
-  const issues = validateFortuneInput(input);
 
-  if (issues.length > 0) {
+  if (!isValidFortuneInput(input)) {
     return reply
       .status(400)
-      .send(fail("INVALID_INPUT", "입력값이 유효하지 않습니다.", issues));
+      .send(fail("INVALID_INPUT", "입력값이 유효하지 않습니다."));
   }
 
   return ok(generateFortune(input));
@@ -237,12 +245,11 @@ app.post<{ Body: FortuneInput }>("/fortune/mock", async (request, reply) => {
 
 app.post<{ Body: FortuneInput }>("/report/preview", async (request, reply) => {
   const input = request.body;
-  const issues = validateFortuneInput(input);
 
-  if (issues.length > 0) {
+  if (!isValidFortuneInput(input)) {
     return reply
       .status(400)
-      .send(fail("INVALID_INPUT", "입력값이 유효하지 않습니다.", issues));
+      .send(fail("INVALID_INPUT", "입력값이 유효하지 않습니다."));
   }
 
   return ok(generatePreview(input));
@@ -259,9 +266,8 @@ app.post<{ Body: CheckoutCreateRequest }>("/checkout/create", async (request, re
     return reply.status(400).send(fail("INVALID_PRODUCT", "지원하지 않는 상품 코드입니다."));
   }
 
-  const issues = validateFortuneInput(body.input);
-  if (issues.length > 0) {
-    return reply.status(400).send(fail("INVALID_INPUT", "입력값이 유효하지 않습니다.", issues));
+  if (!isValidFortuneInput(body.input)) {
+    return reply.status(400).send(fail("INVALID_INPUT", "입력값이 유효하지 않습니다."));
   }
 
   const order: OrderSummary = {
