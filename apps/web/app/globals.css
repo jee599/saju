@@ -1,7 +1,7 @@
 :root {
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #0f172a;
-  background: #f4f6f8;
+  background: #f3f5f8;
 }
 
 * {
@@ -10,28 +10,81 @@
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, #f4f6f8 0%, #eef2f7 100%);
+  background: radial-gradient(circle at top left, #f8fafc, #eef2f7 52%, #e9eef5 100%);
 }
 
-main {
-  max-width: 760px;
+a {
+  color: #0f172a;
+}
+
+.shell {
+  width: min(980px, 92vw);
   margin: 0 auto;
-  padding: 24px;
+}
+
+.siteHeader {
+  border-bottom: 1px solid #d9e1eb;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.headerInner {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.brand {
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.topNav {
+  display: flex;
+  gap: 14px;
+  font-size: 14px;
+}
+
+.pageMain {
+  padding: 24px 0 48px;
 }
 
 .card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #dce3ee;
   border-radius: 14px;
   padding: 20px;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.06);
+}
+
+.heroCard h1 {
+  margin-top: 8px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #334155;
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
 }
 
 label {
   display: block;
-  margin-top: 2px;
+  margin-top: 6px;
   font-weight: 600;
-  color: #1e293b;
 }
 
 input,
@@ -42,16 +95,41 @@ button {
   margin-bottom: 14px;
   padding: 11px 12px;
   border-radius: 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #c8d3e1;
   font-size: 14px;
 }
 
-button {
+button,
+.primaryLink {
   border: none;
   background: #0f172a;
   color: #fff;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 11px 14px;
+}
+
+.ghostButton {
+  border: 1px solid #c8d3e1;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.primaryLink.center {
+  width: 100%;
+}
+
+.primaryLink.small {
+  margin-top: 8px;
+}
+
+.subtleLink {
+  text-decoration: underline;
 }
 
 button:disabled {
@@ -59,15 +137,17 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.secondaryButton {
-  background: #e2e8f0;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
-}
-
 .muted,
 small {
   color: #64748b;
+}
+
+.errorText {
+  color: #b91c1c;
+}
+
+.sectionGap {
+  margin-top: 16px;
 }
 
 .sectionBlock {
@@ -100,11 +180,30 @@ small {
   font-weight: 600;
 }
 
-.ctaRow {
+.buttonRow,
+.inlineActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ctaRow,
+.pricingGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
   margin-top: 16px;
+}
+
+.pricingCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.price {
+  font-size: 22px;
+  font-weight: 800;
 }
 
 .shareItem {
@@ -113,8 +212,47 @@ small {
   border-top: 1px solid #e2e8f0;
 }
 
-@media (min-width: 640px) {
-  .ctaRow {
+.shareText {
+  white-space: pre-wrap;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px;
+  background: #f8fafc;
+}
+
+.flatList {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.faqItem {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.legal h2 {
+  margin-top: 18px;
+}
+
+.siteFooter {
+  border-top: 1px solid #d9e1eb;
+  padding: 20px 0;
+}
+
+.footerInner p {
+  margin: 0;
+}
+
+@media (min-width: 720px) {
+  .ctaRow,
+  .pricingGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .topNav {
+    display: none;
   }
 }

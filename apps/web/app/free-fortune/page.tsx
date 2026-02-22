@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { FortuneInput, Gender, CalendarType } from "@saju/shared";
+import type { CalendarType, FortuneInput, Gender } from "@saju/shared";
+import { trackEvent } from "../../lib/analytics";
+import { toInputQuery } from "../../lib/fortune";
 
 const defaultInput: FortuneInput = {
   name: "",
@@ -17,28 +19,27 @@ export default function FreeFortunePage() {
   const [input, setInput] = useState<FortuneInput>(defaultInput);
 
   const canSubmit = useMemo(() => {
-    return Boolean(input.name.trim() && input.birthDate);
+    return Boolean(input.name.trim().length >= 2 && input.birthDate);
   }, [input]);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
+    if (!canSubmit) return;
 
-    const params = new URLSearchParams({
-      name: input.name.trim(),
-      birthDate: input.birthDate,
-      gender: input.gender,
+    trackEvent("free_input_submit", {
+      hasBirthTime: Boolean(input.birthTime),
       calendarType: input.calendarType,
-      ...(input.birthTime ? { birthTime: input.birthTime } : {})
+      gender: input.gender
     });
 
-    router.push(`/result?${params.toString()}`);
+    router.push(`/result?${toInputQuery(input)}`);
   };
 
   return (
-    <main>
+    <main className="shell pageMain">
       <section className="card">
         <h1>무료 사주 입력</h1>
-        <p className="muted">결과는 확률 기반 문장으로 제공됩니다.</p>
+        <p className="muted">입력값 기반으로 무료 미리보기와 유료 리포트 옵션을 제공합니다.</p>
         <form onSubmit={submit}>
           <label>이름</label>
           <input
@@ -85,7 +86,7 @@ export default function FreeFortunePage() {
           </select>
 
           <button type="submit" disabled={!canSubmit}>
-            결과 페이지로 이동
+            미리보기 생성
           </button>
         </form>
       </section>

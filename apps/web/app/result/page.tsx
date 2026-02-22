@@ -3,134 +3,97 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import type { FortuneInput, ProductCta, ReportPreview } from "@saju/shared";
+import type { ProductCode, ReportPreview } from "@saju/shared";
+import { webApi } from "../../lib/api";
+import { trackEvent } from "../../lib/analytics";
+import { buildShareText, toInputFromParams, toInputQuery } from "../../lib/fortune";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+type LoadState = "idle" | "loading" | "success" | "error";
+type ShareChannel = "instagram" | "kakao";
 
-type SharePreset = "today" | "core" | "caution";
-
-const sharePresetLabels: Record<SharePreset, string> = {
-  today: "오늘의 한줄",
-  core: "성향핵심",
-  caution: "주의포인트"
-};
-
-const toInputFromParams = (searchParams: URLSearchParams): FortuneInput | null => {
-  const name = searchParams.get("name")?.trim() ?? "";
-  const birthDate = searchParams.get("birthDate") ?? "";
-  const birthTime = searchParams.get("birthTime") ?? "";
-  const gender = searchParams.get("gender") as FortuneInput["gender"] | null;
-  const calendarType = searchParams.get("calendarType") as FortuneInput["calendarType"] | null;
-
-  if (!name || !birthDate || !gender || !calendarType) {
-    return null;
-  }
-
-  return {
-    name,
-    birthDate,
-    birthTime,
-    gender,
-    calendarType
-  };
-};
-
-const buildShareText = (preset: SharePreset, preview: ReportPreview): string => {
-  const firstFree = preview.free.sections[0]?.text ?? preview.free.summary;
-
-  if (preset === "today") {
-    return `오늘의 한줄: ${preview.free.summary}`;
-  }
-  if (preset === "core") {
-    return `성향핵심: ${firstFree}`;
-  }
-  return `주의포인트: ${preview.paid.standard.teaser}`;
+const channelLabels: Record<ShareChannel, string> = {
+  instagram: "Instagram 스타일",
+  kakao: "Kakao 메시지 스타일"
 };
 
 export default function ResultPage() {
   const searchParams = useSearchParams();
   const [preview, setPreview] = useState<ReportPreview | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState<LoadState>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [copiedPreset, setCopiedPreset] = useState<SharePreset | null>(null);
+  const [copied, setCopied] = useState<ShareChannel | null>(null);
 
-  const input = useMemo(() => toInputFromParams(searchParams), [searchParams]);
+  const input = useMemo(() => toInputFromParams(new URLSearchParams(searchParams.toString())), [searchParams]);
 
-  useEffect(() => {
+  const loadPreview = async () => {
     if (!input) {
-      setError("입력값이 없어 결과를 생성할 수 없습니다.");
+      setState("error");
+      setError("입력값이 누락되어 결과를 생성할 수 없습니다.");
       return;
     }
 
-    const run = async () => {
-      setLoading(true);
-      setError(null);
-      setCopiedPreset(null);
+    setState("loading");
+    setError(null);
 
-      try {
-        const response = await fetch(`${API_URL}/report/preview`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(input)
-        });
-
-        if (!response.ok) {
-          throw new Error("리포트 미리보기 생성에 실패했습니다.");
-        }
-
-        const data = (await response.json()) as ReportPreview;
-        setPreview(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "알 수 없는 오류");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void run();
-  }, [input]);
-
-  const copyShareText = async (preset: SharePreset) => {
-    if (!preview) return;
-
-    const text = buildShareText(preset, preview);
-    await navigator.clipboard.writeText(text);
-    setCopiedPreset(preset);
+    try {
+      const data = await webApi.reportPreview(input);
+      setPreview(data);
+      setState("success");
+      trackEvent("preview_loaded", { seed: data.seed, ctaCount: data.ctas.length });
+    } catch (e) {
+      setState("error");
+      setError(e instanceof Error ? e.message : "결과 조회에 실패했습니다.");
+      trackEvent("preview_load_failed");
+    }
   };
 
-  const renderCta = (cta: ProductCta) => {
-    return (
-      <button key={cta.code} type="button" className="secondaryButton">
-        {cta.label} {cta.priceLabel}
-      </button>
-    );
+  useEffect(() => {
+    void loadPreview();
+  }, [input]);
+
+  const copyShare = async (channel: ShareChannel) => {
+    if (!preview) return;
+    await navigator.clipboard.writeText(buildShareText(channel, preview));
+    setCopied(channel);
+    trackEvent("share_text_copied", { channel });
+  };
+
+  const paywallHref = (productCode: ProductCode): string => {
+    if (!input) return "/free-fortune";
+    return `/paywall?${toInputQuery(input)}&productCode=${productCode}`;
   };
 
   return (
-    <main>
+    <main className="shell pageMain">
       <section className="card">
-        <h1>결과 미리보기</h1>
-        <p className="muted">무료 영역은 공개, 심화 영역은 잠금 상태로 제공됩니다.</p>
-        <div style={{ marginTop: 12 }}>
-          <Link href="/free-fortune">입력으로 돌아가기</Link>
+        <h1>무료 결과 미리보기</h1>
+        <p className="muted">무료 영역 확인 후, 필요한 경우 결제 시뮬레이션으로 전체 리포트를 열람할 수 있습니다.</p>
+        <div className="inlineActions">
+          <Link href="/free-fortune">입력 수정</Link>
+          <button type="button" onClick={() => void loadPreview()} className="ghostButton">
+            다시 불러오기
+          </button>
         </div>
       </section>
 
-      {loading ? (
-        <section className="card" style={{ marginTop: 16 }}>
-          <p>리포트 생성 중입니다...</p>
+      {state === "loading" ? (
+        <section className="card sectionGap">
+          <p>결과를 계산하고 있습니다...</p>
         </section>
       ) : null}
 
-      {error ? (
-        <section className="card" style={{ marginTop: 16 }}>
-          <p style={{ color: "#b91c1c" }}>{error}</p>
+      {state === "error" ? (
+        <section className="card sectionGap">
+          <p className="errorText">{error}</p>
+          <button type="button" onClick={() => void loadPreview()}>
+            재시도
+          </button>
         </section>
       ) : null}
 
-      {preview ? (
+      {state === "success" && preview ? (
         <>
-          <section className="card" style={{ marginTop: 16 }}>
+          <section className="card sectionGap">
             <h2>{preview.free.headline}</h2>
             <p>{preview.free.summary}</p>
             {preview.free.sections.map((section) => (
@@ -141,9 +104,9 @@ export default function ResultPage() {
             ))}
           </section>
 
-          <section className="card" style={{ marginTop: 16 }}>
-            <h2>심화 리포트 미리보기 (잠금)</h2>
-            <p className="muted">잠금된 항목은 상품 구매 후 전체 열람 가능합니다.</p>
+          <section className="card sectionGap">
+            <h2>잠금 영역 미리보기</h2>
+            <p className="muted">결제 시뮬레이션 완료 후 전체 문장을 확인할 수 있습니다.</p>
             {preview.paid.deep.sections.map((section) => (
               <article key={section.key} className="lockedBlock">
                 <h3>{section.title}</h3>
@@ -153,20 +116,23 @@ export default function ResultPage() {
             ))}
 
             <div className="ctaRow">
-              {preview.ctas.map((cta) => renderCta(cta))}
+              {preview.ctas.map((cta) => (
+                <Link key={cta.code} href={paywallHref(cta.code)} className="primaryLink center">
+                  {cta.label} {cta.priceLabel}
+                </Link>
+              ))}
             </div>
           </section>
 
-          <section className="card" style={{ marginTop: 16 }}>
-            <h2>공유 카드 텍스트 생성기</h2>
-            <p className="muted">Instagram/Kakao 공유용 문구를 바로 복사하세요.</p>
-
-            {(["today", "core", "caution"] as SharePreset[]).map((preset) => (
-              <article key={preset} className="shareItem">
-                <h3>{sharePresetLabels[preset]}</h3>
-                <p>{buildShareText(preset, preview)}</p>
-                <button type="button" onClick={() => void copyShareText(preset)}>
-                  {copiedPreset === preset ? "복사됨" : "문구 복사"}
+          <section className="card sectionGap">
+            <h2>공유 카드 문구</h2>
+            <p className="muted">채널 성격에 맞춰 문구를 복사할 수 있습니다.</p>
+            {(Object.keys(channelLabels) as ShareChannel[]).map((channel) => (
+              <article key={channel} className="shareItem">
+                <h3>{channelLabels[channel]}</h3>
+                <pre className="shareText">{buildShareText(channel, preview)}</pre>
+                <button type="button" onClick={() => void copyShare(channel)}>
+                  {copied === channel ? "복사됨" : "문구 복사"}
                 </button>
               </article>
             ))}
