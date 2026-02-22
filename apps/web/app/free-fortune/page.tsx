@@ -41,9 +41,9 @@ export default function FreeFortunePage() {
   return (
     <PageContainer>
       <GlassCard>
-        <p className="heroEyebrow">무료 입력</p>
-        <h1>사주 미리보기 생성</h1>
-        <p className="lead">입력값을 바탕으로 무료 해석을 먼저 제공하고, 이후 확장 리포트 옵션을 안내합니다.</p>
+        <p className="heroEyebrow">무료 리포트 입력</p>
+        <h1>기본 정보 입력 후 7개 구조 미리보기 확인</h1>
+        <p className="lead">무료 리포트는 600~1200자 범위로 생성되며, 이후 표준/심화 장문 리포트로 확장할 수 있습니다.</p>
 
         <form onSubmit={submit} className="form" noValidate>
           <div className="formGrid cols2">
@@ -83,7 +83,7 @@ export default function FreeFortunePage() {
                 value={input.birthTime}
                 onChange={(e) => setInput((prev) => ({ ...prev, birthTime: e.target.value }))}
               />
-              <p className="formHelp muted">미입력 시 중립 시간 기준으로 계산됩니다.</p>
+              <p className="formHelp muted">미입력 시 중립 시간 기준으로 해석합니다.</p>
             </div>
 
             <div className="formGroup">
@@ -106,9 +106,7 @@ export default function FreeFortunePage() {
                 id="calendarType"
                 className="select"
                 value={input.calendarType}
-                onChange={(e) =>
-                  setInput((prev) => ({ ...prev, calendarType: e.target.value as CalendarType }))
-                }
+                onChange={(e) => setInput((prev) => ({ ...prev, calendarType: e.target.value as CalendarType }))}
               >
                 <option value="solar">양력</option>
                 <option value="lunar">음력</option>
@@ -116,10 +114,15 @@ export default function FreeFortunePage() {
             </div>
           </div>
 
-          <div className="buttonRow">
-            <Button type="submit" size="lg" disabled={!canSubmit}>
-              미리보기 생성
-            </Button>
+          <div className="buttonRow desktopOnly">
+            <Button type="submit" size="lg" disabled={!canSubmit}>무료 리포트 생성</Button>
+          </div>
+
+          <div className="stickyCta">
+            <div className="stickyCtaInner">
+              <p className="muted">입력 완료 후 무료 리포트를 즉시 생성합니다.</p>
+              <Button type="submit" size="lg" full disabled={!canSubmit}>무료 리포트 생성</Button>
+            </div>
           </div>
         </form>
       </GlassCard>

@@ -10,17 +10,15 @@ export default function TermsPage() {
 
         <section className="legalSection">
           <h2>1. 서비스 성격</h2>
-          <p>본 서비스는 전통 사주 해석과 데이터 패턴 기반 문장을 결합한 참고 정보를 제공합니다.</p>
+          <p>본 서비스는 명리 해석을 확률 기반 문장으로 재구성한 참고 리포트입니다. 절대적 예언이나 결과 보장을 제공하지 않습니다.</p>
         </section>
-
         <section className="legalSection">
-          <h2>2. 금지 사항</h2>
-          <p>자동화 남용, 서비스 안정성 훼손, 제3자 권리 침해 행위를 금지합니다.</p>
+          <h2>2. 이용자 의무</h2>
+          <p>서비스 안정성을 해치는 자동화 남용, 불법 목적 사용, 타인 권리 침해 행위는 금지됩니다.</p>
         </section>
-
         <section className="legalSection">
           <h2>3. 책임 제한</h2>
-          <p>본 서비스는 판단 보조 목적이며, 중요한 의사결정은 전문 자문과 병행해 주세요.</p>
+          <p>의료·법률·투자·채무·고위험 판단은 반드시 별도 전문가 자문과 함께 진행해야 하며, 본 서비스 단독 근거 사용은 제한됩니다.</p>
         </section>
       </GlassCard>
     </PageContainer>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
+import type { ReportLengthInfo } from "../../lib/reportLength";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
@@ -17,17 +18,17 @@ type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   full?: boolean;
 };
 
-const classes = (...values: Array<string | false | null | undefined>) => values.filter(Boolean).join(" ");
+const cn = (...values: Array<string | false | null | undefined>) => values.filter(Boolean).join(" ");
 
 const buttonClass = (variant: Variant, size: Size, full?: boolean): string =>
-  classes("btn", `btn-${variant}`, `btn-${size}`, full && "btn-full");
+  cn("btn", `btn-${variant}`, `btn-${size}`, full && "btn-full");
 
 export function Button({ variant = "primary", size = "md", full = false, className, ...props }: ButtonProps) {
-  return <button className={classes(buttonClass(variant, size, full), className)} {...props} />;
+  return <button className={cn(buttonClass(variant, size, full), className)} {...props} />;
 }
 
 export function ButtonLink({ href, variant = "primary", size = "md", full = false, className, ...props }: ButtonLinkProps) {
-  return <Link href={href} className={classes(buttonClass(variant, size, full), className)} {...props} />;
+  return <Link href={href} className={cn(buttonClass(variant, size, full), className)} {...props} />;
 }
 
 export function PageContainer({ children }: { children: ReactNode }) {
@@ -35,7 +36,7 @@ export function PageContainer({ children }: { children: ReactNode }) {
 }
 
 export function GlassCard({ children, className }: { children: ReactNode; className?: string }) {
-  return <section className={classes("card", className)}>{children}</section>;
+  return <section className={cn("card", className)}>{children}</section>;
 }
 
 export function SectionTitle({ title, subtitle }: { title: string; subtitle?: string }) {
@@ -44,16 +45,6 @@ export function SectionTitle({ title, subtitle }: { title: string; subtitle?: st
       <h2>{title}</h2>
       {subtitle ? <p className="muted">{subtitle}</p> : null}
     </header>
-  );
-}
-
-export function SkeletonBlock({ lines = 3 }: { lines?: number }) {
-  return (
-    <div className="skeleton" aria-hidden>
-      {Array.from({ length: lines }).map((_, index) => (
-        <span key={index} className="skeletonLine" />
-      ))}
-    </div>
   );
 }
 
@@ -69,10 +60,22 @@ export function StatusBox({
   action?: ReactNode;
 }) {
   return (
-    <section className={classes("statusBox", tone === "error" && "statusError")}>
+    <section className={cn("statusBox", tone === "error" && "statusError")}>
       <h3>{title}</h3>
       <p className="muted">{description}</p>
       {action ? <div className="statusAction">{action}</div> : null}
     </section>
+  );
+}
+
+export function LengthDebugBar({ values }: { values: Array<{ label: string; info: ReportLengthInfo }> }) {
+  return (
+    <aside className="debugLengthBar" aria-label="길이 디버그 정보">
+      {values.map(({ label, info }) => (
+        <p key={label} className={cn("debugLengthItem", info.inRange ? "debugOk" : "debugWarn")}>
+          {label} {info.count}자 ({info.min}~{info.max})
+        </p>
+      ))}
+    </aside>
   );
 }

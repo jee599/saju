@@ -1,3 +1,5 @@
+import type { ReportLengthInfo, ReportTier } from "./reportLength";
+
 export type Gender = "male" | "female" | "other";
 export type CalendarType = "solar" | "lunar";
 export type ProductCode = "standard" | "deep";
@@ -45,6 +47,7 @@ export interface ReportPreview {
     deep: { teaser: string; sections: PreviewSection[] };
   };
   ctas: ProductCta[];
+  debugLengths: Record<ReportTier, ReportLengthInfo>;
 }
 
 export type OrderStatus = "created" | "confirmed";
@@ -58,9 +61,16 @@ export interface OrderSummary {
   confirmedAt?: string;
 }
 
-export interface CheckoutCreateRequest { productCode: ProductCode; input: FortuneInput; }
-export interface CheckoutCreateResponse { order: OrderSummary; }
-export interface CheckoutConfirmRequest { orderId: string; }
+export interface CheckoutCreateRequest {
+  productCode: ProductCode;
+  input: FortuneInput;
+}
+export interface CheckoutCreateResponse {
+  order: OrderSummary;
+}
+export interface CheckoutConfirmRequest {
+  orderId: string;
+}
 
 export interface ReportDetail {
   reportId: string;
@@ -72,14 +82,28 @@ export interface ReportDetail {
   sections: Array<{ key: string; title: string; text: string }>;
   recommendations: string[];
   disclaimer: string;
+  debugLength: ReportLengthInfo;
 }
 
-export interface CheckoutConfirmResponse { order: OrderSummary; report: ReportDetail; }
-export interface GetReportResponse { order: OrderSummary; report: ReportDetail; }
+export interface CheckoutConfirmResponse {
+  order: OrderSummary;
+  report: ReportDetail;
+}
+export interface GetReportResponse {
+  order: OrderSummary;
+  report: ReportDetail;
+}
 
 export interface ApiErrorPayload {
   ok: false;
-  error: { code: string; message: string; details?: Array<{ field: string; reason: string }> };
+  error: {
+    code: string;
+    message: string;
+    details?: Array<{ field: string; reason: string }>;
+  };
 }
-export interface ApiSuccessPayload<T> { ok: true; data: T; }
+export interface ApiSuccessPayload<T> {
+  ok: true;
+  data: T;
+}
 export type ApiResponse<T> = ApiSuccessPayload<T> | ApiErrorPayload;
