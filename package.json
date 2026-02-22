@@ -7,7 +7,11 @@
     "dev:web": "pnpm --filter @saju/web dev",
     "dev:mobile": "pnpm --filter @saju/mobile dev",
     "dev:api": "pnpm --filter @saju/api dev",
-    "lint": "pnpm -r --if-present run lint",
-    "typecheck": "pnpm -r --if-present run typecheck"
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "typecheck:web": "pnpm --filter @saju/web typecheck",
+    "typecheck:api": "pnpm --filter @saju/api typecheck",
+    "typecheck:mobile": "pnpm --filter @saju/mobile typecheck",
+    "typecheck:shared": "pnpm --filter @saju/shared typecheck",
+    "lint": "pnpm -r --if-present run lint"
   }
 }
