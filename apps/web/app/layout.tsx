@@ -12,11 +12,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body>
         <header className="siteHeader">
-          <div className="shell headerInner">
+          <div className="headerInner">
             <Link href="/" className="brand">
               사주는 빅데이터
             </Link>
-            <nav className="topNav">
+            <nav className="topNav" aria-label="주요 탐색">
               <Link href="/free-fortune">무료 입력</Link>
               <Link href="/terms">이용약관</Link>
               <Link href="/privacy">개인정보처리방침</Link>
@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         {children}
         <footer className="siteFooter">
-          <div className="shell footerInner">
+          <div className="footerInner">
             <p>사주는 빅데이터 | 확률 기반 참고 서비스</p>
             <p className="muted">의료·법률·투자 판단은 전문 자문과 함께 검토해 주세요.</p>
           </div>

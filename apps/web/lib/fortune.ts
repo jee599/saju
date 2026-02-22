@@ -1,60 +1,29 @@
-import type { FortuneInput, ProductCode, ReportPreview } from "@saju/shared";
-
-export type ShareChannel = "instagram" | "kakao";
-
-export const toInputFromParams = (searchParams: URLSearchParams): FortuneInput | null => {
-  const name = searchParams.get("name")?.trim() ?? "";
-  const birthDate = searchParams.get("birthDate") ?? "";
-  const birthTime = searchParams.get("birthTime") ?? "";
-  const gender = searchParams.get("gender") as FortuneInput["gender"] | null;
-  const calendarType = searchParams.get("calendarType") as FortuneInput["calendarType"] | null;
-
-  if (!name || !birthDate || !gender || !calendarType) {
-    return null;
-  }
-
-  return {
-    name,
-    birthDate,
-    birthTime,
-    gender,
-    calendarType
-  };
-};
+import type { FortuneInput, ProductCode, ReportPreview } from "./types";
 
 export const toInputQuery = (input: FortuneInput): string => {
-  const params = new URLSearchParams({
-    name: input.name.trim(),
-    birthDate: input.birthDate,
-    gender: input.gender,
-    calendarType: input.calendarType,
-    ...(input.birthTime ? { birthTime: input.birthTime } : {})
-  });
-
-  return params.toString();
+  const p = new URLSearchParams();
+  p.set("name", input.name);
+  p.set("birthDate", input.birthDate);
+  if (input.birthTime) p.set("birthTime", input.birthTime);
+  p.set("gender", input.gender);
+  p.set("calendarType", input.calendarType);
+  return p.toString();
 };
 
-export const getPriceLabel = (productCode: ProductCode): string => {
-  return productCode === "deep" ? "₩12,900" : "₩4,900";
+export const toInputFromParams = (p: URLSearchParams): FortuneInput | null => {
+  const name = p.get("name") ?? "";
+  const birthDate = p.get("birthDate") ?? "";
+  const birthTime = p.get("birthTime") ?? "";
+  const gender = (p.get("gender") ?? "male") as FortuneInput["gender"];
+  const calendarType = (p.get("calendarType") ?? "solar") as FortuneInput["calendarType"];
+  if (!name || !birthDate) return null;
+  return { name, birthDate, birthTime, gender, calendarType };
 };
 
-export const buildShareText = (channel: ShareChannel, preview: ReportPreview): string => {
-  const oneLine = preview.free.summary;
-  const detail = preview.free.sections[0]?.text ?? preview.free.summary;
+export const getPriceLabel = (code: ProductCode): string => (code === "deep" ? "₩12,900" : "₩4,900");
 
-  if (channel === "instagram") {
-    return [
-      "[사주는 빅데이터 | 오늘의 해석]",
-      oneLine,
-      detail,
-      "#사주 #데이터해석 #확률기반"
-    ].join("\n");
-  }
-
-  return [
-    "[사주 결과 공유]",
-    `핵심: ${oneLine}`,
-    `메모: ${detail}`,
-    "참고용 해석이며 중요한 결정은 추가 검토가 필요합니다."
-  ].join("\n");
+export const buildShareText = (channel: "instagram" | "kakao", preview: ReportPreview): string => {
+  const line = preview.free.summary;
+  if (channel === "instagram") return `사주는 빅데이터\n${line}\n#사주 #명리 #자기이해`;
+  return `사주는 빅데이터 기반 요약\n- ${line}\n자세히 보기`; 
 };
