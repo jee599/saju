@@ -22,13 +22,19 @@ export default function HomePage() {
   return (
     <PageContainer>
       <GlassCard>
-        <SectionTitle title="버전 선택" subtitle="아래에서 GPT 버전 / Claude(Opus) 버전을 바로 비교할 수 있습니다." />
+        <SectionTitle title="버전 선택" subtitle="A/B + 교차리뷰(A1/B1) 4개 버전을 비교할 수 있습니다." />
         <div className="buttonRow">
-          <ButtonLink href="/free-fortune" size="lg">
-            GPT 버전 보기 (현재 사이트)
+          <ButtonLink href="https://web-4lefr6vsf-jidongs45-3347s-projects.vercel.app" size="lg" target="_blank" rel="noreferrer">
+            A (GPT 개선본)
           </ButtonLink>
-          <ButtonLink href="https://opus-only.vercel.app" size="lg" variant="secondary" target="_blank" rel="noreferrer">
-            Claude(Opus) 버전 보기
+          <ButtonLink href="https://b-claude-jftpi0cpm-jidongs45-3347s-projects.vercel.app" size="lg" variant="secondary" target="_blank" rel="noreferrer">
+            B (Claude 개선본)
+          </ButtonLink>
+          <ButtonLink href="https://web-1m7i0e8au-jidongs45-3347s-projects.vercel.app" size="lg" variant="ghost" target="_blank" rel="noreferrer">
+            A1 (Claude가 GPT 리뷰/개선)
+          </ButtonLink>
+          <ButtonLink href="https://b1-gpt-review-e5lcvzjhm-jidongs45-3347s-projects.vercel.app" size="lg" variant="ghost" target="_blank" rel="noreferrer">
+            B1 (GPT가 Claude 리뷰/개선)
           </ButtonLink>
         </div>
       </GlassCard>
