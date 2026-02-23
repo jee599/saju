@@ -42,8 +42,8 @@ export default function FreeFortunePage() {
     <PageContainer>
       <GlassCard>
         <p className="heroEyebrow">무료 리포트 입력</p>
-        <h1>기본 정보 입력 후 7개 구조 미리보기 확인</h1>
-        <p className="lead">무료 리포트는 600~1200자 범위로 생성되며, 이후 표준/심화 장문 리포트로 확장할 수 있습니다.</p>
+        <h1>기본 정보 입력 후 무료 요약 리포트 확인</h1>
+        <p className="lead">무료 리포트는 짧은 요약만 제공하며, 이후 단일 장문 리포트로 확장할 수 있습니다.</p>
 
         <form onSubmit={submit} className="form" noValidate>
           <div className="formGrid cols2">

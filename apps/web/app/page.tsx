@@ -1,21 +1,16 @@
 import { ButtonLink, GlassCard, PageContainer, SectionTitle } from "./components/ui";
 
-const pricing = [
-  {
-    code: "standard",
-    title: "표준 리포트",
-    price: "₩4,900",
-    desc: "3,000~6,000자 수준의 정밀 해석",
-    points: ["7개 구조 장문 해설", "분야별 실행 전략", "용어 해설과 쉬운 설명"]
-  },
-  {
-    code: "deep",
-    title: "심화 리포트",
-    price: "₩12,900",
-    desc: "8,000~15,000자 수준의 심층 분석",
-    points: ["목표 9,000~11,000자 장문", "20개 이상 용어 맥락 해설", "리스크·90일 실행 가이드"]
-  }
-] as const;
+const pricing = {
+  title: "장문 리포트",
+  price: "₩12,900",
+  desc: "대화형 한국어 장문 해설",
+  points: [
+    "성격/직업/연애/금전/건강/가족·배우자 6개 도메인",
+    "도메인별 과거→현재→미래 흐름 설명",
+    "용어 의미를 문장 안에서 풀어주는 확률형 결론",
+    "마지막 대운 타임라인 정리"
+  ]
+} as const;
 
 const trustItems = [
   "입력값 해시 기반의 결정론적(seed) 생성으로 재현성 확보",
@@ -29,10 +24,10 @@ export default function HomePage() {
       <GlassCard className="heroCard">
         <div className="heroMain">
           <p className="heroEyebrow">Professional Myeongri Report</p>
-          <h1>명리 해석의 깊이는 유지하고, 문장은 더 명확하게</h1>
+          <h1>명리 해석의 깊이는 유지하고, 문장은 더 대화형으로</h1>
           <p className="lead">
-            과장된 운세 톤이 아닌 전문 해설체로, 원국부터 실행 가이드까지 긴 호흡의 리포트를 제공합니다.
-            무료 리포트로 먼저 확인하고 필요 깊이에 맞춰 확장하세요.
+            무료 요약으로 현재 흐름을 짧게 확인한 뒤, 단일 장문 리포트에서 성격부터 가족·배우자까지
+            과거, 현재, 미래를 연결해 읽을 수 있습니다.
           </p>
           <div className="buttonRow">
             <ButtonLink href="/free-fortune" size="lg">무료 리포트 시작</ButtonLink>
@@ -42,31 +37,29 @@ export default function HomePage() {
         <div className="heroAside">
           <h3>핵심 품질 기준</h3>
           <ul className="flatList">
-            <li>무료 600~1200자</li>
-            <li>표준 3000~6000자</li>
-            <li>심화 8000~15000자</li>
+            <li>무료 요약 150~620자</li>
+            <li>유료 장문 4800~11000자</li>
+            <li>6개 도메인 + 대운 타임라인 고정 구조</li>
           </ul>
         </div>
       </GlassCard>
 
       <GlassCard>
-        <SectionTitle title="요금제" subtitle="필요한 분석 깊이만 선택할 수 있도록 구성했습니다." />
+        <SectionTitle title="요금" subtitle="선택 피로 없이 단일 상품으로 제공됩니다." />
         <div className="pricingGrid">
-          {pricing.map((item) => (
-            <article key={item.code} className="pricingCard">
-              <p className="badge badge-neutral">{item.desc}</p>
-              <h3>{item.title}</h3>
-              <p className="price">{item.price}</p>
-              <ul className="flatList compactList">
-                {item.points.map((point) => <li key={point}>{point}</li>)}
-              </ul>
-              <div className="buttonRow">
-                <ButtonLink href="/free-fortune" variant={item.code === "deep" ? "secondary" : "primary"} full>
-                  무료 결과 후 선택
-                </ButtonLink>
-              </div>
-            </article>
-          ))}
+          <article className="pricingCard">
+            <p className="badge badge-neutral">{pricing.desc}</p>
+            <h3>{pricing.title}</h3>
+            <p className="price">{pricing.price}</p>
+            <ul className="flatList compactList">
+              {pricing.points.map((point) => <li key={point}>{point}</li>)}
+            </ul>
+            <div className="buttonRow">
+              <ButtonLink href="/free-fortune" variant="primary" full>
+                무료 결과 후 결제
+              </ButtonLink>
+            </div>
+          </article>
         </div>
       </GlassCard>
 

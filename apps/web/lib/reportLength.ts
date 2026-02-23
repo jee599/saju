@@ -1,4 +1,4 @@
-export type ReportTier = "free" | "standard" | "deep";
+export type ReportTier = "free" | "paid";
 
 export interface ReportLengthRule {
   min: number;
@@ -13,9 +13,8 @@ export interface ReportLengthInfo extends ReportLengthRule {
 }
 
 export const REPORT_LENGTH_RULES: Record<ReportTier, ReportLengthRule> = {
-  free: { min: 600, max: 1200, target: 860 },
-  standard: { min: 3000, max: 6000, target: 4200 },
-  deep: { min: 8000, max: 15000, target: 9800 }
+  free: { min: 150, max: 620, target: 280 },
+  paid: { min: 4800, max: 11000, target: 7200 }
 };
 
 export const countReportChars = (text: string): number => text.replace(/\s+/g, "").length;

@@ -20,10 +20,10 @@ export const toInputFromParams = (p: URLSearchParams): FortuneInput | null => {
   return { name, birthDate, birthTime, gender, calendarType };
 };
 
-export const getPriceLabel = (code: ProductCode): string => (code === "deep" ? "₩12,900" : "₩4,900");
+export const getPriceLabel = (_code: ProductCode): string => "₩12,900";
 
 export const buildShareText = (channel: "instagram" | "kakao", preview: ReportPreview): string => {
   const line = preview.free.summary;
   if (channel === "instagram") return `사주는 빅데이터\n${line}\n#사주 #명리 #자기이해`;
-  return `사주는 빅데이터 기반 요약\n- ${line}\n자세히 보기`; 
+  return `사주는 빅데이터 기반 요약\n- ${line}\n자세히 보기`;
 };

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import type { ProductCode, ReportPreview } from "../../lib/types";
+import type { ReportPreview } from "../../lib/types";
 import { webApi } from "../../lib/api";
 import { toInputFromParams, toInputQuery } from "../../lib/fortune";
 import { ButtonLink, GlassCard, LengthDebugBar, PageContainer, StatusBox } from "../components/ui";
@@ -24,14 +24,14 @@ function ResultInner() {
     })();
   }, [input]);
 
-  const paywallHref = (code: ProductCode) => (input ? `/paywall?${toInputQuery(input)}&productCode=${code}` : "/free-fortune");
+  const paywallHref = input ? `/paywall?${toInputQuery(input)}` : "/free-fortune";
 
   return (
     <PageContainer>
       <GlassCard>
         <p className="heroEyebrow">무료 결과</p>
-        <h1>무료 리포트 미리보기</h1>
-        <p className="lead">전문 명리 해설체 기반으로 생성된 7개 구조 요약입니다.</p>
+        <h1>무료 요약 리포트</h1>
+        <p className="lead">짧은 요약만 먼저 확인하고, 필요하면 단일 유료 상품으로 전체 장문 리포트를 바로 열 수 있습니다.</p>
 
         {error ? <StatusBox title="오류" description={error} tone="error" /> : null}
 
@@ -42,13 +42,7 @@ function ResultInner() {
             <h2>{preview.free.headline}</h2>
             <p className="muted mt-sm">{preview.free.summary}</p>
 
-            <LengthDebugBar
-              values={[
-                { label: "무료", info: preview.debugLengths.free },
-                { label: "표준", info: preview.debugLengths.standard },
-                { label: "심화", info: preview.debugLengths.deep }
-              ]}
-            />
+            <LengthDebugBar values={[{ label: "무료", info: preview.debugLengths.free }, { label: "유료", info: preview.debugLengths.paid }]} />
 
             <div className="sectionStack mt-md">
               {preview.free.sections.map((section) => (
@@ -60,15 +54,13 @@ function ResultInner() {
             </div>
 
             <div className="ctaPanel">
-              <h3>확장 리포트 선택</h3>
+              <h3>{preview.cta.label}</h3>
+              <p className="muted mt-sm">{preview.cta.description}</p>
               <div className="buttonRow">
-                {preview.ctas.map((cta) => (
-                  <ButtonLink key={cta.code} href={paywallHref(cta.code)} variant={cta.code === "deep" ? "secondary" : "primary"}>
-                    {cta.label} {cta.priceLabel}
-                  </ButtonLink>
-                ))}
+                <ButtonLink href={paywallHref} variant="primary">
+                  {preview.cta.priceLabel} 결제로 전체 보기
+                </ButtonLink>
               </div>
-              <p className="muted">표준/심화는 잠금 해제 후 전체 장문 리포트를 제공합니다.</p>
             </div>
           </>
         )}

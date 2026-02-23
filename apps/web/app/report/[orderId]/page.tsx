@@ -49,7 +49,7 @@ export default function ReportPage() {
                     <a key={section.key} href={`#${section.key}`}>{section.title}</a>
                   ))}
                 </nav>
-                <LengthDebugBar values={[{ label: data.report.productCode === "deep" ? "심화" : "표준", info: data.report.debugLength }]} />
+                <LengthDebugBar values={[{ label: "유료", info: data.report.debugLength }]} />
               </div>
             </aside>
 
@@ -59,6 +59,13 @@ export default function ReportPage() {
                 <p className="muted">{data.report.summary}</p>
               </article>
 
+              <nav className="reportJumpNav" aria-label="리포트 빠른 이동">
+                {toc.map((section) => (
+                  <a key={section.key} href={`#${section.key}`}>{section.title}</a>
+                ))}
+                <a href="#report-checklist">실행 체크리스트</a>
+              </nav>
+
               {data.report.sections.map((section) => (
                 <article key={section.key} id={section.key} className="reportSection">
                   <h3>{section.title}</h3>
@@ -66,7 +73,7 @@ export default function ReportPage() {
                 </article>
               ))}
 
-              <article className="reportSection">
+              <article id="report-checklist" className="reportSection">
                 <h3>실행 체크리스트</h3>
                 <ul className="flatList compactList">
                   {data.report.recommendations.map((item) => <li key={item}>{item}</li>)}

@@ -2,7 +2,7 @@ import type { ReportLengthInfo, ReportTier } from "./reportLength";
 
 export type Gender = "male" | "female" | "other";
 export type CalendarType = "solar" | "lunar";
-export type ProductCode = "standard" | "deep";
+export type ProductCode = "full";
 
 export interface FortuneInput {
   name: string;
@@ -43,10 +43,10 @@ export interface ReportPreview {
     sections: PreviewSection[];
   };
   paid: {
-    standard: { teaser: string; sections: PreviewSection[] };
-    deep: { teaser: string; sections: PreviewSection[] };
+    teaser: string;
+    sections: PreviewSection[];
   };
-  ctas: ProductCta[];
+  cta: ProductCta;
   debugLengths: Record<ReportTier, ReportLengthInfo>;
 }
 
