@@ -21,6 +21,18 @@ const trustItems = [
 export default function HomePage() {
   return (
     <PageContainer>
+      <GlassCard>
+        <SectionTitle title="버전 선택" subtitle="아래에서 GPT 버전 / Claude(Opus) 버전을 바로 비교할 수 있습니다." />
+        <div className="buttonRow">
+          <ButtonLink href="https://web-ri2udhshj-jidongs45-3347s-projects.vercel.app" size="lg" target="_blank" rel="noreferrer">
+            GPT 버전 보기
+          </ButtonLink>
+          <ButtonLink href="https://opus-only.vercel.app" size="lg" variant="secondary" target="_blank" rel="noreferrer">
+            Claude(Opus) 버전 보기
+          </ButtonLink>
+        </div>
+      </GlassCard>
+
       <GlassCard className="heroCard">
         <div className="heroMain">
           <p className="heroEyebrow">Professional Myeongri Report</p>
