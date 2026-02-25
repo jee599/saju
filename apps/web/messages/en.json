@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "FateSaju | AI-Powered Destiny Analysis",
+    "description": "Traditional East Asian astrology reimagined with probability-based AI interpretation"
+  },
+  "nav": {
+    "brand": "FateSaju",
+    "saju": "Four Pillars",
+    "palm": "Palm Reading",
+    "name": "Name Analysis",
+    "face": "Face Reading"
+  },
+  "footer": {
+    "brand": "FateSaju",
+    "desc": "A reference service combining traditional fortune-telling frameworks with probability-based AI analysis.",
+    "warning": "Please consult qualified professionals for medical, legal, and financial decisions.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "disclaimer": "Disclaimer"
+  },
+  "hero": {
+    "eyebrow": "✦ AI Probability-Based Destiny Analysis",
+    "title": "Discover Your Destiny with AI",
+    "lead": "Get your free summary report combining traditional astrology with modern probability analysis.",
+    "cta": "✦ Get Free Report",
+    "help": "If birth time is not provided, a neutral time will be used for interpretation."
+  },
+  "form": {
+    "name": "Name",
+    "namePlaceholder": "John Doe",
+    "nameError": "Please enter at least 2 characters.",
+    "birthDate": "Date of Birth",
+    "birthDateError": "Please enter your date of birth.",
+    "gender": "Gender",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "genderOther": "Other",
+    "birthTime": "Birth Time (optional)",
+    "solar": "Solar",
+    "lunar": "Lunar"
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "One simple plan — no decision fatigue.",
+    "productTitle": "Full Report",
+    "productDesc": "Detailed AI-generated narrative analysis",
+    "price": "$9.90",
+    "points": [
+      "6 life domains: personality, career, love, finance, health, family",
+      "Past → present → future flow for each domain",
+      "Probability-based conclusions explaining key terms in context",
+      "Major fortune timeline summary"
+    ],
+    "freeCta": "See free results first"
+  },
+  "trust": {
+    "title": "Trust & Safety",
+    "subtitle": "Designed as a safe decision-support tool.",
+    "items": [
+      {
+        "icon": "🔒",
+        "title": "Reproducible Results",
+        "desc": "Deterministic seed-based generation ensures consistent results for the same input"
+      },
+      {
+        "icon": "📊",
+        "title": "Probability-Based Language",
+        "desc": "Describes tendencies and possibilities instead of absolute predictions"
+      },
+      {
+        "icon": "⚖️",
+        "title": "Responsible Guidance",
+        "desc": "Clearly states this should not be the sole basis for important decisions"
+      }
+    ]
+  },
+  "result": {
+    "loading": "Generating your report…",
+    "errorTitle": "An error occurred",
+    "retry": "Try Again",
+    "backHome": "Back to Home",
+    "ctaBanner": "🔮 Unlock Full Report",
+    "ctaLocked": "🔓 Unlock Full Report",
+    "ctaSticky": "View Full Report",
+    "retentionNotice": "This free report is kept for {days} days. Paid reports are permanently saved."
+  },
+  "comingSoon": {
+    "title": "Coming Soon!",
+    "desc": "This service is currently being prepared.",
+    "back": "Back to Home"
+  }
+}

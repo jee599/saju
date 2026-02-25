@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "FateSaju | AI概率命理分析",
+    "description": "用AI概率语言重新诠释传统东方命理的可靠报告服务"
+  },
+  "nav": {
+    "brand": "FateSaju",
+    "saju": "四柱命理",
+    "palm": "手相",
+    "name": "姓名分析",
+    "face": "面相"
+  },
+  "footer": {
+    "brand": "FateSaju",
+    "desc": "结合传统命理学与AI概率分析的参考服务。",
+    "warning": "医疗、法律、投资决策请务必咨询专业人士。",
+    "terms": "使用条款",
+    "privacy": "隐私政策",
+    "disclaimer": "免责声明"
+  },
+  "hero": {
+    "eyebrow": "✦ AI概率命理分析",
+    "title": "AI为您解析命运密码",
+    "lead": "立即获取融合传统命理与AI概率分析的免费摘要报告。",
+    "cta": "✦ 免费报告开始",
+    "help": "未输入出生时间时，将以中性时间为基准进行解读。"
+  },
+  "form": {
+    "name": "姓名",
+    "namePlaceholder": "张三",
+    "nameError": "请输入至少2个字。",
+    "birthDate": "出生日期",
+    "birthDateError": "请输入出生日期。",
+    "gender": "性别",
+    "genderMale": "男",
+    "genderFemale": "女",
+    "genderOther": "其他",
+    "birthTime": "出生时间（选填）",
+    "solar": "公历",
+    "lunar": "农历"
+  },
+  "pricing": {
+    "title": "价格",
+    "subtitle": "简洁的单一方案，无选择困难。",
+    "productTitle": "详细报告",
+    "productDesc": "AI生成的详细命理解读",
+    "price": "¥68",
+    "points": [
+      "性格、事业、感情、财运、健康、家庭6大领域",
+      "各领域过去→现在→未来流程解读",
+      "用概率语言在上下文中解释专业术语",
+      "大运时间线总结"
+    ],
+    "freeCta": "先查看免费结果"
+  },
+  "trust": {
+    "title": "信任与安全",
+    "subtitle": "作为决策辅助工具，安全可靠地使用。",
+    "items": [
+      {
+        "icon": "🔒",
+        "title": "可复现结果",
+        "desc": "基于哈希种子的确定性生成，相同输入获得相同结果"
+      },
+      {
+        "icon": "📊",
+        "title": "概率化表达",
+        "desc": "以可能性和趋势为中心描述，非断言式预测"
+      },
+      {
+        "icon": "⚖️",
+        "title": "负责任的引导",
+        "desc": "明确说明不应作为重要决策的唯一依据"
+      }
+    ]
+  },
+  "result": {
+    "loading": "正在生成报告…",
+    "errorTitle": "发生错误",
+    "retry": "重试",
+    "backHome": "返回首页",
+    "ctaBanner": "🔮 解锁完整报告",
+    "ctaLocked": "🔓 解锁完整报告",
+    "ctaSticky": "查看完整报告",
+    "retentionNotice": "此免费报告保存{days}天。付费报告永久保存。"
+  },
+  "comingSoon": {
+    "title": "即将上线！",
+    "desc": "此服务正在准备中。",
+    "back": "返回首页"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "title": "FateSaju | Phân Tích Vận Mệnh Bằng AI",
+    "description": "Dịch vụ báo cáo vận mệnh kết hợp thuật số truyền thống với phân tích xác suất AI"
+  },
+  "nav": {
+    "brand": "FateSaju",
+    "saju": "Tứ Trụ",
+    "palm": "Xem Tay",
+    "name": "Phân Tích Tên",
+    "face": "Nhân Tướng"
+  },
+  "footer": {
+    "brand": "FateSaju",
+    "desc": "Dịch vụ tham khảo kết hợp thuật số truyền thống với phân tích xác suất AI.",
+    "warning": "Vui lòng tham vấn chuyên gia cho các quyết định y tế, pháp lý và tài chính.",
+    "terms": "Điều khoản Dịch vụ",
+    "privacy": "Chính sách Bảo mật",
+    "disclaimer": "Tuyên bố Miễn trừ"
+  },
+  "hero": {
+    "eyebrow": "✦ Phân Tích Vận Mệnh Xác Suất AI",
+    "title": "AI Phân Tích Vận Mệnh Của Bạn",
+    "lead": "Nhận báo cáo tóm tắt miễn phí kết hợp thuật số truyền thống với phân tích xác suất AI.",
+    "cta": "✦ Báo Cáo Miễn Phí",
+    "help": "Nếu không nhập giờ sinh, hệ thống sẽ sử dụng giờ trung lập để phân tích."
+  },
+  "form": {
+    "name": "Họ Tên",
+    "namePlaceholder": "Nguyễn Văn A",
+    "nameError": "Vui lòng nhập ít nhất 2 ký tự.",
+    "birthDate": "Ngày Sinh",
+    "birthDateError": "Vui lòng nhập ngày sinh.",
+    "gender": "Giới Tính",
+    "genderMale": "Nam",
+    "genderFemale": "Nữ",
+    "genderOther": "Khác",
+    "birthTime": "Giờ Sinh (tùy chọn)",
+    "solar": "Dương lịch",
+    "lunar": "Âm lịch"
+  },
+  "pricing": {
+    "title": "Bảng Giá",
+    "subtitle": "Một gói đơn giản — không phải chọn lựa.",
+    "productTitle": "Báo Cáo Chi Tiết",
+    "productDesc": "Phân tích vận mệnh AI chi tiết",
+    "price": "199.000₫",
+    "points": [
+      "6 lĩnh vực: tính cách, sự nghiệp, tình cảm, tài chính, sức khỏe, gia đình",
+      "Phân tích quá khứ → hiện tại → tương lai cho mỗi lĩnh vực",
+      "Giải thích thuật ngữ trong ngữ cảnh với kết luận xác suất",
+      "Tổng hợp vận hạn lớn"
+    ],
+    "freeCta": "Xem kết quả miễn phí trước"
+  },
+  "trust": {
+    "title": "Tin Cậy & An Toàn",
+    "subtitle": "Được thiết kế như công cụ hỗ trợ quyết định an toàn.",
+    "items": [
+      {
+        "icon": "🔒",
+        "title": "Kết Quả Có Thể Tái Tạo",
+        "desc": "Tạo kết quả xác định dựa trên seed hash, đảm bảo nhất quán"
+      },
+      {
+        "icon": "📊",
+        "title": "Ngôn Ngữ Xác Suất",
+        "desc": "Mô tả xu hướng và khả năng thay vì dự đoán tuyệt đối"
+      },
+      {
+        "icon": "⚖️",
+        "title": "Hướng Dẫn Có Trách Nhiệm",
+        "desc": "Nêu rõ không nên dùng làm cơ sở duy nhất cho quyết định quan trọng"
+      }
+    ]
+  },
+  "result": {
+    "loading": "Đang tạo báo cáo…",
+    "errorTitle": "Đã xảy ra lỗi",
+    "retry": "Thử lại",
+    "backHome": "Về Trang Chủ",
+    "ctaBanner": "🔮 Mở Khóa Báo Cáo Đầy Đủ",
+    "ctaLocked": "🔓 Mở Khóa Báo Cáo Đầy Đủ",
+    "ctaSticky": "Xem Báo Cáo Đầy Đủ",
+    "retentionNotice": "Báo cáo miễn phí được lưu trong {days} ngày. Báo cáo trả phí được lưu vĩnh viễn."
+  },
+  "comingSoon": {
+    "title": "Sắp Ra Mắt!",
+    "desc": "Dịch vụ này đang được chuẩn bị.",
+    "back": "Về Trang Chủ"
+  }
+}

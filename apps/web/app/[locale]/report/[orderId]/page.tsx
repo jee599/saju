@@ -2,8 +2,8 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import type { GetReportResponse } from "../../../lib/types";
-import { webApi } from "../../../lib/api";
+import type { GetReportResponse } from "../../../../lib/types";
+import { webApi } from "../../../../lib/api";
 import { ButtonLink, GlassCard, LengthDebugBar, PageContainer, StatusBox } from "../../components/ui";
 
 function splitParagraphs(text: string): string[] {

@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { CalendarType, FortuneInput, Gender } from "../../lib/types";
-import { trackEvent } from "../../lib/analytics";
-import { toInputQuery } from "../../lib/fortune";
+import { useTranslations } from "next-intl";
+import { useRouter } from "../../../i18n/navigation";
+import type { CalendarType, FortuneInput, Gender } from "../../../lib/types";
+import { trackEvent } from "../../../lib/analytics";
+import { toInputQuery } from "../../../lib/fortune";
 import { Button, GlassCard, PageContainer } from "../components/ui";
 
 const defaultInput: FortuneInput = {
@@ -16,6 +17,7 @@ const defaultInput: FortuneInput = {
 };
 
 export default function FreeFortunePage() {
+  const t = useTranslations();
   const router = useRouter();
   const [input, setInput] = useState<FortuneInput>(defaultInput);
   const [submitted, setSubmitted] = useState(false);
@@ -41,28 +43,28 @@ export default function FreeFortunePage() {
   return (
     <PageContainer>
       <GlassCard>
-        <p className="heroEyebrow">무료 리포트 입력</p>
-        <h1>기본 정보 입력 후 무료 요약 리포트 확인</h1>
-        <p className="lead">무료 리포트는 짧은 요약만 제공하며, 이후 단일 장문 리포트로 확장할 수 있습니다.</p>
+        <p className="heroEyebrow">{t("hero.eyebrow")}</p>
+        <h1>{t("hero.title")}</h1>
+        <p className="lead">{t("hero.lead")}</p>
 
         <form onSubmit={submit} className="form" noValidate>
           <div className="formGrid cols2">
             <div className="formGroup">
-              <label htmlFor="name">이름</label>
+              <label htmlFor="name">{t("form.name")}</label>
               <input
                 id="name"
                 className={`input ${submitted && !nameValid ? "inputError" : ""}`}
                 value={input.name}
                 onChange={(e) => setInput((prev) => ({ ...prev, name: e.target.value }))}
-                placeholder="홍길동"
+                placeholder={t("form.namePlaceholder")}
                 autoComplete="name"
                 required
               />
-              {submitted && !nameValid ? <p className="errorText">이름은 2자 이상 입력해 주세요.</p> : null}
+              {submitted && !nameValid ? <p className="errorText">{t("form.nameError")}</p> : null}
             </div>
 
             <div className="formGroup">
-              <label htmlFor="birthDate">생년월일</label>
+              <label htmlFor="birthDate">{t("form.birthDate")}</label>
               <input
                 id="birthDate"
                 className={`input ${submitted && !birthDateValid ? "inputError" : ""}`}
@@ -71,11 +73,11 @@ export default function FreeFortunePage() {
                 onChange={(e) => setInput((prev) => ({ ...prev, birthDate: e.target.value }))}
                 required
               />
-              {submitted && !birthDateValid ? <p className="errorText">생년월일을 입력해 주세요.</p> : null}
+              {submitted && !birthDateValid ? <p className="errorText">{t("form.birthDateError")}</p> : null}
             </div>
 
             <div className="formGroup">
-              <label htmlFor="birthTime">출생시간 (선택)</label>
+              <label htmlFor="birthTime">{t("form.birthTime")}</label>
               <input
                 id="birthTime"
                 className="input"
@@ -83,45 +85,44 @@ export default function FreeFortunePage() {
                 value={input.birthTime}
                 onChange={(e) => setInput((prev) => ({ ...prev, birthTime: e.target.value }))}
               />
-              <p className="formHelp muted">미입력 시 중립 시간 기준으로 해석합니다.</p>
+              <p className="formHelp muted">{t("hero.help")}</p>
             </div>
 
             <div className="formGroup">
-              <label htmlFor="gender">성별</label>
+              <label htmlFor="gender">{t("form.gender")}</label>
               <select
                 id="gender"
                 className="select"
                 value={input.gender}
                 onChange={(e) => setInput((prev) => ({ ...prev, gender: e.target.value as Gender }))}
               >
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-                <option value="other">기타</option>
+                <option value="male">{t("form.genderMale")}</option>
+                <option value="female">{t("form.genderFemale")}</option>
+                <option value="other">{t("form.genderOther")}</option>
               </select>
             </div>
 
             <div className="formGroup">
-              <label htmlFor="calendarType">달력 유형</label>
+              <label htmlFor="calendarType">{t("form.solar")}/{t("form.lunar")}</label>
               <select
                 id="calendarType"
                 className="select"
                 value={input.calendarType}
                 onChange={(e) => setInput((prev) => ({ ...prev, calendarType: e.target.value as CalendarType }))}
               >
-                <option value="solar">양력</option>
-                <option value="lunar">음력</option>
+                <option value="solar">{t("form.solar")}</option>
+                <option value="lunar">{t("form.lunar")}</option>
               </select>
             </div>
           </div>
 
           <div className="buttonRow desktopOnly">
-            <Button type="submit" size="lg" disabled={!canSubmit}>무료 리포트 생성</Button>
+            <Button type="submit" size="lg" disabled={!canSubmit}>{t("hero.cta")}</Button>
           </div>
 
           <div className="stickyCta">
             <div className="stickyCtaInner">
-              <p className="muted">입력 완료 후 무료 리포트를 즉시 생성합니다.</p>
-              <Button type="submit" size="lg" full disabled={!canSubmit}>무료 리포트 생성</Button>
+              <Button type="submit" size="lg" full disabled={!canSubmit}>{t("hero.cta")}</Button>
             </div>
           </div>
         </form>

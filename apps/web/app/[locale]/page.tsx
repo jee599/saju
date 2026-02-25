@@ -1,41 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { CalendarType, FortuneInput, Gender } from "../lib/types";
-import { trackEvent } from "../lib/analytics";
-import { toInputQuery } from "../lib/fortune";
+import { useTranslations } from "next-intl";
+import { useRouter } from "../../i18n/navigation";
+import type { CalendarType, FortuneInput, Gender } from "../../lib/types";
+import { trackEvent } from "../../lib/analytics";
+import { toInputQuery } from "../../lib/fortune";
 import { Button, ButtonLink, GlassCard, PageContainer, SectionTitle } from "./components/ui";
-
-const pricing = {
-  title: "장문 리포트",
-  price: "₩12,900",
-  desc: "대화형 한국어 장문 해설",
-  points: [
-    "성격/직업/연애/금전/건강/가족·배우자 6개 도메인",
-    "도메인별 과거→현재→미래 흐름 설명",
-    "용어 의미를 문장 안에서 풀어주는 확률형 결론",
-    "마지막 대운 타임라인 정리"
-  ]
-} as const;
-
-const trustItems = [
-  {
-    icon: "🔒",
-    title: "재현성 확보",
-    desc: "입력값 해시 기반의 결정론적(seed) 생성으로 같은 입력에 같은 결과"
-  },
-  {
-    icon: "📊",
-    title: "확률 기반 표현",
-    desc: "확정 예언형 문구 대신 가능성·경향 중심으로 서술"
-  },
-  {
-    icon: "⚖️",
-    title: "책임 있는 안내",
-    desc: "중요 의사결정 단독 근거 사용 금지 원칙을 전면 고지"
-  }
-] as const;
 
 const defaultInput: FortuneInput = {
   name: "",
@@ -46,6 +17,7 @@ const defaultInput: FortuneInput = {
 };
 
 export default function HomePage() {
+  const t = useTranslations();
   const router = useRouter();
   const [input, setInput] = useState<FortuneInput>(defaultInput);
   const [submitted, setSubmitted] = useState(false);
@@ -68,34 +40,34 @@ export default function HomePage() {
     router.push(`/result?${toInputQuery(input)}`);
   };
 
+  const pricingPoints = t.raw("pricing.points") as string[];
+
   return (
     <PageContainer>
-      {/* ── Hero + Inline Form ── */}
+      {/* Hero + Inline Form */}
       <GlassCard className="heroCard">
-        <p className="heroEyebrow">✦ AI 확률 기반 사주 분석</p>
-        <h1>당신의 사주를 AI가 분석합니다</h1>
-        <p className="lead">
-          전통 명리 해석에 확률 언어를 결합한 무료 요약 리포트를 지금 바로 받아보세요.
-        </p>
+        <p className="heroEyebrow">{t("hero.eyebrow")}</p>
+        <h1>{t("hero.title")}</h1>
+        <p className="lead">{t("hero.lead")}</p>
 
         <form onSubmit={submit} className="heroForm" noValidate>
           <div className="heroFormGrid">
             <div className="heroFormGroup">
-              <label htmlFor="hero-name">이름</label>
+              <label htmlFor="hero-name">{t("form.name")}</label>
               <input
                 id="hero-name"
                 className={`input ${submitted && !nameValid ? "inputError" : ""}`}
                 value={input.name}
                 onChange={(e) => setInput((prev) => ({ ...prev, name: e.target.value }))}
-                placeholder="홍길동"
+                placeholder={t("form.namePlaceholder")}
                 autoComplete="name"
                 required
               />
-              {submitted && !nameValid ? <p className="errorText">이름은 2자 이상 입력해 주세요.</p> : null}
+              {submitted && !nameValid ? <p className="errorText">{t("form.nameError")}</p> : null}
             </div>
 
             <div className="heroFormGroup">
-              <label htmlFor="hero-birthDate">생년월일</label>
+              <label htmlFor="hero-birthDate">{t("form.birthDate")}</label>
               <input
                 id="hero-birthDate"
                 className={`input ${submitted && !birthDateValid ? "inputError" : ""}`}
@@ -104,25 +76,25 @@ export default function HomePage() {
                 onChange={(e) => setInput((prev) => ({ ...prev, birthDate: e.target.value }))}
                 required
               />
-              {submitted && !birthDateValid ? <p className="errorText">생년월일을 입력해 주세요.</p> : null}
+              {submitted && !birthDateValid ? <p className="errorText">{t("form.birthDateError")}</p> : null}
             </div>
 
             <div className="heroFormGroup">
-              <label htmlFor="hero-gender">성별</label>
+              <label htmlFor="hero-gender">{t("form.gender")}</label>
               <select
                 id="hero-gender"
                 className="select"
                 value={input.gender}
                 onChange={(e) => setInput((prev) => ({ ...prev, gender: e.target.value as Gender }))}
               >
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-                <option value="other">기타</option>
+                <option value="male">{t("form.genderMale")}</option>
+                <option value="female">{t("form.genderFemale")}</option>
+                <option value="other">{t("form.genderOther")}</option>
               </select>
             </div>
 
             <div className="heroFormGroup">
-              <label htmlFor="hero-birthTime">출생시간 (선택)</label>
+              <label htmlFor="hero-birthTime">{t("form.birthTime")}</label>
               <input
                 id="hero-birthTime"
                 className="input"
@@ -142,7 +114,7 @@ export default function HomePage() {
                 checked={input.calendarType === "solar"}
                 onChange={() => setInput((prev) => ({ ...prev, calendarType: "solar" as CalendarType }))}
               />
-              양력
+              {t("form.solar")}
             </label>
             <label>
               <input
@@ -152,44 +124,44 @@ export default function HomePage() {
                 checked={input.calendarType === "lunar"}
                 onChange={() => setInput((prev) => ({ ...prev, calendarType: "lunar" as CalendarType }))}
               />
-              음력
+              {t("form.lunar")}
             </label>
           </div>
 
           <div className="heroCta">
             <Button type="submit" size="lg" disabled={!canSubmit}>
-              ✦ 무료 리포트 시작
+              {t("hero.cta")}
             </Button>
           </div>
-          <p className="heroHelp">출생시간 미입력 시 중립 시간 기준으로 해석합니다.</p>
+          <p className="heroHelp">{t("hero.help")}</p>
         </form>
       </GlassCard>
 
-      {/* ── Pricing ── */}
+      {/* Pricing */}
       <GlassCard>
-        <SectionTitle title="요금" subtitle="선택 피로 없이 단일 상품으로 제공됩니다." />
+        <SectionTitle title={t("pricing.title")} subtitle={t("pricing.subtitle")} />
         <div className="pricingGrid">
           <article className="pricingCard">
-            <p className="badge badge-neutral">{pricing.desc}</p>
-            <h3>{pricing.title}</h3>
-            <p className="price">{pricing.price}</p>
+            <p className="badge badge-neutral">{t("pricing.productDesc")}</p>
+            <h3>{t("pricing.productTitle")}</h3>
+            <p className="price">{t("pricing.price")}</p>
             <ul className="flatList compactList">
-              {pricing.points.map((point) => <li key={point}>{point}</li>)}
+              {pricingPoints.map((point: string) => <li key={point}>{point}</li>)}
             </ul>
             <div className="buttonRow">
               <ButtonLink href="/free-fortune" variant="ghost" full>
-                무료 결과 먼저 확인하기
+                {t("pricing.freeCta")}
               </ButtonLink>
             </div>
           </article>
         </div>
       </GlassCard>
 
-      {/* ── Trust ── */}
+      {/* Trust */}
       <GlassCard>
-        <SectionTitle title="신뢰 안내" subtitle="의사결정 보조 도구로 안전하게 사용할 수 있도록 설계했습니다." />
+        <SectionTitle title={t("trust.title")} subtitle={t("trust.subtitle")} />
         <div className="trustGrid">
-          {trustItems.map((item) => (
+          {(t.raw("trust.items") as Array<{ icon: string; title: string; desc: string }>).map((item) => (
             <div key={item.title} className="trustItem">
               <div className="trustIcon">{item.icon}</div>
               <div>

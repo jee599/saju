@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { Link } from "../../../i18n/navigation";
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
-import type { ReportLengthInfo } from "../../lib/reportLength";
+import type { ReportLengthInfo } from "../../../lib/reportLength";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
@@ -70,10 +70,10 @@ export function StatusBox({
 
 export function LengthDebugBar({ values }: { values: Array<{ label: string; info: ReportLengthInfo }> }) {
   return (
-    <aside className="debugLengthBar" aria-label="길이 디버그 정보">
+    <aside className="debugLengthBar" aria-label="debug length info">
       {values.map(({ label, info }) => (
         <p key={label} className={cn("debugLengthItem", info.inRange ? "debugOk" : "debugWarn")}>
-          {label} {info.count}자 ({info.min}~{info.max})
+          {label} {info.count} ({info.min}~{info.max})
         </p>
       ))}
     </aside>
