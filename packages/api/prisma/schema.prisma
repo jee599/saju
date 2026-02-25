@@ -49,6 +49,12 @@ model Report {
   disclaimer  String
   generatedAt DateTime @default(now())
 
+  // ── Retention policy ──
+  // 무료: 90일 후 expiresAt 도달 → 자동 삭제 대상
+  // 유료: expiresAt = null → 영구 보관
+  expiresAt   DateTime?
+  deletedAt   DateTime?
+
   order Order @relation(fields: [orderId], references: [id])
 }
 

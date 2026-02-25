@@ -309,6 +309,11 @@ export const generatePreview = (input: FortuneInput): ReportPreview => {
       priceLabel: "₩12,900",
       description: "대화형 장문 해설 + 6개 도메인 + 대운 타임라인"
     },
+    retention: {
+      isPermanent: false,
+      expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+      daysRemaining: 90,
+    },
     debugLengths: {
       free: buildLengthInfo("free", freeText),
       paid: buildLengthInfo("paid", paidText)

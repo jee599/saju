@@ -12,6 +12,7 @@
     "deploy:prod": "pnpm dlx vercel --prod --yes"
   },
   "dependencies": {
+    "@prisma/client": "^6",
     "@saju/shared": "workspace:*",
     "next": "15.5.12",
     "react": "19.0.0",

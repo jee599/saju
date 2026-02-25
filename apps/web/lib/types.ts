@@ -11,6 +11,7 @@ export type {
   ReportTier,
   ReportLengthRule,
   ReportLengthInfo,
+  RetentionInfo,
   FortuneInput,
   FortuneResult,
   PreviewSection,

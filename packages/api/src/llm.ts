@@ -4,6 +4,8 @@ export type LlmUsage = {
   inputTokens?: number;
   outputTokens?: number;
   totalTokens?: number;
+  cacheCreationInputTokens?: number;
+  cacheReadInputTokens?: number;
 };
 
 export type LlmResult = {
@@ -30,6 +32,13 @@ export const callLlm = async (params: {
 
   if (model === "gpt") {
     const apiKey = requireEnv("OPENAI_API_KEY");
+    const openaiModel = process.env.OPENAI_MODEL ?? "gpt-5.2";
+    const isGpt5 = openaiModel.startsWith("gpt-5");
+    // GPT-5+ uses max_completion_tokens and temperature=1 only
+    const tokenParam = isGpt5
+      ? { max_completion_tokens: maxTokens }
+      : { max_tokens: maxTokens };
+
     const resp = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -37,9 +46,11 @@ export const callLlm = async (params: {
         Authorization: `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
-        temperature,
-        max_tokens: maxTokens,
+        model: openaiModel,
+        temperature: isGpt5 ? 1 : temperature,
+        ...tokenParam,
+        // JSON mode — forces valid JSON output, reduces wasted tokens
+        response_format: { type: "json_object" },
         messages: [
           { role: "system", content: system },
           { role: "user", content: user }
@@ -71,20 +82,29 @@ export const callLlm = async (params: {
 
   if (model === "claude") {
     const apiKey = requireEnv("ANTHROPIC_API_KEY");
-    const anthropicModel = process.env.ANTHROPIC_MODEL ?? "claude-3-5-sonnet-20241022";
+    const anthropicModel = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
 
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01"
+        "anthropic-version": "2023-06-01",
+        // Enable prompt caching — caches system prompt across requests
+        "anthropic-beta": "prompt-caching-2024-07-31"
       },
       body: JSON.stringify({
         model: anthropicModel,
         max_tokens: maxTokens,
         temperature,
-        system,
+        // Prompt caching: mark system prompt as cacheable
+        system: [
+          {
+            type: "text",
+            text: system,
+            cache_control: { type: "ephemeral" }
+          }
+        ],
         messages: [{ role: "user", content: user }]
       })
     });
@@ -103,7 +123,9 @@ export const callLlm = async (params: {
           totalTokens:
             typeof json.usage.input_tokens === "number" && typeof json.usage.output_tokens === "number"
               ? json.usage.input_tokens + json.usage.output_tokens
-              : undefined
+              : undefined,
+          cacheCreationInputTokens: json.usage.cache_creation_input_tokens,
+          cacheReadInputTokens: json.usage.cache_read_input_tokens
         }
       : undefined;
 
@@ -119,7 +141,7 @@ export const callLlm = async (params: {
     if (!apiKey) {
       throw new Error("Missing environment variable: GOOGLE_API_KEY (or GEMINI_API_KEY)");
     }
-    const geminiModel = process.env.GEMINI_MODEL ?? "gemini-2.0-flash";
+    const geminiModel = process.env.GEMINI_MODEL ?? "gemini-3-flash-preview";
 
     const resp = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${apiKey}`,
@@ -129,7 +151,12 @@ export const callLlm = async (params: {
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: system }] },
           contents: [{ role: "user", parts: [{ text: user }] }],
-          generationConfig: { temperature, maxOutputTokens: maxTokens }
+          generationConfig: {
+            temperature,
+            maxOutputTokens: maxTokens,
+            // JSON mode — forces valid JSON output
+            responseMimeType: "application/json"
+          }
         })
       }
     );

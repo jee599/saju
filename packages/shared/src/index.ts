@@ -51,6 +51,12 @@ export interface ProductCta {
   description: string;
 }
 
+export interface RetentionInfo {
+  isPermanent: boolean;
+  expiresAt: string | null;
+  daysRemaining: number | null;
+}
+
 export interface ReportPreview {
   seed: number;
   tone: "expert_probability";
@@ -64,6 +70,7 @@ export interface ReportPreview {
     sections: PreviewSection[];
   };
   cta: ProductCta;
+  retention: RetentionInfo;
   debugLengths?: Record<ReportTier, ReportLengthInfo>;
 }
 

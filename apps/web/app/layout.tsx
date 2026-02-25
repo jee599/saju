@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import Link from "next/link";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   title: "사주는 빅데이터 | 확률 기반 명리 리포트",
@@ -10,6 +13,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
+      {GA_ID && (
+        <>
+          <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+          <Script id="gtag-init" strategy="afterInteractive">
+            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
+          </Script>
+        </>
+      )}
       <body>
         <header className="siteHeader">
           <div className="headerInner">
