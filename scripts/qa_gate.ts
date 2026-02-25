@@ -86,7 +86,7 @@ function checksForPhase(phase: number): Array<() => CheckResult> {
         },
         () => {
           const r = run(
-            `DATABASE_URL="file:${resolve(ROOT, "packages/api/prisma/fortune.db")}" pnpm --filter @saju/api exec prisma migrate status`
+            `pnpm --filter @saju/api exec prisma migrate status`
           );
           const hasPending = r.output.includes("have not yet been applied");
           return {

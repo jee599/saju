@@ -44,7 +44,7 @@
 ANTHROPIC_API_KEY=<REDACTED>
 GEMINI_API_KEY=<REDACTED>
 OPENAI_API_KEY=<REDACTED>
-DATABASE_URL="file:./prisma/fortune.db"
+DATABASE_URL="postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-[N]-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
 DEFAULT_LANGUAGE=ko
 ENABLE_COST_TRACKING=true
 ```
