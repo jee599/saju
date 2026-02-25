@@ -18,12 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
             <nav className="topNav" aria-label="주요 메뉴">
               <Link href="/free-fortune">사주</Link>
-              <Link href="/palm">손금(개발중)</Link>
-              <Link href="/name">이름풀이(개발중)</Link>
-              <Link href="/face">관상(개발중)</Link>
-              <Link href="/terms">이용약관</Link>
-              <Link href="/privacy">개인정보</Link>
-              <Link href="/disclaimer">면책고지</Link>
+              <Link href="/palm">손금</Link>
+              <Link href="/name">이름풀이</Link>
+              <Link href="/face">관상</Link>
             </nav>
           </div>
         </header>
@@ -33,6 +30,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <p className="footerTitle">사주는 빅데이터</p>
             <p className="muted">전통 명리 해석 문법과 확률 기반 문장 엔진을 결합한 참고 서비스입니다.</p>
             <p className="muted">의료·법률·투자 판단은 반드시 자격 있는 전문가 자문과 함께 검토해 주세요.</p>
+            <div className="footerLinks">
+              <Link href="/terms">이용약관</Link>
+              <Link href="/privacy">개인정보처리방침</Link>
+              <Link href="/disclaimer">면책고지</Link>
+            </div>
           </div>
         </footer>
       </body>

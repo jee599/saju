@@ -1,4 +1,11 @@
-import { ButtonLink, GlassCard, PageContainer, SectionTitle } from "./components/ui";
+"use client";
+
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { CalendarType, FortuneInput, Gender } from "../lib/types";
+import { trackEvent } from "../lib/analytics";
+import { toInputQuery } from "../lib/fortune";
+import { Button, ButtonLink, GlassCard, PageContainer, SectionTitle } from "./components/ui";
 
 const pricing = {
   title: "장문 리포트",
@@ -13,45 +20,152 @@ const pricing = {
 } as const;
 
 const trustItems = [
-  "입력값 해시 기반의 결정론적(seed) 생성으로 재현성 확보",
-  "확정 예언형 문구 대신 가능성·경향 중심 표현 적용",
-  "중요 의사결정 단독 근거 사용 금지 원칙을 전면 고지"
+  {
+    icon: "🔒",
+    title: "재현성 확보",
+    desc: "입력값 해시 기반의 결정론적(seed) 생성으로 같은 입력에 같은 결과"
+  },
+  {
+    icon: "📊",
+    title: "확률 기반 표현",
+    desc: "확정 예언형 문구 대신 가능성·경향 중심으로 서술"
+  },
+  {
+    icon: "⚖️",
+    title: "책임 있는 안내",
+    desc: "중요 의사결정 단독 근거 사용 금지 원칙을 전면 고지"
+  }
 ] as const;
 
+const defaultInput: FortuneInput = {
+  name: "",
+  birthDate: "",
+  birthTime: "",
+  gender: "male",
+  calendarType: "solar"
+};
+
 export default function HomePage() {
+  const router = useRouter();
+  const [input, setInput] = useState<FortuneInput>(defaultInput);
+  const [submitted, setSubmitted] = useState(false);
+
+  const nameValid = input.name.trim().length >= 2;
+  const birthDateValid = Boolean(input.birthDate);
+  const canSubmit = useMemo(() => nameValid && birthDateValid, [nameValid, birthDateValid]);
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    setSubmitted(true);
+    if (!canSubmit) return;
+
+    trackEvent("hero_form_submit", {
+      hasBirthTime: Boolean(input.birthTime),
+      calendarType: input.calendarType,
+      gender: input.gender
+    });
+
+    router.push(`/result?${toInputQuery(input)}`);
+  };
+
   return (
     <PageContainer>
-      <GlassCard>
-        <SectionTitle title="버전 선택" subtitle="버튼 문제를 해결했습니다. 아래에서 4개 버전을 내부 페이지로 바로 선택할 수 있습니다." />
-        <div className="buttonRow">
-          <ButtonLink href="/variants" size="lg">4개 버전 선택 페이지로 이동</ButtonLink>
-          <ButtonLink href="/free-fortune" size="lg" variant="ghost">기본 버전 바로 시작</ButtonLink>
-        </div>
-      </GlassCard>
-
+      {/* ── Hero + Inline Form ── */}
       <GlassCard className="heroCard">
-        <div className="heroMain">
-          <p className="heroEyebrow">Professional Myeongri Report</p>
-          <h1>명리 해석의 깊이는 유지하고, 문장은 더 대화형으로</h1>
-          <p className="lead">
-            무료 요약으로 현재 흐름을 짧게 확인한 뒤, 단일 장문 리포트에서 성격부터 가족·배우자까지
-            과거, 현재, 미래를 연결해 읽을 수 있습니다.
-          </p>
-          <div className="buttonRow">
-            <ButtonLink href="/free-fortune" size="lg">무료 리포트 시작</ButtonLink>
-            <ButtonLink href="/disclaimer" size="lg" variant="ghost">해석 원칙 보기</ButtonLink>
+        <p className="heroEyebrow">✦ AI 확률 기반 사주 분석</p>
+        <h1>당신의 사주를 AI가 분석합니다</h1>
+        <p className="lead">
+          전통 명리 해석에 확률 언어를 결합한 무료 요약 리포트를 지금 바로 받아보세요.
+        </p>
+
+        <form onSubmit={submit} className="heroForm" noValidate>
+          <div className="heroFormGrid">
+            <div className="heroFormGroup">
+              <label htmlFor="hero-name">이름</label>
+              <input
+                id="hero-name"
+                className={`input ${submitted && !nameValid ? "inputError" : ""}`}
+                value={input.name}
+                onChange={(e) => setInput((prev) => ({ ...prev, name: e.target.value }))}
+                placeholder="홍길동"
+                autoComplete="name"
+                required
+              />
+              {submitted && !nameValid ? <p className="errorText">이름은 2자 이상 입력해 주세요.</p> : null}
+            </div>
+
+            <div className="heroFormGroup">
+              <label htmlFor="hero-birthDate">생년월일</label>
+              <input
+                id="hero-birthDate"
+                className={`input ${submitted && !birthDateValid ? "inputError" : ""}`}
+                type="date"
+                value={input.birthDate}
+                onChange={(e) => setInput((prev) => ({ ...prev, birthDate: e.target.value }))}
+                required
+              />
+              {submitted && !birthDateValid ? <p className="errorText">생년월일을 입력해 주세요.</p> : null}
+            </div>
+
+            <div className="heroFormGroup">
+              <label htmlFor="hero-gender">성별</label>
+              <select
+                id="hero-gender"
+                className="select"
+                value={input.gender}
+                onChange={(e) => setInput((prev) => ({ ...prev, gender: e.target.value as Gender }))}
+              >
+                <option value="male">남성</option>
+                <option value="female">여성</option>
+                <option value="other">기타</option>
+              </select>
+            </div>
+
+            <div className="heroFormGroup">
+              <label htmlFor="hero-birthTime">출생시간 (선택)</label>
+              <input
+                id="hero-birthTime"
+                className="input"
+                type="time"
+                value={input.birthTime}
+                onChange={(e) => setInput((prev) => ({ ...prev, birthTime: e.target.value }))}
+              />
+            </div>
           </div>
-        </div>
-        <div className="heroAside">
-          <h3>핵심 품질 기준</h3>
-          <ul className="flatList">
-            <li>무료 요약 150~620자</li>
-            <li>유료 장문 4800~11000자</li>
-            <li>6개 도메인 + 대운 타임라인 고정 구조</li>
-          </ul>
-        </div>
+
+          <div className="heroFormMeta">
+            <label>
+              <input
+                type="radio"
+                name="calendarType"
+                value="solar"
+                checked={input.calendarType === "solar"}
+                onChange={() => setInput((prev) => ({ ...prev, calendarType: "solar" as CalendarType }))}
+              />
+              양력
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="calendarType"
+                value="lunar"
+                checked={input.calendarType === "lunar"}
+                onChange={() => setInput((prev) => ({ ...prev, calendarType: "lunar" as CalendarType }))}
+              />
+              음력
+            </label>
+          </div>
+
+          <div className="heroCta">
+            <Button type="submit" size="lg" disabled={!canSubmit}>
+              ✦ 무료 리포트 시작
+            </Button>
+          </div>
+          <p className="heroHelp">출생시간 미입력 시 중립 시간 기준으로 해석합니다.</p>
+        </form>
       </GlassCard>
 
+      {/* ── Pricing ── */}
       <GlassCard>
         <SectionTitle title="요금" subtitle="선택 피로 없이 단일 상품으로 제공됩니다." />
         <div className="pricingGrid">
@@ -63,19 +177,28 @@ export default function HomePage() {
               {pricing.points.map((point) => <li key={point}>{point}</li>)}
             </ul>
             <div className="buttonRow">
-              <ButtonLink href="/free-fortune" variant="primary" full>
-                무료 결과 후 결제
+              <ButtonLink href="/free-fortune" variant="ghost" full>
+                무료 결과 먼저 확인하기
               </ButtonLink>
             </div>
           </article>
         </div>
       </GlassCard>
 
+      {/* ── Trust ── */}
       <GlassCard>
-        <SectionTitle title="신뢰/책임 안내" subtitle="의사결정 보조 도구로 안전하게 사용할 수 있도록 설계했습니다." />
-        <ul className="flatList">
-          {trustItems.map((item) => <li key={item}>{item}</li>)}
-        </ul>
+        <SectionTitle title="신뢰 안내" subtitle="의사결정 보조 도구로 안전하게 사용할 수 있도록 설계했습니다." />
+        <div className="trustGrid">
+          {trustItems.map((item) => (
+            <div key={item.title} className="trustItem">
+              <div className="trustIcon">{item.icon}</div>
+              <div>
+                <p><strong>{item.title}</strong></p>
+                <p>{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </GlassCard>
     </PageContainer>
   );
