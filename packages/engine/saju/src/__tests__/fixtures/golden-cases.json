@@ -1,0 +1,480 @@
+{
+  "$schema": "golden-cases-schema",
+  "version": "1.0.0",
+  "description": "사주(四柱) 계산 골든 테스트 케이스 — 경계값 중심",
+  "methodology": {
+    "primary": "A2: lunar-typescript v1.8.6 (standard time, exact 절기 boundaries)",
+    "secondary": "A2: @fullstackfamily/manseryeok v1.0.7 (진태양시 보정, 약 -32분)",
+    "verification": "A1: 만세력 웹사이트 검증 필요 (TODO)",
+    "timezone": "Asia/Seoul (KST, UTC+9)",
+    "dayBoundary": "midnight (00:00)",
+    "hourSystem": "standard (23:00-01:00 = 子時, day does NOT advance at 23:00)"
+  },
+  "stems": ["갑","을","병","정","무","기","경","신","임","계"],
+  "branches": ["자","축","인","묘","진","사","오","미","신","유","술","해"],
+  "stemsHanja": ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"],
+  "branchesHanja": ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"],
+  "cases": [
+    {
+      "id": "G001",
+      "description": "2024 입춘 당일 오후 — 입춘(17:27 KST) 이후",
+      "input": { "year": 2024, "month": 2, "day": 4, "hour": 18, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "丙寅", "dayPillar": "戊戌", "hourPillar": "辛酉"
+      },
+      "tags": ["입춘", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G002",
+      "description": "2024 입춘 전날",
+      "input": { "year": 2024, "month": 2, "day": 3, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "癸卯", "monthPillar": "乙丑", "dayPillar": "丁酉", "hourPillar": "丙午"
+      },
+      "tags": ["입춘", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G003",
+      "description": "2024 입춘 당일 오전 — 입춘(17:27) 이전, 아직 계묘년",
+      "input": { "year": 2024, "month": 2, "day": 4, "hour": 10, "minute": 0 },
+      "expected": {
+        "yearPillar": "癸卯", "monthPillar": "乙丑", "dayPillar": "戊戌", "hourPillar": "丁巳"
+      },
+      "tags": ["입춘", "boundary", "critical"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok says 甲辰/丙寅 — uses day-level 입춘 without exact time"
+    },
+    {
+      "id": "G004",
+      "description": "2025 입춘(23:10 KST) 직전 22:00",
+      "input": { "year": 2025, "month": 2, "day": 3, "hour": 22, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "丁丑", "dayPillar": "癸卯", "hourPillar": "癸亥"
+      },
+      "tags": ["입춘", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G005",
+      "description": "2025 입춘(23:10 KST) 직후 23:30 — 을사년 시작",
+      "input": { "year": 2025, "month": 2, "day": 3, "hour": 23, "minute": 30 },
+      "expected": {
+        "yearPillar": "乙巳", "monthPillar": "戊寅", "dayPillar": "癸卯", "hourPillar": "甲子"
+      },
+      "tags": ["입춘", "야자시", "boundary", "critical"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok says 甲辰/丁丑/癸亥 — 진태양시 보정으로 22:58이 되어 입춘 미통과로 판정"
+    },
+    {
+      "id": "G006",
+      "description": "2023 입춘(11:43 KST) 당일 오후 — 입춘 이후",
+      "input": { "year": 2023, "month": 2, "day": 4, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "癸卯", "monthPillar": "甲寅", "dayPillar": "癸巳", "hourPillar": "戊午"
+      },
+      "tags": ["입춘", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G007",
+      "description": "2023 입춘 전날 — 아직 임인년",
+      "input": { "year": 2023, "month": 2, "day": 3, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "壬寅", "monthPillar": "癸丑", "dayPillar": "壬辰", "hourPillar": "丙午"
+      },
+      "tags": ["입춘", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G010",
+      "description": "야자시 23:00 — 子時 시작, 일주는 당일 유지 (standard)",
+      "input": { "year": 1990, "month": 5, "day": 15, "hour": 23, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚午", "monthPillar": "辛巳", "dayPillar": "庚辰", "hourPillar": "戊子"
+      },
+      "tags": ["야자시", "boundary"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 丁亥 — 진태양시 22:28이므로 아직 亥時"
+    },
+    {
+      "id": "G011",
+      "description": "야자시 23:30",
+      "input": { "year": 1990, "month": 5, "day": 15, "hour": 23, "minute": 30 },
+      "expected": {
+        "yearPillar": "庚午", "monthPillar": "辛巳", "dayPillar": "庚辰", "hourPillar": "戊子"
+      },
+      "tags": ["야자시", "boundary"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 丁亥 — 진태양시 22:58"
+    },
+    {
+      "id": "G012",
+      "description": "자정 직후 00:30 — 일주 바뀜, 子時 유지",
+      "input": { "year": 1990, "month": 5, "day": 16, "hour": 0, "minute": 30 },
+      "expected": {
+        "yearPillar": "庚午", "monthPillar": "辛巳", "dayPillar": "辛巳", "hourPillar": "戊子"
+      },
+      "tags": ["야자시", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G013",
+      "description": "22:59 — 亥時 마지막",
+      "input": { "year": 1990, "month": 5, "day": 15, "hour": 22, "minute": 59 },
+      "expected": {
+        "yearPillar": "庚午", "monthPillar": "辛巳", "dayPillar": "庚辰", "hourPillar": "丁亥"
+      },
+      "tags": ["야자시"],
+      "agreement": "both"
+    },
+    {
+      "id": "G014",
+      "description": "01:00 — 丑時 시작",
+      "input": { "year": 1990, "month": 5, "day": 16, "hour": 1, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚午", "monthPillar": "辛巳", "dayPillar": "辛巳", "hourPillar": "己丑"
+      },
+      "tags": ["야자시"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 戊子 — 진태양시 0:28이므로 아직 子時"
+    },
+    {
+      "id": "G020",
+      "description": "경칩 경계 2024-03-05 12:00 — 卯月 시작",
+      "input": { "year": 2024, "month": 3, "day": 5, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "丁卯", "dayPillar": "戊辰", "hourPillar": "戊午"
+      },
+      "tags": ["절기", "boundary"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 丙寅 — 절기 경계 시각 차이"
+    },
+    {
+      "id": "G021",
+      "description": "경칩 전날 2024-03-04 — 아직 寅月",
+      "input": { "year": 2024, "month": 3, "day": 4, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "丙寅", "dayPillar": "丁卯", "hourPillar": "丙午"
+      },
+      "tags": ["절기", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G022",
+      "description": "소서 2024-07-06",
+      "input": { "year": 2024, "month": 7, "day": 6, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "庚午", "dayPillar": "辛未", "hourPillar": "甲午"
+      },
+      "tags": ["절기", "boundary"],
+      "agreement": "both"
+    },
+    {
+      "id": "G023",
+      "description": "입동 2024-11-07",
+      "input": { "year": 2024, "month": 11, "day": 7, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "乙亥", "dayPillar": "乙亥", "hourPillar": "壬午"
+      },
+      "tags": ["절기", "boundary"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 甲戌 — 입동 절기 시각 차이"
+    },
+    {
+      "id": "G030",
+      "description": "윤년 2024-02-29",
+      "input": { "year": 2024, "month": 2, "day": 29, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "丙寅", "dayPillar": "癸亥", "hourPillar": "戊午"
+      },
+      "tags": ["윤년"],
+      "agreement": "both"
+    },
+    {
+      "id": "G031",
+      "description": "윤년 2000-02-29",
+      "input": { "year": 2000, "month": 2, "day": 29, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "戊寅", "dayPillar": "丁巳", "hourPillar": "丙午"
+      },
+      "tags": ["윤년"],
+      "agreement": "both"
+    },
+    {
+      "id": "G032",
+      "description": "윤년 2024-02-28",
+      "input": { "year": 2024, "month": 2, "day": 28, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "甲辰", "monthPillar": "丙寅", "dayPillar": "壬戌", "hourPillar": "丙午"
+      },
+      "tags": ["윤년"],
+      "agreement": "both"
+    },
+    {
+      "id": "G040",
+      "description": "1970-01-01 00:00 (Unix epoch)",
+      "input": { "year": 1970, "month": 1, "day": 1, "hour": 0, "minute": 0 },
+      "expected": {
+        "yearPillar": "己酉", "monthPillar": "丙子", "dayPillar": "辛巳", "hourPillar": "戊子"
+      },
+      "tags": ["normal", "epoch"],
+      "agreement": "both"
+    },
+    {
+      "id": "G041",
+      "description": "1980-08-15 09:00 (광복절)",
+      "input": { "year": 1980, "month": 8, "day": 15, "hour": 9, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚申", "monthPillar": "甲申", "dayPillar": "庚申", "hourPillar": "辛巳"
+      },
+      "tags": ["normal"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 庚辰 — 진태양시 8:28이므로 辰時"
+    },
+    {
+      "id": "G042",
+      "description": "1985-12-25 12:00 (크리스마스)",
+      "input": { "year": 1985, "month": 12, "day": 25, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "乙丑", "monthPillar": "戊子", "dayPillar": "戊戌", "hourPillar": "戊午"
+      },
+      "tags": ["normal"],
+      "agreement": "both"
+    },
+    {
+      "id": "G043",
+      "description": "1990-05-15 14:30",
+      "input": { "year": 1990, "month": 5, "day": 15, "hour": 14, "minute": 30 },
+      "expected": {
+        "yearPillar": "庚午", "monthPillar": "辛巳", "dayPillar": "庚辰", "hourPillar": "癸未"
+      },
+      "tags": ["normal"],
+      "agreement": "both"
+    },
+    {
+      "id": "G044",
+      "description": "1995-09-20 06:00",
+      "input": { "year": 1995, "month": 9, "day": 20, "hour": 6, "minute": 0 },
+      "expected": {
+        "yearPillar": "乙亥", "monthPillar": "乙酉", "dayPillar": "甲寅", "hourPillar": "丁卯"
+      },
+      "tags": ["normal"],
+      "agreement": "both"
+    },
+    {
+      "id": "G045",
+      "description": "2000-01-01 00:00 (밀레니엄)",
+      "input": { "year": 2000, "month": 1, "day": 1, "hour": 0, "minute": 0 },
+      "expected": {
+        "yearPillar": "己卯", "monthPillar": "丙子", "dayPillar": "戊午", "hourPillar": "壬子"
+      },
+      "tags": ["normal", "millennium"],
+      "agreement": "both"
+    },
+    {
+      "id": "G046",
+      "description": "2000-06-15 15:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 15, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "壬申"
+      },
+      "tags": ["normal"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 辛未 — 진태양시 14:28이므로 未時"
+    },
+    {
+      "id": "G047",
+      "description": "2010-03-10 08:30",
+      "input": { "year": 2010, "month": 3, "day": 10, "hour": 8, "minute": 30 },
+      "expected": {
+        "yearPillar": "庚寅", "monthPillar": "己卯", "dayPillar": "己未", "hourPillar": "戊辰"
+      },
+      "tags": ["normal"],
+      "agreement": "both"
+    },
+    {
+      "id": "G048",
+      "description": "2015-07-20 20:00",
+      "input": { "year": 2015, "month": 7, "day": 20, "hour": 20, "minute": 0 },
+      "expected": {
+        "yearPillar": "乙未", "monthPillar": "癸未", "dayPillar": "丁酉", "hourPillar": "庚戌"
+      },
+      "tags": ["normal"],
+      "agreement": "both"
+    },
+    {
+      "id": "G049",
+      "description": "2020-12-21 11:00 (동지)",
+      "input": { "year": 2020, "month": 12, "day": 21, "hour": 11, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚子", "monthPillar": "戊子", "dayPillar": "戊戌", "hourPillar": "戊午"
+      },
+      "tags": ["normal", "동지"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 丁巳 — 진태양시 10:28이므로 巳時"
+    },
+    {
+      "id": "G050",
+      "description": "2026-02-25 14:00 (오늘)",
+      "input": { "year": 2026, "month": 2, "day": 25, "hour": 14, "minute": 0 },
+      "expected": {
+        "yearPillar": "丙午", "monthPillar": "庚寅", "dayPillar": "庚午", "hourPillar": "癸未"
+      },
+      "tags": ["normal"],
+      "agreement": "both"
+    },
+    {
+      "id": "G060",
+      "description": "2023-12-31 23:30 (연말 야자시)",
+      "input": { "year": 2023, "month": 12, "day": 31, "hour": 23, "minute": 30 },
+      "expected": {
+        "yearPillar": "癸卯", "monthPillar": "甲子", "dayPillar": "癸亥", "hourPillar": "甲子"
+      },
+      "tags": ["연말", "야자시"],
+      "agreement": "lunar-typescript only",
+      "note": "manseryeok: 癸亥 — 진태양시 22:58이므로 亥時"
+    },
+    {
+      "id": "G061",
+      "description": "2024-01-01 00:30 (연초 자시)",
+      "input": { "year": 2024, "month": 1, "day": 1, "hour": 0, "minute": 30 },
+      "expected": {
+        "yearPillar": "癸卯", "monthPillar": "甲子", "dayPillar": "甲子", "hourPillar": "甲子"
+      },
+      "tags": ["연초", "야자시"],
+      "agreement": "both"
+    },
+    {
+      "id": "G062",
+      "description": "2024-01-01 12:00 (연초 정오)",
+      "input": { "year": 2024, "month": 1, "day": 1, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "癸卯", "monthPillar": "甲子", "dayPillar": "甲子", "hourPillar": "庚午"
+      },
+      "tags": ["연초"],
+      "agreement": "both"
+    },
+    {
+      "id": "G070",
+      "description": "12시주 — 子時 00:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 0, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "甲子"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G071",
+      "description": "12시주 — 丑時 02:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 2, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "乙丑"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G072",
+      "description": "12시주 — 寅時 04:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 4, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "丙寅"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G073",
+      "description": "12시주 — 卯時 06:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 6, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "丁卯"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G074",
+      "description": "12시주 — 辰時 08:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 8, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "戊辰"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G075",
+      "description": "12시주 — 巳時 10:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 10, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "己巳"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G076",
+      "description": "12시주 — 午時 12:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 12, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "庚午"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G077",
+      "description": "12시주 — 未時 14:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 14, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "辛未"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G078",
+      "description": "12시주 — 申時 16:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 16, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "壬申"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G079",
+      "description": "12시주 — 酉時 18:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 18, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "癸酉"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G080",
+      "description": "12시주 — 戌時 20:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 20, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "甲戌"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    },
+    {
+      "id": "G081",
+      "description": "12시주 — 亥時 22:00",
+      "input": { "year": 2000, "month": 6, "day": 15, "hour": 22, "minute": 0 },
+      "expected": {
+        "yearPillar": "庚辰", "monthPillar": "壬午", "dayPillar": "甲辰", "hourPillar": "乙亥"
+      },
+      "tags": ["시주"],
+      "agreement": "both"
+    }
+  ]
+}
