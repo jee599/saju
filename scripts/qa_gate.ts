@@ -126,11 +126,18 @@ function checksForPhase(phase: number): Array<() => CheckResult> {
           };
         },
         () => {
-          // Placeholder: LLM 5종 모델 유효 리포트 생성 (Phase 1 후반에 구현)
+          // Prompt v2 QA tests — 프롬프트 구조 + 금지 패턴 + 스키마 검증
+          const r = run("pnpm test -- packages/api/src/__tests__/reportPrompt.test.ts");
+          const passMatch = r.output.match(/(\d+) passed/);
+          const failMatch = r.output.match(/(\d+) failed/);
+          const passed = parseInt(passMatch?.[1] ?? "0", 10);
+          const failed = parseInt(failMatch?.[1] ?? "0", 10);
           return {
-            name: "llm report generation",
-            passed: false,
-            detail: "Not yet implemented — needs 5-model report generation with saju calc integration",
+            name: "prompt v2 QA tests",
+            passed: r.ok && failed === 0 && passed >= 20,
+            detail: r.ok
+              ? `${passed} prompt QA tests passed, ${failed} failed`
+              : r.output.slice(-300),
           };
         },
       ];

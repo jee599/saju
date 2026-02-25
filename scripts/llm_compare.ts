@@ -117,8 +117,12 @@ const KNOWN_COSTS: Record<string, { in: number; out: number }> = {
 };
 const FALLBACK_COST = { in: 1.0, out: 5.0 };
 
-const MAX_TOKENS = 2000;
+const MAX_TOKENS = 4000;
 const CACHE_DIR = join(ROOT, "inbox", "llm-compare", ".cache");
+
+// ── Saju engine integration ─────────────────────────────
+import { calculateFourPillars } from "../packages/engine/saju/src/index";
+import { SYSTEM_PROMPT_V2, buildUserPromptV2 } from "../packages/api/src/reportPrompt";
 
 // ── Fixed test input ──────────────────────────────────────
 const INPUT = {
@@ -129,19 +133,22 @@ const INPUT = {
   calendarType: "solar" as const,
 };
 
-// ── Compact prompt (3 sections – token-efficient) ─────────
+// ── Prompt v2 (saju engine output → LLM) ─────────────────
 const buildPrompt = () => {
-  const system =
-    "사주 분석 전문가. 한국어 존댓말. 단정 금지, 확률/가능성 표현 사용.";
-  const user = [
-    `입력: ${JSON.stringify(INPUT)}`,
-    "",
-    "위 사주 정보 기반 간결한 분석 보고서. 마크다운, 각 섹션 4~6문장:",
-    "",
-    "## 1. 성격 분석",
-    "## 2. 직업/재정",
-    "## 3. 종합 조언",
-  ].join("\n");
+  // Calculate four pillars from engine
+  const sajuResult = calculateFourPillars({
+    year: 1990, month: 5, day: 15, hour: 14, minute: 30,
+  });
+
+  const system = SYSTEM_PROMPT_V2;
+  const user = buildUserPromptV2({
+    input: INPUT,
+    saju: sajuResult,
+    productCode: "standard",
+  });
+
+  console.log(`🔮 사주 엔진 결과: ${sajuResult.pillars.year.fullKr} ${sajuResult.pillars.month.fullKr} ${sajuResult.pillars.day.fullKr} ${sajuResult.pillars.hour.fullKr}`);
+
   return { system, user };
 };
 
