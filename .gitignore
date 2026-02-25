@@ -11,3 +11,29 @@ coverage
 inbox/llm-compare/.cache/
 *.db
 *.db-journal
+
+# Build artifacts
+*.tsbuildinfo
+
+# OpenClaw workspace artifacts (do not commit)
+.openclaw/
+memory/
+inbox/
+blog/
+.agents/
+.claude/
+.pi/
+skills/
+skills-lock.json
+AGENTS.md
+SOUL.md
+USER.md
+TOOLS.md
+IDENTITY.md
+HEARTBEAT.md
+STATUS.md
+claude.md
+scripts/blog_digest.py
+scripts/blog_digest_and_notify.sh
+scripts/claude_logged.sh
+
