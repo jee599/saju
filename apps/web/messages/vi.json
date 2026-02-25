@@ -88,5 +88,39 @@
     "title": "Sắp Ra Mắt!",
     "desc": "Dịch vụ này đang được chuẩn bị.",
     "back": "Về Trang Chủ"
+  },
+  "paywall": {
+    "eyebrow": "Mở Khóa Báo Cáo",
+    "title": "Báo Cáo Chi Tiết",
+    "lead": "Xem báo cáo đầy đủ ngay lập tức qua thanh toán mô phỏng (không tính phí thực).",
+    "productTitle": "Nội Dung Sản Phẩm",
+    "features": [
+      "Báo cáo AI tường thuật chi tiết",
+      "Phân tích tính cách, sự nghiệp, tình yêu, tài chính, sức khỏe & gia đình",
+      "Quá khứ → hiện tại → tương lai + dòng thời gian vận mệnh"
+    ],
+    "back": "Quay Lại Kết Quả",
+    "creating": "Đang tạo đơn hàng...",
+    "confirming": "Đang xác nhận thanh toán...",
+    "submit": "Tiến Hành Thanh Toán",
+    "errorTitle": "Lỗi",
+    "inputError": "Không thể bắt đầu thanh toán vì thiếu dữ liệu đầu vào.",
+    "failError": "Mô phỏng thanh toán thất bại",
+    "loading": "Đang tải trang thanh toán..."
+  },
+  "report": {
+    "eyebrow": "Báo Cáo Đầy Đủ",
+    "title": "Chi Tiết Báo Cáo Đơn Hàng",
+    "lead": "Kết quả đầy đủ được viết theo phong cách giải mệnh chuyên nghiệp và nguyên tắc xác suất.",
+    "newBtn": "Tạo Mới",
+    "errorTitle": "Lỗi",
+    "loading": "Đang tải báo cáo...",
+    "tocTitle": "Mục Lục",
+    "modelLabel": "Chọn Mô Hình",
+    "preferred": "Đề Xuất",
+    "quickNav": "Điều Hướng Nhanh",
+    "checklist": "Danh Sách Hành Động",
+    "debugLabel": "Trả phí",
+    "fetchError": "Không thể tải báo cáo"
   }
 }

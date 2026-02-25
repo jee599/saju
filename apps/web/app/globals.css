@@ -69,10 +69,10 @@ p {
 }
 
 h1 {
-  font-size: clamp(1.76rem, 5.8vw, 2.82rem);
+  font-size: clamp(1.64rem, 4.5vw, 2.82rem);
   font-weight: 780;
   letter-spacing: -0.026em;
-  line-height: 1.19;
+  line-height: 1.22;
 }
 
 h2 {
@@ -135,10 +135,9 @@ textarea {
   width: var(--container);
   margin-inline: auto;
   min-height: 62px;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: 10px 14px;
   padding: 10px 0;
 }
@@ -155,10 +154,10 @@ textarea {
   display: flex;
   align-items: center;
   gap: 6px;
-  width: 100%;
   overflow-x: auto;
   scrollbar-width: none;
   padding-bottom: 2px;
+  justify-self: center;
 }
 
 .topNav::-webkit-scrollbar {
@@ -237,7 +236,6 @@ textarea {
 
 .heroCard {
   position: relative;
-  overflow: hidden;
   text-align: center;
   padding: clamp(32px, 6vw, 56px) clamp(20px, 4.5vw, 40px);
 }
@@ -246,6 +244,8 @@ textarea {
   content: "";
   position: absolute;
   inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
   background:
     radial-gradient(ellipse 500px 300px at 50% 0%, rgba(184, 140, 247, 0.12), transparent 60%),
     radial-gradient(ellipse 300px 200px at 80% 80%, rgba(240, 198, 116, 0.06), transparent 50%);
@@ -261,11 +261,12 @@ textarea {
   background: var(--accent-soft);
   border: 1px solid rgba(184, 140, 247, 0.22);
   color: var(--accent);
-  font-size: 0.78rem;
+  font-size: clamp(0.62rem, 1.8vw, 0.78rem);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   position: relative;
+  max-width: 90%;
 }
 
 .heroCard h1 {
@@ -275,6 +276,9 @@ textarea {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .lead {
@@ -284,6 +288,7 @@ textarea {
   margin-inline: auto;
   line-height: 1.74;
   position: relative;
+  text-wrap: balance;
 }
 
 /* ── Hero Inline Form ───────────────────── */
@@ -1085,13 +1090,12 @@ textarea {
 @media (min-width: 768px) {
   .headerInner {
     min-height: 62px;
-    flex-wrap: nowrap;
     gap: 16px;
   }
 
   .topNav {
-    width: auto;
     justify-content: flex-end;
+    justify-self: end;
     overflow: visible;
     padding-bottom: 0;
   }
@@ -1154,6 +1158,28 @@ textarea {
 }
 
 @media (max-width: 767px) {
+  .headerInner {
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+  }
+
+  .headerInner .brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .headerInner .langSwitcher {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  .topNav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: start;
+  }
+
   .page {
     padding-top: 22px;
     padding-bottom: 122px;

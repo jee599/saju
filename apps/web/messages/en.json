@@ -88,5 +88,39 @@
     "title": "Coming Soon!",
     "desc": "This service is currently being prepared.",
     "back": "Back to Home"
+  },
+  "paywall": {
+    "eyebrow": "Unlock Report",
+    "title": "Full Detailed Report",
+    "lead": "Instantly view the full report via a simulated payment (no real charges).",
+    "productTitle": "What's Included",
+    "features": [
+      "Detailed narrative AI report",
+      "Personality, career, love, finance, health & family analysis",
+      "Past → present → future flow + major fortune timeline"
+    ],
+    "back": "Back to Results",
+    "creating": "Creating order...",
+    "confirming": "Confirming payment...",
+    "submit": "Proceed with Payment",
+    "errorTitle": "Error",
+    "inputError": "Cannot start payment without input data.",
+    "failError": "Payment simulation failed",
+    "loading": "Loading payment page..."
+  },
+  "report": {
+    "eyebrow": "Full Report",
+    "title": "Order Report Details",
+    "lead": "Complete results written with professional fortune-telling narrative and probability-based expressions.",
+    "newBtn": "New Reading",
+    "errorTitle": "Error",
+    "loading": "Loading report...",
+    "tocTitle": "Contents",
+    "modelLabel": "Model Selection",
+    "preferred": "Recommended",
+    "quickNav": "Quick Navigation",
+    "checklist": "Action Checklist",
+    "debugLabel": "Paid",
+    "fetchError": "Failed to load report"
   }
 }

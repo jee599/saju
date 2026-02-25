@@ -88,5 +88,39 @@
     "title": "곧 만나요!",
     "desc": "이 서비스는 현재 준비 중입니다.",
     "back": "홈으로 돌아가기"
+  },
+  "paywall": {
+    "eyebrow": "리포트 잠금 해제",
+    "title": "단일 장문 리포트",
+    "lead": "실제 청구 없는 모의 결제로 전체 리포트를 즉시 확인할 수 있습니다.",
+    "productTitle": "상품 구성",
+    "features": [
+      "대화형 한국어 장문 리포트",
+      "성격·직업·연애·금전·건강·가족·배우자 분석",
+      "각 도메인 과거→현재→미래 + 대운 타임라인"
+    ],
+    "back": "결과로 돌아가기",
+    "creating": "주문 생성 중...",
+    "confirming": "결제 확인 중...",
+    "submit": "모의 결제 진행",
+    "errorTitle": "오류",
+    "inputError": "입력값이 없어 결제를 시작할 수 없습니다.",
+    "failError": "결제 시뮬레이션 실패",
+    "loading": "결제 페이지 로딩중..."
+  },
+  "report": {
+    "eyebrow": "전체 리포트",
+    "title": "주문 리포트 상세",
+    "lead": "전문 명리 해설체와 확률 표현 원칙으로 작성된 전체 결과입니다.",
+    "newBtn": "새로 생성",
+    "errorTitle": "오류",
+    "loading": "리포트 로딩중...",
+    "tocTitle": "목차",
+    "modelLabel": "모델 선택",
+    "preferred": "추천본",
+    "quickNav": "리포트 빠른 이동",
+    "checklist": "실행 체크리스트",
+    "debugLabel": "유료",
+    "fetchError": "리포트 조회 실패"
   }
 }

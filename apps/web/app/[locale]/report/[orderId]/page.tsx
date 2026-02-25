@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import type { GetReportResponse } from "../../../../lib/types";
 import { webApi } from "../../../../lib/api";
 import { ButtonLink, GlassCard, LengthDebugBar, PageContainer, StatusBox } from "../../components/ui";
@@ -31,7 +32,7 @@ function SectionText({ text }: { text: string }) {
   return (
     <div className="reportText">
       {paragraphs.map((p, i) => {
-        // Highlight only the first paragraph’s first sentence.
+        // Highlight only the first paragraph's first sentence.
         if (i === 0) {
           const { lead, rest } = highlightFirstSentence(p);
           return (
@@ -51,6 +52,7 @@ function SectionText({ text }: { text: string }) {
 }
 
 export default function ReportPage() {
+  const t = useTranslations("report");
   const { orderId } = useParams<{ orderId: string }>();
   const [data, setData] = useState<GetReportResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -61,10 +63,10 @@ export default function ReportPage() {
         if (!orderId) return;
         setData(await webApi.report(orderId));
       } catch (e) {
-        setError(e instanceof Error ? e.message : "리포트 조회 실패");
+        setError(e instanceof Error ? e.message : t("fetchError"));
       }
     })();
-  }, [orderId]);
+  }, [orderId, t]);
 
   const [model, setModel] = useState<"preferred" | "gpt" | "claude">("preferred");
 
@@ -81,27 +83,27 @@ export default function ReportPage() {
   return (
     <PageContainer>
       <GlassCard>
-        <p className="heroEyebrow">전체 리포트</p>
-        <h1>주문 리포트 상세</h1>
-        <p className="lead">전문 명리 해설체와 확률 표현 원칙으로 작성된 전체 결과입니다.</p>
+        <p className="heroEyebrow">{t("eyebrow")}</p>
+        <h1>{t("title")}</h1>
+        <p className="lead">{t("lead")}</p>
 
         <div className="buttonRow">
-          <ButtonLink href="/free-fortune" variant="ghost">새로 생성</ButtonLink>
+          <ButtonLink href="/free-fortune" variant="ghost">{t("newBtn")}</ButtonLink>
         </div>
 
-        {error ? <StatusBox title="오류" description={error} tone="error" /> : null}
+        {error ? <StatusBox title={t("errorTitle")} description={error} tone="error" /> : null}
 
         {!data || !report ? (
-          <p className="muted">리포트 로딩중...</p>
+          <p className="muted">{t("loading")}</p>
         ) : (
           <div className="reportLayout">
             <aside className="reportToc">
               <div className="tocCard">
-                <h3>목차</h3>
+                <h3>{t("tocTitle")}</h3>
                 {data.reportsByModel ? (
-                  <div className="buttonRow mt-xs" role="group" aria-label="모델 선택">
+                  <div className="buttonRow mt-xs" role="group" aria-label={t("modelLabel")}>
                     <button className="button ghost" onClick={() => setModel("preferred")} aria-pressed={model === "preferred"}>
-                      추천본
+                      {t("preferred")}
                     </button>
                     <button className="button ghost" onClick={() => setModel("gpt")} aria-pressed={model === "gpt"}>
                       GPT
@@ -111,12 +113,12 @@ export default function ReportPage() {
                     </button>
                   </div>
                 ) : null}
-                <nav aria-label="리포트 목차">
+                <nav aria-label={t("quickNav")}>
                   {toc.map((section) => (
                     <a key={section.key} href={`#${section.key}`}>{section.title}</a>
                   ))}
                 </nav>
-                {report.debugLength && <LengthDebugBar values={[{ label: "유료", info: report.debugLength }]} />}
+                {report.debugLength && <LengthDebugBar values={[{ label: t("debugLabel"), info: report.debugLength }]} />}
               </div>
             </aside>
 
@@ -126,11 +128,11 @@ export default function ReportPage() {
                 <p className="muted">{report.summary}</p>
               </article>
 
-              <nav className="reportJumpNav" aria-label="리포트 빠른 이동">
+              <nav className="reportJumpNav" aria-label={t("quickNav")}>
                 {toc.map((section) => (
                   <a key={section.key} href={`#${section.key}`}>{section.title}</a>
                 ))}
-                <a href="#report-checklist">실행 체크리스트</a>
+                <a href="#report-checklist">{t("checklist")}</a>
               </nav>
 
               {report.sections.map((section) => (
@@ -141,7 +143,7 @@ export default function ReportPage() {
               ))}
 
               <article id="report-checklist" className="reportSection">
-                <h3>실행 체크리스트</h3>
+                <h3>{t("checklist")}</h3>
                 <ul className="flatList compactList">
                   {report.recommendations.map((item) => <li key={item}>{item}</li>)}
                 </ul>

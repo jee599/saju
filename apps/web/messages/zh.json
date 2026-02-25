@@ -88,5 +88,39 @@
     "title": "即将上线！",
     "desc": "此服务正在准备中。",
     "back": "返回首页"
+  },
+  "paywall": {
+    "eyebrow": "解锁报告",
+    "title": "完整详细报告",
+    "lead": "通过模拟支付即时查看完整报告（无实际扣费）。",
+    "productTitle": "产品内容",
+    "features": [
+      "详细AI叙事分析报告",
+      "性格·事业·爱情·财运·健康·家庭分析",
+      "各领域过去→现在→未来 + 大运时间线"
+    ],
+    "back": "返回结果",
+    "creating": "创建订单中...",
+    "confirming": "确认支付中...",
+    "submit": "进行模拟支付",
+    "errorTitle": "错误",
+    "inputError": "缺少输入数据，无法开始支付。",
+    "failError": "支付模拟失败",
+    "loading": "正在加载支付页面..."
+  },
+  "report": {
+    "eyebrow": "完整报告",
+    "title": "订单报告详情",
+    "lead": "以专业命理解说和概率表达原则撰写的完整结果。",
+    "newBtn": "重新生成",
+    "errorTitle": "错误",
+    "loading": "正在加载报告...",
+    "tocTitle": "目录",
+    "modelLabel": "模型选择",
+    "preferred": "推荐版",
+    "quickNav": "快速导航",
+    "checklist": "行动清单",
+    "debugLabel": "付费",
+    "fetchError": "报告加载失败"
   }
 }
