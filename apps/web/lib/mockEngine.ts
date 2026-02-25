@@ -16,8 +16,27 @@ import { buildLengthInfo, countReportChars, REPORT_LENGTH_RULES, type ReportTier
 const PRODUCT_CODE: ProductCode = "full";
 const PRODUCT_PRICE = 12900;
 
-const orders = new Map<string, { order: OrderSummary; input: FortuneInput }>();
-const reports = new Map<string, ReportDetail>();
+type Store = {
+  orders: Map<string, { order: OrderSummary; input: FortuneInput }>;
+  reports: Map<string, ReportDetail>;
+  reportsByModel: Map<string, { gpt: ReportDetail; claude: ReportDetail }>;
+};
+
+const store: Store = (() => {
+  const g = globalThis as any;
+  if (!g.__SAJU_STORE__) {
+    g.__SAJU_STORE__ = {
+      orders: new Map(),
+      reports: new Map(),
+      reportsByModel: new Map()
+    } satisfies Store;
+  }
+  return g.__SAJU_STORE__ as Store;
+})();
+
+const orders = store.orders;
+const reports = store.reports;
+const reportsByModel = store.reportsByModel;
 
 const pick = <T>(arr: readonly T[], seed: number, offset: number): T => arr[(seed + offset) % arr.length] as T;
 
@@ -101,10 +120,10 @@ const domainNarrative = (
 
   if (mustIncludeSikshin) {
     const sikshinSentence = inlineTerm(sikshin, input, domain, "한 번 만든 루틴이 실제 성과로 연결될");
-    return `${commonPast} ${commonNow} ${sikshinSentence} ${termSentenceB} ${commonFuture}`;
+    return [commonPast, commonNow, sikshinSentence, termSentenceB, commonFuture].join("\n\n");
   }
 
-  return `${commonPast} ${commonNow} ${termSentenceA} ${termSentenceB} ${commonFuture}`;
+  return [commonPast, commonNow, termSentenceA, termSentenceB, commonFuture].join("\n\n");
 };
 
 const buildFreeDraft = (input: FortuneInput): TierDraft => {
@@ -331,19 +350,50 @@ export const createCheckout = (payload: CheckoutCreateRequest): CheckoutCreateRe
   return { order };
 };
 
-export const confirmCheckout = (orderId: string): CheckoutConfirmResponse | null => {
+export const confirmCheckout = async (orderId: string): Promise<CheckoutConfirmResponse | null> => {
   const found = orders.get(orderId);
   if (!found) return null;
+
   const updated: OrderSummary = { ...found.order, status: "confirmed", confirmedAt: new Date().toISOString() };
   orders.set(orderId, { ...found, order: updated });
-  const report = buildReport(updated, found.input);
-  reports.set(orderId, report);
-  return { order: updated, report };
+
+  // Default: existing deterministic report (no cost)
+  const fallback = buildReport(updated, found.input);
+
+  // If keys exist AND compare mode enabled, generate GPT/Claude variants for QA.
+  const compareEnabled = process.env.REPORT_COMPARE_MODE === "1";
+  if (compareEnabled) {
+    try {
+      const { generateDualModelPaidReports, hasLlmKeys } = await import("./llmEngine");
+      if (hasLlmKeys()) {
+        const dual = await generateDualModelPaidReports({ orderId, input: found.input, productCode: updated.productCode });
+        reportsByModel.set(orderId, { gpt: dual.gpt, claude: dual.claude });
+
+        const preferred = dual.preferred === "claude" ? dual.claude : dual.gpt;
+        reports.set(orderId, preferred);
+
+        return {
+          order: updated,
+          report: preferred,
+          reportsByModel: { gpt: dual.gpt, claude: dual.claude }
+        };
+      }
+    } catch {
+      // ignore and fallback
+    }
+  }
+
+  reports.set(orderId, fallback);
+  return { order: updated, report: fallback };
 };
 
 export const getReport = (orderId: string): GetReportResponse | null => {
   const found = orders.get(orderId);
   const report = reports.get(orderId);
   if (!found || !report || found.order.status !== "confirmed") return null;
-  return { order: found.order, report };
+
+  const dual = reportsByModel.get(orderId);
+  return dual
+    ? { order: found.order, report, reportsByModel: { gpt: dual.gpt as any, claude: dual.claude as any } }
+    : { order: found.order, report };
 };

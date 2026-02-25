@@ -17,7 +17,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               사주는 빅데이터
             </Link>
             <nav className="topNav" aria-label="주요 메뉴">
-              <Link href="/free-fortune">무료 리포트</Link>
+              <Link href="/free-fortune">사주</Link>
+              <Link href="/palm">손금(개발중)</Link>
+              <Link href="/name">이름풀이(개발중)</Link>
+              <Link href="/face">관상(개발중)</Link>
               <Link href="/terms">이용약관</Link>
               <Link href="/privacy">개인정보</Link>
               <Link href="/disclaimer">면책고지</Link>

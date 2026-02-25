@@ -602,6 +602,28 @@ textarea {
   line-height: 1.86;
 }
 
+.reportText {
+  margin-top: 10px;
+}
+
+.reportParagraph {
+  margin: 0;
+  margin-top: 12px;
+  white-space: pre-wrap;
+}
+
+.reportMark {
+  background: rgba(255, 214, 102, 0.45);
+  padding: 0.08em 0.2em;
+  border-radius: 0.25em;
+}
+
+@media (prefers-color-scheme: dark) {
+  .reportMark {
+    background: rgba(255, 214, 102, 0.25);
+  }
+}
+
 .reportDisclaimer {
   margin-top: 18px;
   max-width: var(--content-readable);
