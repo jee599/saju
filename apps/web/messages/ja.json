@@ -8,7 +8,8 @@
     "saju": "四柱推命",
     "palm": "手相",
     "name": "姓名判断",
-    "face": "人相"
+    "face": "人相",
+    "compatibility": "相性"
   },
   "footer": {
     "brand": "FateSaju",
@@ -122,5 +123,27 @@
     "checklist": "実行チェックリスト",
     "debugLabel": "有料",
     "fetchError": "レポートの取得に失敗しました"
+  },
+  "compatibility": {
+    "eyebrow": "✦ AI相性分析",
+    "title": "二人の相性をAIが分析します",
+    "lead": "生年月日だけで相性スコアと関係の傾向を確認できます。",
+    "personA": "自分",
+    "personB": "相手",
+    "submit": "相性を見る",
+    "loading": "相性分析中...",
+    "resultTitle": "相性結果",
+    "score": "相性スコア",
+    "strengths": "強み",
+    "challenges": "注意ポイント",
+    "advice": "関係アドバイス",
+    "shareTitle": "AI相性結果",
+    "trySaju": "四柱推命も試す",
+    "retry": "再試行",
+    "errorGeneric": "相性分析に失敗しました。"
+  },
+  "share": {
+    "share": "共有",
+    "copied": "コピー済み！"
   }
 }

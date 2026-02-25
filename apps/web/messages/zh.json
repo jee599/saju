@@ -8,7 +8,8 @@
     "saju": "四柱命理",
     "palm": "手相",
     "name": "姓名分析",
-    "face": "面相"
+    "face": "面相",
+    "compatibility": "合婚"
   },
   "footer": {
     "brand": "FateSaju",
@@ -122,5 +123,27 @@
     "checklist": "行动清单",
     "debugLabel": "付费",
     "fetchError": "报告加载失败"
+  },
+  "compatibility": {
+    "eyebrow": "✦ AI合婚分析",
+    "title": "AI分析两人的缘分",
+    "lead": "输入生日即可查看两人的合婚分数和关系趋势。",
+    "personA": "我",
+    "personB": "对方",
+    "submit": "查看合婚",
+    "loading": "正在分析合婚...",
+    "resultTitle": "合婚结果",
+    "score": "合婚分数",
+    "strengths": "优势",
+    "challenges": "注意事项",
+    "advice": "关系建议",
+    "shareTitle": "AI合婚结果",
+    "trySaju": "也试试命理分析",
+    "retry": "重试",
+    "errorGeneric": "合婚分析失败。"
+  },
+  "share": {
+    "share": "分享",
+    "copied": "已复制！"
   }
 }

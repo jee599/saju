@@ -8,7 +8,8 @@
     "saju": "Tứ Trụ",
     "palm": "Xem Tay",
     "name": "Phân Tích Tên",
-    "face": "Nhân Tướng"
+    "face": "Nhân Tướng",
+    "compatibility": "Hợp Tuổi"
   },
   "footer": {
     "brand": "FateSaju",
@@ -122,5 +123,27 @@
     "checklist": "Danh Sách Hành Động",
     "debugLabel": "Trả phí",
     "fetchError": "Không thể tải báo cáo"
+  },
+  "compatibility": {
+    "eyebrow": "✦ AI Phân Tích Hợp Tuổi",
+    "title": "AI Phân Tích Độ Hợp Của Bạn",
+    "lead": "Nhập ngày sinh để xem điểm tương hợp và xu hướng mối quan hệ.",
+    "personA": "Bạn",
+    "personB": "Đối phương",
+    "submit": "Xem Hợp Tuổi",
+    "loading": "Đang phân tích...",
+    "resultTitle": "Kết Quả Hợp Tuổi",
+    "score": "Điểm",
+    "strengths": "Điểm Mạnh",
+    "challenges": "Lưu Ý",
+    "advice": "Lời Khuyên",
+    "shareTitle": "Kết Quả AI Hợp Tuổi",
+    "trySaju": "Thử Phân Tích Vận Mệnh",
+    "retry": "Thử Lại",
+    "errorGeneric": "Phân tích thất bại."
+  },
+  "share": {
+    "share": "Chia Sẻ",
+    "copied": "Đã Sao Chép!"
   }
 }

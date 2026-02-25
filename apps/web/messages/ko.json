@@ -8,7 +8,8 @@
     "saju": "사주",
     "palm": "손금",
     "name": "이름풀이",
-    "face": "관상"
+    "face": "관상",
+    "compatibility": "궁합"
   },
   "footer": {
     "brand": "FateSaju",
@@ -122,5 +123,27 @@
     "checklist": "실행 체크리스트",
     "debugLabel": "유료",
     "fetchError": "리포트 조회 실패"
+  },
+  "compatibility": {
+    "eyebrow": "✦ AI 궁합 분석",
+    "title": "두 사람의 궁합을 AI가 분석합니다",
+    "lead": "생년월일만으로 두 사람의 궁합 점수와 관계 경향을 확인해 보세요.",
+    "personA": "나",
+    "personB": "상대방",
+    "submit": "궁합 보기",
+    "loading": "궁합 분석 중...",
+    "resultTitle": "궁합 결과",
+    "score": "궁합 점수",
+    "strengths": "강점",
+    "challenges": "주의 포인트",
+    "advice": "관계 조언",
+    "shareTitle": "AI 궁합 결과",
+    "trySaju": "사주 분석도 해보기",
+    "retry": "다시 시도",
+    "errorGeneric": "궁합 분석에 실패했습니다."
+  },
+  "share": {
+    "share": "공유하기",
+    "copied": "복사됨!"
   }
 }

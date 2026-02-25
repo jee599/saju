@@ -8,7 +8,8 @@
     "saju": "Four Pillars",
     "palm": "Palm Reading",
     "name": "Name Analysis",
-    "face": "Face Reading"
+    "face": "Face Reading",
+    "compatibility": "Compatibility"
   },
   "footer": {
     "brand": "FateSaju",
@@ -122,5 +123,27 @@
     "checklist": "Action Checklist",
     "debugLabel": "Paid",
     "fetchError": "Failed to load report"
+  },
+  "compatibility": {
+    "eyebrow": "✦ AI Compatibility Analysis",
+    "title": "Check Your Compatibility with AI",
+    "lead": "Enter birth dates to see your compatibility score and relationship tendencies.",
+    "personA": "You",
+    "personB": "Partner",
+    "submit": "Check Compatibility",
+    "loading": "Analyzing compatibility...",
+    "resultTitle": "Compatibility Result",
+    "score": "Score",
+    "strengths": "Strengths",
+    "challenges": "Watch Points",
+    "advice": "Relationship Advice",
+    "shareTitle": "AI Compatibility Result",
+    "trySaju": "Try Fortune Analysis",
+    "retry": "Try Again",
+    "errorGeneric": "Compatibility analysis failed."
+  },
+  "share": {
+    "share": "Share",
+    "copied": "Copied!"
   }
 }

@@ -10,6 +10,7 @@ import type {
   GetReportResponse,
   ReportPreview
 } from "./types";
+import type { CompatibilityPerson, CompatibilityResult } from "./compatibilityEngine";
 
 const API_URL = "/api";
 
@@ -99,5 +100,7 @@ export const webApi = {
   reportPreview: (input: FortuneInput) => request<FortuneInput, ReportPreview>("/report/preview", input),
   checkoutCreate: (payload: CheckoutCreateRequest) => request<CheckoutCreateRequest, CheckoutCreateResponse>("/checkout/create", payload),
   checkoutConfirm: (payload: CheckoutConfirmRequest) => request<CheckoutConfirmRequest, CheckoutConfirmResponse>("/checkout/confirm", payload),
-  report: (orderId: string) => request<undefined, GetReportResponse>(`/report/${orderId}`, undefined, "GET")
+  report: (orderId: string) => request<undefined, GetReportResponse>(`/report/${orderId}`, undefined, "GET"),
+  compatibility: (personA: CompatibilityPerson, personB: CompatibilityPerson) =>
+    request<{ personA: CompatibilityPerson; personB: CompatibilityPerson }, CompatibilityResult>("/compatibility", { personA, personB })
 };

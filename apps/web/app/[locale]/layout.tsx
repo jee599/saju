@@ -22,9 +22,27 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const messages = await getMessages({ locale });
   const meta = (messages as any).meta;
+  const title = meta?.title ?? "FateSaju";
+  const description = meta?.description ?? "";
+  const url = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fatesaju.com";
+
   return {
-    title: meta?.title ?? "FateSaju",
-    description: meta?.description ?? "",
+    title,
+    description,
+    metadataBase: new URL(url),
+    openGraph: {
+      title,
+      description,
+      type: "website" as const,
+      siteName: "FateSaju",
+      locale,
+      url,
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
+    },
   };
 }
 
@@ -59,6 +77,7 @@ export default async function LocaleLayout({ children, params }: Props) {
               </Link>
               <nav className="topNav" aria-label="main menu">
                 <Link href="/free-fortune">{t.nav?.saju ?? "Saju"}</Link>
+                <Link href="/compatibility">{t.nav?.compatibility ?? "Compatibility"}</Link>
                 <Link href="/palm">{t.nav?.palm ?? "Palm"}</Link>
                 <Link href="/name">{t.nav?.name ?? "Name"}</Link>
                 <Link href="/face">{t.nav?.face ?? "Face"}</Link>
