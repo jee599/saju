@@ -12,6 +12,7 @@
     "deploy:prod": "pnpm dlx vercel --prod --yes"
   },
   "dependencies": {
+    "@saju/shared": "workspace:*",
     "next": "15.5.12",
     "react": "19.0.0",
     "react-dom": "19.0.0"

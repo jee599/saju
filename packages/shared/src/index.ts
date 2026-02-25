@@ -1,6 +1,25 @@
+// ── Primitives ────────────────────────────────────────────
 export type Gender = "male" | "female" | "other";
 export type CalendarType = "solar" | "lunar";
+export type ProductCode = "standard" | "deep" | "full";
+export type OrderStatus = "created" | "confirmed";
+export type ReportModel = "gpt" | "claude" | "gemini";
+export type ReportTier = "free" | "paid";
 
+// ── Report length (QA / debug) ────────────────────────────
+export interface ReportLengthRule {
+  min: number;
+  max: number;
+  target: number;
+}
+
+export interface ReportLengthInfo extends ReportLengthRule {
+  tier: ReportTier;
+  count: number;
+  inRange: boolean;
+}
+
+// ── Fortune input / result ────────────────────────────────
 export interface FortuneInput {
   name: string;
   birthDate: string; // YYYY-MM-DD
@@ -17,14 +36,13 @@ export interface FortuneResult {
   caution: string;
 }
 
+// ── Preview ───────────────────────────────────────────────
 export interface PreviewSection {
   key: string;
   title: string;
   text: string;
   locked: boolean;
 }
-
-export type ProductCode = "standard" | "deep";
 
 export interface ProductCta {
   code: ProductCode;
@@ -42,23 +60,20 @@ export interface ReportPreview {
     sections: PreviewSection[];
   };
   paid: {
-    standard: {
-      teaser: string;
-      sections: PreviewSection[];
-    };
-    deep: {
-      teaser: string;
-      sections: PreviewSection[];
-    };
+    teaser: string;
+    sections: PreviewSection[];
   };
-  ctas: ProductCta[];
+  cta: ProductCta;
+  debugLengths?: Record<ReportTier, ReportLengthInfo>;
 }
 
+// ── Validation ────────────────────────────────────────────
 export interface ValidationIssue {
   field: string;
   reason: string;
 }
 
+// ── API envelope ──────────────────────────────────────────
 export interface ApiErrorPayload {
   ok: false;
   error: {
@@ -75,8 +90,7 @@ export interface ApiSuccessPayload<T> {
 
 export type ApiResponse<T> = ApiSuccessPayload<T> | ApiErrorPayload;
 
-export type OrderStatus = "created" | "confirmed";
-
+// ── Order ─────────────────────────────────────────────────
 export interface OrderSummary {
   orderId: string;
   productCode: ProductCode;
@@ -86,6 +100,7 @@ export interface OrderSummary {
   confirmedAt?: string;
 }
 
+// ── Checkout ──────────────────────────────────────────────
 export interface CheckoutCreateRequest {
   productCode: ProductCode;
   input: FortuneInput;
@@ -99,6 +114,7 @@ export interface CheckoutConfirmRequest {
   orderId: string;
 }
 
+// ── Report ────────────────────────────────────────────────
 export interface ReportDetail {
   reportId: string;
   orderId: string;
@@ -113,18 +129,47 @@ export interface ReportDetail {
   }>;
   recommendations: string[];
   disclaimer: string;
+  debugLength?: ReportLengthInfo;
+}
+
+export interface ModelReportDetail extends ReportDetail {
+  model: ReportModel;
+  usage?: {
+    inputTokens?: number;
+    outputTokens?: number;
+    totalTokens?: number;
+  };
 }
 
 export interface CheckoutConfirmResponse {
   order: OrderSummary;
   report: ReportDetail;
+  reportsByModel?: { gpt: ModelReportDetail; claude: ModelReportDetail };
 }
 
 export interface GetReportResponse {
   order: OrderSummary;
   report: ReportDetail;
+  reportsByModel?: { gpt: ModelReportDetail; claude: ModelReportDetail };
 }
 
+// ── LLM compare (API server) ─────────────────────────────
+export interface GeneratePaidReportRequest {
+  input: FortuneInput;
+  productCode: ProductCode;
+}
+
+export interface ComparePaidReportResponse {
+  productCode: ProductCode;
+  gpt: ModelReportDetail;
+  claude: ModelReportDetail;
+  notes: {
+    costWarning: string;
+    fixedJasiNotice: string;
+  };
+}
+
+// ── Validation helpers ────────────────────────────────────
 const isDateFormat = (value: string): boolean => /^\d{4}-\d{2}-\d{2}$/.test(value);
 const isTimeFormat = (value: string): boolean => /^\d{2}:\d{2}$/.test(value);
 

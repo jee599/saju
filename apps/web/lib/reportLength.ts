@@ -1,16 +1,6 @@
-export type ReportTier = "free" | "paid";
+import type { ReportTier, ReportLengthRule, ReportLengthInfo } from "@saju/shared";
 
-export interface ReportLengthRule {
-  min: number;
-  max: number;
-  target: number;
-}
-
-export interface ReportLengthInfo extends ReportLengthRule {
-  tier: ReportTier;
-  count: number;
-  inRange: boolean;
-}
+export type { ReportTier, ReportLengthRule, ReportLengthInfo };
 
 export const REPORT_LENGTH_RULES: Record<ReportTier, ReportLengthRule> = {
   free: { min: 150, max: 620, target: 280 },

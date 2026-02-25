@@ -12,6 +12,15 @@
     "typecheck:api": "pnpm --filter @saju/api typecheck",
     "typecheck:mobile": "pnpm --filter @saju/mobile typecheck",
     "typecheck:shared": "pnpm --filter @saju/shared typecheck",
-    "lint": "pnpm -r --if-present run lint"
+    "lint": "pnpm -r --if-present run lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "compare:llm": "pnpm --filter @saju/api exec tsx ../../scripts/llm_compare.ts",
+    "gate:status": "pnpm --filter @saju/api exec tsx ../../scripts/qa_gate.ts --status",
+    "gate:check": "pnpm --filter @saju/api exec -- tsx ../../scripts/qa_gate.ts",
+    "gate:next": "pnpm --filter @saju/api exec tsx ../../scripts/qa_gate.ts --next"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.18"
   }
 }

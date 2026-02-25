@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── Fortune request (입력 기록) ─────────────────────────
+model FortuneRequest {
+  id           String   @id @default(cuid())
+  name         String
+  birthDate    String
+  birthTime    String?
+  gender       String
+  calendarType String
+  createdAt    DateTime @default(now())
+
+  orders    Order[]
+  llmUsages LlmUsage[]
+}
+
+// ── Order (주문) ────────────────────────────────────────
+model Order {
+  id          String   @id @default(cuid())
+  requestId   String
+  productCode String
+  amountKrw   Int
+  status      String   @default("created")
+  createdAt   DateTime @default(now())
+  confirmedAt DateTime?
+
+  request FortuneRequest @relation(fields: [requestId], references: [id])
+  reports Report[]
+}
+
+// ── Report (리포트) ─────────────────────────────────────
+model Report {
+  id          String   @id @default(cuid())
+  orderId     String
+  model       String
+  productCode String
+  headline    String
+  summary     String
+  sectionsJson String
+  recommendationsJson String
+  disclaimer  String
+  generatedAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+// ── LLM Usage (비용 추적) ───────────────────────────────
+model LlmUsage {
+  id          String   @id @default(cuid())
+  requestId   String?
+  provider    String
+  model       String
+  inputTokens  Int?
+  outputTokens Int?
+  totalTokens  Int?
+  durationMs   Int?
+  estimatedCostUsd Float?
+  createdAt   DateTime @default(now())
+
+  request FortuneRequest? @relation(fields: [requestId], references: [id])
+}
+
+// ── Prompt Cache (프롬프트 캐시) ────────────────────────
+model PromptCache {
+  id        String   @id @default(cuid())
+  cacheKey  String   @unique
+  provider  String
+  model     String
+  response  String
+  usageJson String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime?
+}

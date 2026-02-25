@@ -8,3 +8,6 @@ build
 coverage
 .env
 .DS_Store
+inbox/llm-compare/.cache/
+*.db
+*.db-journal

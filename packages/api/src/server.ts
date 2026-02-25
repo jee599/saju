@@ -7,24 +7,43 @@ import type {
   CheckoutConfirmResponse,
   CheckoutCreateRequest,
   CheckoutCreateResponse,
+  ComparePaidReportResponse,
   FortuneInput,
   FortuneResult,
+  GeneratePaidReportRequest,
   GetReportResponse,
+  ModelReportDetail,
   OrderSummary,
   PreviewSection,
   ProductCode,
-  ReportDetail,
-  ReportPreview
+  ProductCta,
+  ReportDetail
 } from "../../shared/src/index.ts";
+
+// Server uses a multi-tier preview structure (standard/deep) distinct from
+// the web app's single-tier ReportPreview in shared.
+type ServerReportPreview = {
+  seed: number;
+  tone: "expert_probability";
+  free: { headline: string; summary: string; sections: PreviewSection[] };
+  paid: {
+    standard: { teaser: string; sections: PreviewSection[] };
+    deep: { teaser: string; sections: PreviewSection[] };
+  };
+  ctas: ProductCta[];
+};
+import { callLlm } from "./llm";
+import { buildPaidReportPrompt, FIXED_JASI_NOTICE_KO } from "./reportPrompt";
 
 const app = Fastify({ logger: true });
 const port = Number(process.env.PORT ?? 3001);
 
 await app.register(cors, { origin: true });
 
-const priceTable: Record<ProductCode, number> = {
+const priceTable: Record<"standard" | "deep" | "full", number> = {
   standard: 4900,
-  deep: 12900
+  deep: 12900,
+  full: 12900
 };
 
 type StoredOrder = {
@@ -133,7 +152,7 @@ const buildSections = (
   });
 };
 
-const generatePreview = (input: FortuneInput): ReportPreview => {
+const generatePreview = (input: FortuneInput): ServerReportPreview => {
   const seed = hashInput(input);
   const freeSections = buildSections(seed, [...periodOptions], insightFragments, actionFragments, false);
   const standardSections = buildSections(seed + 9, [...areaOptions], insightFragments, actionFragments, true);
@@ -334,6 +353,119 @@ app.get<{ Params: { orderId: string } }>("/report/:orderId", async (request, rep
   }
 
   return ok<GetReportResponse>({ order: stored.order, report });
+});
+
+const safeJsonParse = (text: string): unknown => {
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Some models may accidentally wrap with code fences; try a minimal salvage.
+    const trimmed = text.trim();
+    const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+    if (fenceMatch?.[1]) {
+      return JSON.parse(fenceMatch[1]);
+    }
+    throw new Error("JSON_PARSE_FAILED");
+  }
+};
+
+const normalizeToReportDetail = (params: {
+  orderId: string;
+  productCode: ProductCode;
+  generatedAt: string;
+  json: any;
+}): ReportDetail => {
+  const { orderId, productCode, generatedAt, json } = params;
+
+  if (!json || typeof json !== "object") {
+    throw new Error("INVALID_REPORT_JSON");
+  }
+
+  const headline = typeof json.headline === "string" ? json.headline : "맞춤 해석 리포트";
+  const summary = typeof json.summary === "string" ? json.summary : "";
+  const sections = Array.isArray(json.sections) ? json.sections : [];
+  const recommendations = Array.isArray(json.recommendations) ? json.recommendations : [];
+  const disclaimer = typeof json.disclaimer === "string" ? json.disclaimer : "";
+
+  return {
+    reportId: `rpt_${orderId}`,
+    orderId,
+    productCode,
+    generatedAt,
+    headline,
+    summary,
+    sections: sections
+      .filter((s: any) => s && typeof s === "object")
+      .map((s: any) => ({
+        key: String(s.key ?? "section"),
+        title: String(s.title ?? s.key ?? "섹션"),
+        text: String(s.text ?? "")
+      })),
+    recommendations: recommendations.map((r: any) => String(r)),
+    disclaimer
+  };
+};
+
+// Paid report compare endpoint (Claude vs GPT) for QA / tuning.
+app.post<{ Body: GeneratePaidReportRequest }>("/report/compare", async (request, reply) => {
+  const body = request.body;
+  if (!body || !body.input || !body.productCode) {
+    return reply.status(400).send(fail("INVALID_REQUEST", "요청 바디가 누락되었습니다."));
+  }
+
+  if (!Object.keys(priceTable).includes(body.productCode)) {
+    return reply.status(400).send(fail("INVALID_PRODUCT", "지원하지 않는 상품 코드입니다."));
+  }
+
+  if (!isValidFortuneInput(body.input)) {
+    return reply.status(400).send(fail("INVALID_INPUT", "입력값이 유효하지 않습니다."));
+  }
+
+  const { system, user } = buildPaidReportPrompt({ input: body.input, productCode: body.productCode });
+
+  const maxTokens = body.productCode === "deep" ? 6000 : 3500;
+  const generatedAt = new Date().toISOString();
+  const orderId = makeOrderId(body.input);
+
+  try {
+    const [gptRes, claudeRes] = await Promise.all([
+      callLlm({ model: "gpt", system, user, maxTokens, temperature: 0.7 }),
+      callLlm({ model: "claude", system, user, maxTokens, temperature: 0.7 })
+    ]);
+
+    const gptJson = safeJsonParse(gptRes.text);
+    const claudeJson = safeJsonParse(claudeRes.text);
+
+    const gptReport: ModelReportDetail = {
+      ...normalizeToReportDetail({ orderId, productCode: body.productCode, generatedAt, json: gptJson }),
+      model: "gpt",
+      usage: gptRes.usage
+    };
+
+    const claudeReport: ModelReportDetail = {
+      ...normalizeToReportDetail({ orderId, productCode: body.productCode, generatedAt, json: claudeJson }),
+      model: "claude",
+      usage: claudeRes.usage
+    };
+
+    const payload: ComparePaidReportResponse = {
+      productCode: body.productCode,
+      gpt: gptReport,
+      claude: claudeReport,
+      notes: {
+        costWarning:
+          "심화(15k급) 장문 생성은 토큰 사용량이 커서 모델 비용이 증가합니다. 재생성/추가질문을 막으면 비용 폭발을 크게 줄일 수 있습니다.",
+        fixedJasiNotice: FIXED_JASI_NOTICE_KO
+      }
+    };
+
+    return ok(payload);
+  } catch (err: any) {
+    request.log.error({ err }, "report_compare_failed");
+    return reply
+      .status(500)
+      .send(fail("REPORT_GENERATION_FAILED", "리포트 생성에 실패했습니다.", [{ field: "report", reason: String(err?.message ?? err) }]));
+  }
 });
 
 app.listen({ port, host: "0.0.0.0" }).catch((err) => {

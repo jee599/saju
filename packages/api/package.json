@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@fastify/cors": "^10.0.1",
+    "@prisma/client": "^6",
     "@saju/shared": "workspace:*",
-    "fastify": "^5.0.0"
+    "fastify": "^5.0.0",
+    "prisma": "^6"
   },
   "devDependencies": {
     "tsx": "^4.19.2",

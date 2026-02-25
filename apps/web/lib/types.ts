@@ -1,109 +1,31 @@
-import type { ReportLengthInfo, ReportTier } from "./reportLength";
-
-export type Gender = "male" | "female" | "other";
-export type CalendarType = "solar" | "lunar";
-export type ProductCode = "full";
-
-export interface FortuneInput {
-  name: string;
-  birthDate: string;
-  birthTime?: string;
-  gender: Gender;
-  calendarType: CalendarType;
-}
-
-export interface FortuneResult {
-  summary: string;
-  luckyColor: string;
-  luckyNumber: number;
-  traits: string[];
-  caution: string;
-}
-
-export interface PreviewSection {
-  key: string;
-  title: string;
-  text: string;
-  locked: boolean;
-}
-
-export interface ProductCta {
-  code: ProductCode;
-  label: string;
-  priceLabel: string;
-  description: string;
-}
-
-export interface ReportPreview {
-  seed: number;
-  tone: "expert_probability";
-  free: {
-    headline: string;
-    summary: string;
-    sections: PreviewSection[];
-  };
-  paid: {
-    teaser: string;
-    sections: PreviewSection[];
-  };
-  cta: ProductCta;
-  debugLengths: Record<ReportTier, ReportLengthInfo>;
-}
-
-export type OrderStatus = "created" | "confirmed";
-
-export interface OrderSummary {
-  orderId: string;
-  productCode: ProductCode;
-  status: OrderStatus;
-  amountKrw: number;
-  createdAt: string;
-  confirmedAt?: string;
-}
-
-export interface CheckoutCreateRequest {
-  productCode: ProductCode;
-  input: FortuneInput;
-}
-export interface CheckoutCreateResponse {
-  order: OrderSummary;
-}
-export interface CheckoutConfirmRequest {
-  orderId: string;
-}
-
-export interface ReportDetail {
-  reportId: string;
-  orderId: string;
-  productCode: ProductCode;
-  generatedAt: string;
-  headline: string;
-  summary: string;
-  sections: Array<{ key: string; title: string; text: string }>;
-  recommendations: string[];
-  disclaimer: string;
-  debugLength: ReportLengthInfo;
-}
-
-export interface CheckoutConfirmResponse {
-  order: OrderSummary;
-  report: ReportDetail;
-}
-export interface GetReportResponse {
-  order: OrderSummary;
-  report: ReportDetail;
-}
-
-export interface ApiErrorPayload {
-  ok: false;
-  error: {
-    code: string;
-    message: string;
-    details?: Array<{ field: string; reason: string }>;
-  };
-}
-export interface ApiSuccessPayload<T> {
-  ok: true;
-  data: T;
-}
-export type ApiResponse<T> = ApiSuccessPayload<T> | ApiErrorPayload;
+/**
+ * Web app 타입 — @saju/shared 에서 re-export.
+ * 기존 import 경로 (`./types`, `../../lib/types`) 호환 유지.
+ */
+export type {
+  Gender,
+  CalendarType,
+  ProductCode,
+  OrderStatus,
+  ReportModel,
+  ReportTier,
+  ReportLengthRule,
+  ReportLengthInfo,
+  FortuneInput,
+  FortuneResult,
+  PreviewSection,
+  ProductCta,
+  ReportPreview,
+  ValidationIssue,
+  ApiErrorPayload,
+  ApiSuccessPayload,
+  ApiResponse,
+  OrderSummary,
+  CheckoutCreateRequest,
+  CheckoutCreateResponse,
+  CheckoutConfirmRequest,
+  ReportDetail,
+  ModelReportDetail,
+  CheckoutConfirmResponse,
+  GetReportResponse,
+} from "@saju/shared";

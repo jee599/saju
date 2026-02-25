@@ -42,7 +42,7 @@ function ResultInner() {
             <h2>{preview.free.headline}</h2>
             <p className="muted mt-sm">{preview.free.summary}</p>
 
-            <LengthDebugBar values={[{ label: "무료", info: preview.debugLengths.free }, { label: "유료", info: preview.debugLengths.paid }]} />
+            {preview.debugLengths && <LengthDebugBar values={[{ label: "무료", info: preview.debugLengths.free }, { label: "유료", info: preview.debugLengths.paid }]} />}
 
             <div className="sectionStack mt-md">
               {preview.free.sections.map((section) => (
