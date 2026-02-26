@@ -2,7 +2,8 @@
 
 > 기준일: 2026-02-25
 > 대상 스펙: `docs/fortune-engine-v2-spec.md`
-> 현재 레포: `saju-mvp-monorepo` (pnpm workspaces)
+> 현재 레포: `/Users/jidong/saju_global` (pnpm workspaces)
+> **Note:** `~/.openclaw/workspace` is legacy — do NOT use.
 > 실행 계획: `docs/WORKSTREAM_PLAN.md` (Phase 0 workstream 분리/순서/충돌 방지)
 
 ---

@@ -2,6 +2,10 @@
 
 > 작성일: 2026-02-25
 > 목적: Phase 0 기반 정비 작업을 병렬 가능하게 분리하되, 파일 충돌 없이 순차 merge
+>
+> **Canonical project root:** `/Users/jidong/saju_global`
+> **Warning:** `~/.openclaw/workspace` is a legacy path from the OpenClaw agent
+> environment and must NOT be used. All paths below are relative to the canonical root.
 
 ---
 

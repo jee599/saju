@@ -11,7 +11,7 @@
 ### 프로젝트 구조 (모노레포)
 
 ```text
-workspace/
+/Users/jidong/saju_global/          # canonical project root (NOT ~/.openclaw/workspace)
 ├─ apps/web/               # Next.js 프로덕션 앱
 │  ├─ app/api/             # API 라우트 (checkout, fortune, report)
 │  ├─ app/free-fortune/    # 사주 무료 분석 페이지
