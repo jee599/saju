@@ -31,7 +31,7 @@ USER.md
 TOOLS.md
 IDENTITY.md
 HEARTBEAT.md
-STATUS.md
+# STATUS.md is tracked per project; only ignore root-level legacy STATUS.md (none)
 claude.md
 scripts/blog_digest.py
 scripts/blog_digest_and_notify.sh

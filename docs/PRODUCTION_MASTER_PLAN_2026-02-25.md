@@ -1,12 +1,47 @@
-# Fortune Engine v2 → FateSaju 프로덕션 마스터 플랜
+# FateSaju (사주) – 프로덕션 마스터 플랜
 
-> 작성일: 2026-02-25  
-> 목적: Claude Code가 이 문서 하나로 현재 상태를 파악하고, 순서대로 실행할 수 있는 태스크 정의서.  
-> 원칙: QA Gate 통과 전 다음 단계 금지. 한 Phase씩 순서대로.
+- Repo: `jee599/saju`
+- Canonical root: `/Users/jidong/saju_global`
+- Updated: 2026-02-26
+
+목적은 하나다.
+
+AI로 돈 벌 수 있는 사주 제품을 만든다.
+
+원칙은 이것만 지킨다.
+
+QA Gate 통과 전 다음 단계로 안 간다.
+STATUS는 한 장만 유지한다.
+커밋이 생기면 dev_blog에 worklog가 자동으로 남는다.
 
 -----
 
-## 0. 현재 상태 (As-Is)
+## 0) One-liner
+
+사주(四柱) 기반 운세 리포트를 만든다.
+
+무료는 엔진으로, 유료는 LLM으로.
+
+---
+
+## 1) North Star + Metrics
+
+North Star Metric은 유료 결제 완료 건수다.
+
+가드레일은 무료 비용, 실패율, 사용자 완료율이다.
+
+- 결제 완료 / 일
+- free → paywall 진입률
+- paywall → 결제 시작률
+- 결제 시작 → 결제 완료율
+- 무료 1건당 비용(USD)
+- LLM 실패율(429/timeout 포함)
+
+Gate는 숫자가 나오게 만드는 거다.
+
+---
+
+## 2) 현재 상태 (As-Is)
 
 ### 프로젝트 구조 (모노레포)
 
@@ -102,26 +137,59 @@ DB 전환:
 
 -----
 
-## 2. 실행 Phase 정의
+## 3) Architecture snapshot
+
+```text
+/Users/jidong/saju_global/
+├─ apps/web/                 # Next.js 앱(랜딩/입력/결과/리포트)
+├─ packages/engine/saju/     # 엔진(만세력/사주 계산)
+├─ packages/api/             # API(Fastify) + Prisma
+├─ packages/shared/          # 타입/유틸
+├─ scripts/                  # QA gate, 비교 러너 등
+└─ docs/                     # 문서
+```
+
+---
+
+## 4) Phases & Gates
+
 
 ### Phase A: DB 전환 + 인프라 정비
 
-> 목표: 프로덕션 DB 기반 마련. 이후 모든 작업의 토대.
-> Gate 조건: Supabase 연결 + 기존 테스트 전체 통과 + Vercel 배포 확인
+목표는 이거다.
 
-태스크:
-|#|태스크|상세|
-|---:|---|---|
-|A-1|Supabase 프로젝트 생성/연결|PostgreSQL 연결 문자열/환경변수 정리|
-|A-2|Prisma datasource 전환|SQLite → Postgres, 마이그레이션 전략 확정|
-|A-3|로컬/프리뷰/프로덕션 환경 분리|env 규칙/secret 관리|
-|A-4|Vercel 배포 점검|빌드/런타임/환경변수 확인|
+Supabase Postgres로 갈아타고도 테스트/빌드가 안 깨지는 상태.
 
-(이 문서는 사용자가 이어서 Phase A 태스크를 추가 작성 예정)
+Gate는 커맨드로 확인한다.
+
+```bash
+cd /Users/jidong/saju_global
+pnpm test
+pnpm typecheck
+pnpm -C apps/web build
+
+# Supabase Postgres 연결 후
+pnpm --filter @saju/api exec prisma generate
+pnpm --filter @saju/api exec prisma migrate dev --name init_postgres
+```
+
+태스크는 이렇게 쪼갠다.
+
+A-1 Supabase 프로젝트 연결 문자열 확정(DATABASE_URL, DIRECT_URL)
+A-2 Prisma datasource 전환 + migrate
+A-3 Preview/Prod 환경 분리 규칙 확정
+A-4 Vercel 배포에서 env 세팅 검증
+
+문서 링크.
+
+- 실행 가이드: `docs/PHASE_A_DB_MIGRATION_SUPABASE.md`
 
 -----
 
-## 3. 사업성 / 사용성 / 디자인 (Master Plan에 포함되는 공통 기준)
+---
+
+## 5) Business / UX / Design (Gate 포함)
+
 
 ### 3.1 사업성 (Revenue + Cost)
 
@@ -163,7 +231,14 @@ DB 전환:
 
 -----
 
-## 4. Phase B (P0 런칭 블로커) – Business/UX/Design 관점으로 재정의
+---
+
+## 6) Phase B (P0 런칭 블로커)
+
+Phase A가 끝난 뒤에만 한다.
+
+여기부터는 기능이 아니라 런칭이다.
+
 
 > Phase A(DB)가 끝난 뒤에만 착수.
 
