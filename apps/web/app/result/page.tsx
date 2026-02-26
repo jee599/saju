@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import type { ReportPreview } from "../../lib/types";
+import { track } from "../../lib/analytics";
 import { webApi } from "../../lib/api";
 import { toInputFromParams, toInputQuery } from "../../lib/fortune";
 import { ButtonLink, GlassCard, LengthDebugBar, PageContainer, StatusBox } from "../components/ui";
@@ -17,7 +18,9 @@ function ResultInner() {
     (async () => {
       if (!input) return setError("입력값이 없습니다.");
       try {
-        setPreview(await webApi.reportPreview(input));
+        const result = await webApi.reportPreview(input);
+        setPreview(result);
+        track("result_view");
       } catch (e) {
         setError(e instanceof Error ? e.message : "불러오기 실패");
       }

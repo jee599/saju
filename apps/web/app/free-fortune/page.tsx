@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { CalendarType, FortuneInput, Gender } from "../../lib/types";
-import { trackEvent } from "../../lib/analytics";
+import { track } from "../../lib/analytics";
 import { toInputQuery } from "../../lib/fortune";
 import { Button, GlassCard, PageContainer } from "../components/ui";
 
@@ -19,6 +19,13 @@ export default function FreeFortunePage() {
   const router = useRouter();
   const [input, setInput] = useState<FortuneInput>(defaultInput);
   const [submitted, setSubmitted] = useState(false);
+  const inputStarted = useRef(false);
+  const onFirstInteraction = useCallback(() => {
+    if (!inputStarted.current) {
+      inputStarted.current = true;
+      track("input_start");
+    }
+  }, []);
 
   const nameValid = input.name.trim().length >= 2;
   const birthDateValid = Boolean(input.birthDate);
@@ -29,7 +36,7 @@ export default function FreeFortunePage() {
     setSubmitted(true);
     if (!canSubmit) return;
 
-    trackEvent("free_input_submit", {
+    track("input_submit", {
       hasBirthTime: Boolean(input.birthTime),
       calendarType: input.calendarType,
       gender: input.gender
@@ -45,7 +52,7 @@ export default function FreeFortunePage() {
         <h1>기본 정보 입력 후 무료 요약 리포트 확인</h1>
         <p className="lead">무료 리포트는 짧은 요약만 제공하며, 이후 단일 장문 리포트로 확장할 수 있습니다.</p>
 
-        <form onSubmit={submit} className="form" noValidate>
+        <form onSubmit={submit} onFocus={onFirstInteraction} className="form" noValidate>
           <div className="formGrid cols2">
             <div className="formGroup">
               <label htmlFor="name">이름</label>

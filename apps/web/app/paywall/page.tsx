@@ -1,7 +1,8 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { track } from "../../lib/analytics";
 import { webApi } from "../../lib/api";
 import { getPriceLabel, toInputFromParams, toInputQuery } from "../../lib/fortune";
 import { Button, ButtonLink, GlassCard, PageContainer, StatusBox } from "../components/ui";
@@ -16,17 +17,23 @@ function PaywallInner() {
 
   const input = useMemo(() => toInputFromParams(new URLSearchParams(searchParams.toString())), [searchParams]);
 
+  useEffect(() => { track("paywall_view"); }, []);
+
   const checkout = async () => {
     if (!input) return setError("입력값이 없어 결제를 시작할 수 없습니다.");
     try {
       setState("creating");
+      track("checkout_start", { productCode: "full" });
       const created = await webApi.checkoutCreate({ productCode: "full", input });
       setState("confirming");
       const confirmed = await webApi.checkoutConfirm({ orderId: created.order.orderId });
+      track("checkout_success", { orderId: confirmed.order.orderId });
       router.push(`/report/${confirmed.order.orderId}?${toInputQuery(input)}`);
     } catch (e) {
       setState("failed");
-      setError(e instanceof Error ? e.message : "결제 시뮬레이션 실패");
+      const message = e instanceof Error ? e.message : "결제 시뮬레이션 실패";
+      track("checkout_fail", { error: message });
+      setError(message);
     }
   };
 

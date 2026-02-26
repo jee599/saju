@@ -27,10 +27,27 @@ pnpm typecheck
 pnpm -C apps/web build
 ```
 
-## Next Up (P0)
-- Supabase DATABASE_URL/DIRECT_URL 세팅
-- `prisma migrate dev`로 init_postgres 적용
-- Preview/Prod env 분리 규칙 확정
+## Launch Checklist (P0) — launch-first mode (DB migration deferred)
+
+Phase A (Supabase migration) is intentionally deferred. The goal is to ship a
+functional, measurable product on the current stack first.
+
+- [x] QA Gate green: `pnpm test && pnpm typecheck && pnpm -C apps/web build`
+- [x] GA4 funnel events scaffolded (input_start → checkout_success/fail)
+- [x] Analytics no-ops safely without GA_MEASUREMENT_ID
+- [ ] Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` in Vercel env (production)
+- [ ] Verify Vercel deployment builds and serves correctly
+- [ ] Smoke-test full funnel on production URL (input → result → paywall → report)
+- [ ] Confirm GA4 events appear in GA4 DebugView
+- [ ] Add basic error monitoring (Vercel Analytics or Sentry free tier)
+- [ ] Review LLM API key env vars are set in Vercel
+- [ ] DNS / custom domain setup (if applicable)
+
+### Deferred (post-launch)
+- Phase A: Supabase DATABASE_URL/DIRECT_URL + `prisma migrate dev`
+- Rate limiting (IP + fingerprint)
+- Paywall UX (CTA 3x, mobile sticky)
+- i18n, mini-compatibility, design refresh
 
 ## Worklog
 - dev_blog 자동 로그: `/Users/jidong/dev_blog/logs/YYYY-MM-DD/saju-<sha>.md`
