@@ -14,15 +14,16 @@
 | Phase B2: 런칭 직후 | ✅ (코드) | GA4 11 이벤트 + Rate Limit 미들웨어 + 법적 4페이지 + 공유 |
 | Phase C: 디자인+바이럴 | ✅ (코드) | 랜딩v2 + Coming Soon + FAQ + Stats + 로테이팅카피 |
 | Phase D: 글로벌 | ✅ (스캐폴딩) | CountryConfig 3국 + i18n 딕셔너리(ko/en) |
-| Phase E: 캐싱 | 📋 스키마만 | LlmUsage + PromptCache 모델 존재 |
-| Phase F: 리텐션 | 📋 스키마만 | EmailSubscription 모델 존재 |
+| Phase E: 캐싱 | ✅ | Anthropic prompt caching + LLM 사용량 DB 로깅 + 비용 추정 |
+| Phase F: 리텐션 | ✅ (인프라) | 이메일 구독 API + 리포트 보관 크론 + Rate Limit DB 로깅 |
 
 ## QA Gate (2026-02-27 통과)
 
 ```bash
 pnpm test          # 99 tests passed ✅
 pnpm typecheck     # All packages passed ✅
-pnpm -C apps/web build  # 22 routes, 0 errors ✅
+pnpm -C apps/web build  # 24 routes, 0 errors ✅
+vercel --prod      # Deployed ✅ (fatesaju.com + fortunelab.store)
 ```
 
 ## North Star / Guardrails
@@ -32,14 +33,13 @@ pnpm -C apps/web build  # 22 routes, 0 errors ✅
 
 ## 런칭 전 사용자 액션
 
-자세한 내용은 아래 "사용자 액션 아이템" 참조.
-
-1. Supabase 프로젝트 생성 + Prisma migrate 실행
-2. Vercel 환경변수 설정
-3. GA4 Measurement ID 설정
+1. ~~Supabase 프로젝트 생성 + Prisma migrate 실행~~ ✅
+2. ~~Vercel 환경변수 설정~~ ✅
+3. GA4 Measurement ID 설정 (NEXT_PUBLIC_GA_ID)
 4. Toss Payments 키 설정
-5. 도메인 연결
-6. 스모크 테스트
+5. ~~도메인 연결 (fortunelab.store)~~ ✅ DNS 전파 대기 중
+6. 이메일 발송 서비스 연동 (Resend/SendGrid 계정 생성 필요)
+7. 스모크 테스트
 
 ## Worklog
 - dev_blog 자동 로그: `/Users/jidong/dev_blog/logs/YYYY-MM-DD/saju-<sha>.md`
