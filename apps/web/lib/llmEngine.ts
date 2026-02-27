@@ -37,9 +37,13 @@ const callLlm = async (params: {
   user: string;
   maxTokens: number;
   temperature?: number;
+  anthropicModel?: string;
+  geminiModel?: string;
+  openaiModel?: string;
 }): Promise<LlmResult> => {
-  const { model, system, user, maxTokens, temperature = 0.7 } = params;
+  const { model, system, user, maxTokens, temperature = 0.7, anthropicModel, geminiModel, openaiModel } = params;
 
+  // ── OpenAI (GPT) ──
   if (model === "gpt") {
     const apiKey = requireEnv("OPENAI_API_KEY");
     const startMs = Date.now();
@@ -47,7 +51,7 @@ const callLlm = async (params: {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
+        model: openaiModel ?? process.env.OPENAI_MODEL ?? "gpt-5.2",
         temperature,
         max_tokens: maxTokens,
         messages: [
@@ -71,6 +75,43 @@ const callLlm = async (params: {
     return { text, usage, durationMs: gptDuration };
   }
 
+  // ── Google Gemini ──
+  if (model === "gemini") {
+    const apiKey = requireEnv("GOOGLE_API_KEY");
+    const modelId = geminiModel ?? process.env.GEMINI_MODEL ?? "gemini-3.1-pro-preview";
+    const startMs = Date.now();
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: `${system}\n\n---\n\n${user}` }] }],
+          systemInstruction: { parts: [{ text: system }] },
+          generationConfig: {
+            temperature,
+            maxOutputTokens: maxTokens,
+            responseMimeType: "text/plain",
+          },
+        }),
+      }
+    );
+    const durationMs = Date.now() - startMs;
+    if (!resp.ok) throw new Error(`Gemini error: ${resp.status} ${resp.statusText} ${await resp.text().catch(() => "")}`);
+    const json = (await resp.json()) as any;
+    const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (typeof text !== "string") throw new Error("Gemini: missing text");
+    const usage = json?.usageMetadata
+      ? {
+          inputTokens: json.usageMetadata.promptTokenCount,
+          outputTokens: json.usageMetadata.candidatesTokenCount,
+          totalTokens: json.usageMetadata.totalTokenCount,
+        }
+      : undefined;
+    return { text, usage, durationMs };
+  }
+
+  // ── Anthropic (Claude) ──
   const apiKey = requireEnv("ANTHROPIC_API_KEY");
   const startMs = Date.now();
   const resp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -81,7 +122,7 @@ const callLlm = async (params: {
       "anthropic-version": "2023-06-01"
     },
     body: JSON.stringify({
-      model: process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6",
+      model: anthropicModel ?? process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6",
       max_tokens: maxTokens,
       temperature,
       system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
@@ -108,13 +149,19 @@ const callLlm = async (params: {
   return { text, usage, durationMs };
 };
 
-const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: ProductCode }) => {
-  const { input, productCode } = params;
+const MODEL_CHAR_TARGETS: Record<string, number> = {
+  opus: 20000,
+  sonnet: 30000,
+  gpt: 40000,
+};
+
+const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: ProductCode; targetModel?: string; charTarget?: number }) => {
+  const { input, productCode, targetModel } = params;
+  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel ?? "sonnet"] ?? 15000;
 
   const lengthGuide =
-    productCode === "full"
-      ? "유료 기준으로 충분히 길게 작성하세요. 목표: 약 15,000자(±25%) 수준의 한국어 장문."
-      : "유료 기준으로 장문으로 작성하세요.";
+    `유료 기준으로 최대한 길고 상세하게 작성하세요. 목표: 약 ${charTarget.toLocaleString()}자(±15%) 수준의 한국어 장문. ` +
+    `각 섹션마다 최소 ${Math.round(charTarget / 10 / 100) * 100}자 이상 작성하세요.`;
 
   const system =
     "당신은 한국어로 사주/운세 리포트를 쓰는 전문 에디터입니다.\n" +
@@ -195,19 +242,35 @@ const normalizeToReportDetail = (params: {
 };
 
 /** Estimate USD cost based on model and token counts */
-const estimateCostUsd = (provider: string, model: string, usage: LlmUsage): number => {
+export const estimateCostUsd = (provider: string, model: string, usage: LlmUsage): number => {
   const input = usage.inputTokens ?? 0;
   const output = usage.outputTokens ?? 0;
   const cacheWrite = usage.cacheCreationInputTokens ?? 0;
   const cacheRead = usage.cacheReadInputTokens ?? 0;
 
   if (provider === "anthropic") {
+    if (model.includes("opus")) {
+      // Opus 4.6 pricing: $15/M input, $75/M output
+      return (input * 15 + output * 75) / 1_000_000;
+    }
+    if (model.includes("haiku")) {
+      // Haiku 4.5 pricing: $1/M input, $5/M output
+      return (input * 1 + output * 5) / 1_000_000;
+    }
     // Sonnet 4.6 pricing: $3/M input, $15/M output, cache write $3.75/M, cache read $0.30/M
     const regularInput = Math.max(0, input - cacheWrite - cacheRead);
     return (regularInput * 3 + cacheWrite * 3.75 + cacheRead * 0.3 + output * 15) / 1_000_000;
   }
-  // GPT-4.1-mini pricing: $0.40/M input, $1.60/M output
-  return (input * 0.4 + output * 1.6) / 1_000_000;
+  if (provider === "google") {
+    if (model.includes("flash")) {
+      // Gemini Flash pricing: $0.50/M input, $3/M output
+      return (input * 0.5 + output * 3) / 1_000_000;
+    }
+    // Gemini 3.1 Pro pricing: $2/M input, $12/M output
+    return (input * 2 + output * 12) / 1_000_000;
+  }
+  // GPT-5.2 pricing: $1.75/M input, $14/M output
+  return (input * 1.75 + output * 14) / 1_000_000;
 };
 
 /** Log LLM usage to database (fire-and-forget) */
@@ -241,25 +304,176 @@ export const hasLlmKeys = (): boolean => {
   return Boolean(process.env.OPENAI_API_KEY && process.env.ANTHROPIC_API_KEY);
 };
 
+export const hasGeminiKey = (): boolean => {
+  return Boolean(process.env.GOOGLE_API_KEY);
+};
+
+/** Generate a single-model report based on user's model selection */
+export const generateSingleModelReport = async (params: {
+  orderId: string;
+  input: FortuneInput;
+  productCode: ProductCode;
+  targetModel: string; // "opus" | "sonnet" | "gpt" | "gemini" | "gemini-flash"
+  charTarget?: number;
+}): Promise<ModelReportDetail> => {
+  const { orderId, input, productCode, targetModel } = params;
+  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel] ?? 30000;
+  const { system, user } = buildPaidReportPrompt({ input, productCode, targetModel, charTarget });
+
+  const maxTokens = Math.max(8000, Math.round(charTarget / 2.5));
+
+  let llmModel: ReportModel;
+  let anthropicModelId: string | undefined;
+  let geminiModelId: string | undefined;
+  let openaiModelId: string | undefined;
+
+  if (targetModel === "gpt") {
+    llmModel = "gpt";
+    openaiModelId = process.env.OPENAI_MODEL ?? "gpt-5.2";
+  } else if (targetModel === "gemini") {
+    llmModel = "gemini";
+    geminiModelId = "gemini-3.1-pro-preview";
+  } else if (targetModel === "gemini-flash") {
+    llmModel = "gemini";
+    geminiModelId = "gemini-3-flash-preview";
+  } else if (targetModel === "opus") {
+    llmModel = "claude";
+    anthropicModelId = "claude-opus-4-6";
+  } else {
+    llmModel = "claude";
+    anthropicModelId = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
+  }
+
+  const res = await callLlm({
+    model: llmModel, system, user, maxTokens, temperature: 0.7,
+    anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
+  });
+
+  const provider = llmModel === "gpt" ? "openai" : llmModel === "gemini" ? "google" : "anthropic";
+  const modelName = openaiModelId ?? geminiModelId ?? anthropicModelId ?? "unknown";
+  logLlmUsage({ provider, model: modelName, usage: res.usage, durationMs: res.durationMs });
+
+  const json = safeJsonParse(res.text);
+  const base = normalizeToReportDetail({ orderId, productCode, json });
+  return { ...base, model: llmModel, usage: res.usage };
+};
+
+const SECTION_KEYS = [
+  { key: "성격", title: "성격" },
+  { key: "직업", title: "직업" },
+  { key: "연애", title: "연애" },
+  { key: "금전", title: "금전" },
+  { key: "건강", title: "건강" },
+  { key: "가족·배우자", title: "가족·배우자" },
+  { key: "과거", title: "과거" },
+  { key: "현재", title: "현재" },
+  { key: "미래", title: "미래" },
+  { key: "대운 타임라인", title: "대운 타임라인" },
+] as const;
+
+/** Generate report by calling LLM once per section (chunked: 3000자 × 10) */
+export const generateChunkedReport = async (params: {
+  orderId: string;
+  input: FortuneInput;
+  productCode: ProductCode;
+  targetModel: string; // "sonnet" | "gemini-flash"
+}): Promise<ModelReportDetail & { totalCostUsd: number }> => {
+  const { orderId, input, productCode, targetModel } = params;
+  const charPerSection = 3000;
+  const maxTokensPerSection = Math.max(2000, Math.round(charPerSection / 2.5));
+
+  let llmModel: ReportModel;
+  let anthropicModelId: string | undefined;
+  let geminiModelId: string | undefined;
+
+  if (targetModel === "gemini-flash") {
+    llmModel = "gemini";
+    geminiModelId = "gemini-3-flash-preview";
+  } else if (targetModel === "haiku") {
+    llmModel = "claude";
+    anthropicModelId = "claude-haiku-4-5-20251001";
+  } else {
+    llmModel = "claude";
+    anthropicModelId = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
+  }
+
+  const system =
+    "당신은 한국어로 사주/운세 리포트를 쓰는 전문 에디터입니다.\n" +
+    "- 문체: 존댓말, 칼럼형(서사/근거/맥락), 단정 금지(확률/가능성 표현)\n" +
+    "- 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신\n" +
+    "- 출력: 요청된 섹션의 본문 텍스트만 출력 (JSON, 마크다운 금지). 순수 텍스트만.";
+
+  const inputJson = JSON.stringify(input);
+  const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
+  let totalDurationMs = 0;
+
+  const results = await Promise.all(
+    SECTION_KEYS.map(async (sec) => {
+      const userPrompt =
+        `사용자: ${inputJson}\n\n` +
+        `위 사용자의 사주를 바탕으로 "${sec.title}" 섹션을 약 ${charPerSection}자 분량으로 작성해 주세요.\n` +
+        `근거→패턴→리스크→실행 팁 순서로, 구체적 행동 예시 포함.\n` +
+        `본문 텍스트만 출력하세요.`;
+
+      const res = await callLlm({
+        model: llmModel, system, user: userPrompt,
+        maxTokens: maxTokensPerSection, temperature: 0.7,
+        anthropicModel: anthropicModelId, geminiModel: geminiModelId,
+      });
+
+      if (res.usage) {
+        totalUsage.inputTokens = (totalUsage.inputTokens ?? 0) + (res.usage.inputTokens ?? 0);
+        totalUsage.outputTokens = (totalUsage.outputTokens ?? 0) + (res.usage.outputTokens ?? 0);
+        totalUsage.totalTokens = (totalUsage.totalTokens ?? 0) + (res.usage.totalTokens ?? 0);
+      }
+      totalDurationMs += res.durationMs ?? 0;
+
+      return { key: sec.key, title: sec.title, text: res.text.trim() };
+    })
+  );
+
+  const provider = llmModel === "gemini" ? "google" : "anthropic";
+  const modelName = geminiModelId ?? anthropicModelId ?? "unknown";
+  logLlmUsage({ provider, model: modelName, usage: totalUsage, durationMs: totalDurationMs });
+
+  const costUsd = estimateCostUsd(provider, modelName, totalUsage);
+
+  const fullText = results.map((s) => `${s.title}\n${s.text}`).join("\n");
+
+  return {
+    reportId: `rep_${orderId}`,
+    orderId,
+    productCode,
+    generatedAt: new Date().toISOString(),
+    headline: `${input.name}님 사주 분석 리포트`,
+    summary: "10개 섹션 × 3,000자 청크 생성",
+    sections: results,
+    recommendations: [],
+    disclaimer: "본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.",
+    debugLength: buildLengthInfo("paid", fullText),
+    model: llmModel,
+    usage: totalUsage,
+    totalCostUsd: costUsd,
+  };
+};
+
 export const generateDualModelPaidReports = async (params: {
   orderId: string;
   input: FortuneInput;
   productCode: ProductCode;
 }): Promise<{ gpt: ModelReportDetail; claude: ModelReportDetail; preferred: ReportModel }> => {
   const { orderId, input, productCode } = params;
-  const { system, user } = buildPaidReportPrompt({ input, productCode });
+  const { system, user } = buildPaidReportPrompt({ input, productCode, targetModel: "sonnet" });
 
-  // Costs: keep output bounded. (15k chars ~= a few thousand tokens; adjust as needed.)
-  const maxTokens = Number(process.env.REPORT_MAX_TOKENS ?? 6000);
+  const maxTokens = Number(process.env.REPORT_MAX_TOKENS ?? 8000);
 
   const [gptRes, claudeRes] = await Promise.all([
     callLlm({ model: "gpt", system, user, maxTokens, temperature: 0.7 }),
     callLlm({ model: "claude", system, user, maxTokens, temperature: 0.7 })
   ]);
 
-  // Fire-and-forget LLM usage logging
   const anthropicModel = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
-  const openaiModel = process.env.OPENAI_MODEL ?? "gpt-4.1-mini";
+  const openaiModel = process.env.OPENAI_MODEL ?? "gpt-5.2";
   logLlmUsage({ provider: "openai", model: openaiModel, usage: gptRes.usage, durationMs: gptRes.durationMs });
   logLlmUsage({ provider: "anthropic", model: anthropicModel, usage: claudeRes.usage, durationMs: claudeRes.durationMs });
 
@@ -272,11 +486,10 @@ export const generateDualModelPaidReports = async (params: {
   const gpt: ModelReportDetail = { ...gptBase, model: "gpt", usage: gptRes.usage };
   const claude: ModelReportDetail = { ...claudeBase, model: "claude", usage: claudeRes.usage };
 
-  // Heuristic preference: fewer empty sections + closer to 15k target.
   const score = (r: ModelReportDetail) => {
     const empties = r.sections.filter((s) => !s.text || s.text.trim().length < 80).length;
     const chars = countReportChars(r.sections.map((s) => s.text).join("\n"));
-    const target = 15000;
+    const target = 30000;
     const dist = Math.abs(chars - target);
     return -(empties * 5000 + dist);
   };

@@ -17,7 +17,7 @@ const PRODUCT_CODE: ProductCode = "full";
 const PRODUCT_PRICE = 5_900;
 
 type Store = {
-  orders: Map<string, { order: OrderSummary; input: FortuneInput }>;
+  orders: Map<string, { order: OrderSummary; input: FortuneInput; model?: string }>;
   reports: Map<string, ReportDetail>;
   reportsByModel: Map<string, { gpt: ReportDetail; claude: ReportDetail }>;
 };
@@ -339,14 +339,18 @@ const buildReport = (order: OrderSummary, input: FortuneInput): ReportDetail => 
 };
 
 export const createCheckout = (payload: CheckoutCreateRequest): CheckoutCreateResponse => {
+  const modelPrices: Record<string, number> = { opus: 9900, sonnet: 5900, gpt: 3900 };
+  const selectedModel = payload.model ?? "sonnet";
+  const price = modelPrices[selectedModel] ?? PRODUCT_PRICE;
+
   const order: OrderSummary = {
     orderId: `ord_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
     productCode: payload.productCode,
-    amountKrw: PRODUCT_PRICE,
+    amountKrw: price,
     status: "created",
     createdAt: new Date().toISOString()
   };
-  orders.set(order.orderId, { order, input: payload.input });
+  orders.set(order.orderId, { order, input: payload.input, model: selectedModel });
   return { order };
 };
 
@@ -357,43 +361,33 @@ export const confirmCheckout = async (orderId: string): Promise<CheckoutConfirmR
   const updated: OrderSummary = { ...found.order, status: "confirmed", confirmedAt: new Date().toISOString() };
   orders.set(orderId, { ...found, order: updated });
 
-  // Default: existing deterministic report (no cost)
-  const fallback = buildReport(updated, found.input);
-
-  // If keys exist AND compare mode enabled, generate GPT/Claude variants for QA.
-  const compareEnabled = process.env.REPORT_COMPARE_MODE === "1";
-  if (compareEnabled) {
-    try {
-      const { generateDualModelPaidReports, hasLlmKeys } = await import("./llmEngine");
-      if (hasLlmKeys()) {
-        const dual = await generateDualModelPaidReports({ orderId, input: found.input, productCode: updated.productCode });
-        reportsByModel.set(orderId, { gpt: dual.gpt, claude: dual.claude });
-
-        const preferred = dual.preferred === "claude" ? dual.claude : dual.gpt;
-        reports.set(orderId, preferred);
-
-        return {
-          order: updated,
-          report: preferred,
-          reportsByModel: { gpt: dual.gpt, claude: dual.claude }
-        };
-      }
-    } catch {
-      // ignore and fallback
+  // Try LLM generation with user's selected model (no caching — fresh call every time)
+  const selectedModel = found.model ?? "sonnet";
+  try {
+    const { generateSingleModelReport, hasLlmKeys } = await import("./llmEngine");
+    if (hasLlmKeys()) {
+      const report = await generateSingleModelReport({
+        orderId,
+        input: found.input,
+        productCode: updated.productCode,
+        targetModel: selectedModel,
+      });
+      return { order: updated, report };
     }
+  } catch (e) {
+    console.error("[confirmCheckout] LLM generation failed, using fallback:", e);
   }
 
-  reports.set(orderId, fallback);
+  // Fallback: deterministic report (no LLM keys or LLM failed)
+  const fallback = buildReport(updated, found.input);
   return { order: updated, report: fallback };
 };
 
 export const getReport = (orderId: string): GetReportResponse | null => {
   const found = orders.get(orderId);
-  const report = reports.get(orderId);
-  if (!found || !report || found.order.status !== "confirmed") return null;
+  if (!found || found.order.status !== "confirmed") return null;
 
-  const dual = reportsByModel.get(orderId);
-  return dual
-    ? { order: found.order, report, reportsByModel: { gpt: dual.gpt as any, claude: dual.claude as any } }
-    : { order: found.order, report };
+  // Generate fresh report (no caching)
+  const report = buildReport(found.order, found.input);
+  return { order: found.order, report };
 };

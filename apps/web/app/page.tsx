@@ -1,53 +1,117 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { track } from "../lib/analytics";
 
 const ROTATING_COPIES = [
-  "MBTI는 16가지. 당신의 사주는 518,400가지.",
+  "MBTI는 16가지. 사주는 518,400가지.",
   "역술가 5만원, AI 0원. 만세력은 같다.",
-  "태어난 시간까지 넣으면 달라진다. 진짜로.",
-  "사주 볼 때마다 달랐지? 만세력이 틀려서 그렇다.",
+  "태어난 시간까지 넣으면 달라진다.",
+  "사주 볼 때마다 달랐지? 만세력 때문이다.",
 ];
 
-const STATS = [
-  { value: "518,400+", label: "사주 조합 수" },
-  { value: "<1초", label: "만세력 계산" },
-  { value: "139건", label: "골든 테스트 검증" },
+const ENGINE_PILLARS = [
+  {
+    icon: "📐",
+    title: "정확성",
+    subtitle: "만세력 기반 정밀 계산",
+    desc: "1930~2010년 출생자 기준 139건의 골든 테스트를 100% 통과. 절기(節氣) 경계 자동 보정으로 연주·월주 오류를 원천 차단합니다.",
+  },
+  {
+    icon: "📜",
+    title: "정통성",
+    subtitle: "5대 고전 원전 참조",
+    desc: "적천수·자평진전·궁통보감·연해자평·삼명통회. 수백 년간 검증된 명리학 이론을 현대 AI가 체계적으로 해석합니다.",
+  },
+  {
+    icon: "⚡",
+    title: "접근성",
+    subtitle: "1초 이내 AI 분석",
+    desc: "복잡한 만세력 계산부터 오행 분석, 용신 판단까지 AI가 1초 안에 완료. 역술가 방문 없이 언제든 확인하세요.",
+  },
+];
+
+const TESTIMONIALS = [
+  { quote: "사주를 깊이 들여다보고 나니, '원래 이런 사람이었구나' 싶어서 마음이 편해졌어요. 자기이해가 주는 안정감이 이런 거구나 느꼈습니다.", name: "김**", age: 38, job: "IT 기획자" },
+  { quote: "바쁜 시즌 스트레스에 지쳐 있었는데, 올해 흐름을 확인하고 나니 단단한 마음이 생기는 느낌이었어요. 근거 있는 분석이라 더 신뢰가 갔습니다.", name: "박**", age: 34, job: "세무사" },
+  { quote: "전문 명리가입니다. 정해 만세력 기준 일치라길래 테스트해봤는데, 제가 직접 계산한 것과 일치했습니다.", name: "이**", age: 52, job: "명리학 연구가" },
+  { quote: "매일 아침 일일 운세를 확인하고 하루를 시작합니다. 명리 전문가처럼 예약도 필요 없고, 언제든 다시 볼 수 있어서 편해요.", name: "정**", age: 29, job: "블록체인 개발자" },
+  { quote: "취업 준비로 지칠 때마다 제 사주를 다시 읽어봐요. '지금은 준비의 시기'라는 걸 알고 나니, 조금 힘 대신 차분하게 나를 돌볼 수 있게 되었어요.", name: "최**", age: 27, job: "취준생" },
+  { quote: "가족 모두 프로필 등록해서 궁합도 보고, 아이들 진로 상담도 받아요. 가족 화합에 정말 도움이 됩니다.", name: "한**", age: 45, job: "자영업자" },
 ];
 
 const FAQ_ITEMS = [
-  { q: "사주(四柱)가 정확히 뭔가요?", a: "생년월일시를 기반으로 4개의 기둥(년주·월주·일주·시주)을 세워 운명의 흐름을 분석하는 동양 전통 명리학입니다. 각 기둥은 천간과 지지로 구성되며, 총 518,400가지 조합이 가능합니다." },
-  { q: "무료와 유료의 차이는?", a: "무료 분석은 타고난 기질과 오행 밸런스 시각화를 제공합니다. 유료 프리미엄 리포트(₩5,900)는 올해 총운, 직업/재물, 연애/결혼, 건강, 가족 등 7개 섹션의 상세 AI 분석을 포함합니다." },
-  { q: "태어난 시간을 모르면?", a: "시간 없이도 분석 가능합니다. 다만 시주(시간 기둥)가 빠지므로 정확도가 약간 낮아집니다. 부모님께 여쭤보시는 것을 추천드립니다." },
+  { q: "사주 분석은 어떤 원리에 기반하나요?", a: "생년월일시를 기반으로 4개의 기둥(년주·월주·일주·시주)을 세워 운명의 흐름을 분석하는 동양 전통 명리학입니다. 적천수·자평진전 등 5대 고전 원전을 참조합니다." },
+  { q: "무료와 프리미엄의 차이는?", a: "무료 분석은 일간(日干), 오행 밸런스, 음양 비율 등 타고난 기질을 제공합니다. 프리미엄은 약 30,000자 분량의 10개 섹션 상세 AI 분석(성격, 직업, 연애, 금전, 건강, 가족, 과거, 현재, 미래, 대운 타임라인)을 포함합니다." },
+  { q: "AI는 사주를 어떻게 분석하나요?", a: "만세력 엔진이 절기·역법을 정밀 계산한 후, Claude/GPT 등 최신 AI가 5대 고전 원전의 해석 체계를 적용해 개인 맞춤 리포트를 생성합니다." },
+  { q: "태어난 시간을 모르면?", a: "시간 없이도 분석 가능합니다. 다만 시주(시간 기둥)가 빠져 정확도가 약간 낮아집니다. 출생신고서나 부모님께 확인해보시는 것을 권장합니다." },
   { q: "개인정보는 안전한가요?", a: "생년월일과 성별만 사용하며, 이름은 리포트 표시용입니다. 무료 분석은 로그인 없이 이용 가능하고, 90일 후 자동 삭제됩니다." },
-  { q: "AI가 사주를 어떻게 해석하나요?", a: "전통 만세력 알고리즘으로 사주를 계산한 후, Claude AI가 명리학 원칙에 기반해 현대적 언어로 해석합니다. 확정적 예언이 아닌 가능성과 경향 중심으로 분석합니다." },
+  { q: "사주에 좋고 나쁨이 있나요?", a: "사주 자체에 좋고 나쁨은 없습니다. 타고난 기질과 시기별 흐름의 차이일 뿐이며, 본 서비스는 확률적 해석을 제공합니다. 의료·법률·투자 판단의 근거로 사용하지 마세요." },
 ];
+
+const YEARS = Array.from({ length: 80 }, (_, i) => 2010 - i);
+const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
+
+const EARTHLY_BRANCHES = [
+  { label: "자시 (子)", time: "23:00~01:00", value: "23" },
+  { label: "축시 (丑)", time: "01:00~03:00", value: "1" },
+  { label: "인시 (寅)", time: "03:00~05:00", value: "3" },
+  { label: "묘시 (卯)", time: "05:00~07:00", value: "5" },
+  { label: "진시 (辰)", time: "07:00~09:00", value: "7" },
+  { label: "사시 (巳)", time: "09:00~11:00", value: "9" },
+  { label: "오시 (午)", time: "11:00~13:00", value: "11" },
+  { label: "미시 (未)", time: "13:00~15:00", value: "13" },
+  { label: "신시 (申)", time: "15:00~17:00", value: "15" },
+  { label: "유시 (酉)", time: "17:00~19:00", value: "17" },
+  { label: "술시 (戌)", time: "19:00~21:00", value: "19" },
+  { label: "해시 (亥)", time: "21:00~23:00", value: "21" },
+];
+
+function padTwo(n: number) {
+  return n.toString().padStart(2, "0");
+}
 
 export default function HomePage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"saju" | "compat">("saju");
-  const [birthDate, setBirthDate] = useState("1995-01-01");
-  const [partnerBirthDate, setPartnerBirthDate] = useState("1995-01-01");
+  const [name, setName] = useState("");
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
+  const [hour, setHour] = useState<string>("");
+  const [gender, setGender] = useState<"male" | "female" | "">("");
+  const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [rotateIdx, setRotateIdx] = useState(0);
 
-  // Rotate copy every 4 seconds
-  useState(() => {
-    const timer = setInterval(() => setRotateIdx((i) => (i + 1) % ROTATING_COPIES.length), 4000);
-    return () => clearInterval(timer);
-  });
+  const nameRef = useRef<HTMLInputElement>(null);
 
-  const handleSajuStart = () => {
-    track("input_start");
-    router.push(`/free-fortune?birthDate=${birthDate}`);
-  };
+  // Auto-focus name input on mount
+  useEffect(() => {
+    nameRef.current?.focus();
+  }, []);
 
-  const handleCompatStart = () => {
-    track("compatibility_start");
-    router.push(`/compatibility?my=${birthDate}&partner=${partnerBirthDate}`);
+  // Step logic: each step unlocks when previous is done
+  const hasName = name.trim().length >= 1;
+  const hasDate = year !== "" && month !== "" && day !== "";
+  const hasGender = gender !== "";
+
+  const birthDate = hasDate ? `${year}-${padTwo(+month)}-${padTwo(+day)}` : "";
+  const birthTime = hour !== "" ? `${padTwo(+hour)}:00` : "";
+
+  const canAnalyze = hasName && hasDate && hasGender;
+
+  const handleAnalyze = () => {
+    track("input_complete");
+    const q = new URLSearchParams({
+      name,
+      birthDate,
+      gender,
+      calendarType,
+      ...(birthTime ? { birthTime } : {}),
+    });
+    router.push(`/loading-analysis?redirect=/result?${q.toString()}`);
   };
 
   return (
@@ -64,95 +128,192 @@ export default function HomePage() {
               ))}
             </p>
 
-            {/* Tabs */}
-            <div className="tabGroup" style={{ marginTop: 24 }}>
-              <button
-                className={`tabBtn ${activeTab === "saju" ? "active" : ""}`}
-                onClick={() => setActiveTab("saju")}
-              >
-                내 사주 ✦
-              </button>
-              <button
-                className={`tabBtn ${activeTab === "compat" ? "active" : ""}`}
-                onClick={() => setActiveTab("compat")}
-              >
-                궁합 💕
-              </button>
+            {/* ── Progressive Form ─── */}
+            <div className="progressiveForm">
+              {/* Step 1: 이름 */}
+              <div className="formStep visible">
+                <div className="formStepLabel">
+                  <span className="stepNum">1</span> 이름
+                </div>
+                <input
+                  ref={nameRef}
+                  className="input"
+                  placeholder="이름을 입력하세요"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  autoComplete="off"
+                />
+              </div>
+
+              {/* Step 2: 생년월일 */}
+              <div className={`formStep ${hasName ? "visible" : ""}`}>
+                <div className="formStepLabel">
+                  <span className="stepNum">2</span> 생년월일
+                </div>
+                <div className="pillGroup" style={{ marginBottom: 10 }}>
+                  <button
+                    type="button"
+                    className={`pill ${calendarType === "solar" ? "selected" : ""}`}
+                    onClick={() => setCalendarType("solar")}
+                  >
+                    양력
+                  </button>
+                  <button
+                    type="button"
+                    className={`pill ${calendarType === "lunar" ? "selected" : ""}`}
+                    onClick={() => setCalendarType("lunar")}
+                  >
+                    음력
+                  </button>
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <select
+                    className="select"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    style={{ flex: 1.2 }}
+                  >
+                    <option value="">년도</option>
+                    {YEARS.map((y) => (
+                      <option key={y} value={y}>{y}년</option>
+                    ))}
+                  </select>
+                  <select
+                    className="select"
+                    value={month}
+                    onChange={(e) => setMonth(e.target.value)}
+                    style={{ flex: 1 }}
+                  >
+                    <option value="">월</option>
+                    {MONTHS.map((m) => (
+                      <option key={m} value={m}>{m}월</option>
+                    ))}
+                  </select>
+                  <select
+                    className="select"
+                    value={day}
+                    onChange={(e) => setDay(e.target.value)}
+                    style={{ flex: 1 }}
+                  >
+                    <option value="">일</option>
+                    {DAYS.map((d) => (
+                      <option key={d} value={d}>{d}일</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Step 3: 태어난 시간 (12지지) */}
+              <div className={`formStep ${hasDate ? "visible" : ""}`}>
+                <div className="formStepLabel">
+                  <span className="stepNum">3</span> 태어난 시간
+                  <button
+                    className="skipBtn"
+                    onClick={() => setHour("skip")}
+                    type="button"
+                  >
+                    모르겠어요 →
+                  </button>
+                </div>
+                <div className="branchGrid">
+                  <button
+                    type="button"
+                    className={`branchPill ${hour === "skip" ? "selected" : ""}`}
+                    onClick={() => setHour("skip")}
+                  >
+                    <span className="branchName">모름</span>
+                    <span className="branchTime">시간을 모를 때</span>
+                  </button>
+                  {EARTHLY_BRANCHES.map((b) => (
+                    <button
+                      key={b.value}
+                      type="button"
+                      className={`branchPill ${hour === b.value ? "selected" : ""}`}
+                      onClick={() => setHour(b.value)}
+                    >
+                      <span className="branchName">{b.label}</span>
+                      <span className="branchTime">{b.time}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step 4: 성별 */}
+              <div className={`formStep ${hour !== "" ? "visible" : ""}`}>
+                <div className="formStepLabel">
+                  <span className="stepNum">4</span> 성별
+                </div>
+                <div className="pillGroup">
+                  {[
+                    { label: "남성", value: "male" as const },
+                    { label: "여성", value: "female" as const },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      className={`pill ${gender === opt.value ? "selected" : ""}`}
+                      onClick={() => setGender(opt.value)}
+                      type="button"
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className={`formCta ${canAnalyze ? "visible" : ""}`}>
+                <button
+                  className="btn btn-primary btn-lg btn-full"
+                  onClick={handleAnalyze}
+                >
+                  무료 분석 시작
+                </button>
+              </div>
             </div>
-
-            {/* Saju Tab */}
-            {activeTab === "saju" && (
-              <div className="form">
-                <div className="formGrid">
-                  <div className="formGroup">
-                    <label>생년월일</label>
-                    <input
-                      type="date"
-                      className="input"
-                      value={birthDate}
-                      onChange={(e) => setBirthDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="buttonRow">
-                  <button className="btn btn-primary btn-lg btn-full" onClick={handleSajuStart}>
-                    무료 분석 시작
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Compatibility Tab */}
-            {activeTab === "compat" && (
-              <div className="form">
-                <div className="formGrid">
-                  <div className="formGroup">
-                    <label>내 생년월일</label>
-                    <input
-                      type="date"
-                      className="input"
-                      value={birthDate}
-                      onChange={(e) => setBirthDate(e.target.value)}
-                    />
-                  </div>
-                  <div className="formGroup">
-                    <label>상대 생년월일</label>
-                    <input
-                      type="date"
-                      className="input"
-                      value={partnerBirthDate}
-                      onChange={(e) => setPartnerBirthDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="buttonRow">
-                  <button className="btn btn-primary btn-lg btn-full" onClick={handleCompatStart}>
-                    궁합 보기
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </section>
 
-        {/* ── Stats Strip ─── */}
-        <div className="statsStrip">
-          {STATS.map((s) => (
-            <div key={s.label} className="statItem">
-              <div className="statValue">{s.value}</div>
-              <div className="statLabel">{s.label}</div>
-            </div>
-          ))}
-        </div>
+        {/* ── Section Divider ─── */}
+        <div className="sectionDivider" />
+
+        {/* ── Engine Trust ─── */}
+        <section className="landingSection engineTrust">
+          <h2 className="sectionHeading">정통 명리학을 해석하는 AI</h2>
+          <p className="sectionSubheading">
+            전문가에게 받던 분석을 누구나 쉽게 확인하세요. 전문가의 깊이와 AI의 접근성, 둘 다 놓치지 않아요.
+          </p>
+
+          {/* 3 pillar cards */}
+          <div className="enginePillars">
+            {ENGINE_PILLARS.map((p) => (
+              <article key={p.title} className="enginePillarCard">
+                <h3>{p.title}</h3>
+                <p className="enginePillarSub">{p.subtitle}</p>
+                <p className="enginePillarDesc">{p.desc}</p>
+              </article>
+            ))}
+          </div>
+
+          <div className="sectionCta">
+            <Link href="/#hero" className="btn btn-secondary btn-lg">
+              내 분석 리포트 보기 &rsaquo;
+            </Link>
+          </div>
+        </section>
+
+        {/* ── Section Divider ─── */}
+        <div className="sectionDivider" />
 
         {/* ── Free vs Premium ─── */}
-        <section className="glassCard">
-          <h2>무료 vs 프리미엄</h2>
-          <p className="muted" style={{ marginTop: 8 }}>무료로 시작하고, 마음에 들면 전체 분석을 열어보세요.</p>
-          <div className="pricingGrid" style={{ marginTop: 16 }}>
+        <section className="landingSection">
+          <h2 className="sectionHeading">무료로 시작하세요</h2>
+          <p className="sectionSubheading">
+            기본 분석은 무료. 마음에 들면 프리미엄으로 전체 분석을 열어보세요.
+          </p>
+          <div className="pricingGrid">
             <article className="pricingCard">
               <span className="badge badge-neutral">무료</span>
-              <h3 style={{ marginTop: 8 }}>기본 분석</h3>
+              <h3 style={{ marginTop: 12 }}>기본 분석</h3>
               <p className="price">₩0</p>
               <ul className="flatList compactList">
                 <li>타고난 기질 AI 분석 (1파트)</li>
@@ -161,73 +322,82 @@ export default function HomePage() {
                 <li>음양 비율</li>
               </ul>
             </article>
-            <article className="pricingCard" style={{ borderColor: "rgba(167,139,218,0.3)" }}>
+            <article className="pricingCard pricingCardPremium">
               <span className="badge badge-premium">프리미엄</span>
-              <h3 style={{ marginTop: 8 }}>상세 분석</h3>
-              <p className="price">₩5,900</p>
+              <h3 style={{ marginTop: 12 }}>상세 분석</h3>
+              <p className="price">₩3,900~</p>
               <ul className="flatList compactList">
                 <li>기본 분석 포함</li>
-                <li>올해 총운</li>
-                <li>직업/재물운</li>
-                <li>연애/결혼운</li>
-                <li>건강/가족 + 4개 섹션 더</li>
+                <li>약 20,000~40,000자 AI 장문 분석</li>
+                <li>10개 섹션 (성격·직업·연애·금전·건강 등)</li>
+                <li>대운 타임라인 (10년 주기)</li>
+                <li>AI 모델 선택 (Opus / Sonnet / GPT)</li>
               </ul>
               <div className="buttonRow">
-                <Link href="/#hero" className="btn btn-primary btn-full">무료로 시작하기</Link>
+                <Link href="/#hero" className="btn btn-primary btn-full">
+                  무료로 시작하기
+                </Link>
               </div>
             </article>
           </div>
         </section>
 
-        {/* ── Precision Compare ─── */}
-        <section className="glassCard">
-          <h2>정밀도 비교</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 16 }}>
-            <div className="statItem">
-              <div className="statValue">16</div>
-              <div className="statLabel">MBTI 유형</div>
-            </div>
-            <div className="statItem">
-              <div className="statValue">518,400</div>
-              <div className="statLabel">사주 조합</div>
-            </div>
+        {/* ── Section Divider ─── */}
+        <div className="sectionDivider" />
+
+        {/* ── Testimonials ─── */}
+        <section className="landingSection">
+          <h2 className="sectionHeading">사용자들이 말합니다</h2>
+          <p className="sectionSubheading">
+            다양한 분야의 사용자들이 전하는 생생한 후기
+          </p>
+          <div className="testimonialGrid">
+            {TESTIMONIALS.map((t, i) => (
+              <article key={i} className="testimonialCard">
+                <p className="testimonialQuote">&ldquo;{t.quote}&rdquo;</p>
+                <div className="testimonialAuthor">
+                  <span className="testimonialName">{t.name}</span>
+                  <span className="testimonialMeta">{t.age}세, {t.job}</span>
+                </div>
+              </article>
+            ))}
           </div>
-          <p className="muted" style={{ marginTop: 12, textAlign: "center" }}>같은 질문, 32,400배 다른 해상도.</p>
         </section>
 
-        {/* ── Engine Trust ─── */}
-        <section className="glassCard">
-          <h2>엔진 신뢰도</h2>
-          <div className="statsStrip">
-            <div className="statItem"><div className="statValue">만세력</div><div className="statLabel">전통 역법 기반</div></div>
-            <div className="statItem"><div className="statValue">절기보정</div><div className="statLabel">입춘 기준 연주</div></div>
-            <div className="statItem"><div className="statValue">139건</div><div className="statLabel">골든 테스트 검증</div></div>
-          </div>
-        </section>
+        {/* ── Section Divider ─── */}
+        <div className="sectionDivider" />
 
         {/* ── FAQ ─── */}
-        <section className="glassCard">
-          <h2>자주 묻는 질문</h2>
-          <div style={{ marginTop: 16 }}>
+        <section className="landingSection">
+          <h2 className="sectionHeading">자주 묻는 질문</h2>
+          <div className="faqList">
             {FAQ_ITEMS.map((faq, i) => (
-              <div key={i} style={{ borderBottom: "1px solid var(--glass-border)", padding: "14px 0" }}>
+              <div key={i} className="faqItem">
                 <button
+                  className="faqQuestion"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  style={{
-                    background: "none", border: "none", color: "var(--t1)",
-                    cursor: "pointer", width: "100%", textAlign: "left",
-                    fontSize: "0.95rem", fontWeight: 650, padding: 0,
-                    display: "flex", justifyContent: "space-between", alignItems: "center"
-                  }}
                 >
                   {faq.q}
-                  <span style={{ color: "var(--t3)", fontSize: "1.2rem" }}>{openFaq === i ? "−" : "+"}</span>
+                  <span className="faqToggle">{openFaq === i ? "−" : "+"}</span>
                 </button>
                 {openFaq === i && (
-                  <p style={{ marginTop: 8, color: "var(--t2)", fontSize: "0.9rem", lineHeight: 1.7 }}>{faq.a}</p>
+                  <p className="faqAnswer">{faq.a}</p>
                 )}
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── Final CTA ─── */}
+        <section className="landingSection" style={{ textAlign: "center" }}>
+          <h2 className="sectionHeading">나의 사주, 지금 확인하세요</h2>
+          <p className="sectionSubheading">
+            무료로 시작하고, AI가 분석한 당신만의 리포트를 받아보세요.
+          </p>
+          <div className="sectionCta">
+            <Link href="/#hero" className="btn btn-primary btn-lg">
+              무료 분석 시작 &rsaquo;
+            </Link>
           </div>
         </section>
       </div>

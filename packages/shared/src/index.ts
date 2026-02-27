@@ -104,6 +104,7 @@ export interface OrderSummary {
 export interface CheckoutCreateRequest {
   productCode: ProductCode;
   input: FortuneInput;
+  model?: string; // "opus" | "sonnet" | "gpt"
 }
 
 export interface CheckoutCreateResponse {

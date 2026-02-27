@@ -27,13 +27,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="siteHeader">
           <div className="headerInner">
             <Link href="/" className="brand">
-              복연구소
+              <svg className="brandLogo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                  <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#A78BDA" />
+                    <stop offset="100%" stopColor="#D4A5C0" />
+                  </linearGradient>
+                </defs>
+                <circle cx="16" cy="16" r="14.5" stroke="url(#logoGrad)" strokeWidth="1.5" opacity="0.6" />
+                <path d="M16 4 A12 12 0 0 1 16 28 A6 6 0 0 0 16 16 A6 6 0 0 1 16 4Z" fill="url(#logoGrad)" opacity="0.85" />
+                <circle cx="16" cy="10" r="2" fill="#1A1535" />
+                <circle cx="16" cy="22" r="2" fill="url(#logoGrad)" />
+              </svg>
+              <span className="brandText">복연구소</span>
             </Link>
             <nav className="topNav" aria-label="주요 메뉴">
               <Link href="/#hero">사주</Link>
               <Link href="/palm">손금</Link>
               <Link href="/name">작명</Link>
               <Link href="/face">관상</Link>
+              <select className="langSelect" defaultValue="ko" aria-label="언어 선택">
+                <option value="ko">한국어</option>
+                <option value="en">English</option>
+              </select>
             </nav>
           </div>
         </header>

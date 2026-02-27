@@ -1,11 +1,252 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense, useMemo, useEffect, useState } from "react";
+import { Suspense, useMemo, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { calculateFourPillars, analyzeElements, ELEMENT_KR, ELEMENT_EMOJI, ELEMENT_KR_NATIVE } from "@saju/engine-saju";
-import type { Element } from "@saju/engine-saju";
+import { calculateFourPillars, ELEMENT_KR, ELEMENT_EMOJI, ELEMENT_KR_NATIVE } from "@saju/engine-saju";
+import type { Element, FourPillars } from "@saju/engine-saju";
 import { track } from "../../lib/analytics";
+
+// ── 천간/지지 → 오행 매핑 ──
+const STEM_TO_ELEMENT: Record<string, Element> = {
+  "甲": "wood", "乙": "wood", "丙": "fire", "丁": "fire",
+  "戊": "earth", "己": "earth", "庚": "metal", "辛": "metal",
+  "壬": "water", "癸": "water",
+};
+const BRANCH_TO_ELEMENT: Record<string, Element> = {
+  "寅": "wood", "卯": "wood", "巳": "fire", "午": "fire",
+  "辰": "earth", "未": "earth", "戌": "earth", "丑": "earth",
+  "申": "metal", "酉": "metal", "亥": "water", "子": "water",
+};
+
+// ── 띠 동물 (12지지) ──
+const ZODIAC_ANIMALS: Record<string, { name: string; emoji: string }> = {
+  "子": { name: "쥐", emoji: "🐭" }, "丑": { name: "소", emoji: "🐮" },
+  "寅": { name: "호랑이", emoji: "🐯" }, "卯": { name: "토끼", emoji: "🐰" },
+  "辰": { name: "용", emoji: "🐲" }, "巳": { name: "뱀", emoji: "🐍" },
+  "午": { name: "말", emoji: "🐴" }, "未": { name: "양", emoji: "🐑" },
+  "申": { name: "원숭이", emoji: "🐵" }, "酉": { name: "닭", emoji: "🐔" },
+  "戌": { name: "개", emoji: "🐶" }, "亥": { name: "돼지", emoji: "🐷" },
+};
+
+// ── 천간 음양 ──
+const STEM_POLARITY: Record<string, "양" | "음"> = {
+  "甲": "양", "乙": "음", "丙": "양", "丁": "음", "戊": "양",
+  "己": "음", "庚": "양", "辛": "음", "壬": "양", "癸": "음",
+};
+
+// ── 오행 레이더 차트 (Premium SVG) ──
+function ElementRadar({ balance }: { balance: Record<Element, number> }) {
+  const elements: Element[] = ["wood", "fire", "earth", "metal", "water"];
+  const labels = ["木", "火", "土", "金", "水"];
+  const cx = 100, cy = 100, R = 70;
+
+  const angle = (i: number) => (Math.PI / 2) + (2 * Math.PI * i) / 5;
+  const px = (i: number, r: number) => cx + r * Math.cos(-angle(i));
+  const py = (i: number, r: number) => cy - r * Math.sin(-angle(i));
+
+  const gridLevels = [0.25, 0.5, 0.75, 1.0];
+  const maxVal = Math.max(...elements.map(e => balance[e]), 1);
+
+  const dataPoints = elements.map((el, i) => {
+    const ratio = Math.min(balance[el] / maxVal, 1);
+    return `${px(i, R * ratio)},${py(i, R * ratio)}`;
+  }).join(" ");
+
+  return (
+    <svg viewBox="0 0 200 200" style={{ width: "100%", maxWidth: 260, margin: "0 auto", display: "block" }}>
+      <defs>
+        <linearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#A78BDA" stopOpacity={0.3} />
+          <stop offset="100%" stopColor="#D4A5C0" stopOpacity={0.15} />
+        </linearGradient>
+        <linearGradient id="radarStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#A78BDA" />
+          <stop offset="100%" stopColor="#D4A5C0" />
+        </linearGradient>
+        <filter id="radarGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      {/* Circular grid */}
+      {gridLevels.map(level => (
+        <polygon
+          key={level}
+          points={elements.map((_, i) => `${px(i, R * level)},${py(i, R * level)}`).join(" ")}
+          fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5}
+          strokeDasharray={level < 1 ? "2 3" : "none"}
+        />
+      ))}
+      {/* Axis lines */}
+      {elements.map((_, i) => (
+        <line key={i} x1={cx} y1={cy} x2={px(i, R)} y2={py(i, R)}
+          stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} />
+      ))}
+      {/* Data polygon with glow */}
+      <polygon points={dataPoints} fill="url(#radarFill)" stroke="url(#radarStroke)" strokeWidth={1.5}
+        filter="url(#radarGlow)" />
+      {/* Data dots with glow */}
+      {elements.map((el, i) => {
+        const ratio = Math.min(balance[el] / maxVal, 1);
+        const dotX = px(i, R * ratio);
+        const dotY = py(i, R * ratio);
+        return (
+          <g key={el}>
+            <circle cx={dotX} cy={dotY} r={6} fill={`var(--element-${el})`} opacity={0.15} />
+            <circle cx={dotX} cy={dotY} r={3.5} fill={`var(--element-${el})`} />
+          </g>
+        );
+      })}
+      {/* Labels with value */}
+      {elements.map((el, i) => (
+        <g key={el}>
+          <text x={px(i, R + 18)} y={py(i, R + 14)} textAnchor="middle" dominantBaseline="central"
+            fontSize={11} fontWeight={700} fill={`var(--element-${el})`}>
+            {labels[i]}
+          </text>
+          <text x={px(i, R + 18)} y={py(i, R + 26)} textAnchor="middle" dominantBaseline="central"
+            fontSize={8} fontWeight={500} fill="rgba(255,255,255,0.4)">
+            {balance[el]}%
+          </text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+// ── 오행 상생 사이클 (Premium SVG) ──
+function ElementCycle({ dominant, weakest }: { dominant: Element; weakest: Element }) {
+  const elements: Element[] = ["wood", "fire", "earth", "metal", "water"];
+  const labels = ["木", "火", "土", "金", "水"];
+  const icons = ["🌿", "🔥", "⛰️", "⚙️", "🌊"];
+  const cx = 100, cy = 100, R = 62;
+
+  const angle = (i: number) => (Math.PI / 2) + (2 * Math.PI * i) / 5;
+  const px = (i: number) => cx + R * Math.cos(-angle(i));
+  const py = (i: number) => cy - R * Math.sin(-angle(i));
+
+  return (
+    <svg viewBox="0 0 200 200" style={{ width: "100%", maxWidth: 240, margin: "0 auto", display: "block" }}>
+      <defs>
+        <marker id="arrowCycle" viewBox="0 0 10 10" refX={8} refY={5} markerWidth={4} markerHeight={4} orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(167,139,218,0.5)" />
+        </marker>
+        <filter id="nodeGlow">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <filter id="dominantPulse">
+          <feGaussianBlur stdDeviation="6" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      {/* Connection ring */}
+      <circle cx={cx} cy={cy} r={R} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={28} />
+      {/* 상생 arrows */}
+      {elements.map((_, i) => {
+        const next = (i + 1) % 5;
+        const x1 = px(i), y1 = py(i), x2 = px(next), y2 = py(next);
+        const dx = x2 - x1, dy = y2 - y1;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        const offset = 22;
+        return (
+          <line key={`gen-${i}`}
+            x1={x1 + dx / len * offset} y1={y1 + dy / len * offset}
+            x2={x2 - dx / len * offset} y2={y2 - dy / len * offset}
+            stroke="rgba(167,139,218,0.25)" strokeWidth={1.5} markerEnd="url(#arrowCycle)"
+          />
+        );
+      })}
+      {/* Element nodes */}
+      {elements.map((el, i) => {
+        const isDominant = el === dominant;
+        const isWeakest = el === weakest;
+        const nodeR = isDominant ? 24 : isWeakest ? 15 : 19;
+        return (
+          <g key={el} filter={isDominant ? "url(#dominantPulse)" : "url(#nodeGlow)"}>
+            {/* Outer glow ring for dominant */}
+            {isDominant && (
+              <circle cx={px(i)} cy={py(i)} r={nodeR + 4} fill="none"
+                stroke={`var(--element-${el})`} strokeWidth={1} opacity={0.3}>
+                <animate attributeName="r" values={`${nodeR + 2};${nodeR + 6};${nodeR + 2}`} dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite" />
+              </circle>
+            )}
+            <circle cx={px(i)} cy={py(i)} r={nodeR}
+              fill={`var(--element-${el})`}
+              opacity={isDominant ? 0.85 : isWeakest ? 0.25 : 0.55}
+              stroke={isDominant ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.08)"}
+              strokeWidth={isDominant ? 1.5 : 0.5}
+            />
+            <text x={px(i)} y={py(i)} textAnchor="middle" dominantBaseline="central"
+              fontSize={isDominant ? 13 : 11} fontWeight={700} fill="#fff">
+              {labels[i]}
+            </text>
+            {isDominant && (
+              <text x={px(i)} y={py(i) + 34} textAnchor="middle" fontSize={8} fontWeight={600}
+                fill={`var(--element-${el})`}>강</text>
+            )}
+            {isWeakest && (
+              <text x={px(i)} y={py(i) + 26} textAnchor="middle" fontSize={8} fontWeight={600}
+                fill="rgba(255,255,255,0.3)">약</text>
+            )}
+          </g>
+        );
+      })}
+      {/* Center yin-yang symbol */}
+      <circle cx={cx} cy={cy} r={12} fill="rgba(18,18,42,0.8)" stroke="rgba(255,255,255,0.08)" strokeWidth={0.5} />
+      <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize={8} fontWeight={600}
+        fill="rgba(255,255,255,0.3)">상생</text>
+    </svg>
+  );
+}
+
+// ── 사주팔자 테이블 (Premium) ──
+function FourPillarsTable({ pillars, dayMaster }: { pillars: FourPillars; dayMaster: Element }) {
+  const cols = [
+    { label: "시주", sub: "時柱", pillar: pillars.hour },
+    { label: "일주", sub: "日柱", pillar: pillars.day },
+    { label: "월주", sub: "月柱", pillar: pillars.month },
+    { label: "년주", sub: "年柱", pillar: pillars.year },
+  ];
+
+  return (
+    <div className="fourPillarsGrid">
+      {cols.map((col) => {
+        const stemEl = STEM_TO_ELEMENT[col.pillar.stem] ?? "earth";
+        const branchEl = BRANCH_TO_ELEMENT[col.pillar.branch] ?? "earth";
+        const polarity = STEM_POLARITY[col.pillar.stem] ?? "양";
+        const isDayPillar = col.label === "일주";
+
+        return (
+          <div key={col.label} className={`pillarCol ${isDayPillar ? "pillarColHighlight" : ""}`}>
+            <div className="pillarLabel">{col.label}<span className="pillarLabelSub">{col.sub}</span></div>
+            <div className="pillarStem" style={{ color: `var(--element-${stemEl})` }}>
+              {col.pillar.stem}
+              <span className="pillarPol">{polarity === "양" ? "☯" : "☯"} {polarity}</span>
+            </div>
+            <div className="pillarDivider" />
+            <div className="pillarBranch" style={{ color: `var(--element-${branchEl})` }}>
+              {col.pillar.branch}
+            </div>
+            <div className="pillarElementDot" style={{ background: `var(--element-${branchEl})` }} />
+            <div className="pillarKr">{col.pillar.fullKr}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 // 오행별 블러 맛보기 템플릿
 const BLUR_TEASERS: Record<Element, { sections: Array<{ title: string; teaser: string; icon: string }> }> = {
@@ -66,12 +307,49 @@ const BLUR_TEASERS: Record<Element, { sections: Array<{ title: string; teaser: s
   },
 };
 
+// ── 6 Test Strategies ──
+const TEST_STRATEGIES = [
+  { id: 1, label: "Sonnet 4.6", sub: "3,000자 x 10 청크", color: "#7c5cfc" },
+  { id: 2, label: "Sonnet 4.6", sub: "30,000자 원샷", color: "#7c5cfc" },
+  { id: 3, label: "Opus 4.6", sub: "30,000자 원샷", color: "#c04cfc" },
+  { id: 4, label: "GPT 5.2", sub: "30,000자 원샷", color: "#10a37f" },
+  { id: 5, label: "Gemini 3.1 Pro", sub: "30,000자 원샷", color: "#4285f4" },
+  { id: 6, label: "Gemini Flash", sub: "3,000자 x 10 청크", color: "#4285f4" },
+  { id: 7, label: "Haiku 4.5", sub: "3,000자 x 10 청크", color: "#e8954f" },
+] as const;
+
+type TestResult = {
+  strategy: number;
+  label: string;
+  modelName: string;
+  mode: string;
+  totalChars: number;
+  durationMs: number;
+  costUsd: number;
+  usage: { inputTokens?: number; outputTokens?: number; totalTokens?: number };
+  report: {
+    headline: string;
+    summary: string;
+    sections: Array<{ key: string; title: string; text: string }>;
+  };
+};
+
+type TestState = {
+  loading: boolean;
+  error?: string;
+  result?: TestResult;
+};
+
 function ResultContent() {
   const params = useSearchParams();
   const name = params.get("name") ?? "사용자";
   const birthDate = params.get("birthDate") ?? "1995-01-01";
   const birthTime = params.get("birthTime");
+  const gender = params.get("gender") ?? "other";
+  const calendarType = params.get("calendarType") ?? "solar";
   const [visible, setVisible] = useState(false);
+  const [testStates, setTestStates] = useState<Record<number, TestState>>({});
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     track("report_view");
@@ -86,20 +364,81 @@ function ResultContent() {
     return { pillars: result.pillars, elements: result.elements };
   }, [birthDate, birthTime]);
 
-  const { elements } = analysis;
+  const { elements, pillars } = analysis;
   const dayEl = elements.dayMaster;
   const teasers = BLUR_TEASERS[dayEl];
-
+  const zodiac = ZODIAC_ANIMALS[pillars.year.branch];
   const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
+
+  const runTest = useCallback(async (strategy: number) => {
+    setTestStates((prev) => ({ ...prev, [strategy]: { loading: true } }));
+    try {
+      const resp = await fetch("/api/test/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          strategy,
+          input: { name, birthDate, birthTime, gender, calendarType },
+        }),
+      });
+      const json = await resp.json();
+      if (!json.ok) {
+        setTestStates((prev) => ({ ...prev, [strategy]: { loading: false, error: json.error?.message ?? "실패" } }));
+        return;
+      }
+      setTestStates((prev) => ({ ...prev, [strategy]: { loading: false, result: json.data } }));
+    } catch (err) {
+      setTestStates((prev) => ({
+        ...prev,
+        [strategy]: { loading: false, error: err instanceof Error ? err.message : "네트워크 오류" },
+      }));
+    }
+  }, [name, birthDate, birthTime, gender, calendarType]);
+
+  const toggleSection = (key: string) => {
+    setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   return (
     <main className="page">
       <div className="container">
-        {/* 무료 파트 1: 일간 카드 */}
-        <section className="glassCard dayMasterCard">
+        {/* 무료 파트 1: 일간 카드 (Premium) */}
+        <section className={`glassCard dayMasterCard ${dayEl}`}>
+          <div className="dayMasterWatermark">{elements.dayMasterHanja}</div>
           <div className="dayMasterEmoji">{ELEMENT_EMOJI[dayEl]}</div>
-          <h2 className="dayMasterTitle">당신은 {ELEMENT_KR[dayEl]}의 사람입니다</h2>
-          <p className="dayMasterSub">{name}님의 일간(日干)은 {elements.dayMasterHanja}입니다</p>
+          <h2 className="dayMasterTitle" style={{ color: `var(--element-${dayEl})` }}>
+            당신은 {ELEMENT_KR[dayEl]}의 사람입니다
+          </h2>
+          <p className="dayMasterSub">
+            {name}님의 일간(日干)은 <strong style={{ color: `var(--element-${dayEl})` }}>{elements.dayMasterHanja}</strong>입니다
+          </p>
+          {zodiac && (
+            <div className="dayMasterZodiac">
+              <span style={{ fontSize: "1.2rem" }}>{zodiac.emoji}</span>
+              {pillars.year.branch}({zodiac.name})띠
+            </div>
+          )}
+        </section>
+
+        {/* 사주팔자 테이블 */}
+        <section className="glassCard" style={{ marginTop: 16 }}>
+          <h3 style={{ textAlign: "center", marginBottom: 12 }}>사주팔자 (四柱八字)</h3>
+          <FourPillarsTable pillars={pillars} dayMaster={dayEl} />
+        </section>
+
+        {/* 오행 시각화: 레이더 + 상생 사이클 */}
+        <section className="glassCard" style={{ marginTop: 16 }}>
+          <h3 style={{ textAlign: "center", marginBottom: 8 }}>오행 분포</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, alignItems: "center" }}>
+            <div>
+              <ElementRadar balance={elements.balance} />
+              <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--t2)", marginTop: 4 }}>오행 레이더</p>
+            </div>
+            <div>
+              <ElementCycle dominant={elements.dominant} weakest={elements.weakest} />
+              <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--t2)", marginTop: 4 }}>상생 사이클</p>
+            </div>
+          </div>
         </section>
 
         {/* 무료 파트 2: 오행 바 차트 */}
@@ -122,7 +461,6 @@ function ResultContent() {
             ))}
           </div>
 
-          {/* 과다/부족 */}
           <p style={{ marginTop: 12, fontSize: "0.9rem" }}>
             <span style={{ color: `var(--element-${elements.dominant})` }}>
               {ELEMENT_EMOJI[elements.dominant]} {ELEMENT_KR[elements.dominant]} 에너지가 강합니다
@@ -133,7 +471,6 @@ function ResultContent() {
             </span>
           </p>
 
-          {/* 음양 밸런스 */}
           <div style={{ marginTop: 16 }}>
             <h4 style={{ fontSize: "0.9rem", color: "var(--t2)" }}>음양 밸런스</h4>
             <div className="yinYangBar">
@@ -147,16 +484,144 @@ function ResultContent() {
           </div>
         </section>
 
-        {/* CTA #1 */}
+        {/* CTA: 결제 */}
         <section className="ctaPanel" style={{ marginTop: 16 }}>
-          <h3>7개 섹션의 상세 분석이 준비되어 있습니다</h3>
-          <p className="muted">올해 총운부터 대운 타임라인까지, AI가 당신만의 사주를 해석합니다.</p>
+          <h3>더 깊이 알아볼까요?</h3>
+          <p className="muted">블러를 해제하고 전체 분석을 확인하세요.</p>
           <div className="buttonRow">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}`} className="btn btn-primary btn-lg btn-full">
-              ₩5,900으로 전체 분석 보기
+            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+              ₩5,900 · Sonnet 분석 보기
             </Link>
           </div>
         </section>
+
+        {/* ══════════════════════════════════════════════
+            TEST: 6가지 전략 비교
+           ══════════════════════════════════════════════ */}
+        <section className="glassCard" style={{ marginTop: 24, border: "2px dashed #f59e0b", background: "rgba(245,158,11,0.04)" }}>
+          <h3 style={{ color: "#f59e0b", marginBottom: 4 }}>TEST: LLM 품질 비교</h3>
+          <p className="muted" style={{ marginBottom: 16, fontSize: "0.85rem" }}>
+            각 버튼을 클릭하면 해당 전략으로 리포트를 생성합니다. 캐싱 없이 매번 새로 호출합니다.
+          </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+            {TEST_STRATEGIES.map((s) => {
+              const state = testStates[s.id];
+              return (
+                <button
+                  key={s.id}
+                  onClick={() => runTest(s.id)}
+                  disabled={state?.loading}
+                  style={{
+                    padding: "10px 8px",
+                    border: `1.5px solid ${s.color}`,
+                    borderRadius: 10,
+                    background: state?.result ? `${s.color}18` : "var(--bg2)",
+                    cursor: state?.loading ? "wait" : "pointer",
+                    textAlign: "left",
+                    opacity: state?.loading ? 0.6 : 1,
+                  }}
+                >
+                  <div style={{ fontWeight: 600, fontSize: "0.85rem", color: s.color }}>
+                    {s.id}. {s.label}
+                  </div>
+                  <div style={{ fontSize: "0.75rem", color: "var(--t2)" }}>{s.sub}</div>
+                  {state?.loading && (
+                    <div style={{ fontSize: "0.75rem", color: "#f59e0b", marginTop: 4 }}>생성 중...</div>
+                  )}
+                  {state?.result && (
+                    <div style={{ fontSize: "0.7rem", color: "var(--t2)", marginTop: 4 }}>
+                      {state.result.totalChars.toLocaleString()}자 · ${state.result.costUsd} · {(state.result.durationMs / 1000).toFixed(1)}s
+                    </div>
+                  )}
+                  {state?.error && (
+                    <div style={{ fontSize: "0.7rem", color: "#ef4444", marginTop: 4 }}>{state.error}</div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* TEST 결과 출력 */}
+        {TEST_STRATEGIES.map((s) => {
+          const state = testStates[s.id];
+          if (!state?.result) return null;
+          const r = state.result;
+          return (
+            <section key={`result-${s.id}`} className="glassCard" style={{ marginTop: 12 }}>
+              {/* 헤더: 비용 정보 */}
+              <div style={{
+                background: `${s.color}15`,
+                border: `1px solid ${s.color}40`,
+                borderRadius: 8,
+                padding: "10px 14px",
+                marginBottom: 12,
+              }}>
+                <div style={{ fontWeight: 700, fontSize: "0.95rem", color: s.color }}>
+                  {s.id}. {r.label}
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", marginTop: 6, fontSize: "0.8rem", color: "var(--t2)" }}>
+                  <span>모델: <b>{r.modelName}</b></span>
+                  <span>모드: <b>{r.mode === "chunked" ? "청크(x10)" : "원샷"}</b></span>
+                  <span>총 글자: <b>{r.totalChars.toLocaleString()}자</b></span>
+                  <span>소요: <b>{(r.durationMs / 1000).toFixed(1)}s</b></span>
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", marginTop: 4, fontSize: "0.8rem" }}>
+                  <span>입력 토큰: <b>{(r.usage.inputTokens ?? 0).toLocaleString()}</b></span>
+                  <span>출력 토큰: <b>{(r.usage.outputTokens ?? 0).toLocaleString()}</b></span>
+                  <span style={{ color: "#ef4444", fontWeight: 700 }}>비용: ${r.costUsd}</span>
+                </div>
+              </div>
+
+              {/* 섹션별 내용 */}
+              {r.report.sections.map((sec, idx) => {
+                const sectionKey = `${s.id}-${idx}`;
+                const isExpanded = expandedSections[sectionKey] ?? (idx === 0);
+                return (
+                  <div key={idx} style={{ marginBottom: 8 }}>
+                    <button
+                      onClick={() => toggleSection(sectionKey)}
+                      style={{
+                        width: "100%",
+                        textAlign: "left",
+                        padding: "8px 12px",
+                        background: "var(--bg2)",
+                        border: "1px solid var(--border)",
+                        borderRadius: 6,
+                        cursor: "pointer",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>
+                        {sec.title}
+                      </span>
+                      <span style={{ fontSize: "0.75rem", color: "var(--t2)" }}>
+                        {sec.text.length.toLocaleString()}자 {isExpanded ? "▲" : "▼"}
+                      </span>
+                    </button>
+                    {isExpanded && (
+                      <div style={{
+                        padding: "12px",
+                        fontSize: "0.85rem",
+                        lineHeight: 1.7,
+                        color: "var(--t1)",
+                        whiteSpace: "pre-wrap",
+                        borderLeft: `3px solid ${s.color}40`,
+                        marginLeft: 4,
+                        marginTop: 4,
+                      }}>
+                        {sec.text}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </section>
+          );
+        })}
 
         {/* 블러 7파트 */}
         <section className="glassCard" style={{ marginTop: 16 }}>
@@ -182,30 +647,30 @@ function ResultContent() {
         {/* CTA #2 */}
         <section className="ctaPanel" style={{ marginTop: 16 }}>
           <h3>더 깊이 알아볼까요?</h3>
-          <p className="muted">위 7개 섹션의 블러를 해제하고 전체 분석을 확인하세요.</p>
+          <p className="muted">위 블러를 해제하고 전체 분석을 확인하세요.</p>
           <div className="buttonRow">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}`} className="btn btn-primary btn-lg btn-full">
-              ₩5,900으로 전체 분석 보기
+            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+              ₩5,900 · Sonnet 분석 보기
             </Link>
           </div>
         </section>
 
-        {/* 미니 궁합 */}
+        {/* 궁합 */}
         <section className="glassCard" style={{ marginTop: 16, textAlign: "center" }}>
           <h3>궁합도 궁금하다면?</h3>
           <p className="muted" style={{ marginTop: 8 }}>상대방 생년월일만 입력하면 무료 궁합을 볼 수 있어요.</p>
           <div className="buttonRow" style={{ justifyContent: "center" }}>
             <Link href="/?tab=compat" className="btn btn-secondary btn-lg">
-              궁합 보러 가기 💕
+              궁합 보러 가기
             </Link>
           </div>
         </section>
 
-        {/* 모바일 스티키 CTA #3 */}
+        {/* 모바일 스티키 CTA */}
         <div className="stickyCta">
           <div className="stickyCtaInner">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}`} className="btn btn-primary btn-lg btn-full">
-              ₩5,900 · 전체 분석 열기
+            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+              상세 분석 보기
             </Link>
           </div>
         </div>
