@@ -1,4 +1,4 @@
-# Fortune Engine v2 → FateSaju 프로덕션 마스터 플랜
+# Fortune Engine v2 → 복연구소 프로덕션 마스터 플랜
 
 > 작성일: 2026-02-25
 > 목적: Claude Code가 이 문서 하나로 현재 상태를 파악하고, 순서대로 실행할 수 있는 태스크 정의서.
@@ -65,7 +65,7 @@
 
 ### 확인 사항 (Claude Code가 먼저 체크)
 
-1. 현재 Supabase 프로젝트가 이미 있는지 확인 (기존 FateSaju에서 쓰던 것)
+1. 현재 Supabase 프로젝트가 이미 있는지 확인 (기존 복연구소에서 쓰던 것)
 2. Prisma schema에 어떤 모델이 정의되어 있는지 확인
 3. apps/web/.env 또는 .env.local에 어떤 변수가 있는지 확인
 4. Vercel에 연결된 도메인 확인

@@ -4,10 +4,10 @@ import { GtagScript } from "./components/GtagScript";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FateSaju | AI 사주 분석",
+  title: "복연구소 | AI 사주 분석",
   description: "518,400가지 사주 조합을 AI가 분석합니다. 무료로 시작하세요.",
   openGraph: {
-    title: "FateSaju | AI 사주 분석",
+    title: "복연구소 | AI 사주 분석",
     description: "518,400가지 사주 조합을 AI가 분석합니다.",
     type: "website",
   },
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="siteHeader">
           <div className="headerInner">
             <Link href="/" className="brand">
-              FateSaju
+              복연구소
             </Link>
             <nav className="topNav" aria-label="주요 메뉴">
               <Link href="/#hero">사주</Link>
@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <footer className="siteFooter">
           <div className="footerInner">
-            <p className="footerTitle">FateSaju</p>
+            <p className="footerTitle">복연구소</p>
             <p className="muted">전통 사주명리학을 AI로 재해석한 운세 분석 서비스입니다.</p>
             <p className="muted">의료·법률·투자 판단의 근거로 사용하지 마세요.</p>
             <div className="footerLinks">

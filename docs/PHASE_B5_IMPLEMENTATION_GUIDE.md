@@ -34,7 +34,7 @@ NEXT_PUBLIC_GA_ID=G-YYYYYYYYYY
 **값 얻는 방법**:
 1. [Google Analytics](https://analytics.google.com) 접속
 2. 좌측 "관리" → "계정 만들기"
-3. 계정 이름: `FateSaju` 또는 현재 프로젝트명
+3. 계정 이름: `복연구소` 또는 현재 프로젝트명
 4. 웹사이트 URL: `https://[production-domain].com`
 5. 데이터 스트림 생성 후 측정 ID 복사 (`G-`로 시작)
 

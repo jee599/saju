@@ -7,7 +7,7 @@ export default function RefundPage() {
           <div className="legal">
             <div className="legalSection">
               <h3>1. 환불 원칙</h3>
-              <p>FateSaju의 유료 사주 분석 리포트는 디지털 콘텐츠로, 결제 즉시 AI 분석이 실행되어 리포트가 생성됩니다.</p>
+              <p>복연구소의 유료 사주 분석 리포트는 디지털 콘텐츠로, 결제 즉시 AI 분석이 실행되어 리포트가 생성됩니다.</p>
             </div>
             <div className="legalSection">
               <h3>2. 환불 가능한 경우</h3>
@@ -19,7 +19,7 @@ export default function RefundPage() {
             </div>
             <div className="legalSection">
               <h3>4. 환불 절차</h3>
-              <p>환불 요청은 결제 시 입력한 이메일로 contact@fatesaju.com에 문의해주세요. 영업일 기준 3일 이내 처리됩니다.</p>
+              <p>환불 요청은 결제 시 입력한 이메일로 contact@fortunelab.store에 문의해주세요. 영업일 기준 3일 이내 처리됩니다.</p>
             </div>
             <div className="legalSection">
               <h3>5. 시행일</h3>

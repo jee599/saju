@@ -41,8 +41,8 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
     heroDecoration: "hanja",
     llmTone: "친근하고 따뜻한 한국어",
     seo: {
-      siteName: "FateSaju",
-      defaultTitle: "FateSaju | AI 사주 분석",
+      siteName: "복연구소",
+      defaultTitle: "복연구소 | AI 사주 분석",
       defaultDescription: "518,400가지 사주 조합을 AI가 분석합니다.",
     },
   },
@@ -63,8 +63,8 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
     heroDecoration: "constellation",
     llmTone: "warm and insightful English",
     seo: {
-      siteName: "FateSaju",
-      defaultTitle: "FateSaju | AI Four Pillars Analysis",
+      siteName: "FortuneLab",
+      defaultTitle: "FortuneLab | AI Four Pillars Analysis",
       defaultDescription: "518,400 unique destiny readings powered by AI.",
     },
   },
@@ -85,8 +85,8 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
     heroDecoration: "mandala",
     llmTone: "warm and insightful English for Indian audience",
     seo: {
-      siteName: "FateSaju",
-      defaultTitle: "FateSaju | AI Four Pillars Analysis",
+      siteName: "FortuneLab",
+      defaultTitle: "FortuneLab | AI Four Pillars Analysis",
       defaultDescription: "Discover your destiny with 518,400 unique readings.",
     },
   },

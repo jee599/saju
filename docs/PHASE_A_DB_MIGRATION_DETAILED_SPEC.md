@@ -1,6 +1,6 @@
 # Phase A: DB 전환 + 인프라 정비 (고도화) - 상세 스펙
 
-**프로젝트:** FateSaju (packages/api)
+**프로젝트:** 복연구소 (packages/api)
 **현재 상태:** Phase 0/1 QA 통과 (Reset OK)
 **목표:** SQLite → Supabase PostgreSQL 전환 + 배포 환경변수 정비
 **예상 작업량:** 2-3시간 (로컬 환경 설정 포함)
@@ -92,8 +92,8 @@ migration_lock.toml (PostgreSQL로 잠금)
 
 1. Supabase Dashboard 접속
 2. **New Project** > 프로젝트 생성
-   - Organization: FateSaju (또는 기존)
-   - Project Name: `fatesaju-db` (권장)
+   - Organization: 복연구소 (또는 기존)
+   - Project Name: `fortunelab-db` (권장)
    - Database Password: 강력한 비밀번호 설정 (SSH로 보관)
    - Region: 가장 가까운 지역 (ap-southeast-1 등)
    - Pricing: Free (개발/테스트), Pro (프로덕션)
@@ -173,7 +173,7 @@ EXPO_PUBLIC_API_URL=http://localhost:3001
 #### 태스크 1.2.3: Vercel 환경변수 설정 (프로덕션)
 
 **Vercel Dashboard 접속:**
-1. Project: FateSaju (web app)
+1. Project: 복연구소 (web app)
 2. Settings > Environment Variables
 
 **추가할 변수 (프로덕션 배포용):**
@@ -352,15 +352,15 @@ pnpm prisma migrate deploy
 
 | 변수 | 타입 | 값 | 범위 |
 |------|------|---|------|
-| `NEXT_PUBLIC_API_URL` | String | https://api.fatesaju.com (또는 배포된 API URL) | Production, Preview |
-| `EXPO_PUBLIC_API_URL` | String | https://api.fatesaju.com (같음) | Production, Preview |
+| `NEXT_PUBLIC_API_URL` | String | https://api.fortunelab.com (또는 배포된 API URL) | Production, Preview |
+| `EXPO_PUBLIC_API_URL` | String | https://api.fortunelab.com (같음) | Production, Preview |
 
 ### A-3.2 Vercel 설정 스크린샷/단계
 
 **Vercel Dashboard 경로:**
 
 ```
-FateSaju (web) Project
+복연구소 (web) Project
   ↓
 Settings (상단 메뉴)
   ↓
@@ -492,11 +492,11 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient();
   ✓ Deployment Status: Ready
 
 □ Production Health Check
-  curl https://api-fatesaju.vercel.app/health
+  curl https://api-fortunelab.vercel.app/health
   ✓ {"ok":true,"service":"api","timestamp":"..."}
 
 □ Production DB 연결 테스트
-  curl -X POST https://api-fatesaju.vercel.app/checkout/create \
+  curl -X POST https://api-fortunelab.vercel.app/checkout/create \
     -H "Content-Type: application/json" \
     -d '{...}'
   ✓ orderId 응답 확인

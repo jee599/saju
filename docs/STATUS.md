@@ -1,4 +1,4 @@
-# FateSaju Status
+# 복연구소 (FortuneLab) Status
 
 > Updated: 2026-02-27
 > Canonical root: `/Users/jidong/saju_global`

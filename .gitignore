@@ -37,3 +37,4 @@ scripts/blog_digest.py
 scripts/blog_digest_and_notify.sh
 scripts/claude_logged.sh
 
+.vercel

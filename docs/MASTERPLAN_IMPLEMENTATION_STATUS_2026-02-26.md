@@ -1,4 +1,4 @@
-# FateSaju – Production Master Plan 구현 현황 / 앞으로 할 일
+# 복연구소 – Production Master Plan 구현 현황 / 앞으로 할 일
 
 > 기준 문서(캐노니컬): `docs/PRODUCTION_MASTER_PLAN_2026-02-25.md`
 >

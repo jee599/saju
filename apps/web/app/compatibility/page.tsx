@@ -29,7 +29,7 @@ function CompatContent() {
   const handleShare = () => {
     const text = `우리 궁합 ${result.score}점! 너도 해볼래?\n${shareUrl}`;
     if (navigator.share) {
-      navigator.share({ title: "FateSaju 궁합", text });
+      navigator.share({ title: "복연구소 궁합", text });
     } else {
       navigator.clipboard.writeText(text);
     }

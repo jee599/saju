@@ -7,7 +7,7 @@ export default function YouthPolicyPage() {
           <div className="legal">
             <div className="legalSection">
               <h3>1. 목적</h3>
-              <p>FateSaju는 청소년이 건전하게 서비스를 이용할 수 있도록 보호 조치를 시행합니다.</p>
+              <p>복연구소는 청소년이 건전하게 서비스를 이용할 수 있도록 보호 조치를 시행합니다.</p>
             </div>
             <div className="legalSection">
               <h3>2. 이용 제한</h3>
@@ -15,7 +15,7 @@ export default function YouthPolicyPage() {
             </div>
             <div className="legalSection">
               <h3>3. 보호자 안내</h3>
-              <p>만 14세 미만 청소년의 결제는 보호자 동의가 필요합니다. 미성년자 결제 관련 문의는 contact@fatesaju.com으로 연락해주세요.</p>
+              <p>만 14세 미만 청소년의 결제는 보호자 동의가 필요합니다. 미성년자 결제 관련 문의는 contact@fortunelab.store으로 연락해주세요.</p>
             </div>
           </div>
         </section>
