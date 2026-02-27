@@ -57,14 +57,12 @@ export default function HomePage() {
         <section className="glassCard" id="hero">
           <div className="heroMain">
             <p className="heroEyebrow">AI Four Pillars Analysis</p>
-            <h1>
-              나의{" "}
-              <span className="rotatingText">
-                {ROTATING_COPIES.map((copy, i) => (
-                  <span key={i} style={{ animationDelay: `${i * 4}s` }}>{copy}</span>
-                ))}
-              </span>
-            </h1>
+            <h1>나의 사주, 데이터로 풀다</h1>
+            <p className="rotatingText heroSubtitle">
+              {ROTATING_COPIES.map((copy, i) => (
+                <span key={i}>{copy}</span>
+              ))}
+            </p>
 
             {/* Tabs */}
             <div className="tabGroup" style={{ marginTop: 24 }}>

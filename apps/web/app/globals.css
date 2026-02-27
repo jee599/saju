@@ -962,26 +962,36 @@ p, li, label, input, select, button, textarea {
 /* ── Rotating Text ────────────────────────────────── */
 
 .rotatingText {
+  display: block;
   position: relative;
-  height: 1.4em;
+  height: 2.8em;
   overflow: hidden;
 }
 
 .rotatingText span {
   position: absolute;
   left: 0;
+  width: 100%;
   opacity: 0;
-  animation: textRotate 12s infinite;
+  animation: textRotate 16s infinite;
 }
 
 .rotatingText span:nth-child(1) { animation-delay: 0s; }
 .rotatingText span:nth-child(2) { animation-delay: 4s; }
 .rotatingText span:nth-child(3) { animation-delay: 8s; }
+.rotatingText span:nth-child(4) { animation-delay: 12s; }
 
 @keyframes textRotate {
-  0%, 5% { opacity: 0; transform: translateY(20px); }
-  10%, 28% { opacity: 1; transform: translateY(0); }
-  33%, 100% { opacity: 0; transform: translateY(-20px); }
+  0%, 3% { opacity: 0; transform: translateY(20px); }
+  6%, 21% { opacity: 1; transform: translateY(0); }
+  25%, 100% { opacity: 0; transform: translateY(-20px); }
+}
+
+.heroSubtitle {
+  font-size: clamp(0.9rem, 3.2vw, 1.1rem);
+  color: var(--t2);
+  line-height: 1.5;
+  margin-top: 8px;
 }
 
 /* ── Shared responsive ────────────────────────────── */
