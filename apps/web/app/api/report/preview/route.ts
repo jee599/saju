@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { generatePreview, isValidFortuneInput } from '../../../../lib/mockEngine';
+import { logRateLimit } from '../../../../lib/rateLimitLog';
 import type { FortuneInput } from '../../../../lib/types';
 
 export async function POST(req: Request) {
@@ -11,6 +12,11 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Fire-and-forget rate limit DB logging
+    const ip = req.headers.get("x-client-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    logRateLimit({ ip, endpoint: "/api/report/preview" });
+
     return NextResponse.json({ ok: true, data: generatePreview(input) });
   } catch (err) {
     console.error('[report/preview]', err);

@@ -20,7 +20,7 @@ export const toInputFromParams = (p: URLSearchParams): FortuneInput | null => {
   return { name, birthDate, birthTime, gender, calendarType };
 };
 
-export const getPriceLabel = (_code: ProductCode): string => "₩12,900";
+export const getPriceLabel = (_code: ProductCode): string => "₩5,900";
 
 export const buildShareText = (channel: "instagram" | "kakao", preview: ReportPreview): string => {
   const line = preview.free.summary;

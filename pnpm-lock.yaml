@@ -39,6 +39,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@saju/api':
+        specifier: workspace:*
+        version: link:../../packages/api
       '@saju/engine-saju':
         specifier: workspace:*
         version: link:../../packages/engine/saju

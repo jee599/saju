@@ -14,7 +14,7 @@ import type {
 import { buildLengthInfo, countReportChars, REPORT_LENGTH_RULES, type ReportTier } from "./reportLength";
 
 const PRODUCT_CODE: ProductCode = "full";
-const PRODUCT_PRICE = 5900;
+const PRODUCT_PRICE = 5_900;
 
 type Store = {
   orders: Map<string, { order: OrderSummary; input: FortuneInput }>;
@@ -306,7 +306,7 @@ export const generatePreview = (input: FortuneInput): ReportPreview => {
     cta: {
       code: PRODUCT_CODE,
       label: "장문 리포트 잠금 해제",
-      priceLabel: "₩12,900",
+      priceLabel: "₩5,900",
       description: "대화형 장문 해설 + 6개 도메인 + 대운 타임라인"
     },
     debugLengths: {

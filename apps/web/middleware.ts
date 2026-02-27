@@ -62,10 +62,12 @@ export function middleware(request: NextRequest) {
     );
   }
 
+  // Pass IP downstream for DB logging
   const response = NextResponse.next();
   response.headers.set("X-RateLimit-Limit", String(RATE_LIMIT));
   response.headers.set("X-RateLimit-Remaining", String(Math.max(0, RATE_LIMIT - entry.count)));
   response.headers.set("X-RateLimit-Reset", String(Math.ceil(entry.resetAt / 1000)));
+  response.headers.set("X-Client-IP", ip);
 
   return response;
 }
