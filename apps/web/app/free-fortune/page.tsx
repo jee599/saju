@@ -1,138 +1,125 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { CalendarType, FortuneInput, Gender } from "../../lib/types";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { track } from "../../lib/analytics";
-import { toInputQuery } from "../../lib/fortune";
-import { Button, GlassCard, PageContainer } from "../components/ui";
 
-const defaultInput: FortuneInput = {
-  name: "",
-  birthDate: "",
-  birthTime: "",
-  gender: "male",
-  calendarType: "solar"
-};
-
-export default function FreeFortunePage() {
+function FreeFortunContent() {
   const router = useRouter();
-  const [input, setInput] = useState<FortuneInput>(defaultInput);
-  const [submitted, setSubmitted] = useState(false);
-  const inputStarted = useRef(false);
-  const onFirstInteraction = useCallback(() => {
-    if (!inputStarted.current) {
-      inputStarted.current = true;
-      track("input_start");
-    }
-  }, []);
+  const params = useSearchParams();
+  const [name, setName] = useState("");
+  const [birthDate, setBirthDate] = useState(params.get("birthDate") ?? "1995-01-01");
+  const [birthTime, setBirthTime] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "other">("other");
+  const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
+  const [step, setStep] = useState(1);
 
-  const nameValid = input.name.trim().length >= 2;
-  const birthDateValid = Boolean(input.birthDate);
-  const canSubmit = useMemo(() => nameValid && birthDateValid, [nameValid, birthDateValid]);
+  const handleStep1 = () => {
+    if (name.trim().length < 2) return;
+    track("input_start");
+    setStep(2);
+  };
 
-  const submit = (event: React.FormEvent) => {
-    event.preventDefault();
-    setSubmitted(true);
-    if (!canSubmit) return;
-
-    track("input_submit", {
-      hasBirthTime: Boolean(input.birthTime),
-      calendarType: input.calendarType,
-      gender: input.gender
+  const handleSubmit = () => {
+    track("input_complete");
+    const q = new URLSearchParams({
+      name, birthDate, gender, calendarType,
+      ...(birthTime ? { birthTime } : {}),
     });
-
-    router.push(`/result?${toInputQuery(input)}`);
+    router.push(`/loading-analysis?redirect=/result?${q.toString()}`);
   };
 
   return (
-    <PageContainer>
-      <GlassCard>
-        <p className="heroEyebrow">무료 리포트 입력</p>
-        <h1>기본 정보 입력 후 무료 요약 리포트 확인</h1>
-        <p className="lead">무료 리포트는 짧은 요약만 제공하며, 이후 단일 장문 리포트로 확장할 수 있습니다.</p>
+    <main className="page">
+      <div className="container">
+        <section className="glassCard">
+          <h2>무료 사주 분석</h2>
+          <p className="muted" style={{ marginTop: 8 }}>기본 정보를 입력하면 타고난 기질과 오행 분석을 무료로 받을 수 있습니다.</p>
 
-        <form onSubmit={submit} onFocus={onFirstInteraction} className="form" noValidate>
-          <div className="formGrid cols2">
-            <div className="formGroup">
-              <label htmlFor="name">이름</label>
-              <input
-                id="name"
-                className={`input ${submitted && !nameValid ? "inputError" : ""}`}
-                value={input.name}
-                onChange={(e) => setInput((prev) => ({ ...prev, name: e.target.value }))}
-                placeholder="홍길동"
-                autoComplete="name"
-                required
-              />
-              {submitted && !nameValid ? <p className="errorText">이름은 2자 이상 입력해 주세요.</p> : null}
+          {step === 1 && (
+            <div className="form">
+              <div className="formGrid">
+                <div className="formGroup">
+                  <label>이름</label>
+                  <input
+                    className="input"
+                    placeholder="홍길동"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+                <div className="formGroup">
+                  <label>생년월일</label>
+                  <input
+                    type="date"
+                    className="input"
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="buttonRow">
+                <button
+                  className="btn btn-primary btn-lg btn-full"
+                  onClick={handleStep1}
+                  disabled={name.trim().length < 2}
+                >
+                  다음 단계
+                </button>
+              </div>
             </div>
+          )}
 
-            <div className="formGroup">
-              <label htmlFor="birthDate">생년월일</label>
-              <input
-                id="birthDate"
-                className={`input ${submitted && !birthDateValid ? "inputError" : ""}`}
-                type="date"
-                value={input.birthDate}
-                onChange={(e) => setInput((prev) => ({ ...prev, birthDate: e.target.value }))}
-                required
-              />
-              {submitted && !birthDateValid ? <p className="errorText">생년월일을 입력해 주세요.</p> : null}
+          {step === 2 && (
+            <div className="form">
+              <div className="formGrid">
+                <div className="formGroup">
+                  <label>태어난 시간 (선택)</label>
+                  <input
+                    type="time"
+                    className="input"
+                    value={birthTime}
+                    onChange={(e) => setBirthTime(e.target.value)}
+                    placeholder="모르면 비워두세요"
+                  />
+                  <p className="formHelp">모르시면 비워두셔도 됩니다.</p>
+                </div>
+                <div className="formGroup">
+                  <label>성별</label>
+                  <select className="select" value={gender} onChange={(e) => setGender(e.target.value as "male" | "female" | "other")}>
+                    <option value="other">선택 안 함</option>
+                    <option value="male">남성</option>
+                    <option value="female">여성</option>
+                  </select>
+                </div>
+                <div className="formGroup">
+                  <label>달력</label>
+                  <select className="select" value={calendarType} onChange={(e) => setCalendarType(e.target.value as "solar" | "lunar")}>
+                    <option value="solar">양력</option>
+                    <option value="lunar">음력</option>
+                  </select>
+                </div>
+              </div>
+              <div className="buttonRow">
+                <button className="btn btn-ghost btn-lg" onClick={() => setStep(1)}>
+                  이전
+                </button>
+                <button className="btn btn-primary btn-lg" onClick={handleSubmit} style={{ flex: 1 }}>
+                  무료 분석 시작
+                </button>
+              </div>
             </div>
+          )}
+        </section>
+      </div>
+    </main>
+  );
+}
 
-            <div className="formGroup">
-              <label htmlFor="birthTime">출생시간 (선택)</label>
-              <input
-                id="birthTime"
-                className="input"
-                type="time"
-                value={input.birthTime}
-                onChange={(e) => setInput((prev) => ({ ...prev, birthTime: e.target.value }))}
-              />
-              <p className="formHelp muted">미입력 시 중립 시간 기준으로 해석합니다.</p>
-            </div>
-
-            <div className="formGroup">
-              <label htmlFor="gender">성별</label>
-              <select
-                id="gender"
-                className="select"
-                value={input.gender}
-                onChange={(e) => setInput((prev) => ({ ...prev, gender: e.target.value as Gender }))}
-              >
-                <option value="male">남성</option>
-                <option value="female">여성</option>
-                <option value="other">기타</option>
-              </select>
-            </div>
-
-            <div className="formGroup">
-              <label htmlFor="calendarType">달력 유형</label>
-              <select
-                id="calendarType"
-                className="select"
-                value={input.calendarType}
-                onChange={(e) => setInput((prev) => ({ ...prev, calendarType: e.target.value as CalendarType }))}
-              >
-                <option value="solar">양력</option>
-                <option value="lunar">음력</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="buttonRow desktopOnly">
-            <Button type="submit" size="lg" disabled={!canSubmit}>무료 리포트 생성</Button>
-          </div>
-
-          <div className="stickyCta">
-            <div className="stickyCtaInner">
-              <p className="muted">입력 완료 후 무료 리포트를 즉시 생성합니다.</p>
-              <Button type="submit" size="lg" full disabled={!canSubmit}>무료 리포트 생성</Button>
-            </div>
-          </div>
-        </form>
-      </GlassCard>
-    </PageContainer>
+export default function FreeFortuPage() {
+  return (
+    <Suspense fallback={<div className="loadingScreen"><p className="muted">로딩 중...</p></div>}>
+      <FreeFortunContent />
+    </Suspense>
   );
 }

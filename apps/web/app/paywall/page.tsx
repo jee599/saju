@@ -1,76 +1,120 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { track } from "../../lib/analytics";
-import { webApi } from "../../lib/api";
-import { getPriceLabel, toInputFromParams, toInputQuery } from "../../lib/fortune";
-import { Button, ButtonLink, GlassCard, PageContainer, StatusBox } from "../components/ui";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { track, trackCheckoutStart } from "../../lib/analytics";
 
-type CheckoutState = "idle" | "creating" | "confirming" | "failed";
-
-function PaywallInner() {
-  const searchParams = useSearchParams();
+function PaywallContent() {
+  const params = useSearchParams();
   const router = useRouter();
-  const [state, setState] = useState<CheckoutState>("idle");
-  const [error, setError] = useState<string | null>(null);
+  const birthDate = params.get("birthDate") ?? "";
+  const birthTime = params.get("birthTime") ?? "";
+  const name = params.get("name") ?? "";
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
-  const input = useMemo(() => toInputFromParams(new URLSearchParams(searchParams.toString())), [searchParams]);
+  track("paywall_view");
 
-  useEffect(() => { track("paywall_view"); }, []);
+  const handleCheckout = async (ctaPosition: "top" | "middle" | "sticky") => {
+    if (!email || !email.includes("@")) {
+      setError("이메일을 입력해주세요.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    trackCheckoutStart(ctaPosition);
 
-  const checkout = async () => {
-    if (!input) return setError("입력값이 없어 결제를 시작할 수 없습니다.");
     try {
-      setState("creating");
-      track("checkout_start", { productCode: "full" });
-      const created = await webApi.checkoutCreate({ productCode: "full", input });
-      setState("confirming");
-      const confirmed = await webApi.checkoutConfirm({ orderId: created.order.orderId });
-      track("checkout_success", { orderId: confirmed.order.orderId });
-      router.push(`/report/${confirmed.order.orderId}?${toInputQuery(input)}`);
-    } catch (e) {
-      setState("failed");
-      const message = e instanceof Error ? e.message : "결제 시뮬레이션 실패";
-      track("checkout_fail", { error: message });
-      setError(message);
+      const res = await fetch("/api/checkout/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productCode: "full",
+          input: { name, birthDate, birthTime, gender: "other", calendarType: "solar" },
+        }),
+      });
+
+      if (!res.ok) throw new Error("결제 생성 실패");
+      const data = await res.json();
+      const orderId = data.data?.order?.orderId ?? data.order?.orderId;
+
+      // Confirm (mock)
+      const confirmRes = await fetch("/api/checkout/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+
+      if (!confirmRes.ok) throw new Error("결제 확인 실패");
+
+      track("purchase_complete", { price_variant: "B", value: 5900 });
+      router.push(`/loading-analysis?redirect=/report/${orderId}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "결제 중 오류가 발생했습니다.");
+      track("checkout_fail");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <PageContainer>
-      <GlassCard>
-        <p className="heroEyebrow">리포트 잠금 해제</p>
-        <h1>단일 장문 리포트</h1>
-        <p className="lead">실제 청구 없는 모의 결제로 전체 리포트를 즉시 확인할 수 있습니다.</p>
+    <main className="page">
+      <div className="container">
+        <section className="glassCard" style={{ textAlign: "center" }}>
+          <span className="badge badge-premium">프리미엄 사주 분석</span>
+          <h1 style={{ marginTop: 16 }}>₩5,900</h1>
+          <p className="muted" style={{ marginTop: 8 }}>7개 섹션의 상세 AI 분석</p>
 
-        <article className="pricingCard mt-sm">
-          <h3>상품 구성</h3>
-          <p className="price">{getPriceLabel("full")}</p>
-          <ul className="flatList compactList">
-            <li>대화형 한국어 장문 리포트</li>
-            <li>성격·직업·연애·금전·건강·가족·배우자 분석</li>
-            <li>각 도메인 과거→현재→미래 + 대운 타임라인</li>
-          </ul>
-        </article>
+          <div style={{ marginTop: 24, textAlign: "left" }}>
+            <ul className="flatList compactList">
+              <li>올해 총운 — 2026년 전체 흐름</li>
+              <li>직업/재물 — 커리어와 재물의 방향</li>
+              <li>연애/결혼 — 인연의 시기와 특성</li>
+              <li>건강 — 주의할 건강 포인트</li>
+              <li>가족/대인관계 — 관계의 흐름</li>
+              <li>월별 상세 운세 — 12개월 흐름</li>
+              <li>대운 타임라인 — 10년 주기 분석</li>
+            </ul>
+          </div>
 
-        <div className="buttonRow mt-md">
-          <ButtonLink href={input ? `/result?${toInputQuery(input)}` : "/free-fortune"} variant="ghost">결과로 돌아가기</ButtonLink>
-          <Button onClick={() => void checkout()} disabled={state === "creating" || state === "confirming"}>
-            {state === "creating" ? "주문 생성 중..." : state === "confirming" ? "결제 확인 중..." : "모의 결제 진행"}
-          </Button>
-        </div>
+          <div className="form" style={{ maxWidth: 400, margin: "24px auto 0" }}>
+            <div className="formGroup">
+              <label>이메일 (리포트 보관용)</label>
+              <input
+                type="email"
+                className={`input ${error ? "inputError" : ""}`}
+                placeholder="email@example.com"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); setError(""); }}
+              />
+              {error && <p className="errorText">{error}</p>}
+            </div>
+            <div className="buttonRow">
+              <button
+                className="btn btn-primary btn-lg btn-full"
+                onClick={() => handleCheckout("top")}
+                disabled={loading}
+              >
+                {loading ? "결제 처리 중..." : "₩5,900 결제하기"}
+              </button>
+            </div>
+          </div>
 
-        {error ? <StatusBox title="오류" description={error} tone="error" /> : null}
-      </GlassCard>
-    </PageContainer>
+          <p className="muted" style={{ marginTop: 16, fontSize: "0.8rem" }}>
+            결제 후 즉시 전체 리포트를 확인할 수 있습니다.
+            <br />환불 정책은 <a href="/refund" style={{ color: "var(--accent)" }}>여기</a>에서 확인하세요.
+          </p>
+        </section>
+      </div>
+    </main>
   );
 }
 
 export default function PaywallPage() {
   return (
-    <Suspense fallback={<PageContainer><GlassCard><p>결제 페이지 로딩중...</p></GlassCard></PageContainer>}>
-      <PaywallInner />
+    <Suspense fallback={<div className="loadingScreen"><p className="muted">결제 페이지 로딩 중...</p></div>}>
+      <PaywallContent />
     </Suspense>
   );
 }

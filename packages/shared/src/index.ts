@@ -169,6 +169,96 @@ export interface ComparePaidReportResponse {
   };
 }
 
+// ── Element types (from engine) ─────────────────────────
+export type Element = "wood" | "fire" | "earth" | "metal" | "water";
+export type Polarity = "yang" | "yin";
+
+export interface ElementBalance {
+  wood: number;
+  fire: number;
+  earth: number;
+  metal: number;
+  water: number;
+}
+
+export interface ElementAnalysis {
+  balance: ElementBalance;
+  dayMaster: Element;
+  dayMasterHanja: string;
+  yinYang: { yang: number; yin: number };
+  dominant: Element;
+  weakest: Element;
+}
+
+// ── Compatibility ───────────────────────────────────────
+export interface CompatibilityInput {
+  myBirthDate: string;    // YYYY-MM-DD
+  myBirthTime?: string;   // HH:mm
+  partnerBirthDate: string;
+  partnerBirthTime?: string;
+}
+
+export interface CompatibilityResult {
+  score: number;
+  myElement: Element;
+  partnerElement: Element;
+  relationship: string;
+  description: string;
+}
+
+// ── Price / A/B Test ────────────────────────────────────
+export type PriceVariant = "A" | "B" | "C";
+export const PRICE_VARIANTS: Record<PriceVariant, number> = {
+  A: 3900,
+  B: 5900,
+  C: 7900,
+};
+export const DEFAULT_PRICE_KRW = 5900;
+
+// ── Report tier structure ───────────────────────────────
+export interface FreeReportSection {
+  key: string;
+  title: string;
+  text: string;
+  type: "haiku" | "algorithm";
+}
+
+export interface BlurredSection {
+  key: string;
+  title: string;
+  teaser: string; // 오행별 분기 맛보기 text
+  elementHint: Element;
+  icon: string;
+}
+
+export interface ReportPreviewV2 {
+  freeSections: FreeReportSection[];
+  elementAnalysis: ElementAnalysis;
+  blurredSections: BlurredSection[];
+  cta: {
+    text: string;
+    priceLabel: string;
+    priceKrw: number;
+  };
+}
+
+// ── GA4 Events ──────────────────────────────────────────
+export type FunnelEvent =
+  | "page_view"
+  | "input_start"
+  | "input_step2"
+  | "input_complete"
+  | "report_view"
+  | "compatibility_start"
+  | "compatibility_result"
+  | "paywall_view"
+  | "checkout_start"
+  | "purchase_complete"
+  | "share_click";
+
+// ── Email subscription source ───────────────────────────
+export type EmailSource = "checkout" | "coming_soon" | "monthly_fortune";
+
 // ── Validation helpers ────────────────────────────────────
 const isDateFormat = (value: string): boolean => /^\d{4}-\d{2}-\d{2}$/.test(value);
 const isTimeFormat = (value: string): boolean => /^\d{2}:\d{2}$/.test(value);

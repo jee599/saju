@@ -36,7 +36,7 @@ export function PageContainer({ children }: { children: ReactNode }) {
 }
 
 export function GlassCard({ children, className }: { children: ReactNode; className?: string }) {
-  return <section className={cn("card", className)}>{children}</section>;
+  return <section className={cn("glassCard", className)}>{children}</section>;
 }
 
 export function SectionTitle({ title, subtitle }: { title: string; subtitle?: string }) {

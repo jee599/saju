@@ -14,7 +14,7 @@ import type {
 import { buildLengthInfo, countReportChars, REPORT_LENGTH_RULES, type ReportTier } from "./reportLength";
 
 const PRODUCT_CODE: ProductCode = "full";
-const PRODUCT_PRICE = 12900;
+const PRODUCT_PRICE = 5900;
 
 type Store = {
   orders: Map<string, { order: OrderSummary; input: FortuneInput }>;

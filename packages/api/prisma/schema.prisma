@@ -5,8 +5,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  // For migrations on Supabase you often want a non-pooled direct connection string.
-  // If not set, Prisma will fall back to DATABASE_URL.
   directUrl = env("DIRECT_URL")
 }
 
@@ -44,12 +42,14 @@ model Report {
   orderId     String
   model       String
   productCode String
+  tier        String   @default("free")  // "free" | "paid"
   headline    String
   summary     String
   sectionsJson String
   recommendationsJson String
   disclaimer  String
   generatedAt DateTime @default(now())
+  expiresAt   DateTime?  // null for paid (permanent), 90 days for free
 
   order Order @relation(fields: [orderId], references: [id])
 }
@@ -80,4 +80,42 @@ model PromptCache {
   usageJson String?
   createdAt DateTime @default(now())
   expiresAt DateTime?
+}
+
+// ── Anonymous User (비로그인 사용자) ─────────────────────
+model User {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String?
+  anonymousUuid String   @unique @map("anonymous_uuid")
+  locale        String   @default("ko")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+// ── Email Subscription (이메일 구독) ─────────────────────
+model EmailSubscription {
+  id        String   @id @default(cuid())
+  email     String
+  source    String   // "checkout" | "coming_soon" | "monthly_fortune"
+  locale    String   @default("ko")
+  optedIn   Boolean  @default(true) @map("opted_in")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([email, source])
+  @@map("email_subscriptions")
+}
+
+// ── Rate Limit Log (요청 제한 로그) ──────────────────────
+model RateLimitLog {
+  id          String   @id @default(cuid())
+  ip          String
+  fingerprint String?
+  uuid        String?
+  endpoint    String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([ip, createdAt])
+  @@index([uuid, createdAt])
+  @@map("rate_limit_logs")
 }

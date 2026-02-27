@@ -12,10 +12,15 @@
     "deploy:prod": "pnpm dlx vercel --prod --yes"
   },
   "dependencies": {
+    "@saju/engine-saju": "workspace:*",
     "@saju/shared": "workspace:*",
+    "@tailwindcss/postcss": "^4.2.1",
     "next": "15.5.12",
+    "postcss": "^8.5.6",
     "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react-dom": "19.0.0",
+    "react-mobile-picker": "^1.2.0",
+    "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",
