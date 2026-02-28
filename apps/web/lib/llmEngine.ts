@@ -150,9 +150,9 @@ const callLlm = async (params: {
 };
 
 const MODEL_CHAR_TARGETS: Record<string, number> = {
-  opus: 20000,
+  opus: 30000,
   sonnet: 30000,
-  gpt: 40000,
+  gpt: 30000,
 };
 
 const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: ProductCode; targetModel?: string; charTarget?: number }) => {

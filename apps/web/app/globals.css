@@ -692,6 +692,56 @@ p, li, label, input, select, button, textarea {
 
 .statusAction { margin-top: 12px; }
 
+/* ── 모델 테스트 패널 (심플) ────────────────────────── */
+
+.modelTestPanel {
+  margin-bottom: 20px;
+}
+
+.modelTabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+}
+
+.modelTab {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--t2);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.modelTab:hover {
+  border-color: var(--tab-color);
+  color: var(--tab-color);
+}
+
+.modelTab.active {
+  background: color-mix(in srgb, var(--tab-color) 15%, transparent);
+  border-color: var(--tab-color);
+  color: var(--tab-color);
+  font-weight: 700;
+}
+
+.modelSummaryRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--t2);
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+}
+
 /* ── Report ───────────────────────────────────────── */
 
 .reportLayout {
