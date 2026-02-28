@@ -82,11 +82,29 @@ export default function ReportPage() {
     <PageContainer>
       <GlassCard>
         <p className="heroEyebrow">전체 리포트</p>
-        <h1>주문 리포트 상세</h1>
+        <h1>사주 분석 리포트</h1>
         <p className="lead">전문 명리 해설체와 확률 표현 원칙으로 작성된 전체 결과입니다.</p>
 
         <div className="buttonRow">
-          <ButtonLink href="/free-fortune" variant="ghost">새로 생성</ButtonLink>
+          <ButtonLink href="/" variant="ghost">새로 생성</ButtonLink>
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              const shareData = {
+                title: "복연구소 - AI 사주 분석",
+                text: "나의 사주 분석 결과를 확인해보세요!",
+                url: window.location.href,
+              };
+              if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("링크가 복사되었습니다!");
+              }
+            }}
+          >
+            공유하기
+          </button>
         </div>
 
         {error ? <StatusBox title="오류" description={error} tone="error" /> : null}

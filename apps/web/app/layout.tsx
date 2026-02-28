@@ -48,10 +48,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="brandText">복연구소</span>
             </Link>
             <nav className="topNav" aria-label="주요 메뉴">
+              <Link href="/daily">오늘의 운세</Link>
               <Link href="/#hero">사주</Link>
               <Link href="/palm">손금</Link>
               <Link href="/name">작명</Link>
               <Link href="/face">관상</Link>
+              <Link href="/dream">꿈해몽</Link>
+              <Link href="/tarot">타로</Link>
             </nav>
           </div>
         </header>

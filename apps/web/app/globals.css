@@ -32,7 +32,7 @@
   /* 텍스트 */
   --t1: #F5F0EB;
   --t2: #B0A8BC;
-  --t3: #7A7490;
+  --t3: #9490A8;
 
   /* 보더 */
   --glass-border: rgba(220, 207, 243, 0.08);
@@ -1114,7 +1114,7 @@ p, li, label, input, select, button, textarea {
 
 .yinYangBar {
   display: flex;
-  height: 8px;
+  height: 16px;
   border-radius: 4px;
   overflow: hidden;
   margin-top: 12px;
@@ -1169,6 +1169,33 @@ p, li, label, input, select, button, textarea {
   inset: 0;
   background: linear-gradient(180deg, transparent 0%, var(--bg-card) 80%);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+
+.blurUnlockBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  z-index: 2;
+  box-shadow: 0 4px 16px rgba(183, 110, 121, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.blurUnlockBtn:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 0 6px 24px rgba(183, 110, 121, 0.4);
 }
 
 /* ── Loading UX ───────────────────────────────────── */

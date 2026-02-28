@@ -32,6 +32,14 @@ const STRATEGY_META: Record<number, { label: string; model: string; mode: "onesh
 
 export async function POST(req: Request) {
   try {
+    // Block in production
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { ok: false, error: { code: "NOT_AVAILABLE", message: "이 엔드포인트는 개발 환경에서만 사용할 수 있습니다." } },
+        { status: 404 }
+      );
+    }
+
     const body = await req.json();
     const strategy = Number(body.strategy);
     const input = body.input as FortuneInput;

@@ -268,57 +268,57 @@ function FourPillarsTable({ pillars, dayMaster }: { pillars: FourPillars; dayMas
 const BLUR_TEASERS: Record<Element, { sections: Array<{ title: string; teaser: string; icon: string }> }> = {
   wood: {
     sections: [
-      { title: "올해 총운", teaser: "2026년은 성장과 확장의 기운이 강한 해입니다...", icon: "🌿" },
-      { title: "직업/재물", teaser: "木의 기운이 재물운에 새로운 싹을 틔우고 있습니다...", icon: "🌿" },
-      { title: "연애/결혼", teaser: "봄처럼 새로운 만남의 에너지가 감지됩니다...", icon: "🌿" },
-      { title: "건강", teaser: "木의 에너지가 간과 담에 영향을 주고 있습니다...", icon: "🌿" },
-      { title: "가족/대인", teaser: "가족 관계에서 새로운 성장의 계기가 보입니다...", icon: "🌿" },
-      { title: "월별 운세", teaser: "상반기와 하반기의 흐름이 뚜렷하게 갈립니다...", icon: "🌿" },
-      { title: "대운 타임라인", teaser: "10년 주기의 대운 흐름에서 전환점이 다가옵니다...", icon: "🌿" },
+      { title: "올해 총운", teaser: "2026년은 성장과 확장의 기운이 강한 해입니다...", icon: "📊" },
+      { title: "직업/재물", teaser: "木의 기운이 재물운에 새로운 싹을 틔우고 있습니다...", icon: "💼" },
+      { title: "연애/결혼", teaser: "봄처럼 새로운 만남의 에너지가 감지됩니다...", icon: "💕" },
+      { title: "건강", teaser: "木의 에너지가 간과 담에 영향을 주고 있습니다...", icon: "🏥" },
+      { title: "가족/대인", teaser: "가족 관계에서 새로운 성장의 계기가 보입니다...", icon: "👨‍👩‍👧‍👦" },
+      { title: "월별 운세", teaser: "상반기와 하반기의 흐름이 뚜렷하게 갈립니다...", icon: "📅" },
+      { title: "대운 타임라인", teaser: "10년 주기의 대운 흐름에서 전환점이 다가옵니다...", icon: "⏳" },
     ],
   },
   fire: {
     sections: [
-      { title: "올해 총운", teaser: "2026년은 열정과 변화의 기운이 강한 해입니다...", icon: "🔥" },
-      { title: "직업/재물", teaser: "火의 에너지가 사업운에 강한 추진력을 만들고 있습니다...", icon: "🔥" },
-      { title: "연애/결혼", teaser: "뜨거운 인연이 하반기에 찾아올 기운이 보입니다...", icon: "🔥" },
-      { title: "건강", teaser: "심장과 소장에 火 기운이 집중되고 있습니다...", icon: "🔥" },
-      { title: "가족/대인", teaser: "주변에 활력을 불어넣는 역할이 강해집니다...", icon: "🔥" },
-      { title: "월별 운세", teaser: "여름철 운기가 특히 강하게 작용합니다...", icon: "🔥" },
-      { title: "대운 타임라인", teaser: "인생의 가장 활발한 시기가 다가오고 있습니다...", icon: "🔥" },
+      { title: "올해 총운", teaser: "2026년은 열정과 변화의 기운이 강한 해입니다...", icon: "📊" },
+      { title: "직업/재물", teaser: "火의 에너지가 사업운에 강한 추진력을 만들고 있습니다...", icon: "💼" },
+      { title: "연애/결혼", teaser: "뜨거운 인연이 하반기에 찾아올 기운이 보입니다...", icon: "💕" },
+      { title: "건강", teaser: "심장과 소장에 火 기운이 집중되고 있습니다...", icon: "🏥" },
+      { title: "가족/대인", teaser: "주변에 활력을 불어넣는 역할이 강해집니다...", icon: "👨‍👩‍👧‍👦" },
+      { title: "월별 운세", teaser: "여름철 운기가 특히 강하게 작용합니다...", icon: "📅" },
+      { title: "대운 타임라인", teaser: "인생의 가장 활발한 시기가 다가오고 있습니다...", icon: "⏳" },
     ],
   },
   earth: {
     sections: [
-      { title: "올해 총운", teaser: "2026년은 안정과 수확의 기운이 강한 해입니다...", icon: "⛰️" },
-      { title: "직업/재물", teaser: "土의 기운이 재물을 단단히 지켜주고 있습니다...", icon: "⛰️" },
-      { title: "연애/결혼", teaser: "신뢰를 기반으로 한 깊은 인연이 보입니다...", icon: "⛰️" },
-      { title: "건강", teaser: "비위(소화기)에 土 기운이 집중됩니다...", icon: "⛰️" },
-      { title: "가족/대인", teaser: "가족의 중심 역할이 더 강해지는 시기입니다...", icon: "⛰️" },
-      { title: "월별 운세", teaser: "환절기마다 운기의 변화가 뚜렷합니다...", icon: "⛰️" },
-      { title: "대운 타임라인", teaser: "안정적인 기반 위에 새로운 도약이 준비됩니다...", icon: "⛰️" },
+      { title: "올해 총운", teaser: "2026년은 안정과 수확의 기운이 강한 해입니다...", icon: "📊" },
+      { title: "직업/재물", teaser: "土의 기운이 재물을 단단히 지켜주고 있습니다...", icon: "💼" },
+      { title: "연애/결혼", teaser: "신뢰를 기반으로 한 깊은 인연이 보입니다...", icon: "💕" },
+      { title: "건강", teaser: "비위(소화기)에 土 기운이 집중됩니다...", icon: "🏥" },
+      { title: "가족/대인", teaser: "가족의 중심 역할이 더 강해지는 시기입니다...", icon: "👨‍👩‍👧‍👦" },
+      { title: "월별 운세", teaser: "환절기마다 운기의 변화가 뚜렷합니다...", icon: "📅" },
+      { title: "대운 타임라인", teaser: "안정적인 기반 위에 새로운 도약이 준비됩니다...", icon: "⏳" },
     ],
   },
   metal: {
     sections: [
-      { title: "올해 총운", teaser: "2026년은 결실과 정리의 기운이 강한 해입니다...", icon: "⚙️" },
-      { title: "직업/재물", teaser: "金의 에너지가 커리어에 날카로운 판단력을 줍니다...", icon: "⚙️" },
-      { title: "연애/결혼", teaser: "진지하고 명확한 관계를 원하는 시기입니다...", icon: "⚙️" },
-      { title: "건강", teaser: "폐와 대장에 金 기운이 집중됩니다...", icon: "⚙️" },
-      { title: "가족/대인", teaser: "관계 정리와 핵심 인연에 집중하는 시기입니다...", icon: "⚙️" },
-      { title: "월별 운세", teaser: "가을철 운기가 절정에 달합니다...", icon: "⚙️" },
-      { title: "대운 타임라인", teaser: "성과를 거두고 다음 단계를 준비하는 전환기입니다...", icon: "⚙️" },
+      { title: "올해 총운", teaser: "2026년은 결실과 정리의 기운이 강한 해입니다...", icon: "📊" },
+      { title: "직업/재물", teaser: "金의 에너지가 커리어에 날카로운 판단력을 줍니다...", icon: "💼" },
+      { title: "연애/결혼", teaser: "진지하고 명확한 관계를 원하는 시기입니다...", icon: "💕" },
+      { title: "건강", teaser: "폐와 대장에 金 기운이 집중됩니다...", icon: "🏥" },
+      { title: "가족/대인", teaser: "관계 정리와 핵심 인연에 집중하는 시기입니다...", icon: "👨‍👩‍👧‍👦" },
+      { title: "월별 운세", teaser: "가을철 운기가 절정에 달합니다...", icon: "📅" },
+      { title: "대운 타임라인", teaser: "성과를 거두고 다음 단계를 준비하는 전환기입니다...", icon: "⏳" },
     ],
   },
   water: {
     sections: [
-      { title: "올해 총운", teaser: "2026년은 지혜와 유연함의 기운이 강한 해입니다...", icon: "🌊" },
-      { title: "직업/재물", teaser: "水의 흐름이 새로운 기회를 끌어오고 있습니다...", icon: "🌊" },
-      { title: "연애/결혼", teaser: "감성적이고 깊은 교류가 이루어지는 시기입니다...", icon: "🌊" },
-      { title: "건강", teaser: "신장과 방광에 水 기운이 집중됩니다...", icon: "🌊" },
-      { title: "가족/대인", teaser: "소통과 이해가 관계를 깊게 만드는 시기입니다...", icon: "🌊" },
-      { title: "월별 운세", teaser: "겨울철 운기가 가장 강하게 작용합니다...", icon: "🌊" },
-      { title: "대운 타임라인", teaser: "내면의 성장이 외적 변화로 이어지는 시기입니다...", icon: "🌊" },
+      { title: "올해 총운", teaser: "2026년은 지혜와 유연함의 기운이 강한 해입니다...", icon: "📊" },
+      { title: "직업/재물", teaser: "水의 흐름이 새로운 기회를 끌어오고 있습니다...", icon: "💼" },
+      { title: "연애/결혼", teaser: "감성적이고 깊은 교류가 이루어지는 시기입니다...", icon: "💕" },
+      { title: "건강", teaser: "신장과 방광에 水 기운이 집중됩니다...", icon: "🏥" },
+      { title: "가족/대인", teaser: "소통과 이해가 관계를 깊게 만드는 시기입니다...", icon: "👨‍👩‍👧‍👦" },
+      { title: "월별 운세", teaser: "겨울철 운기가 가장 강하게 작용합니다...", icon: "📅" },
+      { title: "대운 타임라인", teaser: "내면의 성장이 외적 변화로 이어지는 시기입니다...", icon: "⏳" },
     ],
   },
 };
@@ -377,11 +377,8 @@ function ResultContent() {
     setTimeout(() => setVisible(true), 100);
   }, [birthDate, router]);
 
-  if (!birthDate) {
-    return <div className="loadingScreen"><p className="muted">생년월일 정보가 없습니다. 홈으로 이동합니다...</p></div>;
-  }
-
   const analysis = useMemo(() => {
+    if (!birthDate) return null;
     const parts = birthDate.split("-").map(Number);
     const y = parts[0] ?? 2000;
     const m = parts[1] ?? 1;
@@ -399,10 +396,13 @@ function ResultContent() {
     return { pillars: result.pillars, elements: result.elements };
   }, [birthDate, birthTime]);
 
-  const { elements, pillars } = analysis;
-  const dayEl = elements.dayMaster;
-  const teasers = BLUR_TEASERS[dayEl];
-  const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
+  const paywallParams = useMemo(() => new URLSearchParams({
+    birthDate: birthDate ?? "",
+    birthTime: birthTime ?? "",
+    name,
+    gender,
+    calendarType,
+  }).toString(), [birthDate, birthTime, name, gender, calendarType]);
 
   const runTest = useCallback(async (strategy: number) => {
     setTestStates((prev) => ({ ...prev, [strategy]: { loading: true } }));
@@ -429,9 +429,18 @@ function ResultContent() {
     }
   }, [name, birthDate, birthTime, gender, calendarType]);
 
-  const toggleSection = (key: string) => {
+  const toggleSection = useCallback((key: string) => {
     setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  }, []);
+
+  if (!birthDate || !analysis) {
+    return <div className="loadingScreen"><p className="muted">생년월일 정보가 없습니다. 홈으로 이동합니다...</p></div>;
+  }
+
+  const { elements, pillars } = analysis;
+  const dayEl = elements.dayMaster;
+  const teasers = BLUR_TEASERS[dayEl];
+  const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
 
   return (
     <main className="page">
@@ -517,13 +526,13 @@ function ResultContent() {
           </div>
         </section>
 
-        {/* CTA: 결제 */}
+        {/* CTA #1: 결제 */}
         <section className="ctaPanel" style={{ marginTop: 16 }}>
-          <h3>더 깊이 알아볼까요?</h3>
+          <h3>프리미엄 분석으로 전체 해석 보기</h3>
           <p className="muted">블러를 해제하고 전체 분석을 확인하세요.</p>
           <div className="buttonRow">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&gender=${gender}&calendarType=${calendarType}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
-              ₩5,900 · Sonnet 분석 보기
+            <Link href={`/paywall?${paywallParams}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+              나머지 7파트 전체 열기 — ₩5,900
             </Link>
           </div>
         </section>
@@ -672,18 +681,22 @@ function ResultContent() {
                 오행의 흐름과 십성의 배치를 고려한 전문적인 해석을 확인해보세요.
                 과거의 패턴과 현재의 기운, 그리고 미래의 흐름을 연결하여 분석합니다.
               </div>
-              <div className="blurOverlay" />
+              <div className="blurOverlay">
+                <Link href={`/paywall?${paywallParams}&model=sonnet`} className="blurUnlockBtn">
+                  🔓 잠금 해제
+                </Link>
+              </div>
             </div>
           ))}
         </section>
 
         {/* CTA #2 */}
         <section className="ctaPanel" style={{ marginTop: 16 }}>
-          <h3>더 깊이 알아볼까요?</h3>
+          <h3>블러 해제하고 전체 분석 보기</h3>
           <p className="muted">위 블러를 해제하고 전체 분석을 확인하세요.</p>
           <div className="buttonRow">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&gender=${gender}&calendarType=${calendarType}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
-              ₩5,900 · Sonnet 분석 보기
+            <Link href={`/paywall?${paywallParams}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+              전체 분석 잠금 해제 — ₩5,900
             </Link>
           </div>
         </section>
@@ -693,7 +706,7 @@ function ResultContent() {
           <h3>궁합도 궁금하다면?</h3>
           <p className="muted" style={{ marginTop: 8 }}>상대방 생년월일만 입력하면 무료 궁합을 볼 수 있어요.</p>
           <div className="buttonRow" style={{ justifyContent: "center" }}>
-            <Link href="/?tab=compat" className="btn btn-secondary btn-lg">
+            <Link href={`/compatibility?birthDate=${birthDate}`} className="btn btn-secondary btn-lg">
               궁합 보러 가기
             </Link>
           </div>
@@ -702,8 +715,8 @@ function ResultContent() {
         {/* 모바일 스티키 CTA */}
         <div className="stickyCta">
           <div className="stickyCtaInner">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&gender=${gender}&calendarType=${calendarType}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
-              상세 분석 보기
+            <Link href={`/paywall?${paywallParams}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+              전체 분석 보기 ₩5,900
             </Link>
           </div>
         </div>
