@@ -692,54 +692,59 @@ p, li, label, input, select, button, textarea {
 
 .statusAction { margin-top: 12px; }
 
-/* ── 모델 테스트 패널 (심플) ────────────────────────── */
+/* ── 모델 테스트 패널 ────────────────────────────── */
 
 .modelTestPanel {
   margin-bottom: 20px;
 }
 
-.modelTabs {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding-bottom: 12px;
+.modelCompareTable {
+  overflow-x: auto;
 }
 
-.modelTab {
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--glass-border);
-  background: transparent;
-  color: var(--t2);
-  font-size: 0.78rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+.modelCompareTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  color: var(--t1);
+}
+
+.modelCompareTable th {
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--t3);
+  border-bottom: 1px solid var(--glass-border);
   white-space: nowrap;
 }
 
-.modelTab:hover {
-  border-color: var(--tab-color);
-  color: var(--tab-color);
+.modelCompareTable td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
-.modelTab.active {
-  background: color-mix(in srgb, var(--tab-color) 15%, transparent);
-  border-color: var(--tab-color);
-  color: var(--tab-color);
+.modelCompareTable tr:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.modelCompareTable tr.activeRow {
+  background: rgba(196, 139, 159, 0.08);
+}
+
+.modelCompareTable tr.activeRow td:first-child {
   font-weight: 700;
 }
 
-.modelSummaryRow {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-size: 0.8rem;
-  color: var(--t2);
-  padding: 10px 14px;
-  background: rgba(255,255,255,0.02);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--glass-border);
+.modelDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* ── Report ───────────────────────────────────────── */

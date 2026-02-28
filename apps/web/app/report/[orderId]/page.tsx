@@ -148,36 +148,45 @@ export default function ReportPage() {
           <p className="muted">리포트 로딩중...</p>
         ) : (
           <div className="reportLayout">
-            {/* ── 심플 모델 선택 탭 ── */}
+            {/* ── 모델 비교 패널 ── */}
             {hasMultiModel && data.reportsByModel && (
               <div className="modelTestPanel">
-                <div className="modelTabs">
-                  {modelKeys.map((k) => (
-                    <button
-                      key={k}
-                      className={`modelTab ${activeModel === k ? "active" : ""}`}
-                      onClick={() => setActiveModel(k)}
-                      style={{
-                        "--tab-color": MODEL_COLORS[k] ?? "#888",
-                      } as React.CSSProperties}
-                    >
-                      {MODEL_LABELS[k] ?? k}
-                    </button>
-                  ))}
+                {/* 비교 테이블 */}
+                <div className="modelCompareTable">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>모델</th>
+                        <th>시간</th>
+                        <th>비용</th>
+                        <th>글자수</th>
+                        <th>토큰 (in/out)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {modelKeys.map((k) => {
+                        const r = data.reportsByModel![k];
+                        return (
+                          <tr
+                            key={k}
+                            className={activeModel === k ? "activeRow" : ""}
+                            onClick={() => setActiveModel(k)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <td>
+                              <span className="modelDot" style={{ background: MODEL_COLORS[k] ?? "#888" }} />
+                              {MODEL_LABELS[k] ?? k}
+                            </td>
+                            <td>{fmt(r.durationMs)}</td>
+                            <td>{fmtCost(r.estimatedCostUsd)}</td>
+                            <td>{fmtChars(r.charCount)}</td>
+                            <td className="muted">{(r.usage?.inputTokens ?? 0).toLocaleString()} / {(r.usage?.outputTokens ?? 0).toLocaleString()}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-
-                {/* 현재 선택 모델 요약 */}
-                {activeModel && data.reportsByModel[activeModel] && (() => {
-                  const r = data.reportsByModel![activeModel!];
-                  return (
-                    <div className="modelSummaryRow">
-                      <span>⏱ {fmt(r.durationMs)}</span>
-                      <span>💰 {fmtCost(r.estimatedCostUsd)}</span>
-                      <span>📝 {fmtChars(r.charCount)}</span>
-                      {r.usage && <span className="muted">토큰: {(r.usage.inputTokens ?? 0).toLocaleString()} / {(r.usage.outputTokens ?? 0).toLocaleString()}</span>}
-                    </div>
-                  );
-                })()}
               </div>
             )}
 
