@@ -269,6 +269,10 @@ export const estimateCostUsd = (provider: string, model: string, usage: LlmUsage
     // Gemini 3.1 Pro pricing: $2/M input, $12/M output
     return (input * 2 + output * 12) / 1_000_000;
   }
+  if (model.includes("5-mini") || model.includes("5.2-mini")) {
+    // GPT-5-mini pricing: $0.30/M input, $1.25/M output
+    return (input * 0.3 + output * 1.25) / 1_000_000;
+  }
   // GPT-5.2 pricing: $1.75/M input, $14/M output
   return (input * 1.75 + output * 14) / 1_000_000;
 };
@@ -376,7 +380,7 @@ export const generateChunkedReport = async (params: {
   orderId: string;
   input: FortuneInput;
   productCode: ProductCode;
-  targetModel: string; // "sonnet" | "gemini-flash"
+  targetModel: string; // "sonnet" | "gemini-flash" | "haiku" | "gpt-mini"
 }): Promise<ModelReportDetail & { totalCostUsd: number }> => {
   const { orderId, input, productCode, targetModel } = params;
   const charPerSection = 3000;
@@ -385,6 +389,7 @@ export const generateChunkedReport = async (params: {
   let llmModel: ReportModel;
   let anthropicModelId: string | undefined;
   let geminiModelId: string | undefined;
+  let openaiModelId: string | undefined;
 
   if (targetModel === "gemini-flash") {
     llmModel = "gemini";
@@ -392,6 +397,9 @@ export const generateChunkedReport = async (params: {
   } else if (targetModel === "haiku") {
     llmModel = "claude";
     anthropicModelId = "claude-haiku-4-5-20251001";
+  } else if (targetModel === "gpt-mini") {
+    llmModel = "gpt";
+    openaiModelId = "gpt-5-mini";
   } else {
     llmModel = "claude";
     anthropicModelId = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
@@ -418,7 +426,7 @@ export const generateChunkedReport = async (params: {
       const res = await callLlm({
         model: llmModel, system, user: userPrompt,
         maxTokens: maxTokensPerSection, temperature: 0.7,
-        anthropicModel: anthropicModelId, geminiModel: geminiModelId,
+        anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
       });
 
       if (res.usage) {
@@ -432,8 +440,8 @@ export const generateChunkedReport = async (params: {
     })
   );
 
-  const provider = llmModel === "gemini" ? "google" : "anthropic";
-  const modelName = geminiModelId ?? anthropicModelId ?? "unknown";
+  const provider = llmModel === "gpt" ? "openai" : llmModel === "gemini" ? "google" : "anthropic";
+  const modelName = openaiModelId ?? geminiModelId ?? anthropicModelId ?? "unknown";
   logLlmUsage({ provider, model: modelName, usage: totalUsage, durationMs: totalDurationMs });
 
   const costUsd = estimateCostUsd(provider, modelName, totalUsage);

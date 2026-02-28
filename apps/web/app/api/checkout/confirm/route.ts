@@ -5,11 +5,32 @@ import { buildReport } from '../../../../lib/mockEngine';
 import { countReportChars } from '../../../../lib/reportLength';
 
 /**
- * 테스트 모드: 결제 확인 후 모든 모델(gpt, sonnet, opus)을 병렬 생성.
- * 각 모델별 소요시간, 비용, 글자수를 비교할 수 있도록 반환.
- * 나중에 원복 시 단일 모델로 변경.
+ * 테스트 모드: 결제 확인 후 7개 모델 변형을 병렬 생성.
+ * - sonnet-chunked: Sonnet 4.6, 3000자 × 10섹션
+ * - sonnet-single: Sonnet 4.6, 30000자 × 1회
+ * - opus: Opus 4.6, 30000자 × 1회
+ * - gpt: GPT-5.2, 30000자 × 1회
+ * - gpt-mini-chunked: GPT-5-mini, 3000자 × 10섹션
+ * - gemini: Gemini 3.1 Pro, 30000자 × 1회
+ * - haiku-chunked: Haiku 4.5, 3000자 × 10섹션
  */
-const TEST_MODELS = ['gpt', 'sonnet', 'opus'] as const;
+interface TestVariation {
+  key: string;           // DB에 저장될 모델 키
+  targetModel: string;   // llmEngine에 전달될 모델명
+  strategy: 'single' | 'chunked';
+  charTarget?: number;   // single일 때 총 글자수 목표
+}
+
+const TEST_VARIATIONS: TestVariation[] = [
+  { key: 'sonnet-chunked', targetModel: 'sonnet', strategy: 'chunked' },
+  { key: 'sonnet-single', targetModel: 'sonnet', strategy: 'single', charTarget: 30000 },
+  { key: 'opus', targetModel: 'opus', strategy: 'single', charTarget: 30000 },
+  { key: 'gpt', targetModel: 'gpt', strategy: 'single', charTarget: 30000 },
+  { key: 'gpt-mini-chunked', targetModel: 'gpt-mini', strategy: 'chunked' },
+  { key: 'gemini', targetModel: 'gemini', strategy: 'single', charTarget: 30000 },
+  { key: 'gemini-flash-chunked', targetModel: 'gemini-flash', strategy: 'chunked' },
+  { key: 'haiku-chunked', targetModel: 'haiku', strategy: 'chunked' },
+];
 
 export async function POST(req: Request) {
   try {
@@ -65,49 +86,73 @@ export async function POST(req: Request) {
       confirmedAt: updatedOrder.confirmedAt?.toISOString(),
     };
 
-    // 4. 테스트 모드: 모든 모델 병렬 생성
+    // 4. 테스트 모드: 8개 모델 변형 병렬 생성
     let reportsByModel: Record<string, ModelReportDetail> = {};
     let primaryReport: ReportDetail;
 
     try {
-      const { generateSingleModelReport, hasLlmKeys, estimateCostUsd } = await import('../../../../lib/llmEngine');
+      const { generateSingleModelReport, generateChunkedReport, hasLlmKeys, estimateCostUsd } = await import('../../../../lib/llmEngine');
       if (hasLlmKeys()) {
         const results = await Promise.allSettled(
-          TEST_MODELS.map(async (model) => {
+          TEST_VARIATIONS.map(async (variation) => {
             const startMs = Date.now();
-            const report = await generateSingleModelReport({
-              orderId: order.id,
-              input,
-              productCode: updatedOrder.productCode as ReportDetail['productCode'],
-              targetModel: model,
-            });
+
+            let report: ModelReportDetail;
+
+            if (variation.strategy === 'chunked') {
+              // Chunked: 3000자 × 10 섹션
+              const chunkedResult = await generateChunkedReport({
+                orderId: order.id,
+                input,
+                productCode: updatedOrder.productCode as ReportDetail['productCode'],
+                targetModel: variation.targetModel,
+              });
+              report = chunkedResult;
+            } else {
+              // Single: 30000자 × 1회
+              report = await generateSingleModelReport({
+                orderId: order.id,
+                input,
+                productCode: updatedOrder.productCode as ReportDetail['productCode'],
+                targetModel: variation.targetModel,
+                charTarget: variation.charTarget,
+              });
+            }
+
             const durationMs = Date.now() - startMs;
             const charCount = countReportChars(report.sections.map(s => s.text).join('\n'));
 
             // Calculate cost
             let estimatedCostUsd = 0;
             if (report.usage) {
-              const provider = model === 'gpt' ? 'openai' : 'anthropic';
-              const modelName = model === 'gpt' ? (process.env.OPENAI_MODEL ?? 'gpt-5.2')
-                : model === 'opus' ? 'claude-opus-4-6'
-                : (process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-6');
-              estimatedCostUsd = estimateCostUsd(provider, modelName, report.usage);
+              const provider = report.model === 'gpt' ? 'openai' : report.model === 'gemini' ? 'google' : 'anthropic';
+              const modelNameMap: Record<string, string> = {
+                'sonnet-chunked': 'claude-sonnet-4-6',
+                'sonnet-single': 'claude-sonnet-4-6',
+                'opus': 'claude-opus-4-6',
+                'gpt': 'gpt-5.2',
+                'gpt-mini-chunked': 'gpt-5-mini',
+                'gemini': 'gemini-3.1-pro-preview',
+                'gemini-flash-chunked': 'gemini-3-flash-preview',
+                'haiku-chunked': 'claude-haiku-4-5-20251001',
+              };
+              estimatedCostUsd = estimateCostUsd(provider, modelNameMap[variation.key] ?? 'unknown', report.usage);
             }
 
-            return { model, report: { ...report, durationMs, estimatedCostUsd, charCount } };
+            return { key: variation.key, report: { ...report, durationMs, estimatedCostUsd, charCount } };
           })
         );
 
         for (const result of results) {
           if (result.status === 'fulfilled') {
-            reportsByModel[result.value.model] = result.value.report;
+            reportsByModel[result.value.key] = result.value.report;
           } else {
             console.error(`[checkout/confirm] Model generation failed:`, result.reason);
           }
         }
 
-        // Primary report = sonnet (or first successful)
-        primaryReport = reportsByModel['sonnet'] ?? Object.values(reportsByModel)[0] ?? buildReport(orderSummary, input);
+        // Primary report = sonnet-single (or first successful)
+        primaryReport = reportsByModel['sonnet-single'] ?? reportsByModel['sonnet-chunked'] ?? Object.values(reportsByModel)[0] ?? buildReport(orderSummary, input);
       } else {
         primaryReport = buildReport(orderSummary, input);
       }

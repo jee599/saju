@@ -54,19 +54,29 @@ function SectionText({ text }: { text: string }) {
 }
 
 const MODEL_LABELS: Record<string, string> = {
-  gpt: "GPT",
-  sonnet: "Claude Sonnet",
-  opus: "Claude Opus",
-  gemini: "Gemini",
-  fallback: "Fallback",
+  "sonnet-chunked": "Sonnet (청크)",
+  "sonnet-single": "Sonnet (단일)",
+  "opus": "Opus",
+  "gpt": "GPT-5.2",
+  "gpt-mini-chunked": "GPT-mini (청크)",
+  "gemini": "Gemini 3.1",
+  "gemini-flash-chunked": "Gemini Flash (청크)",
+  "haiku-chunked": "Haiku (청크)",
+  "sonnet": "Sonnet",
+  "fallback": "Fallback",
 };
 
 const MODEL_COLORS: Record<string, string> = {
-  gpt: "#10a37f",
-  sonnet: "#c48b9f",
-  opus: "#7c3aed",
-  gemini: "#4285f4",
-  fallback: "#888",
+  "sonnet-chunked": "#c48b9f",
+  "sonnet-single": "#e06090",
+  "opus": "#7c3aed",
+  "gpt": "#10a37f",
+  "gpt-mini-chunked": "#50d4a0",
+  "gemini": "#4285f4",
+  "gemini-flash-chunked": "#6db6ff",
+  "haiku-chunked": "#f59e0b",
+  "sonnet": "#c48b9f",
+  "fallback": "#888",
 };
 
 function formatDuration(ms?: number): string {
@@ -103,7 +113,7 @@ function ModelCompareCard({
       onClick={onClick}
       style={{
         flex: "1 1 0",
-        minWidth: 140,
+        minWidth: 120,
         padding: "14px 12px",
         border: isActive ? `2px solid ${MODEL_COLORS[model] ?? "#888"}` : "1px solid var(--glass-border)",
         borderRadius: "var(--radius-sm)",
@@ -161,7 +171,7 @@ export default function ReportPage() {
   // Set default active model when data loads
   useEffect(() => {
     if (modelKeys.length > 0 && !activeModel) {
-      setActiveModel("sonnet");
+      setActiveModel(modelKeys.includes("sonnet-single") ? "sonnet-single" : modelKeys[0]);
     }
   }, [modelKeys, activeModel]);
 
@@ -222,9 +232,9 @@ export default function ReportPage() {
                 borderRadius: "var(--radius-sm)",
               }}>
                 <h3 style={{ fontSize: "0.9rem", marginBottom: 12, color: "var(--accent-gold)" }}>
-                  🧪 테스트 모드 — 모델 비교
+                  🧪 테스트 모드 — 모델 비교 ({modelKeys.length}개)
                 </h3>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", maxHeight: 320, overflowY: "auto" }}>
                   {modelKeys.map((key) => (
                     <ModelCompareCard
                       key={key}
@@ -240,9 +250,10 @@ export default function ReportPage() {
                 <div style={{ marginTop: 16, overflowX: "auto" }}>
                   <table style={{
                     width: "100%",
-                    fontSize: "0.78rem",
+                    fontSize: "0.7rem",
                     borderCollapse: "collapse",
                     color: "var(--t1)",
+                    minWidth: 600,
                   }}>
                     <thead>
                       <tr style={{ borderBottom: "1px solid var(--glass-border)" }}>
@@ -299,6 +310,19 @@ export default function ReportPage() {
                             {(data.reportsByModel![k].usage?.outputTokens ?? 0).toLocaleString()}
                           </td>
                         ))}
+                      </tr>
+                      <tr>
+                        <td style={{ padding: "4px 8px" }}>💵 원/자</td>
+                        {modelKeys.map(k => {
+                          const cost = data.reportsByModel![k].estimatedCostUsd ?? 0;
+                          const chars = data.reportsByModel![k].charCount ?? 1;
+                          const costPerChar = cost > 0 ? (cost / chars * 1400 * 1000).toFixed(1) : "-";
+                          return (
+                            <td key={k} style={{ padding: "4px 8px", textAlign: "center" }}>
+                              {typeof costPerChar === "string" ? costPerChar : `${costPerChar}원/1K자`}
+                            </td>
+                          );
+                        })}
                       </tr>
                     </tbody>
                   </table>
