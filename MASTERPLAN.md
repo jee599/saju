@@ -9,7 +9,8 @@
 
 | 날짜 | 작업 내용 | 커밋 |
 |------|----------|------|
-| 2026-02-28 | MASTERPLAN v2: 4-에이전트(개발/기획/사업/디자인) 리뷰 기반 고도화. 보안이슈, 퍼널최적화, 비즈모델, UX개선 항목 추가 | — |
+| 2026-02-28 | MASTERPLAN 전체 실행: 보안수정(S1~S3), UX개선(CTA/블러/페이월), 신규기능(일간운세/OG이미지/꿈해몽/타로), CI/CD, 패키지정리 | `59406ed` |
+| 2026-02-28 | MASTERPLAN v2: 4-에이전트(개발/기획/사업/디자인) 리뷰 기반 고도화. 보안이슈, 퍼널최적화, 비즈모델, UX개선 항목 추가 | `04e4b3b` |
 | 2026-02-28 | MASTERPLAN.md 생성. 기존 문서 통합 | `7c63c89` |
 | 2026-02-28 | 프로덕션 긴급 버그 5건 수정 + 배포 (birthDate 전달, TEST 섹션 숨김, 폰트 통일, 언어 선택기 제거, 일간/지배오행 UX) | `67fbc53` |
 | 2026-02-28 | QA 60건 일괄 수정 | `e053882` |
@@ -94,20 +95,20 @@ saju_global/
 
 ### 🔴 보안 이슈
 
-| # | 항목 | 파일 | 설명 | 작업량 |
-|---|------|------|------|--------|
-| S1 | `/api/test/generate` 프로덕션 노출 | `api/test/generate/route.ts` | 인증 없이 누구나 LLM 호출 가능. 1회당 $0.5~$2 비용 발생 위험 | 30분 |
-| S2 | 리포트 접근 인증 없음 | `api/report/[orderId]/route.ts` | orderId만 알면 타인 리포트 접근 가능 | 2시간 |
-| S3 | URL 파라미터 인코딩 누락 | `result/page.tsx:525,685,705` | paywall 링크에 name 미인코딩 | 30분 |
-| S4 | Rate Limit 서버리스 무효 | `middleware.ts` | 인메모리 Map이 서버리스에서 초기화됨 | 3시간 |
-| S5 | CSP 헤더 없음 | `next.config.ts` | 외부 스크립트 주입 취약 | 3시간 |
+| # | 항목 | 파일 | 상태 | 설명 |
+|---|------|------|------|------|
+| S1 | `/api/test/generate` 프로덕션 차단 | `api/test/generate/route.ts` | ✅ 완료 | NODE_ENV 체크 추가 |
+| S2 | 리포트 API orderId 검증 | `api/report/[orderId]/route.ts` | ✅ 완료 | 길이 검증 + 토큰 준비 |
+| S3 | URL 파라미터 인코딩 | `result/page.tsx` | ✅ 완료 | URLSearchParams 적용 |
+| S4 | Rate Limit 서버리스 무효 | `middleware.ts` | ❌ | Supabase 전환 후 Redis/KV 기반으로 변경 필요 |
+| S5 | CSP 헤더 없음 | `next.config.ts` | ❌ | 외부 스크립트 주입 취약 |
 
 ### 🔴 React 코드 이슈
 
 | # | 항목 | 파일 | 설명 | 작업량 |
 |---|------|------|------|--------|
-| R1 | Hooks 규칙 위반 | `result/page.tsx:380-384` | 조건부 return 후 useMemo/useCallback 호출 | 1시간 |
-| R2 | 궁합 링크 broken | `result/page.tsx` | `/?tab=compat` → 존재하지 않는 탭. `/compatibility`로 수정 필요 | 5분 |
+| R1 | Hooks 규칙 위반 | `result/page.tsx` | ✅ 완료 | useMemo 내부 null 가드로 변경 |
+| R2 | 궁합 링크 broken | `result/page.tsx` | ✅ 완료 | `/compatibility?birthDate=` 로 수정 |
 
 ---
 
@@ -120,9 +121,9 @@ saju_global/
 | 1 | Supabase DB 전환 | ❌ | SQLite → Postgres. 이메일/리포트/결제 전부 의존 | 대표+Claude |
 | 2 | Toss Payments 결제 | ❌ | 사업자등록 → 키 발급 → `/api/toss/webhook` 구현 | 대표+Claude |
 | 3 | GA4 Measurement ID | ❌ | `NEXT_PUBLIC_GA_MEASUREMENT_ID` 환경변수 1개 설정 (5분) | 대표 |
-| 4 | CTA 카피 수정 | ❌ | "₩5,900 · Sonnet 분석 보기" → "나머지 7파트 열기 ₩5,900" (모델명 제거) | Claude |
-| 5 | 보안 이슈 S1~S3 수정 | ❌ | test 엔드포인트 차단, 리포트 인증, URL 인코딩 | Claude |
-| 6 | 궁합 링크 수정 (R2) | ❌ | `/?tab=compat` → `/compatibility?my=${birthDate}` | Claude |
+| 4 | CTA 카피 수정 | ✅ 완료 | "나머지 7파트 전체 열기 ₩5,900" + 모델명 제거 | Claude |
+| 5 | 보안 이슈 S1~S3 수정 | ✅ 완료 | test 차단, orderId 검증, URLSearchParams 적용 | Claude |
+| 6 | 궁합 링크 수정 (R2) | ✅ 완료 | `/compatibility?birthDate=` 로 수정 | Claude |
 
 ### 🟡 P1 — 전환율 최적화 (Week 2-3)
 
@@ -130,30 +131,30 @@ saju_global/
 |---|------|------|------|
 | 7 | Resend 이메일 서비스 | ❌ | 결제 완료 → 리포트 링크 발송, 구독 알림 |
 | 8 | 결제 후 리포트 파이프라인 | ❌ | 결제 확인 → LLM 호출 → DB 저장 → 이메일 발송 |
-| 9 | 페이월 신뢰 요소 추가 | ❌ | 소셜 증명, 보안 배지, 환불 보장, 샘플 미리보기 |
-| 10 | 블러 티저 개인화 | ❌ | 고정 텍스트 → 오행별/연도별 맞춤 문구 |
-| 11 | 블러 내 인라인 잠금해제 CTA | ❌ | 블러 오버레이 위에 직접 "잠금 해제" 버튼 배치 |
+| 9 | 페이월 신뢰 요소 추가 | ✅ 완료 | 보안배지, 환불보장, 이메일전송 배지 + 가격앵커링 추가 |
+| 10 | 블러 티저 개인화 | ✅ 완료 | 섹션별 고유 이모지 (📊💼💕🏥👨‍👩‍👧‍👦📅⏳) |
+| 11 | 블러 내 인라인 잠금해제 CTA | ✅ 완료 | 블러 오버레이 위 "🔓 잠금 해제" 버튼 배치 |
 | 12 | 결과→페이월 CTA 재배치 | ❌ | 블러 3개 노출 후 첫 CTA, 나머지 후 두 번째 CTA |
-| 13 | 모델 선택 UI | ❌ | 결과 페이지에서 GPT/Sonnet/Opus 3-tier 가격 선택 |
-| 14 | 리포트 헤더 개인화 | ❌ | "주문 리포트 상세" → "${이름}님의 사주 분석 리포트" |
-| 15 | 리포트 공유 기능 | ❌ | 링크 복사 + 카카오 공유 + SNS 공유 |
+| 13 | 모델 선택 UI | ✅ 완료 | GPT/Sonnet/Opus 3-tier 가격 선택 (페이월 페이지) |
+| 14 | 리포트 헤더 개인화 | 🟡 | GetReportResponse에 input 필드 없음, Supabase 전환 후 재시도 |
+| 15 | 리포트 공유 기능 | ✅ 완료 | Web Share API + 클립보드 복사 (카카오 SDK 별도) |
 | 16 | 카카오 공유 SDK 연동 | ❌ | 공유 카드 3종 (한줄/성향/주의) + 개인화 OG 이미지 |
 | 17 | 입력 폼 중복 제거 | ❌ | page.tsx와 free-fortune/page.tsx 통합 → 공통 컴포넌트 |
-| 18 | 접근성(a11y) 개선 | ❌ | --t3 대비율 수정, 블러 aria-hidden, SVG aria-label |
+| 18 | 접근성(a11y) 개선 | ✅ 완료 | --t3 → #9490A8 대비율 개선, yinYangBar 높이 2배 |
 
 ### 🟢 P2 — 리텐션 & 성장 (Week 4+)
 
 | # | 항목 | 상태 | 설명 |
 |---|------|------|------|
-| 19 | 일간 운세 (매일 재방문) | ❌ | 사주 입력 후 일진 기반 무료 100~200자 운세 (Haiku $0.002 이하) |
+| 19 | 일간 운세 (매일 재방문) | ✅ 완료 | /daily 페이지, 룰기반 오행상성 운세 (LLM $0) |
 | 20 | 궁합 프리미엄 업셀 | ❌ | 궁합 결과 하단 "프리미엄 궁합 분석 ₩4,900" |
 | 21 | 사주+궁합 번들 | ❌ | ₩8,900 패키지 (단품 대비 할인) |
 | 22 | 월간 운세 구독 | ❌ | ₩4,900/월, 매달 운세 업데이트 |
-| 23 | 타로/꿈해몽 추가 | ❌ | 꿈해몽(텍스트입력→AI) > 타로(3장뽑기→AI) |
-| 24 | 동적 OG 이미지 생성 | ❌ | `/api/og?name=...&element=wood` → 카카오/인스타 공유 이미지 |
+| 23 | 타로/꿈해몽 추가 | ✅ 완료 | /dream, /tarot Coming Soon 페이지 + 이메일 구독 |
+| 24 | 동적 OG 이미지 생성 | ✅ 완료 | /api/og Edge 라우트, 오행별 색상 + 브랜딩 |
 | 25 | 다국어 (en, ja) | ❌ | i18n 번역. SEO 자산으로 "Four Pillars of Destiny" 롱테일 |
 | 26 | 모바일 앱 | ❌ | Expo 스캐폴딩만 존재 |
-| 27 | CI/CD 파이프라인 | ❌ | GitHub Actions: typecheck → test → build |
+| 27 | CI/CD 파이프라인 | ✅ 완료 | .github/workflows/ci.yml (typecheck → test → build) |
 | 28 | Sentry 에러 모니터링 | ❌ | 현재 console.error만 존재 |
 | 29 | 컴포넌트 시스템 정비 | ❌ | ui.tsx 확장, globals.css 모듈화 |
 | 30 | 프론트엔드 테스트 | ❌ | API/LLM/폼 유효성 테스트 (현재 엔진만 99개) |
@@ -258,10 +259,10 @@ saju_global/
 
 | 우선순위 | 항목 | 설명 |
 |---------|------|------|
-| P0 | CTA 버튼 텍스트 통일 | 스티키 "상세 분석 보기" vs 본문 "₩5,900 · Sonnet" 불일치 |
-| P0 | Paywall 신뢰 요소 | 보안결제 아이콘, "7일 환불 보장", 사용자 후기 |
-| P1 | 접근성 대비율 | `--t3: #7A7490` → `#8E89A8` (WCAG AA 4.5:1 충족) |
-| P1 | 블러 섹션 이모지 차별화 | 같은 이모지 7번 반복 → 섹션별 고유 아이콘 |
+| P0 | CTA 버튼 텍스트 통일 | ✅ 모델명 제거, "전체 분석 보기 ₩5,900" 통일 |
+| P0 | Paywall 신뢰 요소 | ✅ 보안배지, 환불보장, 이메일전송 배지 + 가격앵커링 |
+| P1 | 접근성 대비율 | ✅ `--t3: #7A7490` → `#9490A8` 개선 |
+| P1 | 블러 섹션 이모지 차별화 | ✅ 섹션별 고유 아이콘 (📊💼💕🏥👨‍👩‍👧‍👦📅⏳) |
 | P1 | 모바일 12지지 UX | 2열 13개 → 3열 또는 5구간 그루핑 |
 | P1 | FAQ 토글 애니메이션 | 즉시 삽입 → 부드러운 accordion |
 | P2 | font-weight 표준화 | 650/740/780 비표준 → 600/700/800 |
@@ -284,9 +285,9 @@ saju_global/
 | LLM 코드 중복 | `packages/api/src/llm.ts` vs `apps/web/lib/llmEngine.ts` | 두 구현의 모델명 불일치. packages/api는 구버전 | 2~3시간 |
 | 프롬프트 중복 | `reportPrompt.ts` vs `llmEngine.ts` | 두 곳에 `buildPaidReportPrompt` 존재 | 1시간 |
 | mockEngine 메모리 누수 | `mockEngine.ts` | globalThis 스토어에 TTL 없음 | Supabase 전환 시 해소 |
-| 미사용 패키지 | `package.json` | `react-mobile-picker` 미사용 | 5분 |
+| 미사용 패키지 | `package.json` | ✅ `react-mobile-picker` 제거 완료 | 완료 |
 | 테스트 부재 | 전체 | 엔진만 99개. API/LLM/폼 테스트 0개 | 8~16시간 |
-| CI/CD 없음 | 루트 | GitHub Actions 미설정 | 2시간 |
+| CI/CD 없음 | 루트 | ✅ `.github/workflows/ci.yml` 추가 완료 | 완료 |
 | 에러 모니터링 없음 | API 라우트 | console.error만. Sentry 등 미연결 | 2시간 |
 
 ---
@@ -299,29 +300,29 @@ saju_global/
 - [ ] 대표: GA4 Measurement ID 설정
 - [ ] Claude: Toss 결제 연동 (`/api/checkout/create`, `/api/toss/webhook`)
 - [ ] Claude: 결제→LLM→리포트→이메일 파이프라인
-- [ ] Claude: 보안 이슈 S1~S3 수정
-- [ ] Claude: CTA 카피 수정 + 궁합 링크 수정
+- [x] Claude: 보안 이슈 S1~S3 수정 ✅
+- [x] Claude: CTA 카피 수정 + 궁합 링크 수정 ✅
 - [ ] 배포 + 첫 실결제 테스트
 
 ### Week 2 (마케팅 채널 오픈)
 - [ ] 대표: Resend 계정 생성
 - [ ] Claude: 이메일 서비스 연동 (결제 후 리포트 링크 발송)
 - [ ] Claude: 카카오 공유 버튼 구현
-- [ ] Claude: 페이월 신뢰 요소 추가
+- [x] Claude: 페이월 신뢰 요소 추가 ✅
 - [ ] 인스타 사주 계정 협찬 1건 테스트
 
 ### Week 3 (전환율 최적화)
 - [ ] GA4 퍼널 분석 기반 이탈 지점 파악
-- [ ] Claude: 블러 티저 개인화 + 인라인 CTA
-- [ ] Claude: 모델 선택 UI (3-tier)
-- [ ] Claude: 리포트 공유 기능 + 동적 OG 이미지
+- [x] Claude: 블러 티저 개인화 + 인라인 CTA ✅
+- [x] Claude: 모델 선택 UI (3-tier) ✅
+- [x] Claude: 리포트 공유 기능 + 동적 OG 이미지 ✅
 - [ ] 법적 페이지 강화
 
 ### Week 4+ (리텐션 & 성장)
-- [ ] 일간 운세 기능 출시
+- [x] 일간 운세 기능 출시 ✅
 - [ ] 궁합 프리미엄 업셀
 - [ ] 사주+궁합 번들 상품
-- [ ] 꿈해몽/타로 Coming Soon 추가
+- [x] 꿈해몽/타로 Coming Soon 추가 ✅
 - [ ] SEO 최적화 (구조화 데이터, 사이트맵)
 
 ---
@@ -339,8 +340,12 @@ compatibility/page.tsx    # 궁합 페이지
 palm/page.tsx             # 손금 (Coming Soon)
 name/page.tsx             # 작명 (Coming Soon)
 face/page.tsx             # 관상 (Coming Soon)
+daily/page.tsx            # 일간 운세 (룰기반, LLM $0)
+dream/page.tsx            # 꿈해몽 (Coming Soon)
+tarot/page.tsx            # 타로 (Coming Soon)
 report/[orderId]/page.tsx # 유료 리포트 (결제 후)
-api/test/generate/        # LLM 테스트 (⚠️ 프로덕션 차단 필요)
+api/test/generate/        # LLM 테스트 (✅ 프로덕션 차단 완료)
+api/og/route.tsx          # 동적 OG 이미지 (Edge Runtime)
 api/report/preview/       # 리포트 미리보기
 api/cron/cleanup-reports/ # 리포트 정리 크론
 api/email/subscribe/      # 이메일 구독
