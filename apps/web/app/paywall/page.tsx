@@ -49,16 +49,10 @@ function PaywallContent() {
       const orderId = data.data?.order?.orderId ?? data.order?.orderId;
       if (!orderId) throw new Error("주문 ID를 받지 못했습니다.");
 
-      const confirmRes = await fetch("/api/checkout/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
-      });
-
-      if (!confirmRes.ok) throw new Error("결제 확인 실패");
-
       track("purchase_complete", { value: FIXED_PRICE });
-      router.push(`/loading-analysis?redirect=${encodeURIComponent(`/report/${orderId}`)}`);
+
+      // 즉시 로딩 페이지로 이동 → 로딩 페이지에서 confirm 호출
+      router.push(`/loading-analysis?orderId=${orderId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "결제 중 오류가 발생했습니다.");
       track("checkout_fail");
@@ -133,7 +127,7 @@ function PaywallContent() {
                 onClick={() => handleCheckout("top")}
                 disabled={loading}
               >
-                {loading ? "AI 분석 생성 중... (1~2분 소요)" : `${FIXED_PRICE_LABEL} 결제하기`}
+                {loading ? "주문 생성 중..." : `${FIXED_PRICE_LABEL} 결제하기`}
               </button>
             </div>
           </div>
