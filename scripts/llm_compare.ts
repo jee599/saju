@@ -208,7 +208,7 @@ const callOpenAI = async (
     body: JSON.stringify({
       model,
       temperature: 0.7,
-      max_tokens: max,
+      max_completion_tokens: max,
       messages: [
         { role: "system", content: sys },
         { role: "user", content: usr },

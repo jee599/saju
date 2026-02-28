@@ -8,8 +8,8 @@ import { track } from "../../lib/analytics";
 
 function CompatContent() {
   const params = useSearchParams();
-  const myDate = params.get("my") ?? "1995-01-01";
-  const partnerDate = params.get("partner") ?? "1995-06-15";
+  const myDate = params.get("my") ?? "2000-01-01";
+  const partnerDate = params.get("partner") ?? "2000-06-15";
 
   const result = useMemo(() => {
     const [my, mm, md] = myDate.split("-").map(Number);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useMemo, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { calculateFourPillars, ELEMENT_KR, ELEMENT_EMOJI, ELEMENT_KR_NATIVE } from "@saju/engine-saju";
@@ -39,7 +39,7 @@ const STEM_POLARITY: Record<string, "양" | "음"> = {
 function ElementRadar({ balance }: { balance: Record<Element, number> }) {
   const elements: Element[] = ["wood", "fire", "earth", "metal", "water"];
   const labels = ["木", "火", "土", "金", "水"];
-  const cx = 100, cy = 100, R = 70;
+  const cx = 110, cy = 105, R = 68;
 
   const angle = (i: number) => (Math.PI / 2) + (2 * Math.PI * i) / 5;
   const px = (i: number, r: number) => cx + r * Math.cos(-angle(i));
@@ -54,127 +54,115 @@ function ElementRadar({ balance }: { balance: Record<Element, number> }) {
   }).join(" ");
 
   return (
-    <svg viewBox="0 0 200 200" style={{ width: "100%", maxWidth: 260, margin: "0 auto", display: "block" }}>
+    <svg viewBox="0 0 220 230" style={{ width: "100%", maxWidth: 280, margin: "0 auto", display: "block" }}>
       <defs>
         <linearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#A78BDA" stopOpacity={0.3} />
-          <stop offset="100%" stopColor="#D4A5C0" stopOpacity={0.15} />
+          <stop offset="0%" stopColor="#C48B9F" stopOpacity={0.25} />
+          <stop offset="100%" stopColor="#D4AF37" stopOpacity={0.1} />
         </linearGradient>
         <linearGradient id="radarStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#A78BDA" />
-          <stop offset="100%" stopColor="#D4A5C0" />
+          <stop offset="0%" stopColor="#C48B9F" />
+          <stop offset="100%" stopColor="#D4AF37" />
         </linearGradient>
-        <filter id="radarGlow">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
-      {/* Circular grid */}
+      {/* Background grid - thicker lines */}
       {gridLevels.map(level => (
         <polygon
           key={level}
           points={elements.map((_, i) => `${px(i, R * level)},${py(i, R * level)}`).join(" ")}
-          fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={0.5}
-          strokeDasharray={level < 1 ? "2 3" : "none"}
+          fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={level === 1.0 ? 1.5 : 0.8}
+          strokeDasharray={level < 1 ? "3 4" : "none"}
         />
       ))}
-      {/* Axis lines */}
+      {/* Axis lines - thicker */}
       {elements.map((_, i) => (
         <line key={i} x1={cx} y1={cy} x2={px(i, R)} y2={py(i, R)}
-          stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} />
+          stroke="rgba(255,255,255,0.1)" strokeWidth={0.8} />
       ))}
-      {/* Data polygon with glow */}
-      <polygon points={dataPoints} fill="url(#radarFill)" stroke="url(#radarStroke)" strokeWidth={1.5}
-        filter="url(#radarGlow)" />
-      {/* Data dots with glow */}
+      {/* Data polygon */}
+      <polygon points={dataPoints} fill="url(#radarFill)" stroke="url(#radarStroke)" strokeWidth={1.5} />
+      {/* Data dots */}
       {elements.map((el, i) => {
         const ratio = Math.min(balance[el] / maxVal, 1);
         const dotX = px(i, R * ratio);
         const dotY = py(i, R * ratio);
         return (
           <g key={el}>
-            <circle cx={dotX} cy={dotY} r={6} fill={`var(--element-${el})`} opacity={0.15} />
-            <circle cx={dotX} cy={dotY} r={3.5} fill={`var(--element-${el})`} />
+            <circle cx={dotX} cy={dotY} r={5} fill={`var(--element-${el})`} opacity={0.2} />
+            <circle cx={dotX} cy={dotY} r={3} fill={`var(--element-${el})`} />
           </g>
         );
       })}
-      {/* Labels with value */}
-      {elements.map((el, i) => (
-        <g key={el}>
-          <text x={px(i, R + 18)} y={py(i, R + 14)} textAnchor="middle" dominantBaseline="central"
-            fontSize={11} fontWeight={700} fill={`var(--element-${el})`}>
-            {labels[i]}
-          </text>
-          <text x={px(i, R + 18)} y={py(i, R + 26)} textAnchor="middle" dominantBaseline="central"
-            fontSize={8} fontWeight={500} fill="rgba(255,255,255,0.4)">
-            {balance[el]}%
-          </text>
-        </g>
-      ))}
+      {/* Labels - separated from percentage to avoid overlap */}
+      {elements.map((el, i) => {
+        const labelR = R + 28;
+        const lx = px(i, labelR);
+        const ly = py(i, labelR);
+        return (
+          <g key={el}>
+            <text x={lx} y={ly - 6} textAnchor="middle" dominantBaseline="central"
+              fontSize={12} fontWeight={700} fill={`var(--element-${el})`}>
+              {labels[i]}
+            </text>
+            <text x={lx} y={ly + 8} textAnchor="middle" dominantBaseline="central"
+              fontSize={9} fontWeight={500} fill="rgba(255,255,255,0.5)">
+              {balance[el]}%
+            </text>
+          </g>
+        );
+      })}
     </svg>
   );
 }
 
 // ── 오행 상생 사이클 (Premium SVG) ──
-function ElementCycle({ dominant, weakest }: { dominant: Element; weakest: Element }) {
+function ElementCycle({ dominant, weakest, balance }: { dominant: Element; weakest: Element; balance: Record<Element, number> }) {
   const elements: Element[] = ["wood", "fire", "earth", "metal", "water"];
   const labels = ["木", "火", "土", "金", "水"];
-  const icons = ["🌿", "🔥", "⛰️", "⚙️", "🌊"];
-  const cx = 100, cy = 100, R = 62;
+  const cx = 110, cy = 110, R = 65;
 
   const angle = (i: number) => (Math.PI / 2) + (2 * Math.PI * i) / 5;
   const px = (i: number) => cx + R * Math.cos(-angle(i));
   const py = (i: number) => cy - R * Math.sin(-angle(i));
 
+  // Scale circle size by balance proportion (min 14, max 28)
+  const maxBal = Math.max(...elements.map(e => balance[e]), 1);
+  const nodeRadius = (el: Element) => {
+    const ratio = balance[el] / maxBal;
+    return 14 + ratio * 14;
+  };
+
   return (
-    <svg viewBox="0 0 200 200" style={{ width: "100%", maxWidth: 240, margin: "0 auto", display: "block" }}>
+    <svg viewBox="0 0 220 220" style={{ width: "100%", maxWidth: 260, margin: "0 auto", display: "block" }}>
       <defs>
         <marker id="arrowCycle" viewBox="0 0 10 10" refX={8} refY={5} markerWidth={4} markerHeight={4} orient="auto">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(167,139,218,0.5)" />
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(196,139,159,0.5)" />
         </marker>
-        <filter id="nodeGlow">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-        <filter id="dominantPulse">
-          <feGaussianBlur stdDeviation="6" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
       {/* Connection ring */}
-      <circle cx={cx} cy={cy} r={R} fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth={28} />
+      <circle cx={cx} cy={cy} r={R} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={30} />
       {/* 상생 arrows */}
       {elements.map((_, i) => {
         const next = (i + 1) % 5;
         const x1 = px(i), y1 = py(i), x2 = px(next), y2 = py(next);
         const dx = x2 - x1, dy = y2 - y1;
         const len = Math.sqrt(dx * dx + dy * dy);
-        const offset = 22;
+        const offset = 24;
         return (
           <line key={`gen-${i}`}
             x1={x1 + dx / len * offset} y1={y1 + dy / len * offset}
             x2={x2 - dx / len * offset} y2={y2 - dy / len * offset}
-            stroke="rgba(167,139,218,0.25)" strokeWidth={1.5} markerEnd="url(#arrowCycle)"
+            stroke="rgba(196,139,159,0.3)" strokeWidth={1.5} markerEnd="url(#arrowCycle)"
           />
         );
       })}
-      {/* Element nodes */}
+      {/* Element nodes - sized by proportion */}
       {elements.map((el, i) => {
         const isDominant = el === dominant;
         const isWeakest = el === weakest;
-        const nodeR = isDominant ? 24 : isWeakest ? 15 : 19;
+        const nodeR = nodeRadius(el);
         return (
-          <g key={el} filter={isDominant ? "url(#dominantPulse)" : "url(#nodeGlow)"}>
-            {/* Outer glow ring for dominant */}
+          <g key={el}>
             {isDominant && (
               <circle cx={px(i)} cy={py(i)} r={nodeR + 4} fill="none"
                 stroke={`var(--element-${el})`} strokeWidth={1} opacity={0.3}>
@@ -184,34 +172,34 @@ function ElementCycle({ dominant, weakest }: { dominant: Element; weakest: Eleme
             )}
             <circle cx={px(i)} cy={py(i)} r={nodeR}
               fill={`var(--element-${el})`}
-              opacity={isDominant ? 0.85 : isWeakest ? 0.25 : 0.55}
-              stroke={isDominant ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.08)"}
+              opacity={isDominant ? 0.85 : isWeakest ? 0.3 : 0.55}
+              stroke={isDominant ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.08)"}
               strokeWidth={isDominant ? 1.5 : 0.5}
             />
             <text x={px(i)} y={py(i)} textAnchor="middle" dominantBaseline="central"
-              fontSize={isDominant ? 13 : 11} fontWeight={700} fill="#fff">
+              fontSize={Math.max(10, nodeR * 0.5)} fontWeight={700} fill="#fff">
               {labels[i]}
             </text>
             {isDominant && (
-              <text x={px(i)} y={py(i) + 34} textAnchor="middle" fontSize={8} fontWeight={600}
+              <text x={px(i)} y={py(i) + nodeR + 12} textAnchor="middle" fontSize={8} fontWeight={600}
                 fill={`var(--element-${el})`}>강</text>
             )}
             {isWeakest && (
-              <text x={px(i)} y={py(i) + 26} textAnchor="middle" fontSize={8} fontWeight={600}
+              <text x={px(i)} y={py(i) + nodeR + 10} textAnchor="middle" fontSize={8} fontWeight={600}
                 fill="rgba(255,255,255,0.3)">약</text>
             )}
           </g>
         );
       })}
-      {/* Center yin-yang symbol */}
-      <circle cx={cx} cy={cy} r={12} fill="rgba(18,18,42,0.8)" stroke="rgba(255,255,255,0.08)" strokeWidth={0.5} />
+      {/* Center label */}
+      <circle cx={cx} cy={cy} r={12} fill="rgba(30,21,51,0.8)" stroke="rgba(220,207,243,0.1)" strokeWidth={0.5} />
       <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontSize={8} fontWeight={600}
         fill="rgba(255,255,255,0.3)">상생</text>
     </svg>
   );
 }
 
-// ── 사주팔자 테이블 (Premium) ──
+// ── 사주팔자 테이블 (Clean Table) ──
 function FourPillarsTable({ pillars, dayMaster }: { pillars: FourPillars; dayMaster: Element }) {
   const cols = [
     { label: "시주", sub: "時柱", pillar: pillars.hour },
@@ -221,30 +209,52 @@ function FourPillarsTable({ pillars, dayMaster }: { pillars: FourPillars; dayMas
   ];
 
   return (
-    <div className="fourPillarsGrid">
-      {cols.map((col) => {
-        const stemEl = STEM_TO_ELEMENT[col.pillar.stem] ?? "earth";
-        const branchEl = BRANCH_TO_ELEMENT[col.pillar.branch] ?? "earth";
-        const polarity = STEM_POLARITY[col.pillar.stem] ?? "양";
-        const isDayPillar = col.label === "일주";
-
-        return (
-          <div key={col.label} className={`pillarCol ${isDayPillar ? "pillarColHighlight" : ""}`}>
-            <div className="pillarLabel">{col.label}<span className="pillarLabelSub">{col.sub}</span></div>
-            <div className="pillarStem" style={{ color: `var(--element-${stemEl})` }}>
-              {col.pillar.stem}
-              <span className="pillarPol">{polarity === "양" ? "☯" : "☯"} {polarity}</span>
-            </div>
-            <div className="pillarDivider" />
-            <div className="pillarBranch" style={{ color: `var(--element-${branchEl})` }}>
-              {col.pillar.branch}
-            </div>
-            <div className="pillarElementDot" style={{ background: `var(--element-${branchEl})` }} />
-            <div className="pillarKr">{col.pillar.fullKr}</div>
-          </div>
-        );
-      })}
-    </div>
+    <table className="fourPillarsTable">
+      <thead>
+        <tr>
+          <th></th>
+          {cols.map((col) => (
+            <th key={col.label} className={col.label === "일주" ? "pillarHighlightCol" : ""}>
+              {col.label}<span className="pillarSubLabel">{col.sub}</span>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        <tr className="pillarRowStem">
+          <td className="pillarRowLabel">천간</td>
+          {cols.map((col) => {
+            const stemEl = STEM_TO_ELEMENT[col.pillar.stem] ?? "earth";
+            const polarity = STEM_POLARITY[col.pillar.stem] ?? "양";
+            return (
+              <td key={col.label} className={col.label === "일주" ? "pillarHighlightCol" : ""}>
+                <span className="pillarChar" style={{ color: `var(--element-${stemEl})` }}>{col.pillar.stem}</span>
+                <span className="pillarPolTag">{polarity}</span>
+              </td>
+            );
+          })}
+        </tr>
+        <tr className="pillarRowBranch">
+          <td className="pillarRowLabel">지지</td>
+          {cols.map((col) => {
+            const branchEl = BRANCH_TO_ELEMENT[col.pillar.branch] ?? "earth";
+            return (
+              <td key={col.label} className={col.label === "일주" ? "pillarHighlightCol" : ""}>
+                <span className="pillarChar" style={{ color: `var(--element-${branchEl})` }}>{col.pillar.branch}</span>
+              </td>
+            );
+          })}
+        </tr>
+        <tr className="pillarRowKr">
+          <td className="pillarRowLabel"></td>
+          {cols.map((col) => (
+            <td key={col.label} className={col.label === "일주" ? "pillarHighlightCol" : ""}>
+              <span className="pillarKrName">{col.pillar.fullKr}</span>
+            </td>
+          ))}
+        </tr>
+      </tbody>
+    </table>
   );
 }
 
@@ -342,8 +352,9 @@ type TestState = {
 
 function ResultContent() {
   const params = useSearchParams();
+  const router = useRouter();
   const name = params.get("name") ?? "사용자";
-  const birthDate = params.get("birthDate") ?? "1995-01-01";
+  const birthDate = params.get("birthDate");
   const birthTime = params.get("birthTime");
   const gender = params.get("gender") ?? "other";
   const calendarType = params.get("calendarType") ?? "solar";
@@ -352,9 +363,17 @@ function ResultContent() {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
+    if (!birthDate) {
+      router.replace("/");
+      return;
+    }
     track("report_view");
     setTimeout(() => setVisible(true), 100);
-  }, []);
+  }, [birthDate, router]);
+
+  if (!birthDate) {
+    return <div className="loadingScreen"><p className="muted">생년월일 정보가 없습니다. 홈으로 이동합니다...</p></div>;
+  }
 
   const analysis = useMemo(() => {
     const [y, m, d] = birthDate.split("-").map(Number);
@@ -412,12 +431,7 @@ function ResultContent() {
           <p className="dayMasterSub">
             {name}님의 일간(日干)은 <strong style={{ color: `var(--element-${dayEl})` }}>{elements.dayMasterHanja}</strong>입니다
           </p>
-          {zodiac && (
-            <div className="dayMasterZodiac">
-              <span style={{ fontSize: "1.2rem" }}>{zodiac.emoji}</span>
-              {pillars.year.branch}({zodiac.name})띠
-            </div>
-          )}
+          {/* 띠 표시 제거 */}
         </section>
 
         {/* 사주팔자 테이블 */}
@@ -435,7 +449,7 @@ function ResultContent() {
               <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--t2)", marginTop: 4 }}>오행 레이더</p>
             </div>
             <div>
-              <ElementCycle dominant={elements.dominant} weakest={elements.weakest} />
+              <ElementCycle dominant={elements.dominant} weakest={elements.weakest} balance={elements.balance} />
               <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--t2)", marginTop: 4 }}>상생 사이클</p>
             </div>
           </div>

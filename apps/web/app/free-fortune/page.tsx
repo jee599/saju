@@ -8,7 +8,7 @@ function FreeFortunContent() {
   const router = useRouter();
   const params = useSearchParams();
   const [name, setName] = useState("");
-  const [birthDate, setBirthDate] = useState(params.get("birthDate") ?? "1995-01-01");
+  const [birthDate, setBirthDate] = useState(params.get("birthDate") ?? "");
   const [birthTime, setBirthTime] = useState("");
   const [gender, setGender] = useState<"male" | "female" | "other">("other");
   const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
@@ -26,7 +26,7 @@ function FreeFortunContent() {
       name, birthDate, gender, calendarType,
       ...(birthTime ? { birthTime } : {}),
     });
-    router.push(`/loading-analysis?redirect=/result?${q.toString()}`);
+    router.push(`/loading-analysis?redirect=${encodeURIComponent(`/result?${q.toString()}`)}`);
   };
 
   return (

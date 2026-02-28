@@ -21,6 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
           rel="stylesheet"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Noto+Serif+KR:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <GtagScript />
       <body>
@@ -30,13 +36,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <svg className="brandLogo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <defs>
                   <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#A78BDA" />
-                    <stop offset="100%" stopColor="#D4A5C0" />
+                    <stop offset="0%" stopColor="#C48B9F" />
+                    <stop offset="100%" stopColor="#D4AF37" />
                   </linearGradient>
                 </defs>
                 <circle cx="16" cy="16" r="14.5" stroke="url(#logoGrad)" strokeWidth="1.5" opacity="0.6" />
                 <path d="M16 4 A12 12 0 0 1 16 28 A6 6 0 0 0 16 16 A6 6 0 0 1 16 4Z" fill="url(#logoGrad)" opacity="0.85" />
-                <circle cx="16" cy="10" r="2" fill="#1A1535" />
+                <circle cx="16" cy="10" r="2" fill="#1A0A2E" />
                 <circle cx="16" cy="22" r="2" fill="url(#logoGrad)" />
               </svg>
               <span className="brandText">복연구소</span>

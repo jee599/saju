@@ -33,14 +33,6 @@ const ENGINE_PILLARS = [
   },
 ];
 
-const TESTIMONIALS = [
-  { quote: "사주를 깊이 들여다보고 나니, '원래 이런 사람이었구나' 싶어서 마음이 편해졌어요. 자기이해가 주는 안정감이 이런 거구나 느꼈습니다.", name: "김**", age: 38, job: "IT 기획자" },
-  { quote: "바쁜 시즌 스트레스에 지쳐 있었는데, 올해 흐름을 확인하고 나니 단단한 마음이 생기는 느낌이었어요. 근거 있는 분석이라 더 신뢰가 갔습니다.", name: "박**", age: 34, job: "세무사" },
-  { quote: "전문 명리가입니다. 정해 만세력 기준 일치라길래 테스트해봤는데, 제가 직접 계산한 것과 일치했습니다.", name: "이**", age: 52, job: "명리학 연구가" },
-  { quote: "매일 아침 일일 운세를 확인하고 하루를 시작합니다. 명리 전문가처럼 예약도 필요 없고, 언제든 다시 볼 수 있어서 편해요.", name: "정**", age: 29, job: "블록체인 개발자" },
-  { quote: "취업 준비로 지칠 때마다 제 사주를 다시 읽어봐요. '지금은 준비의 시기'라는 걸 알고 나니, 조금 힘 대신 차분하게 나를 돌볼 수 있게 되었어요.", name: "최**", age: 27, job: "취준생" },
-  { quote: "가족 모두 프로필 등록해서 궁합도 보고, 아이들 진로 상담도 받아요. 가족 화합에 정말 도움이 됩니다.", name: "한**", age: 45, job: "자영업자" },
-];
 
 const FAQ_ITEMS = [
   { q: "사주 분석은 어떤 원리에 기반하나요?", a: "생년월일시를 기반으로 4개의 기둥(년주·월주·일주·시주)을 세워 운명의 흐름을 분석하는 동양 전통 명리학입니다. 적천수·자평진전 등 5대 고전 원전을 참조합니다." },
@@ -98,7 +90,7 @@ export default function HomePage() {
   const hasGender = gender !== "";
 
   const birthDate = hasDate ? `${year}-${padTwo(+month)}-${padTwo(+day)}` : "";
-  const birthTime = hour !== "" ? `${padTwo(+hour)}:00` : "";
+  const birthTime = hour !== "" && hour !== "skip" ? `${padTwo(+hour)}:00` : "";
 
   const canAnalyze = hasName && hasDate && hasGender;
 
@@ -111,7 +103,7 @@ export default function HomePage() {
       calendarType,
       ...(birthTime ? { birthTime } : {}),
     });
-    router.push(`/loading-analysis?redirect=/result?${q.toString()}`);
+    router.push(`/loading-analysis?redirect=${encodeURIComponent(`/result?${q.toString()}`)}`);
   };
 
   return (
@@ -121,7 +113,7 @@ export default function HomePage() {
         <section className="glassCard" id="hero">
           <div className="heroMain">
             <p className="heroEyebrow">AI Four Pillars Analysis</p>
-            <h1>나의 사주, 데이터로 풀다</h1>
+            <h1>사주는, 빅데이터입니다</h1>
             <p className="rotatingText heroSubtitle">
               {ROTATING_COPIES.map((copy, i) => (
                 <span key={i}>{copy}</span>
@@ -325,7 +317,7 @@ export default function HomePage() {
             <article className="pricingCard pricingCardPremium">
               <span className="badge badge-premium">프리미엄</span>
               <h3 style={{ marginTop: 12 }}>상세 분석</h3>
-              <p className="price">₩3,900~</p>
+              <p className="price">₩4,900</p>
               <ul className="flatList compactList">
                 <li>기본 분석 포함</li>
                 <li>약 20,000~40,000자 AI 장문 분석</li>
@@ -339,28 +331,6 @@ export default function HomePage() {
                 </Link>
               </div>
             </article>
-          </div>
-        </section>
-
-        {/* ── Section Divider ─── */}
-        <div className="sectionDivider" />
-
-        {/* ── Testimonials ─── */}
-        <section className="landingSection">
-          <h2 className="sectionHeading">사용자들이 말합니다</h2>
-          <p className="sectionSubheading">
-            다양한 분야의 사용자들이 전하는 생생한 후기
-          </p>
-          <div className="testimonialGrid">
-            {TESTIMONIALS.map((t, i) => (
-              <article key={i} className="testimonialCard">
-                <p className="testimonialQuote">&ldquo;{t.quote}&rdquo;</p>
-                <div className="testimonialAuthor">
-                  <span className="testimonialName">{t.name}</span>
-                  <span className="testimonialMeta">{t.age}세, {t.job}</span>
-                </div>
-              </article>
-            ))}
           </div>
         </section>
 

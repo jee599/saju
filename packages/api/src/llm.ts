@@ -39,7 +39,7 @@ export const callLlm = async (params: {
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
         temperature,
-        max_tokens: maxTokens,
+        max_completion_tokens: maxTokens,
         messages: [
           { role: "system", content: system },
           { role: "user", content: user }
