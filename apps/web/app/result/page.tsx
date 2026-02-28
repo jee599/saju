@@ -446,7 +446,11 @@ function ResultContent() {
           <p className="dayMasterSub">
             {name}님의 일간(日干)은 <strong style={{ color: `var(--element-${dayEl})` }}>{elements.dayMasterHanja}</strong>입니다
           </p>
-          {/* 띠 표시 제거 */}
+          {dayEl !== elements.dominant && (
+            <p style={{ marginTop: 8, fontSize: "0.78rem", color: "var(--t2)", lineHeight: 1.5 }}>
+              일간은 타고난 본질이며, 오행 분포에서 가장 많은 {ELEMENT_KR[elements.dominant]}({ELEMENT_EMOJI[elements.dominant]})과는 다를 수 있습니다
+            </p>
+          )}
         </section>
 
         {/* 사주팔자 테이블 */}
