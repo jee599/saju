@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { track, trackCheckoutStart } from "../../lib/analytics";
 
 const MODEL_CONFIG: Record<string, { label: string; chars: string; price: number; priceLabel: string; sections: string }> = {
@@ -16,17 +16,22 @@ function PaywallContent() {
   const birthDate = params.get("birthDate") ?? "";
   const birthTime = params.get("birthTime") ?? "";
   const name = params.get("name") ?? "";
+  const gender = params.get("gender") ?? "other";
+  const calendarType = params.get("calendarType") ?? "solar";
   const modelParam = params.get("model") ?? "sonnet";
   const config = MODEL_CONFIG[modelParam] ?? MODEL_CONFIG.sonnet;
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
-  track("paywall_view");
+  useEffect(() => {
+    track("paywall_view");
+  }, []);
 
   const handleCheckout = async (ctaPosition: "top" | "middle" | "sticky") => {
-    if (!email || !email.includes("@")) {
-      setError("이메일을 입력해주세요.");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      setError("올바른 이메일 형식을 입력해주세요.");
       return;
     }
     setLoading(true);
@@ -40,13 +45,14 @@ function PaywallContent() {
         body: JSON.stringify({
           productCode: "full",
           model: modelParam,
-          input: { name, birthDate, birthTime, gender: "other", calendarType: "solar" },
+          input: { name, birthDate, birthTime, gender, calendarType },
         }),
       });
 
       if (!res.ok) throw new Error("결제 생성 실패");
       const data = await res.json();
       const orderId = data.data?.order?.orderId ?? data.order?.orderId;
+      if (!orderId) throw new Error("주문 ID를 받지 못했습니다.");
 
       // Confirm (mock)
       const confirmRes = await fetch("/api/checkout/confirm", {
@@ -58,7 +64,7 @@ function PaywallContent() {
       if (!confirmRes.ok) throw new Error("결제 확인 실패");
 
       track("purchase_complete", { price_variant: modelParam, value: config.price });
-      router.push(`/loading-analysis?redirect=/report/${orderId}`);
+      router.push(`/loading-analysis?redirect=${encodeURIComponent(`/report/${orderId}`)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "결제 중 오류가 발생했습니다.");
       track("checkout_fail");

@@ -43,9 +43,14 @@ const FAQ_ITEMS = [
   { q: "사주에 좋고 나쁨이 있나요?", a: "사주 자체에 좋고 나쁨은 없습니다. 타고난 기질과 시기별 흐름의 차이일 뿐이며, 본 서비스는 확률적 해석을 제공합니다. 의료·법률·투자 판단의 근거로 사용하지 마세요." },
 ];
 
-const YEARS = Array.from({ length: 80 }, (_, i) => 2010 - i);
+const YEARS = Array.from({ length: 81 }, (_, i) => 2010 - i); // 1930~2010
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
-const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
+
+function getDaysInMonth(year: string, month: string): number[] {
+  if (!year || !month) return Array.from({ length: 31 }, (_, i) => i + 1);
+  const daysCount = new Date(Number(year), Number(month), 0).getDate();
+  return Array.from({ length: daysCount }, (_, i) => i + 1);
+}
 
 const EARTHLY_BRANCHES = [
   { label: "자시 (子)", time: "23:00~01:00", value: "23" },
@@ -76,13 +81,23 @@ export default function HomePage() {
   const [gender, setGender] = useState<"male" | "female" | "">("");
   const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
+
+  const availableDays = getDaysInMonth(year, month);
 
   // Auto-focus name input on mount
   useEffect(() => {
     nameRef.current?.focus();
   }, []);
+
+  // Reset day if it exceeds available days in selected month
+  useEffect(() => {
+    if (day && Number(day) > availableDays.length) {
+      setDay("");
+    }
+  }, [year, month, day, availableDays.length]);
 
   // Step logic: each step unlocks when previous is done
   const hasName = name.trim().length >= 1;
@@ -95,6 +110,8 @@ export default function HomePage() {
   const canAnalyze = hasName && hasDate && hasGender;
 
   const handleAnalyze = () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     track("input_complete");
     const q = new URLSearchParams({
       name,
@@ -134,6 +151,7 @@ export default function HomePage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="off"
+                  aria-label="이름"
                 />
               </div>
 
@@ -164,6 +182,7 @@ export default function HomePage() {
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
                     style={{ flex: 1.2 }}
+                    aria-label="출생 년도"
                   >
                     <option value="">년도</option>
                     {YEARS.map((y) => (
@@ -175,6 +194,7 @@ export default function HomePage() {
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
                     style={{ flex: 1 }}
+                    aria-label="출생 월"
                   >
                     <option value="">월</option>
                     {MONTHS.map((m) => (
@@ -186,9 +206,10 @@ export default function HomePage() {
                     value={day}
                     onChange={(e) => setDay(e.target.value)}
                     style={{ flex: 1 }}
+                    aria-label="출생 일"
                   >
                     <option value="">일</option>
-                    {DAYS.map((d) => (
+                    {availableDays.map((d) => (
                       <option key={d} value={d}>{d}일</option>
                     ))}
                   </select>
@@ -257,8 +278,9 @@ export default function HomePage() {
                 <button
                   className="btn btn-primary btn-lg btn-full"
                   onClick={handleAnalyze}
+                  disabled={isSubmitting}
                 >
-                  무료 분석 시작
+                  {isSubmitting ? "분석 준비 중..." : "무료 분석 시작"}
                 </button>
               </div>
             </div>
@@ -346,9 +368,10 @@ export default function HomePage() {
                 <button
                   className="faqQuestion"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
                 >
                   {faq.q}
-                  <span className="faqToggle">{openFaq === i ? "−" : "+"}</span>
+                  <span className="faqToggle" aria-hidden="true">{openFaq === i ? "−" : "+"}</span>
                 </button>
                 {openFaq === i && (
                   <p className="faqAnswer">{faq.a}</p>

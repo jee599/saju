@@ -14,7 +14,8 @@ export async function POST(req: Request) {
     }
 
     // Fire-and-forget rate limit DB logging
-    const ip = req.headers.get("x-client-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    // Use x-forwarded-for (set by reverse proxy) — x-client-ip is client-spoofable
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
     logRateLimit({ ip, endpoint: "/api/report/preview" });
 
     return NextResponse.json({ ok: true, data: generatePreview(input) });

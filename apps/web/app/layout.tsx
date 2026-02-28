@@ -52,10 +52,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/palm">손금</Link>
               <Link href="/name">작명</Link>
               <Link href="/face">관상</Link>
-              <select className="langSelect" defaultValue="ko" aria-label="언어 선택">
-                <option value="ko">한국어</option>
-                <option value="en">English</option>
-              </select>
             </nav>
           </div>
         </header>

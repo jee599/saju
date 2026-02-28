@@ -86,7 +86,7 @@ function FreeFortunContent() {
                 </div>
                 <div className="formGroup">
                   <label>성별</label>
-                  <select className="select" value={gender} onChange={(e) => setGender(e.target.value as "male" | "female" | "other")}>
+                  <select className="select" value={gender} onChange={(e) => setGender(e.target.value as "male" | "female" | "other")} aria-label="성별">
                     <option value="other">선택 안 함</option>
                     <option value="male">남성</option>
                     <option value="female">여성</option>
@@ -94,7 +94,7 @@ function FreeFortunContent() {
                 </div>
                 <div className="formGroup">
                   <label>달력</label>
-                  <select className="select" value={calendarType} onChange={(e) => setCalendarType(e.target.value as "solar" | "lunar")}>
+                  <select className="select" value={calendarType} onChange={(e) => setCalendarType(e.target.value as "solar" | "lunar")} aria-label="달력 유형">
                     <option value="solar">양력</option>
                     <option value="lunar">음력</option>
                   </select>

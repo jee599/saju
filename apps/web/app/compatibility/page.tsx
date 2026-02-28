@@ -1,32 +1,43 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
 import { calculateFourPillars, calculateCompatibility, ELEMENT_KR, ELEMENT_EMOJI } from "@saju/engine-saju";
 import { track } from "../../lib/analytics";
 
 function CompatContent() {
   const params = useSearchParams();
-  const myDate = params.get("my") ?? "2000-01-01";
-  const partnerDate = params.get("partner") ?? "2000-06-15";
+  const router = useRouter();
+  const myDateParam = params.get("my");
+  const partnerDateParam = params.get("partner");
+
+  // If no params, show input form
+  const [myInput, setMyInput] = useState("");
+  const [partnerInput, setPartnerInput] = useState("");
+
+  const hasParams = myDateParam && partnerDateParam;
 
   const result = useMemo(() => {
-    const [my, mm, md] = myDate.split("-").map(Number);
-    const [py, pm, pd] = partnerDate.split("-").map(Number);
+    if (!hasParams) return null;
+    const [my, mm, md] = myDateParam.split("-").map(Number);
+    const [py, pm, pd] = partnerDateParam.split("-").map(Number);
+
+    if (isNaN(my) || isNaN(mm) || isNaN(md) || isNaN(py) || isNaN(pm) || isNaN(pd)) return null;
 
     const myResult = calculateFourPillars({ year: my, month: mm, day: md, hour: 12, minute: 0 });
     const partnerResult = calculateFourPillars({ year: py, month: pm, day: pd, hour: 12, minute: 0 });
 
     track("compatibility_result");
     return calculateCompatibility(myResult.pillars, partnerResult.pillars);
-  }, [myDate, partnerDate]);
+  }, [myDateParam, partnerDateParam, hasParams]);
 
   const shareUrl = typeof window !== "undefined"
     ? `${window.location.origin}/?tab=compat`
     : "";
 
   const handleShare = () => {
+    if (!result) return;
     const text = `우리 궁합 ${result.score}점! 너도 해볼래?\n${shareUrl}`;
     if (navigator.share) {
       navigator.share({ title: "복연구소 궁합", text });
@@ -35,6 +46,58 @@ function CompatContent() {
     }
     track("share_click", { channel: "copy", content_type: "compatibility" });
   };
+
+  const handleCompatSubmit = () => {
+    if (!myInput || !partnerInput) return;
+    router.push(`/compatibility?my=${myInput}&partner=${partnerInput}`);
+  };
+
+  // Show input form when no params
+  if (!hasParams || !result) {
+    return (
+      <main className="page">
+        <div className="container">
+          <section className="glassCard">
+            <h2 style={{ textAlign: "center" }}>궁합 분석</h2>
+            <p className="muted" style={{ textAlign: "center", marginTop: 8 }}>
+              두 사람의 생년월일을 입력하면 오행 궁합을 분석해드립니다.
+            </p>
+            <div className="form" style={{ marginTop: 24 }}>
+              <div className="formGroup">
+                <label>나의 생년월일</label>
+                <input
+                  type="date"
+                  className="input"
+                  value={myInput}
+                  onChange={(e) => setMyInput(e.target.value)}
+                  aria-label="나의 생년월일"
+                />
+              </div>
+              <div className="formGroup">
+                <label>상대방 생년월일</label>
+                <input
+                  type="date"
+                  className="input"
+                  value={partnerInput}
+                  onChange={(e) => setPartnerInput(e.target.value)}
+                  aria-label="상대방 생년월일"
+                />
+              </div>
+              <div className="buttonRow">
+                <button
+                  className="btn btn-primary btn-lg btn-full"
+                  onClick={handleCompatSubmit}
+                  disabled={!myInput || !partnerInput}
+                >
+                  궁합 보기
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="page">

@@ -54,7 +54,9 @@ function ElementRadar({ balance }: { balance: Record<Element, number> }) {
   }).join(" ");
 
   return (
-    <svg viewBox="0 0 220 230" style={{ width: "100%", maxWidth: 280, margin: "0 auto", display: "block" }}>
+    <svg viewBox="0 0 220 230" style={{ width: "100%", maxWidth: 280, margin: "0 auto", display: "block" }} role="img" aria-label="오행 레이더 차트">
+      <title>오행 레이더 차트</title>
+      <desc>목, 화, 토, 금, 수 오행의 분포를 보여주는 레이더 차트</desc>
       <defs>
         <linearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#C48B9F" stopOpacity={0.25} />
@@ -133,7 +135,9 @@ function ElementCycle({ dominant, weakest, balance }: { dominant: Element; weake
   };
 
   return (
-    <svg viewBox="0 0 220 220" style={{ width: "100%", maxWidth: 260, margin: "0 auto", display: "block" }}>
+    <svg viewBox="0 0 220 220" style={{ width: "100%", maxWidth: 260, margin: "0 auto", display: "block" }} role="img" aria-label="오행 상생 사이클">
+      <title>오행 상생 사이클</title>
+      <desc>목→화→토→금→수 순환 관계를 보여주는 상생 다이어그램</desc>
       <defs>
         <marker id="arrowCycle" viewBox="0 0 10 10" refX={8} refY={5} markerWidth={4} markerHeight={4} orient="auto">
           <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(196,139,159,0.5)" />
@@ -209,7 +213,8 @@ function FourPillarsTable({ pillars, dayMaster }: { pillars: FourPillars; dayMas
   ];
 
   return (
-    <table className="fourPillarsTable">
+    <div className="fourPillarsTableWrap">
+    <table className="fourPillarsTable" role="table" aria-label="사주팔자 테이블">
       <thead>
         <tr>
           <th></th>
@@ -255,6 +260,7 @@ function FourPillarsTable({ pillars, dayMaster }: { pillars: FourPillars; dayMas
         </tr>
       </tbody>
     </table>
+    </div>
   );
 }
 
@@ -376,17 +382,26 @@ function ResultContent() {
   }
 
   const analysis = useMemo(() => {
-    const [y, m, d] = birthDate.split("-").map(Number);
-    const hour = birthTime ? parseInt(birthTime.split(":")[0]) : 12;
-    const minute = birthTime ? parseInt(birthTime.split(":")[1]) : 0;
-    const result = calculateFourPillars({ year: y, month: m, day: d, hour, minute });
+    const parts = birthDate.split("-").map(Number);
+    const y = parts[0] ?? 2000;
+    const m = parts[1] ?? 1;
+    const d = parts[2] ?? 1;
+    if (isNaN(y) || isNaN(m) || isNaN(d) || y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31) {
+      // Fallback to safe defaults
+      const result = calculateFourPillars({ year: 2000, month: 1, day: 1, hour: 12, minute: 0 });
+      return { pillars: result.pillars, elements: result.elements };
+    }
+    const hour = birthTime ? parseInt(birthTime.split(":")[0], 10) : 12;
+    const minute = birthTime ? parseInt(birthTime.split(":")[1], 10) : 0;
+    const safeHour = isNaN(hour) ? 12 : hour;
+    const safeMinute = isNaN(minute) ? 0 : minute;
+    const result = calculateFourPillars({ year: y, month: m, day: d, hour: safeHour, minute: safeMinute });
     return { pillars: result.pillars, elements: result.elements };
   }, [birthDate, birthTime]);
 
   const { elements, pillars } = analysis;
   const dayEl = elements.dayMaster;
   const teasers = BLUR_TEASERS[dayEl];
-  const zodiac = ZODIAC_ANIMALS[pillars.year.branch];
   const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
 
   const runTest = useCallback(async (strategy: number) => {
@@ -503,16 +518,16 @@ function ResultContent() {
           <h3>더 깊이 알아볼까요?</h3>
           <p className="muted">블러를 해제하고 전체 분석을 확인하세요.</p>
           <div className="buttonRow">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&gender=${gender}&calendarType=${calendarType}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
               ₩5,900 · Sonnet 분석 보기
             </Link>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════════
-            TEST: 6가지 전략 비교
+            TEST: 6가지 전략 비교 (dev only)
            ══════════════════════════════════════════════ */}
-        <section className="glassCard" style={{ marginTop: 24, border: "2px dashed #f59e0b", background: "rgba(245,158,11,0.04)" }}>
+        {process.env.NODE_ENV === "development" && <section className="glassCard" style={{ marginTop: 24, border: "2px dashed #f59e0b", background: "rgba(245,158,11,0.04)" }}>
           <h3 style={{ color: "#f59e0b", marginBottom: 4 }}>TEST: LLM 품질 비교</h3>
           <p className="muted" style={{ marginBottom: 16, fontSize: "0.85rem" }}>
             각 버튼을 클릭하면 해당 전략으로 리포트를 생성합니다. 캐싱 없이 매번 새로 호출합니다.
@@ -555,10 +570,10 @@ function ResultContent() {
               );
             })}
           </div>
-        </section>
+        </section>}
 
         {/* TEST 결과 출력 */}
-        {TEST_STRATEGIES.map((s) => {
+        {process.env.NODE_ENV === "development" && TEST_STRATEGIES.map((s) => {
           const state = testStates[s.id];
           if (!state?.result) return null;
           const r = state.result;
@@ -663,7 +678,7 @@ function ResultContent() {
           <h3>더 깊이 알아볼까요?</h3>
           <p className="muted">위 블러를 해제하고 전체 분석을 확인하세요.</p>
           <div className="buttonRow">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&gender=${gender}&calendarType=${calendarType}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
               ₩5,900 · Sonnet 분석 보기
             </Link>
           </div>
@@ -683,7 +698,7 @@ function ResultContent() {
         {/* 모바일 스티키 CTA */}
         <div className="stickyCta">
           <div className="stickyCtaInner">
-            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+            <Link href={`/paywall?birthDate=${birthDate}&birthTime=${birthTime ?? ""}&name=${name}&gender=${gender}&calendarType=${calendarType}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
               상세 분석 보기
             </Link>
           </div>

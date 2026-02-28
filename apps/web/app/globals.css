@@ -553,6 +553,13 @@ p, li, label, input, select, button, textarea {
   box-shadow: 0 0 0 4px rgba(196, 139, 159, 0.15);
 }
 
+.input:disabled, .select:disabled, .textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .inputError, .selectError, .textareaError {
   border-color: rgba(212, 132, 138, 0.7);
   background: rgba(212, 132, 138, 0.05);
@@ -918,6 +925,12 @@ p, li, label, input, select, button, textarea {
 
 /* ── 사주팔자 테이블 (Premium) ── */
 /* ── 사주팔자 Clean Table ──────────────────────── */
+.fourPillarsTableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .fourPillarsTable {
   width: 100%;
   border-collapse: separate;
@@ -925,6 +938,7 @@ p, li, label, input, select, button, textarea {
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   overflow: hidden;
+  min-width: 320px;
 }
 .fourPillarsTable th,
 .fourPillarsTable td {
@@ -1485,6 +1499,8 @@ p, li, label, input, select, button, textarea {
   align-items: center;
   justify-content: center;
   padding: 14px 10px;
+  min-height: 44px;
+  min-width: 44px;
   border-radius: 12px;
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.04);
@@ -1785,6 +1801,12 @@ p, li, label, input, select, button, textarea {
   align-items: center;
 }
 
+.faqQuestion:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 .faqToggle {
   color: var(--t3);
   font-size: 1.2rem;
@@ -1856,6 +1878,11 @@ p, li, label, input, select, button, textarea {
   .heroMain { padding: 56px; }
 }
 
+@media (min-width: 481px) and (max-width: 639px) {
+  .branchGrid { grid-template-columns: repeat(3, 1fr); }
+  .pricingGrid { grid-template-columns: 1fr; gap: 12px; }
+}
+
 @media (max-width: 767px) {
   .page { padding-top: 36px; padding-bottom: 130px; }
   .buttonRow .btn, .buttonRow .btn-full { flex: 1 1 auto; }
@@ -1864,4 +1891,24 @@ p, li, label, input, select, button, textarea {
   .compatElements { flex-direction: column; gap: 12px; }
   .compatConnector { transform: rotate(90deg); }
   .landingSection { padding: 52px 0; }
+}
+
+/* ── Reduced Motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rotatingText span {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+  .elementBarFill {
+    transition: none !important;
+  }
+  .yinYangYang, .yinYangYin {
+    transition: none !important;
+  }
 }
