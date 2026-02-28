@@ -140,19 +140,27 @@ export interface ModelReportDetail extends ReportDetail {
     outputTokens?: number;
     totalTokens?: number;
   };
+  /** LLM 호출 소요 시간 (ms) — 테스트 비교용 */
+  durationMs?: number;
+  /** 추정 USD 비용 — 테스트 비교용 */
+  estimatedCostUsd?: number;
+  /** 총 한국어 글자수 — 테스트 비교용 */
+  charCount?: number;
 }
 
 export interface CheckoutConfirmResponse {
   order: OrderSummary;
   report: ReportDetail;
-  reportsByModel?: { gpt: ModelReportDetail; claude: ModelReportDetail };
+  /** 테스트 모드: 모든 모델 결과 비교 */
+  reportsByModel?: Record<string, ModelReportDetail>;
 }
 
 export interface GetReportResponse {
   order: OrderSummary;
   report: ReportDetail;
   input?: FortuneInput;
-  reportsByModel?: { gpt: ModelReportDetail; claude: ModelReportDetail };
+  /** 테스트 모드: 모든 모델 결과 비교 */
+  reportsByModel?: Record<string, ModelReportDetail>;
 }
 
 // ── LLM compare (API server) ─────────────────────────────

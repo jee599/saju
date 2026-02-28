@@ -4,11 +4,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState, useEffect } from "react";
 import { track, trackCheckoutStart } from "../../lib/analytics";
 
-const MODEL_CONFIG: Record<string, { label: string; chars: string; price: number; priceLabel: string; sections: string }> = {
-  opus: { label: "Claude Opus 4.6", chars: "~20,000자", price: 9900, priceLabel: "₩9,900", sections: "10개 섹션" },
-  sonnet: { label: "Claude Sonnet 4.6", chars: "~30,000자", price: 5900, priceLabel: "₩5,900", sections: "10개 섹션" },
-  gpt: { label: "GPT 5.3", chars: "~40,000자", price: 3900, priceLabel: "₩3,900", sections: "10개 섹션" },
-};
+/** 테스트 모드: 단일 ₩5,900 버튼. 나중에 모델 선택 원복 예정. */
+const FIXED_PRICE = 5900;
+const FIXED_PRICE_LABEL = "₩5,900";
 
 function PaywallContent() {
   const params = useSearchParams();
@@ -18,8 +16,6 @@ function PaywallContent() {
   const name = params.get("name") ?? "";
   const gender = params.get("gender") ?? "other";
   const calendarType = params.get("calendarType") ?? "solar";
-  const [selectedModel, setSelectedModel] = useState(params.get("model") ?? "sonnet");
-  const config = MODEL_CONFIG[selectedModel] ?? MODEL_CONFIG.sonnet;
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -44,7 +40,6 @@ function PaywallContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productCode: "full",
-          model: selectedModel,
           input: { name, birthDate, birthTime, gender, calendarType },
         }),
       });
@@ -62,7 +57,7 @@ function PaywallContent() {
 
       if (!confirmRes.ok) throw new Error("결제 확인 실패");
 
-      track("purchase_complete", { price_variant: selectedModel, value: config.price });
+      track("purchase_complete", { value: FIXED_PRICE });
       router.push(`/loading-analysis?redirect=${encodeURIComponent(`/report/${orderId}`)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "결제 중 오류가 발생했습니다.");
@@ -72,12 +67,6 @@ function PaywallContent() {
     }
   };
 
-  const models = [
-    { key: "gpt", label: "GPT 분석", sub: "~40,000자 · 10섹션", price: "₩3,900", badge: "" },
-    { key: "sonnet", label: "Sonnet 분석", sub: "~30,000자 · 10섹션", price: "₩5,900", badge: "추천" },
-    { key: "opus", label: "Opus 분석", sub: "~20,000자 · 최고품질", price: "₩9,900", badge: "프리미엄" },
-  ];
-
   return (
     <main className="page">
       <div className="container">
@@ -86,48 +75,14 @@ function PaywallContent() {
           <p style={{ fontSize: "0.85rem", color: "var(--t2)" }}>
             <span style={{ textDecoration: "line-through", opacity: 0.6 }}>역술가 상담 1회 50,000원~</span>
             {" → "}
-            <span style={{ color: "var(--accent-gold)", fontWeight: 700 }}>AI 분석 {config.priceLabel}부터</span>
+            <span style={{ color: "var(--accent-gold)", fontWeight: 700 }}>AI 분석 {FIXED_PRICE_LABEL}</span>
           </p>
-        </div>
-
-        {/* Model selection */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 20 }}>
-          {models.map((m) => (
-            <button
-              key={m.key}
-              onClick={() => setSelectedModel(m.key)}
-              style={{
-                padding: "14px 8px",
-                border: selectedModel === m.key ? "2px solid var(--accent)" : "1px solid var(--glass-border)",
-                borderRadius: "var(--radius-sm)",
-                background: selectedModel === m.key ? "rgba(196,139,159,0.1)" : "var(--bg-card)",
-                cursor: "pointer",
-                textAlign: "center",
-                position: "relative",
-                transition: "all 0.2s",
-              }}
-            >
-              {m.badge && (
-                <span style={{
-                  position: "absolute", top: -8, left: "50%", transform: "translateX(-50%)",
-                  background: m.badge === "추천" ? "var(--accent)" : "var(--accent-gold)",
-                  color: "#fff", fontSize: "0.65rem", fontWeight: 700,
-                  padding: "2px 8px", borderRadius: 10,
-                }}>{m.badge}</span>
-              )}
-              <div style={{ fontWeight: 700, fontSize: "1.1rem", color: selectedModel === m.key ? "var(--accent)" : "var(--t1)", marginTop: m.badge ? 4 : 0 }}>
-                {m.price}
-              </div>
-              <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--t1)", marginTop: 4 }}>{m.label}</div>
-              <div style={{ fontSize: "0.7rem", color: "var(--t2)", marginTop: 2 }}>{m.sub}</div>
-            </button>
-          ))}
         </div>
 
         <section className="glassCard">
           <h2 style={{ textAlign: "center", fontSize: "1.2rem" }}>{name}님의 전체 사주 분석</h2>
           <p className="muted" style={{ textAlign: "center", marginTop: 4 }}>
-            {config.chars} · {config.sections} 상세 AI 분석
+            10개 섹션 상세 AI 분석
           </p>
 
           <div style={{ marginTop: 20, textAlign: "left" }}>
@@ -178,7 +133,7 @@ function PaywallContent() {
                 onClick={() => handleCheckout("top")}
                 disabled={loading}
               >
-                {loading ? "결제 처리 중..." : `${config.priceLabel} 결제하기`}
+                {loading ? "AI 분석 생성 중... (1~2분 소요)" : `${FIXED_PRICE_LABEL} 결제하기`}
               </button>
             </div>
           </div>

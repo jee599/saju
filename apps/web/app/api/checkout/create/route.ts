@@ -3,7 +3,11 @@ import { isValidFortuneInput } from '@saju/shared';
 import { prisma } from '@saju/api/db';
 import type { CheckoutCreateRequest, OrderSummary } from '../../../../lib/types';
 
-const modelPrices: Record<string, number> = { opus: 9900, sonnet: 5900, gpt: 3900 };
+/**
+ * 테스트 모드: 단일 ₩5,900 고정 가격. 모델 선택 없음.
+ * 나중에 원복 시 modelPrices 및 body.model 로직 복원.
+ */
+const FIXED_PRICE = 5900;
 
 export async function POST(req: Request) {
   try {
@@ -14,9 +18,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    const selectedModel = body.model ?? 'sonnet';
-    const price = modelPrices[selectedModel] ?? 5900;
 
     // 1. Create FortuneRequest record
     const fortuneRequest = await prisma.fortuneRequest.create({
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
       data: {
         requestId: fortuneRequest.id,
         productCode: body.productCode,
-        amountKrw: price,
+        amountKrw: FIXED_PRICE,
         status: 'created',
       },
     });

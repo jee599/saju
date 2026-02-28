@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@saju/api/db';
-import type { FortuneInput, GetReportResponse, OrderSummary, ReportDetail } from '../../../../lib/types';
+import type { FortuneInput, GetReportResponse, ModelReportDetail, OrderSummary, ReportDetail } from '../../../../lib/types';
+import { countReportChars } from '../../../../lib/reportLength';
 
+/**
+ * 테스트 모드: 모든 모델의 리포트를 반환.
+ * 나중에 원복 시 단일 리포트만 반환.
+ */
 export async function GET(req: Request, ctx: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await ctx.params;
 
@@ -14,12 +19,12 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
   }
 
   try {
-    // Find order with its report and fortune request
+    // Find order with ALL its reports and fortune request
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       include: {
         request: true,
-        reports: { orderBy: { generatedAt: 'desc' }, take: 1 },
+        reports: { orderBy: { generatedAt: 'desc' } },
       },
     });
 
@@ -30,8 +35,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       );
     }
 
-    const dbReport = order.reports[0];
-    if (!dbReport) {
+    if (order.reports.length === 0) {
       return NextResponse.json(
         { ok: false, error: { code: 'REPORT_NOT_FOUND', message: '리포트가 아직 생성되지 않았습니다.' } },
         { status: 404 }
@@ -48,33 +52,6 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       confirmedAt: order.confirmedAt?.toISOString(),
     };
 
-    // Parse JSON fields back to arrays
-    let sections: ReportDetail['sections'] = [];
-    let recommendations: string[] = [];
-    try {
-      sections = JSON.parse(dbReport.sectionsJson);
-    } catch {
-      sections = [];
-    }
-    try {
-      recommendations = JSON.parse(dbReport.recommendationsJson);
-    } catch {
-      recommendations = [];
-    }
-
-    // Build ReportDetail
-    const report: ReportDetail = {
-      reportId: dbReport.id,
-      orderId: order.id,
-      productCode: dbReport.productCode as ReportDetail['productCode'],
-      generatedAt: dbReport.generatedAt.toISOString(),
-      headline: dbReport.headline,
-      summary: dbReport.summary,
-      sections,
-      recommendations,
-      disclaimer: dbReport.disclaimer,
-    };
-
     // Build FortuneInput from the stored request
     const input: FortuneInput = {
       name: order.request.name,
@@ -84,7 +61,46 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       calendarType: order.request.calendarType as FortuneInput['calendarType'],
     };
 
-    const data: GetReportResponse = { order: orderSummary, report, input };
+    // Parse all reports
+    const reportsByModel: Record<string, ModelReportDetail> = {};
+    let primaryReport: ReportDetail | null = null;
+
+    for (const dbReport of order.reports) {
+      let sections: ReportDetail['sections'] = [];
+      let recommendations: string[] = [];
+      try { sections = JSON.parse(dbReport.sectionsJson); } catch { sections = []; }
+      try { recommendations = JSON.parse(dbReport.recommendationsJson); } catch { recommendations = []; }
+
+      const charCount = countReportChars(sections.map((s: any) => s.text ?? '').join('\n'));
+
+      const report: ModelReportDetail = {
+        reportId: dbReport.id,
+        orderId: order.id,
+        productCode: dbReport.productCode as ReportDetail['productCode'],
+        generatedAt: dbReport.generatedAt.toISOString(),
+        headline: dbReport.headline,
+        summary: dbReport.summary,
+        sections,
+        recommendations,
+        disclaimer: dbReport.disclaimer,
+        model: dbReport.model as ModelReportDetail['model'],
+        charCount,
+      };
+
+      reportsByModel[dbReport.model] = report;
+
+      // Use sonnet as primary, or first available
+      if (dbReport.model === 'sonnet' || !primaryReport) {
+        primaryReport = report;
+      }
+    }
+
+    const data: GetReportResponse = {
+      order: orderSummary,
+      report: primaryReport!,
+      input,
+      reportsByModel: Object.keys(reportsByModel).length > 1 ? reportsByModel : undefined,
+    };
     return NextResponse.json({ ok: true, data });
   } catch (err) {
     console.error('[report/get]', err);

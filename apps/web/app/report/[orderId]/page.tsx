@@ -2,9 +2,14 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import type { GetReportResponse } from "../../../lib/types";
+import type { GetReportResponse, ModelReportDetail } from "../../../lib/types";
 import { webApi } from "../../../lib/api";
 import { ButtonLink, GlassCard, LengthDebugBar, PageContainer, StatusBox } from "../../components/ui";
+
+/**
+ * 테스트 모드 리포트 페이지: 모든 모델 비교 UI.
+ * 나중에 원복 시 단일 모델 뷰로 변경.
+ */
 
 function splitParagraphs(text: string): string[] {
   return text
@@ -14,7 +19,6 @@ function splitParagraphs(text: string): string[] {
 }
 
 function highlightFirstSentence(paragraph: string): { lead?: string; rest?: string } {
-  // Heuristic: split on the first period-like delimiter.
   const idx = paragraph.search(/[.!?]\s/);
   if (idx === -1) return { lead: paragraph };
   const cut = idx + 1;
@@ -31,7 +35,6 @@ function SectionText({ text }: { text: string }) {
   return (
     <div className="reportText">
       {paragraphs.map((p, i) => {
-        // Highlight only the first paragraph’s first sentence.
         if (i === 0) {
           const { lead, rest } = highlightFirstSentence(p);
           return (
@@ -47,6 +50,88 @@ function SectionText({ text }: { text: string }) {
         );
       })}
     </div>
+  );
+}
+
+const MODEL_LABELS: Record<string, string> = {
+  gpt: "GPT",
+  sonnet: "Claude Sonnet",
+  opus: "Claude Opus",
+  gemini: "Gemini",
+  fallback: "Fallback",
+};
+
+const MODEL_COLORS: Record<string, string> = {
+  gpt: "#10a37f",
+  sonnet: "#c48b9f",
+  opus: "#7c3aed",
+  gemini: "#4285f4",
+  fallback: "#888",
+};
+
+function formatDuration(ms?: number): string {
+  if (!ms) return "-";
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
+function formatCost(usd?: number): string {
+  if (!usd) return "-";
+  if (usd < 0.01) return `$${usd.toFixed(4)}`;
+  return `$${usd.toFixed(3)}`;
+}
+
+function formatChars(count?: number): string {
+  if (!count) return "-";
+  return `${count.toLocaleString()}자`;
+}
+
+/** 테스트 비교 카드: 각 모델의 메타 정보 표시 */
+function ModelCompareCard({
+  model,
+  report,
+  isActive,
+  onClick,
+}: {
+  model: string;
+  report: ModelReportDetail;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        flex: "1 1 0",
+        minWidth: 140,
+        padding: "14px 12px",
+        border: isActive ? `2px solid ${MODEL_COLORS[model] ?? "#888"}` : "1px solid var(--glass-border)",
+        borderRadius: "var(--radius-sm)",
+        background: isActive ? `${MODEL_COLORS[model] ?? "#888"}11` : "var(--bg-card)",
+        cursor: "pointer",
+        textAlign: "center",
+        transition: "all 0.2s",
+      }}
+    >
+      <div style={{
+        fontWeight: 700,
+        fontSize: "1rem",
+        color: MODEL_COLORS[model] ?? "var(--t1)",
+        marginBottom: 8,
+      }}>
+        {MODEL_LABELS[model] ?? model}
+      </div>
+      <div style={{ display: "grid", gap: 4, fontSize: "0.78rem", color: "var(--t2)" }}>
+        <div>⏱ {formatDuration(report.durationMs)}</div>
+        <div>💰 {formatCost(report.estimatedCostUsd)}</div>
+        <div>📝 {formatChars(report.charCount)}</div>
+        {report.usage && (
+          <div style={{ fontSize: "0.7rem", opacity: 0.7 }}>
+            {(report.usage.inputTokens ?? 0).toLocaleString()} in / {(report.usage.outputTokens ?? 0).toLocaleString()} out
+          </div>
+        )}
+      </div>
+    </button>
   );
 }
 
@@ -66,17 +151,31 @@ export default function ReportPage() {
     })();
   }, [orderId]);
 
-  const [model, setModel] = useState<"preferred" | "gpt" | "claude">("preferred");
+  const modelKeys = useMemo(() => {
+    if (!data?.reportsByModel) return [];
+    return Object.keys(data.reportsByModel);
+  }, [data]);
+
+  const [activeModel, setActiveModel] = useState<string | null>(null);
+
+  // Set default active model when data loads
+  useEffect(() => {
+    if (modelKeys.length > 0 && !activeModel) {
+      setActiveModel("sonnet");
+    }
+  }, [modelKeys, activeModel]);
 
   const report = useMemo(() => {
     if (!data) return null;
-    if (!data.reportsByModel) return data.report;
-    if (model === "gpt") return data.reportsByModel.gpt;
-    if (model === "claude") return data.reportsByModel.claude;
+    if (data.reportsByModel && activeModel && data.reportsByModel[activeModel]) {
+      return data.reportsByModel[activeModel];
+    }
     return data.report;
-  }, [data, model]);
+  }, [data, activeModel]);
 
   const toc = useMemo(() => report?.sections ?? [], [report]);
+
+  const hasMultiModel = modelKeys.length > 1;
 
   return (
     <PageContainer>
@@ -113,22 +212,122 @@ export default function ReportPage() {
           <p className="muted">리포트 로딩중...</p>
         ) : (
           <div className="reportLayout">
+            {/* 테스트 모드: 모델 비교 패널 */}
+            {hasMultiModel && data.reportsByModel && (
+              <div style={{
+                marginBottom: 24,
+                padding: 16,
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid var(--glass-border)",
+                borderRadius: "var(--radius-sm)",
+              }}>
+                <h3 style={{ fontSize: "0.9rem", marginBottom: 12, color: "var(--accent-gold)" }}>
+                  🧪 테스트 모드 — 모델 비교
+                </h3>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {modelKeys.map((key) => (
+                    <ModelCompareCard
+                      key={key}
+                      model={key}
+                      report={data.reportsByModel![key]}
+                      isActive={activeModel === key}
+                      onClick={() => setActiveModel(key)}
+                    />
+                  ))}
+                </div>
+
+                {/* 비교 테이블 */}
+                <div style={{ marginTop: 16, overflowX: "auto" }}>
+                  <table style={{
+                    width: "100%",
+                    fontSize: "0.78rem",
+                    borderCollapse: "collapse",
+                    color: "var(--t1)",
+                  }}>
+                    <thead>
+                      <tr style={{ borderBottom: "1px solid var(--glass-border)" }}>
+                        <th style={{ padding: "6px 8px", textAlign: "left" }}>항목</th>
+                        {modelKeys.map(k => (
+                          <th key={k} style={{
+                            padding: "6px 8px",
+                            textAlign: "center",
+                            color: MODEL_COLORS[k],
+                            fontWeight: activeModel === k ? 700 : 400,
+                          }}>
+                            {MODEL_LABELS[k] ?? k}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td style={{ padding: "4px 8px" }}>⏱ 소요시간</td>
+                        {modelKeys.map(k => (
+                          <td key={k} style={{ padding: "4px 8px", textAlign: "center" }}>
+                            {formatDuration(data.reportsByModel![k].durationMs)}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td style={{ padding: "4px 8px" }}>💰 비용</td>
+                        {modelKeys.map(k => (
+                          <td key={k} style={{ padding: "4px 8px", textAlign: "center" }}>
+                            {formatCost(data.reportsByModel![k].estimatedCostUsd)}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td style={{ padding: "4px 8px" }}>📝 글자수</td>
+                        {modelKeys.map(k => (
+                          <td key={k} style={{ padding: "4px 8px", textAlign: "center" }}>
+                            {formatChars(data.reportsByModel![k].charCount)}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td style={{ padding: "4px 8px" }}>🔤 입력토큰</td>
+                        {modelKeys.map(k => (
+                          <td key={k} style={{ padding: "4px 8px", textAlign: "center" }}>
+                            {(data.reportsByModel![k].usage?.inputTokens ?? 0).toLocaleString()}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td style={{ padding: "4px 8px" }}>🔤 출력토큰</td>
+                        {modelKeys.map(k => (
+                          <td key={k} style={{ padding: "4px 8px", textAlign: "center" }}>
+                            {(data.reportsByModel![k].usage?.outputTokens ?? 0).toLocaleString()}
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             <aside className="reportToc">
               <div className="tocCard">
                 <h3>목차</h3>
-                {data.reportsByModel ? (
+                {hasMultiModel && (
                   <div className="buttonRow mt-xs" role="group" aria-label="모델 선택">
-                    <button className="button ghost" onClick={() => setModel("preferred")} aria-pressed={model === "preferred"}>
-                      추천본
-                    </button>
-                    <button className="button ghost" onClick={() => setModel("gpt")} aria-pressed={model === "gpt"}>
-                      GPT
-                    </button>
-                    <button className="button ghost" onClick={() => setModel("claude")} aria-pressed={model === "claude"}>
-                      Claude
-                    </button>
+                    {modelKeys.map(k => (
+                      <button
+                        key={k}
+                        className="button ghost"
+                        onClick={() => setActiveModel(k)}
+                        aria-pressed={activeModel === k}
+                        style={{
+                          color: activeModel === k ? MODEL_COLORS[k] : undefined,
+                          fontWeight: activeModel === k ? 700 : 400,
+                          borderColor: activeModel === k ? MODEL_COLORS[k] : undefined,
+                        }}
+                      >
+                        {MODEL_LABELS[k] ?? k}
+                      </button>
+                    ))}
                   </div>
-                ) : null}
+                )}
                 <nav aria-label="리포트 목차">
                   {toc.map((section) => (
                     <a key={section.key} href={`#${section.key}`}>{section.title}</a>
@@ -142,6 +341,11 @@ export default function ReportPage() {
               <article className="reportHead">
                 <h2>{report.headline}</h2>
                 <p className="muted">{report.summary}</p>
+                {activeModel && (
+                  <p style={{ fontSize: "0.75rem", color: MODEL_COLORS[activeModel], marginTop: 4 }}>
+                    현재 보기: {MODEL_LABELS[activeModel] ?? activeModel}
+                  </p>
+                )}
               </article>
 
               <nav className="reportJumpNav" aria-label="리포트 빠른 이동">
