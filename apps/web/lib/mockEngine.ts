@@ -1,10 +1,17 @@
+/**
+ * Deterministic report-generation helpers.
+ *
+ * All in-memory storage (Maps) has been removed.
+ * Persistence is now handled by Prisma in the API routes.
+ * This module only exports pure/deterministic functions:
+ *   - isValidFortuneInput
+ *   - generateFortune
+ *   - generatePreview
+ *   - buildReport  (deterministic fallback when LLM is unavailable)
+ */
 import type {
-  CheckoutCreateRequest,
-  CheckoutCreateResponse,
-  CheckoutConfirmResponse,
   FortuneInput,
   FortuneResult,
-  GetReportResponse,
   OrderSummary,
   PreviewSection,
   ProductCode,
@@ -14,29 +21,6 @@ import type {
 import { buildLengthInfo, countReportChars, REPORT_LENGTH_RULES, type ReportTier } from "./reportLength";
 
 const PRODUCT_CODE: ProductCode = "full";
-const PRODUCT_PRICE = 5_900;
-
-type Store = {
-  orders: Map<string, { order: OrderSummary; input: FortuneInput; model?: string }>;
-  reports: Map<string, ReportDetail>;
-  reportsByModel: Map<string, { gpt: ReportDetail; claude: ReportDetail }>;
-};
-
-const store: Store = (() => {
-  const g = globalThis as any;
-  if (!g.__SAJU_STORE__) {
-    g.__SAJU_STORE__ = {
-      orders: new Map(),
-      reports: new Map(),
-      reportsByModel: new Map()
-    } satisfies Store;
-  }
-  return g.__SAJU_STORE__ as Store;
-})();
-
-const orders = store.orders;
-const reports = store.reports;
-const reportsByModel = store.reportsByModel;
 
 const pick = <T>(arr: readonly T[], seed: number, offset: number): T => arr[(seed + offset) % arr.length] as T;
 
@@ -319,7 +303,8 @@ export const generatePreview = (input: FortuneInput): ReportPreview => {
 const unlock = (sections: DraftSection[]): Array<{ key: string; title: string; text: string }> =>
   sections.map((section) => ({ key: section.key, title: section.title, text: section.text }));
 
-const buildReport = (order: OrderSummary, input: FortuneInput): ReportDetail => {
+/** Deterministic fallback report builder (no LLM, no DB). */
+export const buildReport = (order: OrderSummary, input: FortuneInput): ReportDetail => {
   const seed = hashInput(input);
   const draft = ensurePaidLength(buildPaidDraft(input), input, seed);
   const fullText = sectionsToPlainText(draft.sections);
@@ -336,58 +321,4 @@ const buildReport = (order: OrderSummary, input: FortuneInput): ReportDetail => 
     disclaimer: "본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.",
     debugLength: buildLengthInfo("paid", fullText)
   };
-};
-
-export const createCheckout = (payload: CheckoutCreateRequest): CheckoutCreateResponse => {
-  const modelPrices: Record<string, number> = { opus: 9900, sonnet: 5900, gpt: 3900 };
-  const selectedModel = payload.model ?? "sonnet";
-  const price = modelPrices[selectedModel] ?? PRODUCT_PRICE;
-
-  const order: OrderSummary = {
-    orderId: `ord_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
-    productCode: payload.productCode,
-    amountKrw: price,
-    status: "created",
-    createdAt: new Date().toISOString()
-  };
-  orders.set(order.orderId, { order, input: payload.input, model: selectedModel });
-  return { order };
-};
-
-export const confirmCheckout = async (orderId: string): Promise<CheckoutConfirmResponse | null> => {
-  const found = orders.get(orderId);
-  if (!found) return null;
-
-  const updated: OrderSummary = { ...found.order, status: "confirmed", confirmedAt: new Date().toISOString() };
-  orders.set(orderId, { ...found, order: updated });
-
-  // Try LLM generation with user's selected model (no caching — fresh call every time)
-  const selectedModel = found.model ?? "sonnet";
-  try {
-    const { generateSingleModelReport, hasLlmKeys } = await import("./llmEngine");
-    if (hasLlmKeys()) {
-      const report = await generateSingleModelReport({
-        orderId,
-        input: found.input,
-        productCode: updated.productCode,
-        targetModel: selectedModel,
-      });
-      return { order: updated, report };
-    }
-  } catch (e) {
-    console.error("[confirmCheckout] LLM generation failed, using fallback:", e);
-  }
-
-  // Fallback: deterministic report (no LLM keys or LLM failed)
-  const fallback = buildReport(updated, found.input);
-  return { order: updated, report: fallback };
-};
-
-export const getReport = (orderId: string): GetReportResponse | null => {
-  const found = orders.get(orderId);
-  if (!found || found.order.status !== "confirmed") return null;
-
-  // Generate fresh report (no caching)
-  const report = buildReport(found.order, found.input);
-  return { order: found.order, report };
 };

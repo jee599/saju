@@ -82,7 +82,7 @@ export default function ReportPage() {
     <PageContainer>
       <GlassCard>
         <p className="heroEyebrow">전체 리포트</p>
-        <h1>사주 분석 리포트</h1>
+        <h1>{data?.input?.name ? `${data.input.name}님의 사주 분석 리포트` : "사주 분석 리포트"}</h1>
         <p className="lead">전문 명리 해설체와 확률 표현 원칙으로 작성된 전체 결과입니다.</p>
 
         <div className="buttonRow">

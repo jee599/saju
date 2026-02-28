@@ -151,6 +151,7 @@ export interface CheckoutConfirmResponse {
 export interface GetReportResponse {
   order: OrderSummary;
   report: ReportDetail;
+  input?: FortuneInput;
   reportsByModel?: { gpt: ModelReportDetail; claude: ModelReportDetail };
 }
 
