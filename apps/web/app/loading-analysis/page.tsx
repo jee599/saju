@@ -319,7 +319,7 @@ function OhangCycleVisual({ activeIdx }: { activeIdx: number }) {
     <div className="ohangCycleVisual">
       {OHANG.map((el, i) => {
         const angle = (i * 72 - 90) * (Math.PI / 180);
-        const r = 56;
+        const r = 42;
         const x = 50 + r * Math.cos(angle);
         const y = 50 + r * Math.sin(angle);
         const isActive = i === activeIdx;
@@ -344,7 +344,7 @@ function OhangCycleVisual({ activeIdx }: { activeIdx: number }) {
           const a1 = (i * 72 - 90) * (Math.PI / 180);
           const next = (i + 1) % 5;
           const a2 = (next * 72 - 90) * (Math.PI / 180);
-          const r = 56;
+          const r = 42;
           return (
             <line
               key={i}
@@ -491,29 +491,34 @@ function LoadingContent() {
 
   return (
     <main className="page loadingAnalysis">
-      {/* 떠다니는 파티클 */}
+      {/* 부드러운 빛 파티클 (느린 속도) */}
       <div className="loadingParticles" aria-hidden="true">
-        {Array.from({ length: 30 }).map((_, i) => (
+        {Array.from({ length: 15 }).map((_, i) => (
           <span
             key={i}
             className="particle"
             style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${8 + Math.random() * 12}s`,
-              fontSize: `${8 + Math.random() * 16}px`,
-            }}
-          >
-            {["✦", "✧", "⊹", "◇", "○", "☆", "✶", "⋆"][Math.floor(Math.random() * 8)]}
-          </span>
+              left: `${5 + Math.random() * 90}%`,
+              animationDelay: `${Math.random() * 20}s`,
+              animationDuration: `${25 + Math.random() * 20}s`,
+              "--particle-size": `${4 + Math.random() * 8}px`,
+              "--particle-hue": `${[330, 40, 210, 270, 190][i % 5]}`,
+            } as React.CSSProperties}
+          />
         ))}
       </div>
 
+      {/* 배경 오로라 글로우 */}
+      <div className="loadingAurora" aria-hidden="true" />
+
       <div className="container">
         <div className="loadingScreen2">
-          {/* ── 상단: 오행 원 + 상세 카드 ── */}
+          {/* ── 상단: 오행 원 + 상세 카드 (가로 배치) ── */}
           <div className="loadingTopSection">
-            <OhangCycleVisual activeIdx={activeOhang} />
+            <div className="ohangVisualWrap">
+              <div className="ohangGlowRing" />
+              <OhangCycleVisual activeIdx={activeOhang} />
+            </div>
             <OhangDetailCard info={OHANG[activeOhang]} />
           </div>
 
@@ -540,7 +545,11 @@ function LoadingContent() {
           <div className={`eduSlide ${fadeState}`}>
             {/* 비주얼 영역 */}
             {slide.visual === "pillars" && <PillarsVisual />}
-            {slide.visual === "ohang-cycle" && <OhangCycleVisual activeIdx={activeOhang} />}
+            {slide.visual === "ohang-cycle" && (
+              <div className="eduOhangMini">
+                <OhangCycleVisual activeIdx={activeOhang} />
+              </div>
+            )}
 
             <div className="eduHeader">
               <span className="eduIcon" style={{ color: slide.color }}>{slide.icon}</span>

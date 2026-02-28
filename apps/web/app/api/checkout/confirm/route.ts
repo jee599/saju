@@ -32,6 +32,9 @@ const TEST_VARIATIONS: TestVariation[] = [
   { key: 'haiku-chunked', targetModel: 'haiku', strategy: 'chunked' },
 ];
 
+// Vercel serverless function: 최대 5분 (Pro plan 필요)
+export const maxDuration = 300;
+
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as { orderId?: string };

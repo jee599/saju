@@ -415,30 +415,30 @@ export const generateChunkedReport = async (params: {
   const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
   let totalDurationMs = 0;
 
-  const results = await Promise.all(
-    SECTION_KEYS.map(async (sec) => {
-      const userPrompt =
-        `사용자: ${inputJson}\n\n` +
-        `위 사용자의 사주를 바탕으로 "${sec.title}" 섹션을 약 ${charPerSection}자 분량으로 작성해 주세요.\n` +
-        `근거→패턴→리스크→실행 팁 순서로, 구체적 행동 예시 포함.\n` +
-        `본문 텍스트만 출력하세요.`;
+  // 순차 처리: rate limit 방지 (8개 모델 동시 실행 시 총 80개 호출 폭주 방지)
+  const results: Array<{ key: string; title: string; text: string }> = [];
+  for (const sec of SECTION_KEYS) {
+    const userPrompt =
+      `사용자: ${inputJson}\n\n` +
+      `위 사용자의 사주를 바탕으로 "${sec.title}" 섹션을 약 ${charPerSection}자 분량으로 작성해 주세요.\n` +
+      `근거→패턴→리스크→실행 팁 순서로, 구체적 행동 예시 포함.\n` +
+      `본문 텍스트만 출력하세요.`;
 
-      const res = await callLlm({
-        model: llmModel, system, user: userPrompt,
-        maxTokens: maxTokensPerSection, temperature: 0.7,
-        anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
-      });
+    const res = await callLlm({
+      model: llmModel, system, user: userPrompt,
+      maxTokens: maxTokensPerSection, temperature: 0.7,
+      anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
+    });
 
-      if (res.usage) {
-        totalUsage.inputTokens = (totalUsage.inputTokens ?? 0) + (res.usage.inputTokens ?? 0);
-        totalUsage.outputTokens = (totalUsage.outputTokens ?? 0) + (res.usage.outputTokens ?? 0);
-        totalUsage.totalTokens = (totalUsage.totalTokens ?? 0) + (res.usage.totalTokens ?? 0);
-      }
-      totalDurationMs += res.durationMs ?? 0;
+    if (res.usage) {
+      totalUsage.inputTokens = (totalUsage.inputTokens ?? 0) + (res.usage.inputTokens ?? 0);
+      totalUsage.outputTokens = (totalUsage.outputTokens ?? 0) + (res.usage.outputTokens ?? 0);
+      totalUsage.totalTokens = (totalUsage.totalTokens ?? 0) + (res.usage.totalTokens ?? 0);
+    }
+    totalDurationMs += res.durationMs ?? 0;
 
-      return { key: sec.key, title: sec.title, text: res.text.trim() };
-    })
-  );
+    results.push({ key: sec.key, title: sec.title, text: res.text.trim() });
+  }
 
   const provider = llmModel === "gpt" ? "openai" : llmModel === "gemini" ? "google" : "anthropic";
   const modelName = openaiModelId ?? geminiModelId ?? anthropicModelId ?? "unknown";
