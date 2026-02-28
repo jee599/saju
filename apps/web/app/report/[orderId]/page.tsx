@@ -53,7 +53,6 @@ function SectionText({ text }: { text: string }) {
 }
 
 const MODEL_LABELS: Record<string, string> = {
-  "sonnet-chunked": "Sonnet 청크",
   "sonnet-single": "Sonnet 단일",
   "opus": "Opus",
   "gpt": "GPT-5.2",
@@ -66,7 +65,6 @@ const MODEL_LABELS: Record<string, string> = {
 };
 
 const MODEL_COLORS: Record<string, string> = {
-  "sonnet-chunked": "#c48b9f",
   "sonnet-single": "#e06090",
   "opus": "#7c3aed",
   "gpt": "#10a37f",

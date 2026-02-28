@@ -6,12 +6,12 @@ import { countReportChars } from '../../../../lib/reportLength';
 
 /**
  * 테스트 모드: 결제 확인 후 7개 모델 변형을 병렬 생성.
- * - sonnet-chunked: Sonnet 4.6, 3000자 × 10섹션
  * - sonnet-single: Sonnet 4.6, 30000자 × 1회
  * - opus: Opus 4.6, 30000자 × 1회
  * - gpt: GPT-5.2, 30000자 × 1회
  * - gpt-mini-chunked: GPT-5-mini, 3000자 × 10섹션
  * - gemini: Gemini 3.1 Pro, 30000자 × 1회
+ * - gemini-flash-chunked: Gemini Flash, 3000자 × 10섹션
  * - haiku-chunked: Haiku 4.5, 3000자 × 10섹션
  */
 interface TestVariation {
@@ -22,7 +22,6 @@ interface TestVariation {
 }
 
 const TEST_VARIATIONS: TestVariation[] = [
-  { key: 'sonnet-chunked', targetModel: 'sonnet', strategy: 'chunked' },
   { key: 'sonnet-single', targetModel: 'sonnet', strategy: 'single', charTarget: 30000 },
   { key: 'opus', targetModel: 'opus', strategy: 'single', charTarget: 30000 },
   { key: 'gpt', targetModel: 'gpt', strategy: 'single', charTarget: 30000 },
@@ -130,7 +129,6 @@ export async function POST(req: Request) {
             if (report.usage) {
               const provider = report.model === 'gpt' ? 'openai' : report.model === 'gemini' ? 'google' : 'anthropic';
               const modelNameMap: Record<string, string> = {
-                'sonnet-chunked': 'claude-sonnet-4-6',
                 'sonnet-single': 'claude-sonnet-4-6',
                 'opus': 'claude-opus-4-6',
                 'gpt': 'gpt-5.2',
