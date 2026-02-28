@@ -9,6 +9,7 @@
 
 | 날짜 | 작업 내용 | 커밋 |
 |------|----------|------|
+| 2026-02-28 | Supabase DB 전환: mockEngine→Prisma 실DB, Vercel 환경변수(DB/GA4/Resend), 리포트 헤더 개인화 | `e6dcd70` |
 | 2026-02-28 | MASTERPLAN 전체 실행: 보안수정(S1~S3), UX개선(CTA/블러/페이월), 신규기능(일간운세/OG이미지/꿈해몽/타로), CI/CD, 패키지정리 | `59406ed` |
 | 2026-02-28 | MASTERPLAN v2: 4-에이전트(개발/기획/사업/디자인) 리뷰 기반 고도화. 보안이슈, 퍼널최적화, 비즈모델, UX개선 항목 추가 | `04e4b3b` |
 | 2026-02-28 | MASTERPLAN.md 생성. 기존 문서 통합 | `7c63c89` |
@@ -58,7 +59,7 @@ saju_global/
 - **엔진**: `@saju/engine-saju` — lunar-typescript 기반 만세력 계산 (99 tests)
 - **LLM**: Claude (Sonnet 4.6/Opus 4.6) + GPT 5.2 + Gemini 3.1 — 7가지 전략 비교
 - **배포**: Vercel (프로덕션: `fortunelab.store`)
-- **DB**: Prisma + SQLite (로컬) → Supabase Postgres (예정)
+- **DB**: Prisma + Supabase Postgres (ap-south-1, ngrfhhkrmjvumrznzhmn)
 - **패키지 매니저**: pnpm workspace
 - **폰트**: Pretendard (한글), Noto Serif KR (보조), Cormorant Garamond (한자 전용)
 - **디자인**: Celestial Rose 다크 테마 (accent: #C48B9F, gold: #D4AF37, 오행 5색 시스템)
@@ -118,9 +119,9 @@ saju_global/
 
 | # | 항목 | 상태 | 설명 | 담당 |
 |---|------|------|------|------|
-| 1 | Supabase DB 전환 | ❌ | SQLite → Postgres. 이메일/리포트/결제 전부 의존 | 대표+Claude |
+| 1 | Supabase DB 전환 | ✅ 완료 | Prisma → Supabase Postgres. mockEngine 제거, 실DB 연동 | 대표+Claude |
 | 2 | Toss Payments 결제 | ❌ | 사업자등록 → 키 발급 → `/api/toss/webhook` 구현 | 대표+Claude |
-| 3 | GA4 Measurement ID | ❌ | `NEXT_PUBLIC_GA_MEASUREMENT_ID` 환경변수 1개 설정 (5분) | 대표 |
+| 3 | GA4 Measurement ID | ✅ 완료 | `G-YS63550G4X` Vercel 환경변수 설정 완료 | 대표 |
 | 4 | CTA 카피 수정 | ✅ 완료 | "나머지 7파트 전체 열기 ₩5,900" + 모델명 제거 | Claude |
 | 5 | 보안 이슈 S1~S3 수정 | ✅ 완료 | test 차단, orderId 검증, URLSearchParams 적용 | Claude |
 | 6 | 궁합 링크 수정 (R2) | ✅ 완료 | `/compatibility?birthDate=` 로 수정 | Claude |
@@ -136,7 +137,7 @@ saju_global/
 | 11 | 블러 내 인라인 잠금해제 CTA | ✅ 완료 | 블러 오버레이 위 "🔓 잠금 해제" 버튼 배치 |
 | 12 | 결과→페이월 CTA 재배치 | ❌ | 블러 3개 노출 후 첫 CTA, 나머지 후 두 번째 CTA |
 | 13 | 모델 선택 UI | ✅ 완료 | GPT/Sonnet/Opus 3-tier 가격 선택 (페이월 페이지) |
-| 14 | 리포트 헤더 개인화 | 🟡 | GetReportResponse에 input 필드 없음, Supabase 전환 후 재시도 |
+| 14 | 리포트 헤더 개인화 | ✅ 완료 | GetReportResponse에 input 추가, "${이름}님의 사주 분석 리포트" |
 | 15 | 리포트 공유 기능 | ✅ 완료 | Web Share API + 클립보드 복사 (카카오 SDK 별도) |
 | 16 | 카카오 공유 SDK 연동 | ❌ | 공유 카드 3종 (한줄/성향/주의) + 개인화 OG 이미지 |
 | 17 | 입력 폼 중복 제거 | ❌ | page.tsx와 free-fortune/page.tsx 통합 → 공통 컴포넌트 |
@@ -200,12 +201,12 @@ saju_global/
 | # | 항목 | 상태 | 설명 | 긴급도 |
 |---|------|------|------|--------|
 | 1 | **사업자등록** | ❌ | Toss Payments 필수 전제. 통신판매업 신고 포함 | 🔴 |
-| 2 | **Supabase 프로젝트 생성** | ❌ | 프로젝트 생성 → Connection string 제공 | 🔴 |
+| 2 | **Supabase 프로젝트 생성** | ✅ | ngrfhhkrmjvumrznzhmn (ap-south-1) 연결 완료 | — |
 | 3 | **Toss Payments 키 발급** | ❌ | 사업자등록 후 → API 키 발급 → 환경변수 설정 | 🔴 |
-| 4 | **GA4 Measurement ID** | ❌ | Google Analytics → `NEXT_PUBLIC_GA_MEASUREMENT_ID` | 🔴 |
-| 5 | 이메일 서비스 가입 | ❌ | Resend 계정 생성 (무료 플랜: 월 3,000이메일) | 🟡 |
+| 4 | **GA4 Measurement ID** | ✅ | `G-YS63550G4X` 설정 완료 | — |
+| 5 | 이메일 서비스 가입 | ✅ | Resend API Key 발급 + Vercel 환경변수 설정 완료 | — |
 | 6 | 도메인 DNS 확인 | ✅ | fortunelab.store 연결 완료 | — |
-| 7 | Vercel 환경변수 | 🟡 | API키 설정됨. DB/결제/GA 키 미설정 | 🟡 |
+| 7 | Vercel 환경변수 | ✅ | DB/GA4/Resend 모두 설정 완료. Toss 키만 미설정 | 🟡 |
 | 8 | 개인정보처리방침 강화 | ❌ | LLM API 국외이전 고지, CPO 지정, PIPA 준수 | 🟡 |
 | 9 | 이용약관 보강 | ❌ | 전자상거래법 의무 기재사항 추가 | 🟡 |
 
@@ -284,7 +285,7 @@ saju_global/
 |------|------|------|--------|
 | LLM 코드 중복 | `packages/api/src/llm.ts` vs `apps/web/lib/llmEngine.ts` | 두 구현의 모델명 불일치. packages/api는 구버전 | 2~3시간 |
 | 프롬프트 중복 | `reportPrompt.ts` vs `llmEngine.ts` | 두 곳에 `buildPaidReportPrompt` 존재 | 1시간 |
-| mockEngine 메모리 누수 | `mockEngine.ts` | globalThis 스토어에 TTL 없음 | Supabase 전환 시 해소 |
+| mockEngine 메모리 누수 | `mockEngine.ts` | ✅ Supabase 전환으로 해소. 인메모리 저장 제거 | 완료 |
 | 미사용 패키지 | `package.json` | ✅ `react-mobile-picker` 제거 완료 | 완료 |
 | 테스트 부재 | 전체 | 엔진만 99개. API/LLM/폼 테스트 0개 | 8~16시간 |
 | CI/CD 없음 | 루트 | ✅ `.github/workflows/ci.yml` 추가 완료 | 완료 |
@@ -296,8 +297,8 @@ saju_global/
 
 ### Week 1 (매출 파이프라인 완성)
 - [ ] 대표: 사업자등록 + Toss Payments 계정 개설
-- [ ] 대표: Supabase 프로젝트 생성 → Connection string 제공
-- [ ] 대표: GA4 Measurement ID 설정
+- [x] 대표: Supabase 프로젝트 생성 → Connection string 제공 ✅
+- [x] 대표: GA4 Measurement ID 설정 ✅
 - [ ] Claude: Toss 결제 연동 (`/api/checkout/create`, `/api/toss/webhook`)
 - [ ] Claude: 결제→LLM→리포트→이메일 파이프라인
 - [x] Claude: 보안 이슈 S1~S3 수정 ✅
@@ -305,7 +306,7 @@ saju_global/
 - [ ] 배포 + 첫 실결제 테스트
 
 ### Week 2 (마케팅 채널 오픈)
-- [ ] 대표: Resend 계정 생성
+- [x] 대표: Resend 계정 생성 ✅
 - [ ] Claude: 이메일 서비스 연동 (결제 후 리포트 링크 발송)
 - [ ] Claude: 카카오 공유 버튼 구현
 - [x] Claude: 페이월 신뢰 요소 추가 ✅
