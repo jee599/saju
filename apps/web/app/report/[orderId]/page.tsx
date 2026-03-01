@@ -96,59 +96,17 @@ function highlightFirstSentence(paragraph: string): { lead?: string; rest?: stri
   };
 }
 
-/** 실천 팁 파싱: "✅ 실천 팁" 패러그래프에서 번호 항목을 추출 */
-function parseTipParagraph(text: string): string[] | null {
-  if (!text.includes("실천 팁") && !text.startsWith("✅")) return null;
-  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
-  const tips: string[] = [];
-  let found = false;
-  for (const line of lines) {
-    if (line.includes("실천 팁") || line.startsWith("✅")) { found = true; continue; }
-    if (found && line.length > 0) tips.push(line.replace(/^[①②③④⑤⑥⑦⑧⑨⑩\d]+[.)]\s*/, ""));
-  }
-  return tips.length > 0 ? tips : null;
-}
-
-function SectionText({ text, sectionTitle }: { text: string; sectionTitle?: string }) {
+function SectionText({ text }: { text: string }) {
   const paragraphs = splitParagraphs(text);
   if (paragraphs.length === 0) return null;
-
-  // 첫 문장에서 풀쿼트용 텍스트 추출
-  const { lead } = highlightFirstSentence(paragraphs[0] ?? "");
-  const showPullQuote = lead && lead.length >= 25 && lead.length <= 200;
-
   return (
     <div className="reportText">
-      {/* ④ 풀쿼트 카드 */}
-      {showPullQuote && (
-        <div className="pullQuote">
-          <span className="pullQuoteText">{lead}</span>
-          <span className="pullQuoteSource">— {sectionTitle ?? ""} 핵심 인사이트</span>
-        </div>
-      )}
-
       {paragraphs.map((p, i) => {
-        // ③ 실천 팁 전용 박스
-        const tips = parseTipParagraph(p);
-        if (tips) {
-          return (
-            <div key={i} className="tipCalloutBox">
-              <span className="tipCalloutHeader">💡 실천 팁</span>
-              {tips.map((tip, j) => (
-                <div key={j} className="tipItem">
-                  <span className="tipNum">{j + 1}</span>
-                  <span>{tip}</span>
-                </div>
-              ))}
-            </div>
-          );
-        }
-
         if (i === 0) {
-          const { lead: l, rest } = highlightFirstSentence(p);
+          const { lead, rest } = highlightFirstSentence(p);
           return (
             <p key={i} className="reportParagraph">
-              {l ? <mark className="reportMark">{l}</mark> : null}{rest ? ` ${rest}` : null}
+              {lead ? <mark className="reportMark">{lead}</mark> : null}{rest ? ` ${rest}` : null}
             </p>
           );
         }
@@ -156,20 +114,6 @@ function SectionText({ text, sectionTitle }: { text: string; sectionTitle?: stri
       })}
     </div>
   );
-}
-
-/** ② 섹션 타이틀 아이콘 매핑 */
-const SECTION_ICONS: Record<string, string> = {
-  "성격": "🧬", "직업": "💼", "연애": "💕", "금전": "💰", "건강": "🏥",
-  "가족·배우자": "👨‍👩‍👧‍👦", "가족": "👨‍👩‍👧‍👦", "배우자": "💑",
-  "과거": "⏪", "현재": "📍", "미래": "🔮",
-  "대운 타임라인": "📊", "대운": "📊", "실행 체크리스트": "✅",
-};
-function getSectionIcon(title: string): string {
-  for (const [key, icon] of Object.entries(SECTION_ICONS)) {
-    if (title.includes(key)) return icon;
-  }
-  return "✦";
 }
 
 interface ModelInfo {
@@ -532,12 +476,8 @@ export default function ReportPage() {
 
                   {activeReport.sections.map((section) => (
                     <article key={section.key} id={section.key} className="reportSection">
-                      <h3 className="reportSectionTitle">
-                        <span className="sectionIcon">{getSectionIcon(section.title)}</span>
-                        {section.title}
-                      </h3>
-                      <div className="sectionDivider" />
-                      <SectionText text={section.text} sectionTitle={section.title} />
+                      <h3>{section.title}</h3>
+                      <SectionText text={section.text} />
                     </article>
                   ))}
 
