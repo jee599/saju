@@ -1397,6 +1397,37 @@ p, li, label, input, select, button, textarea {
   line-height: 1.8;
 }
 
+/* ── 성격 분석 텍스트 스타일 ── */
+.personalityResult {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--t1);
+}
+.personalityHeading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #D4AF37;
+  margin: 20px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  letter-spacing: 0.02em;
+}
+.personalityHeading:first-child {
+  margin-top: 0;
+}
+.personalityParagraph {
+  margin: 0 0 14px;
+  white-space: pre-wrap;
+}
+
+/* ── 잠금 섹션 제목 ── */
+.lockedSectionTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #C48B9F;
+  letter-spacing: 0.02em;
+}
+
 .blurOverlay {
   position: absolute;
   inset: 0;
