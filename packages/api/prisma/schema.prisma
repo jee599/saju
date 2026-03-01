@@ -108,6 +108,19 @@ model EmailSubscription {
   @@map("email_subscriptions")
 }
 
+// ── Model Vote (모델 투표) ────────────────────────────────
+model ModelVote {
+  id        String   @id @default(cuid())
+  orderId   String
+  modelKey  String
+  voterId   String   // 브라우저 localStorage UUID
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([orderId, modelKey, voterId])
+  @@index([orderId])
+  @@map("model_votes")
+}
+
 // ── Rate Limit Log (요청 제한 로그) ──────────────────────
 model RateLimitLog {
   id          String   @id @default(cuid())
