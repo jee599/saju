@@ -428,8 +428,8 @@ export const generateSingleModelReport = async (params: {
   const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel] ?? 20000;
   const { system, user } = buildPaidReportPrompt({ input, productCode, targetModel, charTarget });
 
-  // 한국어 1자 ≈ 1.5~2 토큰, JSON 구조 오버헤드 포함
-  const maxTokens = Math.max(16000, Math.round(charTarget * 1.5));
+  // 한국어 1자 ≈ 1~1.5 토큰 (JSON 구조 포함), Vercel 300s 타임아웃 고려
+  const maxTokens = Math.max(16000, Math.round(charTarget * 1.0));
 
   let llmModel: ReportModel;
   let anthropicModelId: string | undefined;
