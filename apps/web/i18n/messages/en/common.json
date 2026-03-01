@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "title": "FortuneLab | AI Birth Chart Analysis",
+    "description": "518,400 unique destiny readings powered by AI. Start free.",
+    "ogTitle": "FortuneLab | AI Birth Chart Analysis",
+    "ogDescription": "518,400 unique destiny readings powered by AI."
+  },
+  "brand": "FortuneLab",
+  "nav": {
+    "label": "Main Menu",
+    "daily": "Daily Fortune",
+    "saju": "Birth Chart",
+    "palm": "Palm Reading",
+    "naming": "Name Analysis",
+    "face": "Face Reading",
+    "dream": "Dream Guide",
+    "tarot": "Tarot"
+  },
+  "footer": {
+    "title": "FortuneLab",
+    "description": "Traditional Four Pillars astrology reimagined with AI.",
+    "disclaimer": "Not intended as medical, legal, or financial advice.",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "refund": "Refund Policy",
+    "legal": "Disclaimer"
+  },
+  "elements": {
+    "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
+    "native": { "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water" },
+    "emoji": { "wood": "🌿", "fire": "🔥", "earth": "⛰️", "metal": "⚙️", "water": "🌊" }
+  }
+}

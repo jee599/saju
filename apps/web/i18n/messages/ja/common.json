@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "title": "運命研究所 | AI四柱推命",
+    "description": "518,400通りの命式をAIが分析。無料で始めましょう。",
+    "ogTitle": "運命研究所 | AI四柱推命",
+    "ogDescription": "518,400通りの命式をAIが分析します。"
+  },
+  "brand": "運命研究所",
+  "nav": {
+    "label": "メインメニュー",
+    "daily": "今日の運勢",
+    "saju": "四柱推命",
+    "palm": "手相",
+    "naming": "姓名判断",
+    "face": "人相",
+    "dream": "夢占い",
+    "tarot": "タロット"
+  },
+  "footer": {
+    "title": "運命研究所",
+    "description": "伝統的な四柱推命をAIで再解釈した運勢分析サービスです。",
+    "disclaimer": "医療・法律・投資判断の根拠としてご利用しないでください。",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "refund": "返金ポリシー",
+    "legal": "免責事項"
+  },
+  "elements": {
+    "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
+    "native": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
+    "emoji": { "wood": "🌿", "fire": "🔥", "earth": "⛰️", "metal": "⚙️", "water": "🌊" }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "title": "FortuneLab | Analisis Shio & Bazi dengan AI",
+    "description": "518,400 kombinasi nasib dianalisis AI. Mulai gratis.",
+    "ogTitle": "FortuneLab | Analisis Shio & Bazi dengan AI",
+    "ogDescription": "518,400 kombinasi nasib dianalisis AI secara akurat."
+  },
+  "brand": "FortuneLab",
+  "nav": {
+    "label": "Menu Utama",
+    "daily": "Ramalan Hari Ini",
+    "saju": "Bazi",
+    "palm": "Ramal Tangan",
+    "naming": "Analisis Nama",
+    "face": "Fisiognomi",
+    "dream": "Tafsir Mimpi",
+    "tarot": "Tarot"
+  },
+  "footer": {
+    "title": "FortuneLab",
+    "description": "Astrologi Tiongkok tradisional dipadukan dengan teknologi AI.",
+    "disclaimer": "Bukan saran medis, hukum, atau investasi.",
+    "terms": "Syarat Layanan",
+    "privacy": "Kebijakan Privasi",
+    "refund": "Kebijakan Pengembalian",
+    "legal": "Sanggahan"
+  },
+  "elements": {
+    "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
+    "native": { "wood": "Kayu", "fire": "Api", "earth": "Tanah", "metal": "Logam", "water": "Air" },
+    "emoji": { "wood": "🌿", "fire": "🔥", "earth": "⛰️", "metal": "⚙️", "water": "🌊" }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "title": "궁합 분석",
+  "desc": "두 사람의 생년월일을 입력하면 오행 궁합을 분석해드립니다.",
+  "myBirthDate": "나의 생년월일",
+  "partnerBirthDate": "상대방 생년월일",
+  "myBirthDateAria": "나의 생년월일",
+  "partnerBirthDateAria": "상대방 생년월일",
+  "viewCompat": "궁합 보기",
+  "me": "나",
+  "partner": "상대",
+  "score": "{score}점",
+  "shareButton": "상대방에게 공유하기",
+  "detailButton": "내 사주 상세 보기",
+  "shareText": "우리 궁합 {score}점! 너도 해볼래?\n{url}",
+  "shareTitle": "복연구소 궁합",
+  "loading": "궁합 분석 중..."
+}

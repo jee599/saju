@@ -1,0 +1,17 @@
+{
+  "title": "Phân tích hợp duyên",
+  "desc": "Nhập ngày sinh của hai người để phân tích hợp duyên theo Ngũ Hành.",
+  "myBirthDate": "Ngày sinh của tôi",
+  "partnerBirthDate": "Ngày sinh đối phương",
+  "myBirthDateAria": "Ngày sinh của tôi",
+  "partnerBirthDateAria": "Ngày sinh đối phương",
+  "viewCompat": "Xem hợp duyên",
+  "me": "Tôi",
+  "partner": "Đối phương",
+  "score": "{score} điểm",
+  "shareButton": "Chia sẻ với đối phương",
+  "detailButton": "Xem phân tích chi tiết của tôi",
+  "shareText": "Điểm hợp duyên của chúng ta là {score} điểm! Bạn muốn thử không?\n{url}",
+  "shareTitle": "FortuneLab Hợp duyên",
+  "loading": "Đang phân tích hợp duyên..."
+}

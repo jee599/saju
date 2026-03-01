@@ -24,15 +24,21 @@ model FortuneRequest {
 
 // ── Order (주문) ────────────────────────────────────────
 model Order {
-  id          String   @id @default(cuid())
-  requestId   String
-  productCode String
-  amountKrw   Int
-  status      String   @default("created")
-  email       String?
-  emailSentAt DateTime?  @map("email_sent_at")
-  createdAt   DateTime @default(now())
-  confirmedAt DateTime?
+  id              String   @id @default(cuid())
+  requestId       String
+  productCode     String
+  amountKrw       Int           // Legacy KRW amount (kept for backward compat)
+  amount          Int?          // Amount in smallest currency unit (cents, yen, won, etc.)
+  currency        String    @default("KRW")
+  countryCode     String    @default("kr")
+  locale          String    @default("ko")
+  paymentProvider String?       // "toss" | "stripe" | "razorpay"
+  paymentId       String?       // External payment ID (e.g. Stripe session ID)
+  status          String    @default("created")
+  email           String?
+  emailSentAt     DateTime?  @map("email_sent_at")
+  createdAt       DateTime  @default(now())
+  confirmedAt     DateTime?
 
   request FortuneRequest @relation(fields: [requestId], references: [id])
   reports Report[]

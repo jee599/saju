@@ -1,0 +1,32 @@
+{
+  "priceAnchor": "Fortune teller $100+/hr",
+  "priceAnchorTo": "AI analysis {price}",
+  "heading": "Complete BaZi Analysis for {name}",
+  "subheading": "9-Section Detailed AI Analysis",
+  "sections": [
+    "Personality — Innate traits & interpersonal style",
+    "Career — Vocation & professional strengths",
+    "Love · Family · Partner — Connections & relationships",
+    "Wealth — Flow of money & finances",
+    "Health — Key health areas to watch",
+    "Past — Analysis of time already lived",
+    "Present — This year's fortune",
+    "Future — Outlook for the next 3–5 years",
+    "Grand Cycle Timeline — 10-year cycle analysis"
+  ],
+  "trustSecure": "🔒 Secure payment",
+  "trustRefund": "↩️ 24-hour refund guarantee",
+  "trustEmail": "📧 Report delivered by email",
+  "socialProof": "Join the many users who have already received their analysis",
+  "emailLabel": "Email (we'll also send your report here)",
+  "emailError": "Please enter a valid email address.",
+  "checkoutLoading": "Creating order...",
+  "checkoutBtn": "Pay {price}",
+  "afterPurchase": "Your full report will be available immediately after purchase.",
+  "refundLink": "See our refund policy {link}.",
+  "refundLinkText": "here",
+  "createFail": "Failed to create order",
+  "noOrderId": "No order ID received.",
+  "checkoutError": "An error occurred during checkout.",
+  "loading": "Loading payment page..."
+}

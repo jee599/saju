@@ -1,0 +1,17 @@
+{
+  "title": "Analisis Kecocokan",
+  "desc": "Masukkan tanggal lahir kedua orang untuk menganalisis kecocokan Lima Elemen.",
+  "myBirthDate": "Tanggal Lahir Saya",
+  "partnerBirthDate": "Tanggal Lahir Pasangan",
+  "myBirthDateAria": "Tanggal lahir saya",
+  "partnerBirthDateAria": "Tanggal lahir pasangan",
+  "viewCompat": "Lihat Kecocokan",
+  "me": "Saya",
+  "partner": "Pasangan",
+  "score": "{score} poin",
+  "shareButton": "Bagikan ke pasangan",
+  "detailButton": "Lihat analisis detail saya",
+  "shareText": "Skor kecocokan kita {score} poin! Mau coba juga?\n{url}",
+  "shareTitle": "FortuneLab Kecocokan",
+  "loading": "Menganalisis kecocokan..."
+}

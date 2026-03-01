@@ -1,0 +1,13 @@
+{
+  "titleWithName": "{name}'s BaZi Analysis",
+  "titleDefault": "BaZi Analysis Report",
+  "backHome": "Home",
+  "error": "Error",
+  "loading": "Loading...",
+  "notReady": "Your report has not been generated yet.",
+  "toc": "Table of Contents",
+  "tocAria": "Report table of contents",
+  "jumpNavAria": "Quick navigation for report",
+  "checklist": "Action Checklist",
+  "fetchFail": "Failed to load report"
+}

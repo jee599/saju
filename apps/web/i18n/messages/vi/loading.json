@@ -1,0 +1,175 @@
+{
+  "steps": [
+    { "emoji": "📅", "label": "Tính vạn niên lịch" },
+    { "emoji": "☯", "label": "Phân tích ngũ hành" },
+    { "emoji": "⭐", "label": "Sắp xếp thập thần" },
+    { "emoji": "📊", "label": "Giải đọc đại vận" },
+    { "emoji": "🤖", "label": "AI tạo báo cáo" }
+  ],
+  "analyzing": "Đang phân tích",
+  "preparing": "Đang chuẩn bị...",
+  "aiGenerating": "AI đang phân tích chính xác lá số Tứ Trụ riêng của bạn ✨",
+  "retry": "Thử lại",
+  "confirmFail": "Xác nhận thanh toán thất bại.",
+  "reportFail": "Tạo báo cáo thất bại.",
+  "genericError": "Đã xảy ra lỗi.",
+  "timeFormat": { "min": "phút", "sec": "giây" },
+  "pillarsVisual": {
+    "cols": ["Năm trụ", "Tháng trụ", "Ngày trụ", "Giờ trụ"],
+    "heaven": "Thiên Can (Trời)",
+    "earth": "Địa Chi (Đất)"
+  },
+  "ohang": [
+    {
+      "ko": "Mộc (木)",
+      "season": "Mùa xuân",
+      "direction": "Phương Đông",
+      "organ": "Gan·Mật",
+      "personality": "Tăng trưởng, sáng tạo, xông pha",
+      "description": [
+        "木 (Mộc) tượng trưng cho khí xuân — sức sống vươn lên của vạn vật.",
+        "Là năng lượng bắt đầu điều mới và thúc đẩy sự phát triển.",
+        "Người vượng Mộc có tinh thần tiến thủ và tố chất lãnh đạo,",
+        "khi thiếu hụt có thể thiếu quyết đoán hoặc hay lo lắng thái quá."
+      ]
+    },
+    {
+      "ko": "Hỏa (火)",
+      "season": "Mùa hè",
+      "direction": "Phương Nam",
+      "organ": "Tim·Ruột non",
+      "personality": "Đam mê, biểu đạt, lan tỏa",
+      "description": [
+        "火 (Hỏa) tượng trưng cho năng lượng nóng bức của mùa hè — ánh sáng và nhiệt huyết.",
+        "Giàu cảm xúc biểu đạt và mang bản chất xã giao.",
+        "Người vượng Hỏa sôi nổi và có sức hút,",
+        "nhưng khi quá vượng có thể bốc đồng hoặc dễ dao động cảm xúc."
+      ]
+    },
+    {
+      "ko": "Thổ (土)",
+      "season": "Giao mùa",
+      "direction": "Trung tâm",
+      "organ": "Dạ dày·Lá lách",
+      "personality": "Ổn định, tin cậy, bao dung",
+      "description": [
+        "土 (Thổ) tượng trưng cho giao mùa — năng lượng ổn định giữ vững trung tâm.",
+        "Đóng vai trò hòa giải và nền tảng của ngũ hành.",
+        "Người vượng Thổ đáng tin cậy và rộng lượng,",
+        "khi thiếu hụt có thể bất an và khó tìm được điểm cân bằng."
+      ]
+    },
+    {
+      "ko": "Kim (金)",
+      "season": "Mùa thu",
+      "direction": "Phương Tây",
+      "organ": "Phổi·Ruột già",
+      "personality": "Quyết đoán, chính trực, thu liễm",
+      "description": [
+        "金 (Kim) tượng trưng cho khí thu — năng lượng thu hoạch và sắp xếp.",
+        "Biểu trưng cho khả năng phán đoán rõ ràng và thực thi.",
+        "Người vượng Kim nguyên tắc và quyết đoán,",
+        "khi quá vượng có thể cứng nhắc hoặc sa vào chủ nghĩa hoàn hảo."
+      ]
+    },
+    {
+      "ko": "Thủy (水)",
+      "season": "Mùa đông",
+      "direction": "Phương Bắc",
+      "organ": "Thận·Bàng quang",
+      "personality": "Trí tuệ, linh hoạt, sâu sắc",
+      "description": [
+        "水 (Thủy) tượng trưng cho sự tĩnh lặng của mùa đông — tư duy sâu sắc và trí tuệ.",
+        "Chảy linh hoạt, thích nghi với bất kỳ hình thái nào.",
+        "Người vượng Thủy thông minh và có khả năng quan sát xuất sắc,",
+        "khi thiếu hụt có thể nhút nhát hoặc thiếu ý chí."
+      ]
+    }
+  ],
+  "slides": [
+    {
+      "title": "Tứ Trụ là gì?",
+      "content": [
+        "Tứ Trụ (四柱) là bốn trụ của năm, tháng, ngày và giờ sinh.",
+        "Mỗi trụ gồm hai ký tự — Thiên Can (天干) và Địa Chi (地支),",
+        "tổng cộng tám ký tự — Bát Tự (八字).",
+        "Tám ký tự này mang trong đó bản đồ của tính cách, tài năng và vận mệnh."
+      ]
+    },
+    {
+      "title": "Ngũ Hành — Năm năng lượng của vũ trụ",
+      "content": [
+        "Vạn vật trong vũ trụ được cấu thành từ năm nguyên tố: Mộc·Hỏa·Thổ·Kim·Thủy.",
+        "Mỗi hành gắn liền với mùa, hướng, màu sắc và cảm xúc.",
+        "Sự cân bằng của các hành trong lá số Tứ Trụ xác định bản chất bẩm sinh,",
+        "sự thiếu hụt hay vượng thái tạo nên nhịp điệu của vận mệnh."
+      ]
+    },
+    {
+      "title": "Tương Sinh — Mối quan hệ nuôi dưỡng nhau",
+      "content": [
+        "Mộc → Hỏa: Gỗ làm nhiên liệu cho lửa",
+        "Hỏa → Thổ: Lửa đốt thành tro rồi thành đất",
+        "Thổ → Kim: Kim loại sinh ra trong lòng đất",
+        "Kim → Thủy: Sương đọng trên bề mặt kim loại",
+        "Thủy → Mộc: Nước nuôi dưỡng cây cối phát triển"
+      ]
+    },
+    {
+      "title": "Tương Khắc — Mối quan hệ chế ước nhau",
+      "content": [
+        "Mộc → Thổ: Rễ cây đâm xuyên và phá vỡ đất",
+        "Thổ → Thủy: Đất đắp đê ngăn chặn nước",
+        "Thủy → Hỏa: Nước dập tắt lửa",
+        "Hỏa → Kim: Lửa nung chảy kim loại",
+        "Kim → Mộc: Lưỡi dao (kim loại) chặt gỗ"
+      ]
+    },
+    {
+      "title": "Thiên Can — Mười khí của trời",
+      "content": [
+        "Giáp·Ất → Mộc | Bính·Đinh → Hỏa",
+        "Mậu·Kỷ → Thổ | Canh·Tân → Kim",
+        "Nhâm·Quý → Thủy",
+        "Can Dương (陽) chủ động, tích cực; Can Âm (陰) ôn hòa, tinh tế."
+      ]
+    },
+    {
+      "title": "Địa Chi — Mười hai con giáp",
+      "content": [
+        "Tý(Chuột)·Sửu(Trâu)·Dần(Hổ)·Mão(Thỏ)",
+        "Thìn(Rồng)·Tỵ(Rắn)·Ngọ(Ngựa)·Mùi(Dê)",
+        "Thân(Khỉ)·Dậu(Gà)·Tuất(Chó)·Hợi(Lợn)",
+        "12 Địa Chi đồng thời biểu thị con giáp, giờ, hướng và mùa."
+      ]
+    },
+    {
+      "title": "Thập Thần — Quan hệ giữa bản thân và thế giới",
+      "content": [
+        "Tỷ Kiên·Kiếp Tài: đồng nghiệp, đối thủ (hành giống nhật chủ)",
+        "Thực Thần·Thương Quan: tài năng, biểu đạt (hành nhật chủ sinh)",
+        "Thiên Tài·Chính Tài: tiền của, cha (hành nhật chủ khắc)",
+        "Thiên Quan·Chính Quan: sự nghiệp, danh tiếng (hành khắc nhật chủ)",
+        "Thiên Ấn·Chính Ấn: học vấn, mẹ (hành sinh nhật chủ)"
+      ]
+    },
+    {
+      "title": "Đại Vận — Nhịp điệu lớn 10 năm",
+      "content": [
+        "Đại Vận (大運) chia cuộc đời thành các chương lớn 10 năm.",
+        "Ví dụ, Đại Vận Hỏa ở tuổi 30 báo hiệu giai đoạn năng động và giao tiếp rộng,",
+        "Đại Vận Kim ở tuổi 40 báo hiệu giai đoạn gặt hái thành quả và sắp xếp lại.",
+        "Biết mình đang trong Đại Vận nào là cốt lõi của việc đọc vận mệnh."
+      ]
+    },
+    {
+      "title": "Dụng Thần — Chìa khóa của Tứ Trụ",
+      "content": [
+        "Dụng Thần (用神) là hành quan trọng nhất để cân bằng lá số Tứ Trụ.",
+        "Cũng như bổ sung dưỡng chất thiếu hụt để có sức khỏe tốt,",
+        "tận dụng màu sắc, hướng và nghề nghiệp phù hợp với Dụng Thần",
+        "được cho là có thể chuyển hóa dòng chảy vận mệnh theo hướng thuận lợi."
+      ]
+    }
+  ]
+}

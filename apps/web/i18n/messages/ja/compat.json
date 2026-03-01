@@ -1,0 +1,17 @@
+{
+  "title": "相性分析",
+  "desc": "二人の生年月日を入力すると、五行の相性を分析します。",
+  "myBirthDate": "自分の生年月日",
+  "partnerBirthDate": "相手の生年月日",
+  "myBirthDateAria": "自分の生年月日",
+  "partnerBirthDateAria": "相手の生年月日",
+  "viewCompat": "相性を見る",
+  "me": "自分",
+  "partner": "相手",
+  "score": "{score}点",
+  "shareButton": "相手に共有する",
+  "detailButton": "自分の四柱推命を詳しく見る",
+  "shareText": "私たちの相性は{score}点！あなたも試してみない？\n{url}",
+  "shareTitle": "FortuneLab 相性",
+  "loading": "相性分析中..."
+}

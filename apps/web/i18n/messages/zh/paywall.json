@@ -1,0 +1,32 @@
+{
+  "priceAnchor": "算命师 一次300元〜",
+  "priceAnchorTo": "AI分析 {price}",
+  "heading": "{name}的完整八字分析",
+  "subheading": "9大板块 AI深度解析",
+  "sections": [
+    "性格 — 天生气质与人际风格",
+    "事业 — 职业方向与核心优势",
+    "感情·家庭·伴侣 — 缘分与关系",
+    "财运 — 金钱流动与财富走势",
+    "健康 — 需要关注的健康要点",
+    "过去 — 已走过时光的分析",
+    "现在 — 今年的运势",
+    "未来 — 未来3〜5年展望",
+    "大运时间轴 — 十年周期分析"
+  ],
+  "trustSecure": "🔒 安全支付",
+  "trustRefund": "↩️ 24小时退款保障",
+  "trustEmail": "📧 报告发送至邮箱",
+  "socialProof": "已有众多用户完成了分析",
+  "emailLabel": "邮箱（报告也将发送至此邮箱）",
+  "emailError": "请输入正确的邮箱地址。",
+  "checkoutLoading": "订单创建中...",
+  "checkoutBtn": "支付 {price}",
+  "afterPurchase": "支付完成后可立即查看完整报告。",
+  "refundLink": "退款政策请查看{link}。",
+  "refundLinkText": "这里",
+  "createFail": "订单创建失败",
+  "noOrderId": "未收到订单ID。",
+  "checkoutError": "支付过程中发生错误。",
+  "loading": "支付页面加载中..."
+}

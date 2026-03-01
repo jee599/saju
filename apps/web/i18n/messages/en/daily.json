@@ -1,0 +1,53 @@
+{
+  "eyebrow": "Free Daily",
+  "title": "Today's Fortune",
+  "subtitle": "{date} · Your Four Pillars Reading for Today",
+  "inputTitle": "Enter your date of birth",
+  "nameLabel": "Name",
+  "namePlaceholder": "John Doe",
+  "birthDateLabel": "Date of Birth",
+  "viewFortune": "View Today's Fortune",
+  "yourToday": "{name}'s Today",
+  "todayEnergy": "Today's Energy: {emoji} {element}",
+  "weekdayFortune": "{weekday} Fortune",
+  "todayAdvice": "Today's Advice",
+  "luckyColor": "Lucky Color",
+  "luckyDirection": "Lucky Direction",
+  "ctaTitle": "Want a more detailed Four Pillars analysis?",
+  "ctaDesc": "Get an in-depth AI-powered Four Pillars analysis with over 30,000 characters of insight.",
+  "ctaButton": "View Free Four Pillars Analysis",
+  "tryAnother": "Try a different date of birth",
+  "loading": "Loading...",
+  "defaultUser": "User",
+  "elements": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  },
+  "colors": {
+    "wood": "Green", "fire": "Red", "earth": "Yellow", "metal": "White/Silver", "water": "Blue/Black"
+  },
+  "directions": {
+    "wood": "East", "fire": "South", "earth": "Center", "metal": "West", "water": "North"
+  },
+  "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "dayMessages": [
+    "Sunday — recharge your energy with rest.",
+    "Monday — fresh beginnings are in the air.",
+    "Tuesday — a great day to move with passion.",
+    "Wednesday — realign your direction with a midweek check.",
+    "Thursday — growth and expansion energy is present.",
+    "Friday — a good time to reap rewards.",
+    "Saturday — seek stability and harmony."
+  ],
+  "fortune": {
+    "same": "Today, the energy of {element} is doubled. Stay true to your essence and good results will follow.",
+    "sameAdvice": "Be confident and take the lead.",
+    "generates": "Today's {todayEl} energy springs from your {myEl}. It's a day overflowing with creative energy.",
+    "generatesAdvice": "A great day to put new ideas into action.",
+    "generatedBy": "The energy of {todayEl} supports your {myEl} today. Embrace help from those around you.",
+    "generatedByAdvice": "Cooperation and communication are the keys to fortune.",
+    "overcomes": "Your {myEl} energy controls today's {todayEl}. It's a great day to show leadership.",
+    "overcomesAdvice": "Take initiative and steer the situation in your favor.",
+    "overcomeBy": "Today's {todayEl} energy is strong, so don't push too hard. Focus on building inner strength.",
+    "overcomeByAdvice": "Calm preparation is better than rushing today."
+  }
+}

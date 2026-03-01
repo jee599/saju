@@ -1,0 +1,17 @@
+{
+  "title": "Compatibility Analysis",
+  "desc": "Enter both dates of birth to analyse your Five Elements compatibility.",
+  "myBirthDate": "My Date of Birth",
+  "partnerBirthDate": "Partner's Date of Birth",
+  "myBirthDateAria": "My date of birth",
+  "partnerBirthDateAria": "Partner's date of birth",
+  "viewCompat": "View Compatibility",
+  "me": "Me",
+  "partner": "Partner",
+  "score": "{score} pts",
+  "shareButton": "Share with your partner",
+  "detailButton": "View my detailed analysis",
+  "shareText": "Our compatibility score is {score} points! Do you want to try as well?\n{url}",
+  "shareTitle": "FortuneLab Compatibility",
+  "loading": "Analysing compatibility..."
+}

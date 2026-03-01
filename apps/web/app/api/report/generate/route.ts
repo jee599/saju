@@ -7,7 +7,7 @@ import { sendReportEmail } from '../../../../lib/sendReportEmail';
 /**
  * 리포트 생성 API (free / paid 듀얼)
  *
- * 무료: POST { type: "free", input: FortuneInput }
+ * 무료: POST { type: "free", input: FortuneInput, locale?: string }
  *   → GPT-mini로 성격 1섹션만 생성, DB 저장 X
  *
  * 유료: POST { type: "paid", orderId: string, personalityText?: string }
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
     // ── 무료: 성격만 생성 ──
     if (type === 'free') {
       const input = body?.input as FortuneInput | undefined;
+      const locale = (body?.locale as string) ?? 'ko';
       if (!input?.name || !input?.birthDate || !input?.gender || !input?.calendarType) {
         return NextResponse.json(
           { ok: false, error: { code: 'INVALID_INPUT', message: '사용자 정보가 부족합니다.' } },
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
       }
 
       const { generateFreePersonality } = await import('../../../../lib/llmEngine');
-      const result = await generateFreePersonality({ input });
+      const result = await generateFreePersonality({ input, locale });
 
       return NextResponse.json({
         ok: true,
@@ -69,6 +70,8 @@ export async function POST(req: Request) {
           { status: 404 }
         );
       }
+
+      const locale = order.locale ?? 'ko';
 
       // 2. 이미 생성된 리포트 → 캐시 반환
       const existing = await prisma.report.findFirst({
@@ -112,13 +115,14 @@ export async function POST(req: Request) {
       };
 
       // 4. 성격 섹션 준비 (캐시 or 재생성)
-      const { generateFreePersonality, generateChunkedReport } = await import('../../../../lib/llmEngine');
+      const { generateFreePersonality, generateChunkedReport, getPersonalityDef, getReportTexts } = await import('../../../../lib/llmEngine');
+      const pDef = getPersonalityDef(locale);
 
       let personalitySection: { key: string; title: string; text: string };
       if (personalityText && personalityText.length > 100) {
-        personalitySection = { key: '성격', title: '성격', text: personalityText };
+        personalitySection = { key: pDef.key, title: pDef.title, text: personalityText };
       } else {
-        const freeResult = await generateFreePersonality({ input });
+        const freeResult = await generateFreePersonality({ input, locale });
         personalitySection = freeResult.section;
       }
 
@@ -128,15 +132,17 @@ export async function POST(req: Request) {
         input,
         productCode: order.productCode as ReportDetail['productCode'],
         targetModel: 'haiku',
+        locale,
       });
 
       // 6. 성격 + 8섹션 합치기 (총 9섹션)
       const allSections = [personalitySection, ...chunkedReport.sections];
       const charCount = countReportChars(allSections.map(s => s.text).join('\n'));
 
-      const headline = chunkedReport.headline || `${input.name}님 사주 분석 리포트`;
-      const summary = `9개 섹션 분석 완료`;
-      const disclaimer = chunkedReport.disclaimer || '본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.';
+      const texts = getReportTexts(locale, input.name, allSections.length);
+      const headline = chunkedReport.headline || texts.headline;
+      const summary = texts.summary;
+      const disclaimer = chunkedReport.disclaimer || texts.disclaimer;
 
       // 7. DB 저장
       await prisma.report.create({

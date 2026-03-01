@@ -1,0 +1,138 @@
+{
+  "hero": {
+    "eyebrow": "AI Birth Chart Analysis",
+    "title": "Your Birth Chart. Decoded by AI.",
+    "copies": [
+      "MBTI has 16 types. Four Pillars has 518,400.",
+      "A fortune teller charges $100/hr. AI charges $0. Same ancient wisdom.",
+      "Add your birth time and unlock a whole new reading.",
+      "Every reading feels different? That's your luck cycle at work."
+    ]
+  },
+  "form": {
+    "step1Label": "Name",
+    "namePlaceholder": "Enter your name",
+    "nameAria": "Name",
+    "step2Label": "Date of Birth",
+    "solar": "Solar",
+    "lunar": "Lunar",
+    "yearAria": "Birth year",
+    "yearPlaceholder": "Year",
+    "yearSuffix": "",
+    "monthAria": "Birth month",
+    "monthPlaceholder": "Month",
+    "monthSuffix": "",
+    "dayAria": "Birth day",
+    "dayPlaceholder": "Day",
+    "daySuffix": "",
+    "step3Label": "Birth Time",
+    "skipTime": "I don't know \u2192",
+    "unknownTime": "Unknown",
+    "unknownTimeDesc": "When birth time is unknown",
+    "step4Label": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "analyzing": "Preparing your analysis...",
+    "startFree": "Start Free Analysis"
+  },
+  "branches": [
+    { "label": "Zi Hour (\u5b50)", "time": "23:00~01:00" },
+    { "label": "Chou Hour (\u4e11)", "time": "01:00~03:00" },
+    { "label": "Yin Hour (\u5bc5)", "time": "03:00~05:00" },
+    { "label": "Mao Hour (\u536f)", "time": "05:00~07:00" },
+    { "label": "Chen Hour (\u8fb0)", "time": "07:00~09:00" },
+    { "label": "Si Hour (\u5df3)", "time": "09:00~11:00" },
+    { "label": "Wu Hour (\u5348)", "time": "11:00~13:00" },
+    { "label": "Wei Hour (\u672a)", "time": "13:00~15:00" },
+    { "label": "Shen Hour (\u7533)", "time": "15:00~17:00" },
+    { "label": "You Hour (\u9149)", "time": "17:00~19:00" },
+    { "label": "Xu Hour (\u620c)", "time": "19:00~21:00" },
+    { "label": "Hai Hour (\u4ea5)", "time": "21:00~23:00" }
+  ],
+  "engine": {
+    "heading": "Ancient Asian Astrology Meets Modern AI",
+    "subheading": "The depth of a master astrologer. The accessibility of an app. With FortuneLab, you don't have to choose.",
+    "pillars": [
+      {
+        "icon": "\ud83d\udcd0",
+        "title": "Precision",
+        "subtitle": "Traditional calendar engine, precisely computed",
+        "desc": "Passed 139 golden-standard test cases for births from 1930 to 2010. Automatic solar term (Jieqi) boundary correction eliminates year and month pillar errors at the source."
+      },
+      {
+        "icon": "\ud83d\udcdc",
+        "title": "Authenticity",
+        "subtitle": "5 classical texts as the foundation",
+        "desc": "Di Tian Sui, Zi Ping Zhen Quan, Qiong Tong Bao Jian, Yuan Hai Zi Ping, San Ming Tong Hui. Centuries of verified BaZi theory, systematically interpreted by modern AI."
+      },
+      {
+        "icon": "\u26a1",
+        "title": "Instant Access",
+        "subtitle": "AI analysis in under 1 second",
+        "desc": "From complex Four Pillars calculation to Five Elements analysis and Day Master profiling — all completed by AI in under a second. No appointment needed, anytime you want."
+      }
+    ],
+    "cta": "View My Analysis Report"
+  },
+  "pricing": {
+    "heading": "Start for Free",
+    "subheading": "Your core reading is on us. Love what you see? Unlock the full report with Premium.",
+    "free": {
+      "badge": "Free",
+      "title": "Core Reading",
+      "price": "$0",
+      "features": [
+        "AI personality analysis from birth chart (Part 1)",
+        "Five Elements balance visualization",
+        "Day Stem (Day Master) card",
+        "Yin-Yang ratio"
+      ]
+    },
+    "premium": {
+      "badge": "Premium",
+      "title": "Full Analysis",
+      "price": "$4.99",
+      "features": [
+        "Everything in the free reading",
+        "~20,000-character AI deep-dive report",
+        "9 sections (personality, career, love, wealth, health & more)",
+        "Major luck cycle timeline (10-year periods)"
+      ],
+      "cta": "Get Started Free"
+    }
+  },
+  "faq": {
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "What is Four Pillars of Destiny (BaZi)?",
+        "a": "Four Pillars of Destiny, also known as BaZi, is a traditional East Asian astrological system that builds four pillars (year, month, day, and hour) from your exact birth date and time to analyze the flow of your destiny. Our engine references five classical texts including Di Tian Sui and Zi Ping Zhen Quan."
+      },
+      {
+        "q": "What's the difference between Free and Premium?",
+        "a": "The free reading covers your AI personality profile, Day Stem card, Five Elements balance, and Yin-Yang ratio — everything about your innate character. Premium unlocks a full 9-section deep-dive: personality, career, love & relationships, wealth, health, past, present, future, and your major luck cycle timeline."
+      },
+      {
+        "q": "How does AI analyze my birth chart?",
+        "a": "Our traditional calendar engine precisely calculates your Jieqi boundaries and Four Pillars, then state-of-the-art AI models (Claude/GPT) apply the interpretive frameworks from five classical BaZi texts to generate a fully personalized report."
+      },
+      {
+        "q": "What if I don't know my birth time?",
+        "a": "You can still get a reading without your birth time. The hour pillar will simply be omitted, which slightly reduces the depth of the analysis. We recommend checking your birth certificate or asking a family member to find it."
+      },
+      {
+        "q": "Is my personal information safe?",
+        "a": "We only use your date of birth and gender for the analysis. Your name is used solely for display in your report. The free reading requires no login and data is automatically deleted after 90 days."
+      },
+      {
+        "q": "Is my birth chart \"good\" or \"bad\"?",
+        "a": "No chart is inherently good or bad. BaZi reflects the unique pattern of your innate strengths and the natural rhythm of your luck cycles over time. FortuneLab provides probabilistic interpretations — not a basis for medical, legal, or financial decisions."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Your Birth Chart Awaits",
+    "subheading": "Start free and receive your AI-decoded reading — built just for you.",
+    "cta": "Start Free Analysis"
+  }
+}

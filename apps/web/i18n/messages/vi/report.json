@@ -1,0 +1,13 @@
+{
+  "titleWithName": "Phân tích Tử Vi của {name}",
+  "titleDefault": "Báo cáo Phân tích Tử Vi",
+  "backHome": "Trang chủ",
+  "error": "Lỗi",
+  "loading": "Đang tải...",
+  "notReady": "Báo cáo chưa được tạo.",
+  "toc": "Mục lục",
+  "tocAria": "Mục lục báo cáo",
+  "jumpNavAria": "Điều hướng nhanh báo cáo",
+  "checklist": "Danh sách hành động",
+  "fetchFail": "Không thể tải báo cáo"
+}

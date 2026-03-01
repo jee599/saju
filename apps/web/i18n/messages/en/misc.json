@@ -1,0 +1,87 @@
+{
+  "freeFortune": {
+    "title": "Free Four Pillars Analysis",
+    "desc": "Enter your basic information to receive a free personality and Five Elements analysis.",
+    "nameLabel": "Name",
+    "namePlaceholder": "John Doe",
+    "birthDateLabel": "Date of Birth",
+    "nextStep": "Next Step",
+    "birthTimeLabel": "Birth Time (optional)",
+    "birthTimeHelp": "You can leave this blank if unknown.",
+    "genderLabel": "Gender",
+    "genderOther": "Prefer not to say",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "calendarLabel": "Calendar",
+    "calendarSolar": "Solar",
+    "calendarLunar": "Lunar",
+    "prev": "Back",
+    "startAnalysis": "Start Free Analysis",
+    "loading": "Loading..."
+  },
+  "comingSoon": {
+    "emailPlaceholder": "Get notified at launch",
+    "emailAria": "Email address",
+    "notify": "Notify",
+    "submitting": "...",
+    "submitted": "Registered! We'll let you know when it launches.",
+    "emailError": "Please enter a valid email address.",
+    "registerFail": "Registration failed",
+    "ctaButton": "Four Pillars analysis is available now →",
+    "dream": {
+      "emoji": "🌙",
+      "title": "Dream Interpretation",
+      "desc": "AI analyzes the meaning of your dreams. Coming soon!",
+      "features": [
+        "Describe your dream in text",
+        "Personalized interpretation linked to your Four Pillars",
+        "Analysis of dream symbols and messages",
+        "Lucky numbers and directions"
+      ]
+    },
+    "tarot": {
+      "emoji": "🃏",
+      "title": "AI Tarot",
+      "desc": "AI interprets the wisdom of tarot cards. Coming soon!",
+      "features": [
+        "Card spreads tailored to your question",
+        "Integrated reading with Four Pillars analysis",
+        "Custom readings for love, career, and wealth",
+        "Daily one-card tarot"
+      ]
+    },
+    "palm": {
+      "emoji": "✋",
+      "title": "Palm Reading",
+      "desc": "Take a photo of your palm for AI analysis. Coming soon!",
+      "features": [
+        "Photo capture → AI recognition",
+        "Life line, heart line, and head line analysis",
+        "Cross-verification with Four Pillars",
+        "Key points for future changes"
+      ]
+    },
+    "face": {
+      "emoji": "😊",
+      "title": "Face Reading",
+      "desc": "Take a selfie for AI physiognomy analysis. Coming soon!",
+      "features": [
+        "Face reading from a single selfie",
+        "Correlation between facial features and Four Pillars",
+        "First impression analysis",
+        "Tips to enhance your strengths"
+      ]
+    },
+    "name": {
+      "emoji": "✍️",
+      "title": "Name Analysis",
+      "desc": "AI analyzes the meaning of your name and its harmony with your Four Pillars. Coming soon!",
+      "features": [
+        "Meaning analysis of your name",
+        "Compatibility with Five Elements",
+        "Name change recommendations",
+        "Baby name suggestions"
+      ]
+    }
+  }
+}

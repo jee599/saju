@@ -1,0 +1,138 @@
+{
+  "hero": {
+    "eyebrow": "FortuneLab — Kundli by AI",
+    "title": "Your Kundli is Big Data",
+    "copies": [
+      "MBTI has 16 types. Your Kundli has 518,400 unique combinations.",
+      "Astrologers charge thousands. AI reads your chart for free.",
+      "Add your birth time for a Kundli that is truly yours.",
+      "Every reading feels different? That's your Dasha cycle shifting."
+    ]
+  },
+  "form": {
+    "step1Label": "Name",
+    "namePlaceholder": "Enter your name",
+    "nameAria": "Name",
+    "step2Label": "Date of Birth",
+    "solar": "Solar",
+    "lunar": "Lunar",
+    "yearAria": "Birth year",
+    "yearPlaceholder": "Year",
+    "yearSuffix": "",
+    "monthAria": "Birth month",
+    "monthPlaceholder": "Month",
+    "monthSuffix": "",
+    "dayAria": "Birth day",
+    "dayPlaceholder": "Day",
+    "daySuffix": "",
+    "step3Label": "Birth Time",
+    "skipTime": "Don't know \u2192",
+    "unknownTime": "Unknown",
+    "unknownTimeDesc": "When birth time is unavailable",
+    "step4Label": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "analyzing": "Analysing your chart...",
+    "startFree": "Read My Kundli Free"
+  },
+  "branches": [
+    { "label": "Zi Hour (子)", "time": "23:00~01:00" },
+    { "label": "Chou Hour (丑)", "time": "01:00~03:00" },
+    { "label": "Yin Hour (寅)", "time": "03:00~05:00" },
+    { "label": "Mao Hour (卯)", "time": "05:00~07:00" },
+    { "label": "Chen Hour (辰)", "time": "07:00~09:00" },
+    { "label": "Si Hour (巳)", "time": "09:00~11:00" },
+    { "label": "Wu Hour (午)", "time": "11:00~13:00" },
+    { "label": "Wei Hour (未)", "time": "13:00~15:00" },
+    { "label": "Shen Hour (申)", "time": "15:00~17:00" },
+    { "label": "You Hour (酉)", "time": "17:00~19:00" },
+    { "label": "Xu Hour (戌)", "time": "19:00~21:00" },
+    { "label": "Hai Hour (亥)", "time": "21:00~23:00" }
+  ],
+  "engine": {
+    "heading": "Ancient Wisdom, Reimagined by AI",
+    "subheading": "Get the depth of a seasoned Jyotishi without the appointment. Classical Kundli principles meet modern AI — precise, instant, and always available.",
+    "pillars": [
+      {
+        "icon": "📐",
+        "title": "Precision",
+        "subtitle": "Astronomically accurate chart calculation",
+        "desc": "Validated against 139 gold-standard test cases from births between 1930 and 2010 with 100% accuracy. Automatic solar term boundary correction eliminates calculation errors at the source."
+      },
+      {
+        "icon": "📜",
+        "title": "Authenticity",
+        "subtitle": "Grounded in 5 classical source texts",
+        "desc": "Rooted in centuries-tested Chinese astrology classics, systematically interpreted by modern AI. The same principles that have guided millions of readings — now accessible to everyone."
+      },
+      {
+        "icon": "⚡",
+        "title": "Instant Access",
+        "subtitle": "Full AI analysis in under 1 second",
+        "desc": "From chart calculation and elemental balance to Yong Shen determination — AI completes everything in under 1 second. Check your Kundli anytime, no pandit required."
+      }
+    ],
+    "cta": "View My Reading"
+  },
+  "pricing": {
+    "heading": "Start for Free",
+    "subheading": "Core analysis is completely free. Unlock the full Kundli report with Premium whenever you are ready.",
+    "free": {
+      "badge": "Free",
+      "title": "Core Reading",
+      "price": "₹0",
+      "features": [
+        "AI personality & character analysis",
+        "Five-element balance visualisation",
+        "Day Master (日干) card",
+        "Yin-Yang ratio"
+      ]
+    },
+    "premium": {
+      "badge": "Premium",
+      "title": "Full Kundli Report",
+      "price": "₹199",
+      "features": [
+        "Everything in the free reading",
+        "20,000+ character AI narrative report",
+        "9 life sections (personality, career, relationships, finance, health & more)",
+        "10-year Dasha timeline"
+      ],
+      "cta": "Start for Free"
+    }
+  },
+  "faq": {
+    "heading": "Frequently Asked Questions",
+    "items": [
+      {
+        "q": "What system does FortuneLab use for Kundli analysis?",
+        "a": "FortuneLab uses the Chinese Bazi (Eight Characters) system, which analyses four pillars — year, month, day, and hour of birth — to map the flow of one's destiny. It references five classical source texts validated over centuries, making it a rigorous Eastern counterpart to Vedic Jyotish."
+      },
+      {
+        "q": "How is this different from a traditional Vedic Kundli?",
+        "a": "Vedic Jyotish uses planetary positions and house placements, while Bazi maps destiny through the interplay of the five elements (Wood, Fire, Earth, Metal, Water) derived from your exact birth date and time. Both systems are complementary; Bazi excels at personality and life-cycle timing."
+      },
+      {
+        "q": "How does the AI analyse my chart?",
+        "a": "Our calendar engine first calculates your four pillars and solar term boundaries with astronomical precision. An advanced AI model (Claude/GPT) then applies classical interpretive frameworks to generate a personalised, narrative report — in seconds."
+      },
+      {
+        "q": "What if I don't know my exact birth time?",
+        "a": "You can still get a meaningful reading using just your birth date. The hour pillar will be missing, which slightly reduces precision. We recommend checking your birth certificate or asking a family elder for best results."
+      },
+      {
+        "q": "Is my personal data safe?",
+        "a": "We use only your date of birth and gender. Your name is used solely for display in the report. Free readings require no login, and all data is automatically deleted after 90 days."
+      },
+      {
+        "q": "Does a Bazi chart predict good or bad luck?",
+        "a": "Bazi does not label a chart as inherently lucky or unlucky — it maps innate strengths, growth areas, and the rhythm of life cycles (similar to the concept of Dasha periods in Jyotish). This service provides probabilistic insights and should not be used as the sole basis for medical, legal, or financial decisions."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Discover What Your Birth Chart Reveals",
+    "subheading": "Start for free and receive your personalised Kundli report — analysed by AI in seconds.",
+    "cta": "Read My Kundli Free"
+  }
+}
