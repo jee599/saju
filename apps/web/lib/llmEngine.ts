@@ -22,10 +22,35 @@ const safeJsonParse = (text: string): any => {
 
   const trimmed = text.trim();
 
-  // 2차: ```json ... ``` 펜스 제거
-  const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
-  if (fenceMatch?.[1]) {
-    try { return JSON.parse(fenceMatch[1]); } catch { /* fall through */ }
+  // 2차: ```json ... ``` 펜스 제거 (전체 매칭)
+  const fenceMatchFull = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenceMatchFull?.[1]) {
+    try { return JSON.parse(fenceMatchFull[1]); } catch { /* fall through */ }
+  }
+
+  // 2.5차: 텍스트 중간에 있는 ```json 펜스 추출 (Haiku 등 펜스 앞뒤에 텍스트 있을 때)
+  const fenceMatchMid = trimmed.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (fenceMatchMid?.[1]) {
+    try { return JSON.parse(fenceMatchMid[1]); } catch {
+      // 펜스 내용에서 { ~ } 추출
+      const inner = fenceMatchMid[1];
+      const fb = inner.indexOf("{");
+      const lb = inner.lastIndexOf("}");
+      if (fb !== -1 && lb > fb) {
+        try { return JSON.parse(inner.slice(fb, lb + 1)); } catch { /* fall through */ }
+      }
+    }
+  }
+
+  // 2.7차: 잘린 ```json 펜스 (닫는 ``` 없이 잘린 경우)
+  const fenceOpen = trimmed.match(/```(?:json)?\s*([\s\S]+)/i);
+  if (fenceOpen?.[1] && !fenceOpen[1].includes("```")) {
+    const inner = fenceOpen[1].trim();
+    const fb = inner.indexOf("{");
+    const lb = inner.lastIndexOf("}");
+    if (fb !== -1 && lb > fb) {
+      try { return JSON.parse(inner.slice(fb, lb + 1)); } catch { /* fall through */ }
+    }
   }
 
   // 3차: 텍스트 중간에 있는 JSON 객체 추출 (첫 { ~ 마지막 })
@@ -584,17 +609,44 @@ export const generateChunkedReport = async (params: {
     totalDurationMs += res.durationMs ?? 0;
 
     // JSON 파싱하여 섹션 추출
+    let chunkParsed = false;
     try {
       const parsed = safeJsonParse(res.text);
       const sections = parsed?.sections ?? [];
-      for (const s of sections) {
-        results.push({ key: String(s.key ?? ""), title: String(s.title ?? ""), text: String(s.text ?? "") });
+      if (sections.length > 0) {
+        for (const s of sections) {
+          results.push({ key: String(s.key ?? ""), title: String(s.title ?? ""), text: String(s.text ?? "") });
+        }
+        chunkParsed = true;
       }
-    } catch {
-      // JSON 파싱 실패 시 전체 텍스트를 첫 번째 섹션에 할당
-      const text = res.text.trim();
-      results.push({ key: sec1.key, title: sec1.title, text });
-      results.push({ key: sec2.key, title: sec2.title, text: "(생성 실패)" });
+    } catch { /* fall through to fallback */ }
+
+    if (!chunkParsed) {
+      // Fallback: "text" 필드만이라도 regex로 추출 시도
+      const textMatches = [...res.text.matchAll(/"text"\s*:\s*"((?:[^"\\]|\\.)*)"/gs)];
+      if (textMatches.length >= 2) {
+        const t1 = textMatches[0][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+        const t2 = textMatches[1][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+        results.push({ key: sec1.key, title: sec1.title, text: t1 });
+        results.push({ key: sec2.key, title: sec2.title, text: t2 });
+        console.log(`[chunked] regex fallback extracted 2 sections for ${sec1.key}/${sec2.key}`);
+      } else if (textMatches.length === 1) {
+        const t1 = textMatches[0][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+        results.push({ key: sec1.key, title: sec1.title, text: t1 });
+        results.push({ key: sec2.key, title: sec2.title, text: "(생성 실패)" });
+        console.log(`[chunked] regex fallback extracted 1 section for ${sec1.key}`);
+      } else {
+        // 최종 fallback: JSON/마크다운 아티팩트 제거 후 텍스트 할당
+        const cleanedText = res.text
+          .replace(/```(?:json)?\s*/gi, "")
+          .replace(/```/g, "")
+          .replace(/^\s*\{[\s\S]*?"text"\s*:\s*"/m, "")
+          .replace(/"\s*\}\s*\]\s*\}\s*$/m, "")
+          .trim();
+        results.push({ key: sec1.key, title: sec1.title, text: cleanedText || res.text.trim() });
+        results.push({ key: sec2.key, title: sec2.title, text: "(생성 실패)" });
+        console.log(`[chunked] full fallback for ${sec1.key}/${sec2.key}`);
+      }
     }
   }
 
