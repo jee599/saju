@@ -523,7 +523,12 @@ export const generateChunkedReport = async (params: {
   const { orderId, input, productCode, targetModel } = params;
   // 2섹션 묶음당 목표: 각 섹션 2000자 × 2 = 4000자
   const charPerChunk = 4000;
-  const maxTokensPerChunk = Math.max(6000, Math.round(charPerChunk * 1.5));
+  // Claude 토크나이저는 한국어 1자당 ~1.5-2.5 토큰 소비 → 6000으로는 부족
+  // GPT/Gemini는 한국어 토크나이제이션이 더 효율적
+  const isClaudeModel = ["sonnet", "haiku", "opus"].includes(targetModel);
+  const maxTokensPerChunk = isClaudeModel
+    ? Math.max(12000, Math.round(charPerChunk * 3.0))  // Claude: 12000 토큰
+    : Math.max(8000, Math.round(charPerChunk * 2.0));   // GPT/Gemini: 8000 토큰
 
   let llmModel: ReportModel;
   let anthropicModelId: string | undefined;
@@ -566,8 +571,10 @@ export const generateChunkedReport = async (params: {
   const inputJson = JSON.stringify(input);
   const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
 
-  // 2섹션씩 5번 **병렬** 호출 (Promise.all)
-  const chunkPromises = SECTION_CHUNKS.map((chunk) => {
+  /** 단일 청크 호출 + 파싱 (1회 시도) */
+  const callAndParseChunk = async (
+    chunk: Array<{ key: string; title: string }>
+  ): Promise<{ sections: Array<{ key: string; title: string; text: string }>; usage?: LlmUsage; durationMs: number }> => {
     const sec1 = chunk[0];
     const sec2 = chunk[1];
     const guide1 = SECTION_PROMPTS[sec1.title] ?? "";
@@ -588,66 +595,89 @@ export const generateChunkedReport = async (params: {
       `반드시 아래 JSON 형식으로만 출력하세요:\n` +
       `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"본문..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"본문..."}]}`;
 
-    return callLlm({
+    const res = await callLlm({
       model: llmModel, system, user: userPrompt,
       maxTokens: maxTokensPerChunk, temperature: 0.7,
       anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
-    }).then((res) => ({ res, sec1, sec2 }));
-  });
+    });
 
-  const chunkResults = await Promise.all(chunkPromises);
-
-  // 결과 취합 (순서 보존)
-  const results: Array<{ key: string; title: string; text: string }> = [];
-  let totalDurationMs = 0;
-  for (const { res, sec1, sec2 } of chunkResults) {
-    if (res.usage) {
-      totalUsage.inputTokens = (totalUsage.inputTokens ?? 0) + (res.usage.inputTokens ?? 0);
-      totalUsage.outputTokens = (totalUsage.outputTokens ?? 0) + (res.usage.outputTokens ?? 0);
-      totalUsage.totalTokens = (totalUsage.totalTokens ?? 0) + (res.usage.totalTokens ?? 0);
-    }
-    totalDurationMs += res.durationMs ?? 0;
-
-    // JSON 파싱하여 섹션 추출
-    let chunkParsed = false;
+    // JSON 파싱 시도
     try {
       const parsed = safeJsonParse(res.text);
       const sections = parsed?.sections ?? [];
       if (sections.length > 0) {
-        for (const s of sections) {
-          results.push({ key: String(s.key ?? ""), title: String(s.title ?? ""), text: String(s.text ?? "") });
-        }
-        chunkParsed = true;
+        return {
+          sections: sections.map((s: any) => ({
+            key: String(s.key ?? ""), title: String(s.title ?? ""), text: String(s.text ?? "")
+          })),
+          usage: res.usage,
+          durationMs: res.durationMs ?? 0,
+        };
       }
-    } catch { /* fall through to fallback */ }
+    } catch { /* fall through */ }
 
-    if (!chunkParsed) {
-      // Fallback: "text" 필드만이라도 regex로 추출 시도
-      const textMatches = [...res.text.matchAll(/"text"\s*:\s*"((?:[^"\\]|\\.)*)"/gs)];
-      if (textMatches.length >= 2) {
-        const t1 = textMatches[0][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-        const t2 = textMatches[1][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-        results.push({ key: sec1.key, title: sec1.title, text: t1 });
-        results.push({ key: sec2.key, title: sec2.title, text: t2 });
-        console.log(`[chunked] regex fallback extracted 2 sections for ${sec1.key}/${sec2.key}`);
-      } else if (textMatches.length === 1) {
-        const t1 = textMatches[0][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-        results.push({ key: sec1.key, title: sec1.title, text: t1 });
-        results.push({ key: sec2.key, title: sec2.title, text: "(생성 실패)" });
-        console.log(`[chunked] regex fallback extracted 1 section for ${sec1.key}`);
-      } else {
-        // 최종 fallback: JSON/마크다운 아티팩트 제거 후 텍스트 할당
-        const cleanedText = res.text
-          .replace(/```(?:json)?\s*/gi, "")
-          .replace(/```/g, "")
-          .replace(/^\s*\{[\s\S]*?"text"\s*:\s*"/m, "")
-          .replace(/"\s*\}\s*\]\s*\}\s*$/m, "")
-          .trim();
-        results.push({ key: sec1.key, title: sec1.title, text: cleanedText || res.text.trim() });
-        results.push({ key: sec2.key, title: sec2.title, text: "(생성 실패)" });
-        console.log(`[chunked] full fallback for ${sec1.key}/${sec2.key}`);
+    // Regex fallback: "text" 필드 추출
+    const textMatches = [...res.text.matchAll(/"text"\s*:\s*"((?:[^"\\]|\\.)*)"/gs)];
+    if (textMatches.length >= 2) {
+      const t1 = textMatches[0][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+      const t2 = textMatches[1][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+      console.log(`[chunked] regex fallback extracted 2 sections for ${sec1.key}/${sec2.key}`);
+      return {
+        sections: [
+          { key: sec1.key, title: sec1.title, text: t1 },
+          { key: sec2.key, title: sec2.title, text: t2 },
+        ],
+        usage: res.usage,
+        durationMs: res.durationMs ?? 0,
+      };
+    }
+    if (textMatches.length === 1) {
+      const t1 = textMatches[0][1].replace(/\\n/g, "\n").replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+      console.log(`[chunked] regex fallback extracted 1 section for ${sec1.key}`);
+      return {
+        sections: [{ key: sec1.key, title: sec1.title, text: t1 }],
+        usage: res.usage,
+        durationMs: res.durationMs ?? 0,
+      };
+    }
+
+    // 파싱 완전 실패 → 에러를 던져서 재시도 유도
+    throw new Error(`CHUNK_PARSE_FAILED: ${sec1.key}/${sec2.key} — raw: ${res.text.slice(0, 300)}`);
+  };
+
+  /** 청크 호출 + 파싱 실패 시 1회 재시도 */
+  const callChunkWithRetry = async (
+    chunk: Array<{ key: string; title: string }>
+  ): Promise<{ sections: Array<{ key: string; title: string; text: string }>; usage?: LlmUsage; durationMs: number }> => {
+    try {
+      return await callAndParseChunk(chunk);
+    } catch (err) {
+      console.warn(`[chunked] first attempt failed for ${chunk.map(c => c.key).join("/")}, retrying...`, err instanceof Error ? err.message : err);
+      try {
+        await sleep(1000); // 잠시 대기 후 재시도
+        return await callAndParseChunk(chunk);
+      } catch (retryErr) {
+        console.error(`[chunked] retry also failed for ${chunk.map(c => c.key).join("/")}`, retryErr instanceof Error ? retryErr.message : retryErr);
+        // 재시도도 실패 → 빈 결과 (섹션 생략)
+        return { sections: [], usage: undefined, durationMs: 0 };
       }
     }
+  };
+
+  // 2섹션씩 5번 **병렬** 호출 (Promise.all) + 개별 청크 재시도
+  const chunkResults = await Promise.all(SECTION_CHUNKS.map(callChunkWithRetry));
+
+  // 결과 취합 (순서 보존)
+  const results: Array<{ key: string; title: string; text: string }> = [];
+  let totalDurationMs = 0;
+  for (const cr of chunkResults) {
+    if (cr.usage) {
+      totalUsage.inputTokens = (totalUsage.inputTokens ?? 0) + (cr.usage.inputTokens ?? 0);
+      totalUsage.outputTokens = (totalUsage.outputTokens ?? 0) + (cr.usage.outputTokens ?? 0);
+      totalUsage.totalTokens = (totalUsage.totalTokens ?? 0) + (cr.usage.totalTokens ?? 0);
+    }
+    totalDurationMs += cr.durationMs;
+    results.push(...cr.sections);
   }
 
   const provider = llmModel === "gpt" ? "openai" : llmModel === "gemini" ? "google" : "anthropic";
@@ -656,7 +686,16 @@ export const generateChunkedReport = async (params: {
 
   const costUsd = estimateCostUsd(provider, modelName, totalUsage);
 
-  const fullText = results.map((s) => `${s.title}\n${s.text}`).join("\n");
+  // 실패/빈 섹션 제거 (서버사이드 필터링)
+  const validSections = results.filter(
+    (s) => s.text && !s.text.includes("(생성 실패)") && s.text.trim().length > 30
+  );
+
+  if (validSections.length < results.length) {
+    console.warn(`[chunked] filtered out ${results.length - validSections.length} failed sections (${results.length} → ${validSections.length})`);
+  }
+
+  const fullText = validSections.map((s) => `${s.title}\n${s.text}`).join("\n");
 
   return {
     reportId: `rep_${orderId}`,
@@ -664,8 +703,8 @@ export const generateChunkedReport = async (params: {
     productCode,
     generatedAt: new Date().toISOString(),
     headline: `${input.name}님 사주 분석 리포트`,
-    summary: "10개 섹션 × 2,000자 (5회 호출)",
-    sections: results,
+    summary: `${validSections.length}개 섹션 분석 완료`,
+    sections: validSections,
     recommendations: [],
     disclaimer: "본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.",
     debugLength: buildLengthInfo("paid", fullText),
