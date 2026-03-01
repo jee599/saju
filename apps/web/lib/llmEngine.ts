@@ -482,14 +482,24 @@ const LANGUAGE_NAMES: Record<string, string> = {
   id: "Indonesian (Bahasa Indonesia)", hi: "English (for Hindi-speaking Indian audience)",
 };
 
-/** International system prompt */
-const getI18nSystemPrompt = (locale: string, llmTone: string) => {
+/** International system prompt with cultural context */
+const getI18nSystemPrompt = (locale: string, country: import("@saju/shared").CountryConfig) => {
   const targetLang = LANGUAGE_NAMES[locale] ?? "English";
+  const ctx = country.culturalContext;
   return (
-    `You are a world-class BaZi (Four Pillars of Destiny) expert and life counselor with over 20 years of experience. You provide warm, insightful, and practical destiny readings.\n\n` +
-    `CRITICAL: Write ALL output text in ${targetLang}. Your tone should be ${llmTone}.\n\n` +
+    `You are a world-class K-Saju (Korean Four Pillars) destiny reading expert and life counselor with over 20 years of experience.\n\n` +
+    `## Cultural Framework\n` +
+    `- ${ctx.framework}\n` +
+    `- Terminology: ${ctx.terminology}\n` +
+    `- Advice style: ${ctx.culturalTips}\n` +
+    `- Sensitivities: ${ctx.sensitivities}\n\n` +
+    `## Language & Writing Style\n` +
+    `- Write ALL output in ${targetLang}.\n` +
+    `- Tone: ${country.llmTone}\n` +
+    `- ${ctx.writingStyle}\n` +
+    `- CRITICAL: Write as a NATIVE ${targetLang} speaker. Do NOT translate from English or any other language. Use natural ${targetLang} expressions, idioms, proverbs, and sentence structures that feel authentic to a native reader.\n\n` +
     `## Core Principles\n` +
-    `1. **Plain language**: Never use raw BaZi jargon (Day Master, Heavenly Stems, Earthly Branches, etc.) directly. Use nature metaphors (water, fire, wood, earth, metal) to explain concepts.\n` +
+    `1. **Plain language**: Never use raw Four Pillars jargon (Day Master, Heavenly Stems, Earthly Branches, etc.) directly. Use nature metaphors (water, fire, wood, earth, metal) to explain concepts.\n` +
     `2. **Specific descriptions**: Use vivid metaphors, concrete situational examples, and actionable life tips.\n` +
     `3. **Personalized**: Address the person by name in a warm 1-on-1 counseling tone.\n` +
     `4. **Balanced perspective**: Praise strengths specifically, present cautions with positive alternatives.\n` +
@@ -518,13 +528,58 @@ const getSectionPromptsKo = (): Record<string, string> => {
   };
 };
 
-/** International section prompts */
-const getSectionPromptsIntl = (): Record<string, string> => {
+/** Per-locale cultural additions to section guides */
+const SECTION_CULTURAL_ADDITIONS: Record<string, Partial<Record<string, string>>> = {
+  en: {
+    career: "Consider American work culture: career pivots, entrepreneurship, side hustles, work-life balance, remote work trends.",
+    love_family: "Frame relationship advice in modern dating context: communication styles, attachment theory, boundary-setting.",
+    health: "Include wellness trends: mindfulness, therapy, fitness routines, nutrition science.",
+  },
+  ja: {
+    career: "日本の職場文化を考慮：終身雇用の変化、転職トレンド、ワークライフバランス、副業、フリーランス。",
+    love_family: "日本の結婚観：晩婚化、パートナーシップの多様化、義実家関係、共働きの課題。",
+    health: "季節の変わり目の体調管理、温泉・入浴文化、和食の養生法。",
+    finance: "日本の金融環境：NISA、iDeCo、円安の影響、老後資金2000万円問題。",
+  },
+  zh: {
+    career: "考虑中国职场文化：体制内vs体制外、创业浪潮、副业经济、35岁焦虑。",
+    love_family: "中国婚恋观：彩礼/嫁妆文化、房产问题、催婚压力、婆媳关系。",
+    finance: "中国理财环境：房产投资、基金股票、创业机会、存款习惯。",
+    health: "中医养生建议：食疗、穴位按摩、四季养生、体质调理。",
+  },
+  th: {
+    career: "อาชีพในบริบทไทย：ธุรกิจส่วนตัว/ค้าขาย、ราชการ、สตาร์ทอัพ、อาชีพอิสระ",
+    love_family: "วัฒนธรรมครอบครัวไทย：ความกตัญญู、การดูแลพ่อแม่、สินสอด、ความเชื่อเรื่องวันแต่งงาน",
+    health: "สุขภาพแบบไทย：สมุนไพรไทย、นวดแผนโบราณ、อาหารตามธาตุ",
+    finance: "การเงินในบริบทไทย：ทอง/ที่ดิน、ธุรกิจ SME、กองทุนรวม、หวย/โชคลาภ",
+  },
+  vi: {
+    career: "Bối cảnh nghề nghiệp Việt Nam：kinh doanh gia đình、công chức、startup、xuất khẩu lao động。",
+    love_family: "Văn hóa gia đình Việt：thờ cúng tổ tiên、hiếu thảo、sính lễ、mẹ chồng-nàng dâu。",
+    health: "Y học cổ truyền Việt：thuốc nam、châm cứu、dưỡng sinh theo mùa。",
+    finance: "Tài chính Việt Nam：vàng、bất động sản、gửi tiết kiệm、buôn bán nhỏ。",
+  },
+  id: {
+    career: "Konteks karir Indonesia: bisnis keluarga, PNS/ASN, startup, UMKM, kerja di luar negeri.",
+    love_family: "Budaya keluarga Indonesia: restu orang tua, mas kawin/mahar, keharmonisan keluarga besar.",
+    health: "Kesehatan khas Indonesia: jamu tradisional, pijat refleksi, makanan sehat Nusantara.",
+    finance: "Keuangan Indonesia: emas/properti, reksadana, usaha sampingan, arisan.",
+  },
+  hi: {
+    career: "Indian career context: family business, IT/engineering preference, government jobs (sarkari naukri), startup ecosystem, NRI opportunities.",
+    love_family: "Indian family dynamics: arranged vs love marriage, joint family system, in-law relationships, dowry sensitivity, family honour.",
+    health: "Ayurvedic wellness: dosha balance, yoga, pranayama, seasonal diet (ritucharya), gemstone therapy.",
+    finance: "Indian financial context: gold investment, real estate, FDs, SIPs/mutual funds, family financial obligations.",
+  },
+};
+
+/** International section prompts with cultural additions */
+const getSectionPromptsIntl = (locale: string): Record<string, string> => {
   const now = new Date();
   const year = now.getFullYear();
   const nextYear = year + 1;
   const month = now.getMonth() + 1;
-  return {
+  const base: Record<string, string> = {
     "career": "Suitable career paths, work style, leadership qualities, strengths and cautions at work. 3-5 recommended industries/roles with reasons. Business aptitude.",
     "love_family": "Dating style, love language, ideal partner traits. Family dynamics, parent relationships, spouse fortune, marriage characteristics, children fortune. Conflict resolution tips.",
     "finance": "Wealth flow patterns, attitude toward money, spending habits, savings/investment tendencies. Income channels and financial blind spots.",
@@ -534,17 +589,28 @@ const getSectionPromptsIntl = (): Record<string, string> => {
     "future": `From ${year}, 3-5 year outlook (${year+1}-${year+5}): career/wealth/relationship trajectory, major opportunities and preparation.`,
     "fortune_timeline": "Decade-by-decade life fortune flow: core theme, characteristics, cautions, and advice from teens through eighties.",
   };
+
+  // Merge cultural additions for this locale
+  const additions = SECTION_CULTURAL_ADDITIONS[locale];
+  if (additions) {
+    for (const [key, addition] of Object.entries(additions)) {
+      if (base[key] && addition) {
+        base[key] += `\n\nCultural context: ${addition}`;
+      }
+    }
+  }
+  return base;
 };
 
 /** Get section prompts based on locale */
 const getSectionPromptsForLocale = (locale: string) =>
-  locale === "ko" ? getSectionPromptsKo() : getSectionPromptsIntl();
+  locale === "ko" ? getSectionPromptsKo() : getSectionPromptsIntl(locale);
 
 /** Get report fallback texts */
 export const getReportTexts = (locale: string, name: string, sectionCount: number) => ({
   headline: locale === "ko"
     ? `${name}님 사주 분석 리포트`
-    : `${name}'s BaZi Analysis Report`,
+    : `${name}'s K-Saju Analysis Report`,
   summary: locale === "ko"
     ? `${sectionCount}개 섹션 분석 완료`
     : `${sectionCount} section analysis complete`,
@@ -589,11 +655,12 @@ export const generateFreePersonality = async (params: {
       `{"sections":[{"key":"성격","title":"성격","text":"본문..."}]}`;
   } else {
     const country = getCountryByLocale(locale);
-    system = getI18nSystemPrompt(locale, country.llmTone);
+    system = getI18nSystemPrompt(locale, country);
+    const targetLang = LANGUAGE_NAMES[locale] ?? "English";
 
     userPrompt =
       `User information: ${JSON.stringify(input)}\n\n` +
-      `Based on this person's BaZi (Four Pillars of Destiny), write a "Personality" section.\n\n` +
+      `Based on this person's K-Saju (Korean Four Pillars) reading, write a "Personality" section.\n\n` +
       `## Personality\n` +
       `Innate personality traits, strengths and weaknesses, interpersonal style, emotional expression, stress coping patterns. The contrast between first impressions and deeper understanding.\n\n` +
       `### Writing Rules\n` +
@@ -603,6 +670,7 @@ export const generateFreePersonality = async (params: {
       `- Include specific situational examples that create an "ah, that's so me!" feeling.\n` +
       `- End with 2-3 actionable tips.\n` +
       `- Use warm, friendly, polite language.\n\n` +
+      `IMPORTANT: You are writing for a native ${targetLang} reader. Do NOT translate from English — compose original text in ${targetLang} using natural grammar, local idioms, and culturally resonant expressions.\n\n` +
       `Output ONLY this JSON format:\n` +
       `{"sections":[{"key":"personality","title":"Personality","text":"content..."}]}`;
   }
@@ -685,7 +753,7 @@ export const generateChunkedReport = async (params: {
       "5. 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신, 한자 남발\n" +
       "6. 출력: 반드시 JSON 형식으로만 출력하세요."
     )
-    : getI18nSystemPrompt(locale, getCountryByLocale(locale).llmTone);
+    : getI18nSystemPrompt(locale, getCountryByLocale(locale));
 
   const inputJson = JSON.stringify(input);
   const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
@@ -717,9 +785,11 @@ export const generateChunkedReport = async (params: {
         `반드시 아래 JSON 형식으로만 출력하세요:\n` +
         `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"본문..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"본문..."}]}`
       )
-      : (
+      : (() => {
+        const tLang = LANGUAGE_NAMES[locale] ?? "English";
+        return (
         `User information: ${inputJson}\n\n` +
-        `Based on this person's BaZi, write the following 2 sections.\n\n` +
+        `Based on this person's K-Saju (Korean Four Pillars) reading, write the following 2 sections.\n\n` +
         `## Section 1: "${sec1.title}"\n${guide1}\n\n` +
         `## Section 2: "${sec2.title}"\n${guide2}\n\n` +
         `### Writing Rules\n` +
@@ -729,9 +799,11 @@ export const generateChunkedReport = async (params: {
         `- Include specific situational examples that create an "ah, that's so me!" feeling.\n` +
         `- End each section with 2-3 actionable tips.\n` +
         `- Use warm, friendly, polite language.\n\n` +
+        `IMPORTANT: You are writing for a native ${tLang} reader. Do NOT translate from English — compose original text in ${tLang} using natural grammar, local idioms, and culturally resonant expressions.\n\n` +
         `Output ONLY this JSON format:\n` +
         `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"content..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"content..."}]}`
-      );
+        );
+      })();
 
     const res = await callLlm({
       model: llmModel, system, user: userPrompt,
