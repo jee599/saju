@@ -55,13 +55,13 @@ interface ModelInfo {
 }
 
 const MODELS: ModelInfo[] = [
-  { key: "sonnet-single", label: "Sonnet", color: "#e06090", desc: "30000자×1회" },
-  { key: "opus", label: "Opus", color: "#7c3aed", desc: "3000자×10" },
-  { key: "gpt", label: "GPT-5.2", color: "#10a37f", desc: "30000자×1회" },
-  { key: "gpt-mini-chunked", label: "GPT-mini", color: "#50d4a0", desc: "3000자×10" },
-  { key: "gemini", label: "Gemini 3.1", color: "#4285f4", desc: "30000자×1회" },
-  { key: "gemini-flash-chunked", label: "Flash", color: "#6db6ff", desc: "3000자×10" },
-  { key: "haiku-chunked", label: "Haiku", color: "#f59e0b", desc: "3000자×10" },
+  { key: "sonnet-single", label: "Sonnet", color: "#e06090", desc: "20000자×1회" },
+  { key: "opus", label: "Opus", color: "#7c3aed", desc: "4000자×5" },
+  { key: "gpt", label: "GPT-5.2", color: "#10a37f", desc: "20000자×1회" },
+  { key: "gpt-mini-chunked", label: "GPT-mini", color: "#50d4a0", desc: "4000자×5" },
+  { key: "gemini", label: "Gemini 3.1", color: "#4285f4", desc: "20000자×1회" },
+  { key: "gemini-flash-chunked", label: "Flash", color: "#6db6ff", desc: "4000자×5" },
+  { key: "haiku-chunked", label: "Haiku", color: "#f59e0b", desc: "4000자×5" },
 ];
 
 function fmt(ms?: number) { return ms ? ms < 1000 ? `${ms}ms` : `${(ms/1000).toFixed(1)}s` : ""; }

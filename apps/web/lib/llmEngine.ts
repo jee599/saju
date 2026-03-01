@@ -238,14 +238,15 @@ const callLlm = async (params: Parameters<typeof callLlmOnce>[0]): Promise<LlmRe
 };
 
 const MODEL_CHAR_TARGETS: Record<string, number> = {
-  opus: 30000,
-  sonnet: 30000,
-  gpt: 30000,
+  opus: 20000,
+  sonnet: 20000,
+  gpt: 20000,
+  gemini: 20000,
 };
 
 const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: ProductCode; targetModel?: string; charTarget?: number }) => {
   const { input, productCode, targetModel } = params;
-  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel ?? "sonnet"] ?? 15000;
+  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel ?? "sonnet"] ?? 20000;
 
   const lengthGuide =
     `유료 기준으로 최대한 길고 상세하게 작성하세요. 목표: 약 ${charTarget.toLocaleString()}자(±15%) 수준의 한국어 장문. ` +
@@ -424,11 +425,11 @@ export const generateSingleModelReport = async (params: {
   charTarget?: number;
 }): Promise<ModelReportDetail> => {
   const { orderId, input, productCode, targetModel } = params;
-  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel] ?? 30000;
+  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel] ?? 20000;
   const { system, user } = buildPaidReportPrompt({ input, productCode, targetModel, charTarget });
 
-  // 한국어 1자 ≈ 1.5~2 토큰, JSON 구조 오버헤드 20% 추가
-  const maxTokens = Math.max(16000, Math.round(charTarget * 0.8));
+  // 한국어 1자 ≈ 1.5~2 토큰, JSON 구조 오버헤드 포함
+  const maxTokens = Math.max(16000, Math.round(charTarget * 1.5));
 
   let llmModel: ReportModel;
   let anthropicModelId: string | undefined;
@@ -466,29 +467,38 @@ export const generateSingleModelReport = async (params: {
   return { ...base, model: llmModel, usage: res.usage };
 };
 
-const SECTION_KEYS = [
-  { key: "성격", title: "성격" },
-  { key: "직업", title: "직업" },
-  { key: "연애", title: "연애" },
-  { key: "금전", title: "금전" },
-  { key: "건강", title: "건강" },
-  { key: "가족·배우자", title: "가족·배우자" },
-  { key: "과거", title: "과거" },
-  { key: "현재", title: "현재" },
-  { key: "미래", title: "미래" },
-  { key: "대운 타임라인", title: "대운 타임라인" },
-] as const;
+/** 2섹션씩 묶어서 5번 호출 (4000자 × 5 = 총 20000자 목표) */
+const SECTION_CHUNKS: Array<Array<{ key: string; title: string }>> = [
+  [{ key: "성격", title: "성격" }, { key: "직업", title: "직업" }],
+  [{ key: "연애", title: "연애" }, { key: "금전", title: "금전" }],
+  [{ key: "건강", title: "건강" }, { key: "가족·배우자", title: "가족·배우자" }],
+  [{ key: "과거", title: "과거" }, { key: "현재", title: "현재" }],
+  [{ key: "미래", title: "미래" }, { key: "대운 타임라인", title: "대운 타임라인" }],
+];
 
-/** Generate report by calling LLM once per section (chunked: 3000자 × 10) */
+const SECTION_PROMPTS: Record<string, string> = {
+  "성격": "타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.",
+  "직업": "적합한 직업군, 일하는 스타일, 리더십/팔로워십 특성, 직장에서의 강점과 주의점. 추천 업종/직종 3~5가지와 이유. 사업 적합성.",
+  "연애": "연애 스타일, 사랑 표현 방식, 이상형 특성, 연애 패턴(밀당/헌신/질투 등). 좋은 궁합 상대방 특성과 피해야 할 관계 유형.",
+  "금전": "재물운 흐름, 돈 대하는 태도, 소비 패턴, 저축/투자 성향. 재물 유입 경로(월급형/사업형/투자형)와 돈 새는 포인트.",
+  "건강": "체질적 특성, 주의할 건강 영역, 스트레스가 몸에 나타나는 방식, 계절별 관리 팁. 좋은 운동/음식/생활습관.",
+  "가족·배우자": "가족 관계 특성, 부모님 관계 패턴, 배우자운, 결혼생활 특성, 자녀운. 갈등 해소법과 관계 개선 팁.",
+  "과거": "지나온 시기 해석: 어린 시절, 학창 시절, 20대 도전과 성장, 큰 전환점들을 시기별로.",
+  "현재": "2025~2026년 운의 흐름. 올해 핵심 키워드 3가지, 주의할 시기, 기회 시기, 이번 달부터 실천할 행동 3가지.",
+  "미래": "앞으로 3~5년 전망: 커리어/재물/인간관계 변화 흐름, 큰 기회 시기와 준비 사항.",
+  "대운 타임라인": "10년 단위 대운 흐름: 10대~80대 각 시기 핵심 테마, 특징, 주의사항, 인생 조언.",
+};
+
 export const generateChunkedReport = async (params: {
   orderId: string;
   input: FortuneInput;
   productCode: ProductCode;
-  targetModel: string; // "sonnet" | "gemini-flash" | "haiku" | "gpt-mini"
+  targetModel: string; // "opus" | "gemini-flash" | "haiku" | "gpt-mini"
 }): Promise<ModelReportDetail & { totalCostUsd: number }> => {
   const { orderId, input, productCode, targetModel } = params;
-  const charPerSection = 3000;
-  const maxTokensPerSection = Math.max(4000, Math.round(charPerSection * 1.5));
+  // 2섹션 묶음당 목표: 각 섹션 2000자 × 2 = 4000자
+  const charPerChunk = 4000;
+  const maxTokensPerChunk = Math.max(6000, Math.round(charPerChunk * 1.5));
 
   let llmModel: ReportModel;
   let anthropicModelId: string | undefined;
@@ -520,45 +530,38 @@ export const generateChunkedReport = async (params: {
     "3. 각 섹션 끝에 실천 가능한 행동 팁 2~3개를 포함하세요.\n" +
     "4. 문체: 존댓말, 따뜻하고 친근한 톤. 이름을 직접 호명하며 1:1 상담처럼 작성.\n" +
     "5. 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신, 한자 남발\n" +
-    "6. 출력: 요청된 섹션의 본문 텍스트만 출력 (JSON, 마크다운 금지). 순수 텍스트만.";
-
-  const SECTION_PROMPTS: Record<string, string> = {
-    "성격": "이 사람의 타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴을 구체적으로 분석해 주세요. 주변 사람들이 이 사람을 어떻게 느끼는지, 첫인상과 깊이 알게 된 후의 인상 차이도 설명해 주세요.",
-    "직업": "이 사람에게 적합한 직업군, 일하는 스타일, 리더십/팔로워십 특성, 직장에서의 강점과 주의할 점을 분석해 주세요. 구체적인 추천 업종이나 직종 3~5가지와 그 이유도 설명해 주세요. 사업 적합성과 시기도 다뤄주세요.",
-    "연애": "이 사람의 연애 스타일, 사랑 표현 방식, 이상형의 특성, 연애 시 나타나는 패턴(밀당, 헌신, 질투 등)을 분석해 주세요. 좋은 궁합의 상대방 특성과 피해야 할 관계 유형도 설명해 주세요.",
-    "금전": "이 사람의 재물운 흐름, 돈을 대하는 태도, 소비 패턴, 저축/투자 성향을 분석해 주세요. 재물이 들어오는 경로(월급형/사업형/투자형)와 돈이 새는 포인트, 구체적인 재테크 팁도 포함해 주세요.",
-    "건강": "이 사람의 체질적 특성, 특히 주의해야 할 건강 영역(오장육부 중심으로 쉽게 설명), 스트레스가 몸에 나타나는 방식, 계절별 건강 관리 팁을 분석해 주세요. 좋은 운동/음식/생활습관도 구체적으로 추천해 주세요.",
-    "가족·배우자": "이 사람의 가족 관계 특성, 부모님과의 관계 패턴, 배우자운(어떤 배우자를 만나는지, 결혼생활 특성), 자녀운을 분석해 주세요. 가족 간 갈등 해소법과 관계 개선 팁도 포함해 주세요.",
-    "과거": "이 사람이 지나온 시기를 해석해 주세요. 어린 시절의 특성, 학창 시절의 경험 패턴, 20대의 도전과 성장, 지금까지 겪었을 큰 전환점들을 시기별로 설명해 주세요.",
-    "현재": "현재(2025~2026년) 운의 흐름을 상세히 분석해 주세요. 올해의 핵심 키워드 3가지, 주의해야 할 시기, 기회가 오는 시기, 당장 이번 달부터 실천할 수 있는 구체적 행동 3가지를 포함해 주세요.",
-    "미래": "앞으로 3~5년간의 전망을 분석해 주세요. 커리어, 재물, 인간관계 각 영역의 변화 흐름, 특히 큰 기회가 오는 시기와 준비해야 할 사항을 구체적으로 설명해 주세요.",
-    "대운 타임라인": "이 사람의 10년 단위 대운 흐름을 분석해 주세요. 태어나서부터 80대까지 각 시기(10대, 20대, 30대...)의 핵심 테마, 특징, 주의사항을 구체적으로 설명하고, 각 시기에 맞는 인생 조언을 해주세요.",
-  };
+    "6. 출력: 반드시 JSON 형식으로만 출력하세요.";
 
   const inputJson = JSON.stringify(input);
   const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
   let totalDurationMs = 0;
 
-  // 순차 처리: rate limit 방지
+  // 2섹션씩 5번 순차 호출
   const results: Array<{ key: string; title: string; text: string }> = [];
-  for (const sec of SECTION_KEYS) {
-    const sectionGuide = SECTION_PROMPTS[sec.title] ?? "";
+  for (const chunk of SECTION_CHUNKS) {
+    const sec1 = chunk[0];
+    const sec2 = chunk[1];
+    const guide1 = SECTION_PROMPTS[sec1.title] ?? "";
+    const guide2 = SECTION_PROMPTS[sec2.title] ?? "";
+
     const userPrompt =
       `사용자 정보: ${inputJson}\n\n` +
-      `위 사용자의 사주를 바탕으로 "${sec.title}" 섹션을 작성해 주세요.\n\n` +
-      `### 이 섹션에서 다룰 내용\n${sectionGuide}\n\n` +
+      `위 사용자의 사주를 바탕으로 아래 2개 섹션을 작성해 주세요.\n\n` +
+      `## 섹션 1: "${sec1.title}"\n${guide1}\n\n` +
+      `## 섹션 2: "${sec2.title}"\n${guide2}\n\n` +
       `### 작성 규칙\n` +
-      `- 반드시 ${charPerSection}자 이상 작성하세요. 이것은 유료 프리미엄 리포트입니다.\n` +
-      `- 여러 문단으로 나눠서 풍성하게 작성하세요 (최소 4~6문단).\n` +
+      `- 이것은 유료 프리미엄 리포트입니다. 각 섹션을 최소 2000자 이상 작성하세요.\n` +
+      `- 여러 문단으로 나눠서 풍성하게 작성하세요 (섹션당 최소 4~6문단).\n` +
       `- 사주 전문용어 대신 자연물 비유(물, 불, 나무, 땅, 금속)로 쉽게 설명하세요.\n` +
       `- 구체적인 상황 예시를 들어 '아, 나 그래!' 하고 공감할 수 있게 쓰세요.\n` +
-      `- 마지막에 실천 가능한 구체적 행동 팁 2~3가지를 포함하세요.\n` +
-      `- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 존댓말을 사용하세요.\n` +
-      `- 본문 텍스트만 출력하세요 (JSON, 마크다운 금지).`;
+      `- 각 섹션 끝에 실천 가능한 구체적 행동 팁 2~3가지를 포함하세요.\n` +
+      `- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 존댓말을 사용하세요.\n\n` +
+      `반드시 아래 JSON 형식으로만 출력하세요:\n` +
+      `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"본문..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"본문..."}]}`;
 
     const res = await callLlm({
       model: llmModel, system, user: userPrompt,
-      maxTokens: maxTokensPerSection, temperature: 0.7,
+      maxTokens: maxTokensPerChunk, temperature: 0.7,
       anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
     });
 
@@ -569,7 +572,19 @@ export const generateChunkedReport = async (params: {
     }
     totalDurationMs += res.durationMs ?? 0;
 
-    results.push({ key: sec.key, title: sec.title, text: res.text.trim() });
+    // JSON 파싱하여 섹션 추출
+    try {
+      const parsed = safeJsonParse(res.text);
+      const sections = parsed?.sections ?? [];
+      for (const s of sections) {
+        results.push({ key: String(s.key ?? ""), title: String(s.title ?? ""), text: String(s.text ?? "") });
+      }
+    } catch {
+      // JSON 파싱 실패 시 전체 텍스트를 첫 번째 섹션에 할당
+      const text = res.text.trim();
+      results.push({ key: sec1.key, title: sec1.title, text });
+      results.push({ key: sec2.key, title: sec2.title, text: "(생성 실패)" });
+    }
   }
 
   const provider = llmModel === "gpt" ? "openai" : llmModel === "gemini" ? "google" : "anthropic";
@@ -586,7 +601,7 @@ export const generateChunkedReport = async (params: {
     productCode,
     generatedAt: new Date().toISOString(),
     headline: `${input.name}님 사주 분석 리포트`,
-    summary: "10개 섹션 × 3,000자 청크 생성",
+    summary: "10개 섹션 × 2,000자 (5회 호출)",
     sections: results,
     recommendations: [],
     disclaimer: "본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.",
