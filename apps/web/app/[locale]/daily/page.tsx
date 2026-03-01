@@ -75,7 +75,13 @@ function DailyContent() {
   const [inputDate, setInputDate] = useState(birthDate);
   const [showResult, setShowResult] = useState(!!birthDate);
 
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = (() => {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  })();
 
   const result = useMemo(() => {
     if (!inputDate || !showResult) return null;
@@ -126,7 +132,7 @@ function DailyContent() {
                 <label>{t("birthDateLabel")}</label>
                 <input type="date" className="input" value={inputDate} onChange={(e) => setInputDate(e.target.value)} min="1930-01-01" max="2010-12-31" />
               </div>
-              <button className="btn btn-primary btn-lg btn-full" onClick={handleSubmit} disabled={!inputDate}>
+              <button className="btn btn-primary btn-lg btn-full" style={{ marginTop: 12 }} onClick={handleSubmit} disabled={!inputDate}>
                 {t("viewFortune")}
               </button>
             </div>
