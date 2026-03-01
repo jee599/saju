@@ -311,8 +311,8 @@ const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: Produ
     '    {"key":"건강","title":"건강","text":string},  // 체질적 특성, 주의할 건강 영역, 건강 관리 팁, 스트레스 해소법\n' +
     '    {"key":"가족·배우자","title":"가족·배우자","text":string},  // 가족관계 특성, 배우자운, 결혼생활 팁, 부모/자녀 관계\n' +
     '    {"key":"과거","title":"과거","text":string},  // 지나온 시기 해석 (어린 시절~현재까지 시기별 특성)\n' +
-    '    {"key":"현재","title":"현재","text":string},  // 현재 운의 흐름, 올해 주요 키워드, 당장 실천할 것\n' +
-    '    {"key":"미래","title":"미래","text":string},  // 앞으로 3~5년 전망, 기회의 시기, 준비해야 할 것\n' +
+    `    {"key":"현재","title":"현재","text":string},  // ${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 기준 현재 운의 흐름, 올해 주요 키워드, 당장 실천할 것\n` +
+    `    {"key":"미래","title":"미래","text":string},  // ${new Date().getFullYear()}년 기준 앞으로 3~5년 전망, 기회의 시기, 준비해야 할 것\n` +
     '    {"key":"대운 타임라인","title":"대운 타임라인","text":string}  // 10년 단위 인생 흐름, 각 시기별 핵심 테마와 조언\n' +
     "  ],\n" +
     '  "recommendations": string[],  // 5~8개의 구체적 실천 체크리스트\n' +
@@ -501,17 +501,24 @@ const SECTION_CHUNKS: Array<Array<{ key: string; title: string }>> = [
   [{ key: "미래", title: "미래" }, { key: "대운 타임라인", title: "대운 타임라인" }],
 ];
 
-const SECTION_PROMPTS: Record<string, string> = {
-  "성격": "타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.",
-  "직업": "적합한 직업군, 일하는 스타일, 리더십/팔로워십 특성, 직장에서의 강점과 주의점. 추천 업종/직종 3~5가지와 이유. 사업 적합성.",
-  "연애": "연애 스타일, 사랑 표현 방식, 이상형 특성, 연애 패턴(밀당/헌신/질투 등). 좋은 궁합 상대방 특성과 피해야 할 관계 유형.",
-  "금전": "재물운 흐름, 돈 대하는 태도, 소비 패턴, 저축/투자 성향. 재물 유입 경로(월급형/사업형/투자형)와 돈 새는 포인트.",
-  "건강": "체질적 특성, 주의할 건강 영역, 스트레스가 몸에 나타나는 방식, 계절별 관리 팁. 좋은 운동/음식/생활습관.",
-  "가족·배우자": "가족 관계 특성, 부모님 관계 패턴, 배우자운, 결혼생활 특성, 자녀운. 갈등 해소법과 관계 개선 팁.",
-  "과거": "지나온 시기 해석: 어린 시절, 학창 시절, 20대 도전과 성장, 큰 전환점들을 시기별로.",
-  "현재": "2025~2026년 운의 흐름. 올해 핵심 키워드 3가지, 주의할 시기, 기회 시기, 이번 달부터 실천할 행동 3가지.",
-  "미래": "앞으로 3~5년 전망: 커리어/재물/인간관계 변화 흐름, 큰 기회 시기와 준비 사항.",
-  "대운 타임라인": "10년 단위 대운 흐름: 10대~80대 각 시기 핵심 테마, 특징, 주의사항, 인생 조언.",
+/** 실시간 연도를 반영한 섹션별 프롬프트 */
+const getSectionPrompts = (): Record<string, string> => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const nextYear = year + 1;
+  const month = now.getMonth() + 1; // 1~12
+  return {
+    "성격": "타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.",
+    "직업": "적합한 직업군, 일하는 스타일, 리더십/팔로워십 특성, 직장에서의 강점과 주의점. 추천 업종/직종 3~5가지와 이유. 사업 적합성.",
+    "연애": "연애 스타일, 사랑 표현 방식, 이상형 특성, 연애 패턴(밀당/헌신/질투 등). 좋은 궁합 상대방 특성과 피해야 할 관계 유형.",
+    "금전": "재물운 흐름, 돈 대하는 태도, 소비 패턴, 저축/투자 성향. 재물 유입 경로(월급형/사업형/투자형)와 돈 새는 포인트.",
+    "건강": "체질적 특성, 주의할 건강 영역, 스트레스가 몸에 나타나는 방식, 계절별 관리 팁. 좋은 운동/음식/생활습관.",
+    "가족·배우자": "가족 관계 특성, 부모님 관계 패턴, 배우자운, 결혼생활 특성, 자녀운. 갈등 해소법과 관계 개선 팁.",
+    "과거": "지나온 시기 해석: 어린 시절, 학창 시절, 20대 도전과 성장, 큰 전환점들을 시기별로.",
+    "현재": `${year}~${nextYear}년 운의 흐름. 지금은 ${year}년 ${month}월입니다. 올해 핵심 키워드 3가지, 주의할 시기, 기회 시기, 이번 달부터 실천할 행동 3가지.`,
+    "미래": `${year}년 기준 앞으로 3~5년(${year+1}~${year+5}년) 전망: 커리어/재물/인간관계 변화 흐름, 큰 기회 시기와 준비 사항.`,
+    "대운 타임라인": "10년 단위 대운 흐름: 10대~80대 각 시기 핵심 테마, 특징, 주의사항, 인생 조언.",
+  };
 };
 
 export const generateChunkedReport = async (params: {
@@ -570,6 +577,7 @@ export const generateChunkedReport = async (params: {
 
   const inputJson = JSON.stringify(input);
   const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
+  const sectionPrompts = getSectionPrompts(); // 실시간 연도 반영
 
   /** 단일 청크 호출 + 파싱 (1회 시도) */
   const callAndParseChunk = async (
@@ -577,8 +585,8 @@ export const generateChunkedReport = async (params: {
   ): Promise<{ sections: Array<{ key: string; title: string; text: string }>; usage?: LlmUsage; durationMs: number }> => {
     const sec1 = chunk[0];
     const sec2 = chunk[1];
-    const guide1 = SECTION_PROMPTS[sec1.title] ?? "";
-    const guide2 = SECTION_PROMPTS[sec2.title] ?? "";
+    const guide1 = sectionPrompts[sec1.title] ?? "";
+    const guide2 = sectionPrompts[sec2.title] ?? "";
 
     const userPrompt =
       `사용자 정보: ${inputJson}\n\n` +
