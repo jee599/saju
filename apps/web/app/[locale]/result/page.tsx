@@ -247,30 +247,34 @@ function FourPillarsTable({ pillars, dayMaster, t }: { pillars: FourPillars; day
 
 const EXPECTED_DURATION_MS = 20_000;
 
-function SajuLoadingProgress({ startTime, t }: { startTime: number; t: (key: string, values?: Record<string, string>) => string }) {
+function SajuLoadingProgress({ startTime, done, t }: { startTime: number; done: boolean; t: (key: string, values?: Record<string, string>) => string }) {
   const [elapsed, setElapsed] = useState(0);
+  const stepCount = 30;
 
   useEffect(() => {
+    if (done) return;
     const interval = setInterval(() => {
       setElapsed(Date.now() - startTime);
     }, 300);
     return () => clearInterval(interval);
-  }, [startTime]);
+  }, [startTime, done]);
 
-  const rawPct = Math.min(95, (elapsed / EXPECTED_DURATION_MS) * 100);
-  const pct = Math.min(95, Math.sqrt(rawPct / 95) * 95);
-  const stepCount = 30;
-  const stepIndex = Math.min(stepCount - 1, Math.floor((pct / 100) * stepCount));
+  const rawPct = done ? 100 : Math.min(95, (elapsed / EXPECTED_DURATION_MS) * 100);
+  const pct = done ? 100 : Math.min(95, Math.sqrt(rawPct / 95) * 95);
+  const stepIndex = done ? stepCount - 1 : Math.min(stepCount - 1, Math.floor((pct / 100) * stepCount));
   const stepText = t(`sajuSteps.${stepIndex}`);
   const elapsedSec = Math.floor(elapsed / 1000);
 
   return (
     <div className="sajuLoading">
       <div className="sajuLoadingBar">
-        <div className="sajuLoadingFill" style={{ width: `${pct}%` }} />
+        <div className="sajuLoadingFill" style={{ width: `${pct}%`, transition: done ? "width 0.4s ease" : undefined }} />
       </div>
       <div className="sajuLoadingPct">{Math.round(pct)}%</div>
-      <div className="sajuLoadingStep">{stepText}</div>
+      <div className="sajuLoadingStep" style={{ display: "flex", justifyContent: "center", gap: 8, alignItems: "center" }}>
+        <span style={{ fontSize: "0.75rem", color: "var(--t2)", flexShrink: 0 }}>{stepIndex + 1} / {stepCount}</span>
+        <span>{stepText}</span>
+      </div>
       <div className="sajuLoadingTime">{t("elapsedSec", { sec: String(elapsedSec) })}</div>
     </div>
   );
@@ -289,6 +293,7 @@ function ResultContent() {
   const [visible, setVisible] = useState(false);
   const [personalityText, setPersonalityText] = useState<string | null>(null);
   const [personalityLoading, setPersonalityLoading] = useState(false);
+  const [personalityDone, setPersonalityDone] = useState(false);
   const [personalityError, setPersonalityError] = useState<string | null>(null);
   const loadingStartRef = useRef(0);
 
@@ -309,7 +314,12 @@ function ResultContent() {
     }
 
     setPersonalityLoading(true);
+    setPersonalityDone(false);
     loadingStartRef.current = Date.now();
+
+    let resultText: string | null = null;
+    let resultError: string | null = null;
+
     fetch("/api/report/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -322,15 +332,24 @@ function ResultContent() {
       .then((r) => r.json())
       .then((json) => {
         if (json.ok && json.data?.section?.text) {
-          setPersonalityText(json.data.section.text);
+          resultText = json.data.section.text;
           sessionStorage.setItem("free_personality", json.data.section.text);
           sessionStorage.setItem("free_personality_key", currentKey);
         } else {
-          setPersonalityError(t("personalityError"));
+          resultError = t("personalityError");
         }
       })
-      .catch(() => setPersonalityError(t("networkError")))
-      .finally(() => setPersonalityLoading(false));
+      .catch(() => { resultError = t("networkError"); })
+      .finally(() => {
+        // Show 100% for 800ms, then reveal result
+        setPersonalityDone(true);
+        setTimeout(() => {
+          setPersonalityLoading(false);
+          setPersonalityDone(false);
+          if (resultText) setPersonalityText(resultText);
+          if (resultError) setPersonalityError(resultError);
+        }, 800);
+      });
   }, [birthDate, birthTime, name, gender, calendarType, locale, router, t]);
 
   const analysis = useMemo(() => {
@@ -455,7 +474,7 @@ function ResultContent() {
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ marginBottom: 12 }}>{t("personality")}</h3>
           {personalityLoading && (
-            <SajuLoadingProgress startTime={loadingStartRef.current || Date.now()} t={t} />
+            <SajuLoadingProgress startTime={loadingStartRef.current || Date.now()} done={personalityDone} t={t} />
           )}
           {personalityError && (
             <p style={{ color: "#ef4444", fontSize: "0.9rem" }}>{personalityError}</p>
