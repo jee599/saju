@@ -101,7 +101,7 @@ export async function POST(req: Request) {
       meta.model === "gemini" ? "gemini-3.1-pro-preview" :
       meta.model === "gemini-flash" ? "gemini-3-flash-preview" :
       meta.model === "opus" ? "claude-opus-4-6" :
-      meta.model === "haiku" ? "claude-haiku-4-5-20251001" :
+      meta.model === "haiku" ? "claude-haiku-4-5" :
       (process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6");
 
     const costUsd = report.usage ? estimateCostUsd(provider, modelName, report.usage) : 0;

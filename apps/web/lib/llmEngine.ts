@@ -556,7 +556,7 @@ export const generateChunkedReport = async (params: {
     openaiModelId = "gpt-5-mini";
   } else if (targetModel === "haiku") {
     llmModel = "claude";
-    anthropicModelId = "claude-haiku-4-5-20251001";
+    anthropicModelId = "claude-haiku-4-5";
   } else if (targetModel === "opus") {
     llmModel = "claude";
     anthropicModelId = "claude-opus-4-6";
