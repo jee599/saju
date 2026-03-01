@@ -803,6 +803,46 @@ p, li, label, input, select, button, textarea {
   padding: 4px 0;
 }
 
+/* ── 사주 분석 로딩 프로그레스 ── */
+.sajuLoading {
+  padding: 8px 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sajuLoadingBar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sajuLoadingFill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #C48B9F, #D4AF37);
+  transition: width 0.3s ease-out;
+}
+.sajuLoadingPct {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #D4AF37;
+  text-align: center;
+  line-height: 1;
+}
+.sajuLoadingStep {
+  font-size: 0.72rem;
+  color: var(--t2);
+  text-align: center;
+  min-height: 2.4em;
+  line-height: 1.3;
+}
+.sajuLoadingTime {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+}
+
 .spinner {
   display: inline-block;
   width: 14px;
