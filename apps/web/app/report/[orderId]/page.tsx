@@ -214,11 +214,13 @@ export default function ReportPage() {
         const res = await webApi.report(orderId);
         setData(res);
 
-        // 이미 생성된 리포트들 반영
+        // 이미 생성된 리포트들 반영 (현재 MODELS에 있는 것만)
         if (res.reportsByModel) {
+          const validKeys = new Set(MODELS.map(m => m.key));
           const statuses: Record<string, ModelStatus> = {};
           const results: Record<string, ModelResult> = {};
           for (const [key, report] of Object.entries(res.reportsByModel)) {
+            if (!validKeys.has(key)) continue; // 삭제된 모델 무시
             statuses[key] = "done";
             results[key] = { report, charCount: (report as any).charCount, cached: true };
           }
