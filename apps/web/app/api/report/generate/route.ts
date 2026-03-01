@@ -25,11 +25,11 @@ interface ModelConfig {
 }
 
 const MODEL_CONFIGS: Record<string, ModelConfig> = {
-  'sonnet-single': { targetModel: 'sonnet', strategy: 'single', charTarget: 30000 },
+  'sonnet-single': { targetModel: 'sonnet', strategy: 'single', charTarget: 20000 },
   'opus': { targetModel: 'opus', strategy: 'chunked' },
-  'gpt': { targetModel: 'gpt', strategy: 'single', charTarget: 30000 },
+  'gpt': { targetModel: 'gpt', strategy: 'single', charTarget: 20000 },
   'gpt-mini-chunked': { targetModel: 'gpt-mini', strategy: 'chunked' },
-  'gemini': { targetModel: 'gemini', strategy: 'single', charTarget: 30000 },
+  'gemini': { targetModel: 'gemini', strategy: 'single', charTarget: 20000 },
   'gemini-flash-chunked': { targetModel: 'gemini-flash', strategy: 'chunked' },
   'haiku-chunked': { targetModel: 'haiku', strategy: 'chunked' },
 };
