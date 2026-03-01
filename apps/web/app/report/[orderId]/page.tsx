@@ -146,6 +146,16 @@ interface ModelResult {
   cached?: boolean;
 }
 
+function getVoterId(): string {
+  if (typeof window === "undefined") return "ssr";
+  let id = localStorage.getItem("saju_voter_id");
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem("saju_voter_id", id);
+  }
+  return id;
+}
+
 export default function ReportPage() {
   const { orderId } = useParams<{ orderId: string }>();
   const [data, setData] = useState<GetReportResponse | null>(null);
@@ -157,6 +167,44 @@ export default function ReportPage() {
   const [modelErrors, setModelErrors] = useState<Record<string, string>>({});
   const [modelStartTimes, setModelStartTimes] = useState<Record<string, number>>({});
   const [activeModel, setActiveModel] = useState<string | null>(null);
+
+  // 투표 상태
+  const [voteCounts, setVoteCounts] = useState<Record<string, number>>({});
+  const [myVotes, setMyVotes] = useState<Set<string>>(new Set());
+  const [votingModel, setVotingModel] = useState<string | null>(null);
+
+  // 투표 데이터 로딩
+  const loadVotes = useCallback(async () => {
+    if (!orderId) return;
+    try {
+      const vid = getVoterId();
+      const res = await fetch(`/api/report/vote?orderId=${orderId}&voterId=${vid}`);
+      const json = await res.json();
+      if (json.ok) {
+        setVoteCounts(json.data.counts);
+        setMyVotes(new Set(json.data.myVotes));
+      }
+    } catch {}
+  }, [orderId]);
+
+  // 투표 토글
+  const toggleVote = useCallback(async (modelKey: string) => {
+    if (!orderId) return;
+    setVotingModel(modelKey);
+    try {
+      const res = await fetch("/api/report/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId, modelKey, voterId: getVoterId() }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        setVoteCounts(json.data.counts);
+        setMyVotes(new Set(json.data.myVotes));
+      }
+    } catch {}
+    setVotingModel(null);
+  }, [orderId]);
 
   // 초기 데이터 로딩 (이미 생성된 리포트 불러오기)
   useEffect(() => {
@@ -184,7 +232,8 @@ export default function ReportPage() {
         setError(e instanceof Error ? e.message : "리포트 조회 실패");
       }
     })();
-  }, [orderId]);
+    loadVotes();
+  }, [orderId, loadVotes]);
 
   // 모델 생성 요청
   const generateModel = useCallback(async (modelKey: string) => {
@@ -347,6 +396,45 @@ export default function ReportPage() {
                       ))}
                     </tbody>
                   </table>
+                </div>
+              )}
+
+              {/* ── 투표 섹션 ── */}
+              {Object.keys(modelResults).length >= 2 && (
+                <div className="voteSection">
+                  <h3 className="voteSectionTitle">🗳️ 어떤 결과가 마음에 드나요?</h3>
+                  <p className="voteSectionDesc">여러 모델을 선택할 수 있어요. 클릭해서 투표/취소하세요.</p>
+                  <div className="voteGrid">
+                    {MODELS.filter((m) => modelResults[m.key]).map((m) => {
+                      const voted = myVotes.has(m.key);
+                      const count = voteCounts[m.key] ?? 0;
+                      const isVoting = votingModel === m.key;
+                      const totalVotes = Object.values(voteCounts).reduce((a, b) => a + b, 0);
+                      const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
+
+                      return (
+                        <button
+                          key={m.key}
+                          className={`voteCard ${voted ? "voted" : ""}`}
+                          onClick={() => toggleVote(m.key)}
+                          disabled={isVoting}
+                          style={{ "--model-color": m.color } as React.CSSProperties}
+                        >
+                          <div className="voteCardBar" style={{ width: `${pct}%`, background: m.color }} />
+                          <div className="voteCardContent">
+                            <span className="voteCheck">{voted ? "✅" : "⬜"}</span>
+                            <span className="voteModelName">{m.label}</span>
+                            <span className="voteCount">{count > 0 ? `${count}표 (${pct}%)` : ""}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {Object.values(voteCounts).reduce((a, b) => a + b, 0) > 0 && (
+                    <p className="voteTotalText">
+                      총 {Object.values(voteCounts).reduce((a, b) => a + b, 0)}표
+                    </p>
+                  )}
                 </div>
               )}
             </div>

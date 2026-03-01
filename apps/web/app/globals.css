@@ -2751,6 +2751,90 @@ p, li, label, input, select, button, textarea {
   .pillarsRow { gap: 6px; }
 }
 
+/* ── Vote Section ─────────────────────────────────── */
+.voteSection {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.voteSectionTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 4px;
+}
+.voteSectionDesc {
+  font-size: 0.75rem;
+  color: var(--t2);
+  margin-bottom: 14px;
+}
+.voteGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.voteCard {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  overflow: hidden;
+  color: var(--t1);
+  font-size: 0.85rem;
+}
+.voteCard:hover {
+  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+}
+.voteCard.voted {
+  border-color: var(--model-color, var(--accent));
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 12px rgba(255,255,255,0.05);
+}
+.voteCardBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  opacity: 0.12;
+  transition: width 0.5s ease;
+  border-radius: 8px;
+}
+.voteCardContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+}
+.voteCheck {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.voteModelName {
+  font-weight: 600;
+  flex: 1;
+}
+.voteCount {
+  font-size: 0.78rem;
+  color: var(--t2);
+  font-variant-numeric: tabular-nums;
+}
+.voteTotalText {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--t2);
+  margin-top: 10px;
+}
+
 /* ── Reduced Motion ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
