@@ -42,6 +42,36 @@ const safeJsonParse = (text: string): any => {
     .replace(/,\s*([\]}])/g, "$1"); // trailing comma 제거
   try { return JSON.parse(cleaned); } catch { /* fall through */ }
 
+  // 5차: 잘린 JSON 복구 시도 (maxTokens 초과로 잘린 경우)
+  const jsonCandidate = (() => {
+    const start = cleaned.indexOf("{");
+    if (start === -1) return null;
+    let s = cleaned.slice(start);
+    // 열린 중괄호/대괄호 수를 세서 닫아주기
+    let braces = 0, brackets = 0, inStr = false, escape = false;
+    for (const ch of s) {
+      if (escape) { escape = false; continue; }
+      if (ch === "\\") { escape = true; continue; }
+      if (ch === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+      if (ch === "{") braces++;
+      if (ch === "}") braces--;
+      if (ch === "[") brackets++;
+      if (ch === "]") brackets--;
+    }
+    // 문자열이 열려있으면 닫기
+    if (inStr) s += '"';
+    // 대괄호/중괄호 닫기
+    while (brackets > 0) { s += "]"; brackets--; }
+    while (braces > 0) { s += "}"; braces--; }
+    return s;
+  })();
+  if (jsonCandidate) {
+    try { return JSON.parse(jsonCandidate); } catch { /* fall through */ }
+    // trailing comma 제거 후 재시도
+    try { return JSON.parse(jsonCandidate.replace(/,\s*([\]}])/g, "$1")); } catch { /* fall through */ }
+  }
+
   throw new Error("JSON_PARSE_FAILED: " + trimmed.slice(0, 200));
 };
 
@@ -387,7 +417,8 @@ export const generateSingleModelReport = async (params: {
   const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel] ?? 30000;
   const { system, user } = buildPaidReportPrompt({ input, productCode, targetModel, charTarget });
 
-  const maxTokens = Math.max(8000, Math.round(charTarget / 2.5));
+  // 한국어 1자 ≈ 1.5~2 토큰, JSON 구조 오버헤드 20% 추가
+  const maxTokens = Math.max(16000, Math.round(charTarget * 0.8));
 
   let llmModel: ReportModel;
   let anthropicModelId: string | undefined;
