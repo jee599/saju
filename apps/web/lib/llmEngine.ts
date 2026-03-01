@@ -15,14 +15,34 @@ type LlmUsage = {
 type LlmResult = { text: string; usage?: LlmUsage; durationMs?: number };
 
 const safeJsonParse = (text: string): any => {
+  // 1차: 그대로 파싱
   try {
     return JSON.parse(text);
-  } catch {
-    const trimmed = text.trim();
-    const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
-    if (fenceMatch?.[1]) return JSON.parse(fenceMatch[1]);
-    throw new Error("JSON_PARSE_FAILED");
+  } catch { /* fall through */ }
+
+  const trimmed = text.trim();
+
+  // 2차: ```json ... ``` 펜스 제거
+  const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenceMatch?.[1]) {
+    try { return JSON.parse(fenceMatch[1]); } catch { /* fall through */ }
   }
+
+  // 3차: 텍스트 중간에 있는 JSON 객체 추출 (첫 { ~ 마지막 })
+  const firstBrace = trimmed.indexOf("{");
+  const lastBrace = trimmed.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    const candidate = trimmed.slice(firstBrace, lastBrace + 1);
+    try { return JSON.parse(candidate); } catch { /* fall through */ }
+  }
+
+  // 4차: 줄바꿈/제어문자 정리 후 재시도
+  const cleaned = trimmed
+    .replace(/[\x00-\x1f]/g, (ch) => ch === "\n" || ch === "\r" || ch === "\t" ? ch : "")
+    .replace(/,\s*([\]}])/g, "$1"); // trailing comma 제거
+  try { return JSON.parse(cleaned); } catch { /* fall through */ }
+
+  throw new Error("JSON_PARSE_FAILED: " + trimmed.slice(0, 200));
 };
 
 const requireEnv = (key: string): string => {
@@ -31,7 +51,36 @@ const requireEnv = (key: string): string => {
   return v;
 };
 
-const callLlm = async (params: {
+/** 재시도 가능한 에러인지 체크 (429, 503, 529 등) */
+const isRetryableStatus = (status: number): boolean =>
+  status === 429 || status === 503 || status === 529 || status === 500 || status === 502;
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** 지수 백오프 리트라이 래퍼 */
+const withRetry = async <T>(fn: () => Promise<T>, maxRetries = 3, baseDelayMs = 2000): Promise<T> => {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      const msg = err?.message ?? "";
+      // 상태코드 추출
+      const statusMatch = msg.match(/error:\s*(\d{3})/);
+      const status = statusMatch ? parseInt(statusMatch[1]) : 0;
+
+      if (attempt < maxRetries && (isRetryableStatus(status) || msg.includes("overloaded") || msg.includes("UNAVAILABLE") || msg.includes("rate"))) {
+        const delay = baseDelayMs * Math.pow(2, attempt) + Math.random() * 1000;
+        console.log(`[llm-retry] attempt ${attempt + 1}/${maxRetries}, waiting ${Math.round(delay)}ms...`);
+        await sleep(delay);
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error("withRetry: unreachable");
+};
+
+const callLlmOnce = async (params: {
   model: ReportModel;
   system: string;
   user: string;
@@ -46,19 +95,23 @@ const callLlm = async (params: {
   // ── OpenAI (GPT) ──
   if (model === "gpt") {
     const apiKey = requireEnv("OPENAI_API_KEY");
+    const modelId = openaiModel ?? process.env.OPENAI_MODEL ?? "gpt-5.2";
+    // gpt-5-mini는 temperature 1만 지원
+    const useTemp = modelId.includes("mini") ? undefined : temperature;
     const startMs = Date.now();
+    const body: any = {
+      model: modelId,
+      max_completion_tokens: maxTokens,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user }
+      ]
+    };
+    if (useTemp !== undefined) body.temperature = useTemp;
     const resp = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model: openaiModel ?? process.env.OPENAI_MODEL ?? "gpt-5.2",
-        temperature,
-        max_completion_tokens: maxTokens,
-        messages: [
-          { role: "system", content: system },
-          { role: "user", content: user }
-        ]
-      })
+      body: JSON.stringify(body)
     });
     const gptDuration = Date.now() - startMs;
     if (!resp.ok) throw new Error(`OpenAI error: ${resp.status} ${resp.statusText} ${await resp.text().catch(() => "")}`);
@@ -86,7 +139,7 @@ const callLlm = async (params: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: `${system}\n\n---\n\n${user}` }] }],
+          contents: [{ role: "user", parts: [{ text: user }] }],
           systemInstruction: { parts: [{ text: system }] },
           generationConfig: {
             temperature,
@@ -147,6 +200,11 @@ const callLlm = async (params: {
       }
     : undefined;
   return { text, usage, durationMs };
+};
+
+/** callLlm: 자동 리트라이 포함 (429/503/529 → 최대 3회) */
+const callLlm = async (params: Parameters<typeof callLlmOnce>[0]): Promise<LlmResult> => {
+  return withRetry(() => callLlmOnce(params), 3, 2000);
 };
 
 const MODEL_CHAR_TARGETS: Record<string, number> = {
