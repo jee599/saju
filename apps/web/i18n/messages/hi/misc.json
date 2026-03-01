@@ -1,0 +1,87 @@
+{
+  "freeFortune": {
+    "title": "Free Destiny Analysis",
+    "desc": "Enter your basic details to receive a free personality and Five Elements analysis.",
+    "nameLabel": "Name",
+    "namePlaceholder": "Rahul Sharma",
+    "birthDateLabel": "Date of Birth",
+    "nextStep": "Next Step",
+    "birthTimeLabel": "Birth Time (optional)",
+    "birthTimeHelp": "You may leave this blank if not known.",
+    "genderLabel": "Gender",
+    "genderOther": "Prefer not to say",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "calendarLabel": "Calendar",
+    "calendarSolar": "Solar",
+    "calendarLunar": "Lunar",
+    "prev": "Back",
+    "startAnalysis": "Start Free Analysis",
+    "loading": "Loading..."
+  },
+  "comingSoon": {
+    "emailPlaceholder": "Get notified at launch",
+    "emailAria": "Email address",
+    "notify": "Notify",
+    "submitting": "...",
+    "submitted": "Registered successfully! We shall notify you at launch.",
+    "emailError": "Please enter a valid email address.",
+    "registerFail": "Registration failed",
+    "ctaButton": "Destiny analysis is available right now →",
+    "dream": {
+      "emoji": "🌙",
+      "title": "Dream Interpretation",
+      "desc": "AI analyses the meaning behind your dreams. Coming soon!",
+      "features": [
+        "Describe your dream in your own words",
+        "Personalised interpretation linked to your destiny chart",
+        "Analysis of dream symbols and hidden messages",
+        "Lucky numbers and auspicious directions"
+      ]
+    },
+    "tarot": {
+      "emoji": "🃏",
+      "title": "AI Tarot",
+      "desc": "AI unlocks the wisdom of tarot cards for you. Coming soon!",
+      "features": [
+        "Card spreads tailored to your question",
+        "Integrated reading with destiny analysis",
+        "Specialised readings for love, career, and wealth",
+        "Daily one-card tarot reading"
+      ]
+    },
+    "palm": {
+      "emoji": "✋",
+      "title": "Palmistry",
+      "desc": "Capture a photo of your palm for AI analysis. Coming soon!",
+      "features": [
+        "Palm photo capture followed by AI recognition",
+        "Life line, heart line, and head line analysis",
+        "Cross-verification with your destiny chart",
+        "Key turning points for your future"
+      ]
+    },
+    "face": {
+      "emoji": "😊",
+      "title": "Face Reading",
+      "desc": "Take a selfie for AI-powered face reading. Coming soon!",
+      "features": [
+        "Face reading from just one selfie",
+        "Correlation between facial features and destiny",
+        "First impression analysis",
+        "Tips to enhance your natural strengths"
+      ]
+    },
+    "name": {
+      "emoji": "✍️",
+      "title": "Name Analysis",
+      "desc": "AI analyses the meaning of your name and its alignment with your destiny. Coming soon!",
+      "features": [
+        "Meaning and significance of your name",
+        "Compatibility with Five Elements",
+        "Name change suggestions and guidance",
+        "Baby name recommendations"
+      ]
+    }
+  }
+}

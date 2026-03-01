@@ -1,0 +1,87 @@
+{
+  "freeFortune": {
+    "title": "Phân tích Tứ Trụ miễn phí",
+    "desc": "Nhập thông tin cơ bản để nhận phân tích tính cách và Ngũ Hành miễn phí.",
+    "nameLabel": "Họ tên",
+    "namePlaceholder": "Nguyễn Văn A",
+    "birthDateLabel": "Ngày sinh",
+    "nextStep": "Bước tiếp theo",
+    "birthTimeLabel": "Giờ sinh (tùy chọn)",
+    "birthTimeHelp": "Có thể để trống nếu không biết.",
+    "genderLabel": "Giới tính",
+    "genderOther": "Không chọn",
+    "genderMale": "Nam",
+    "genderFemale": "Nữ",
+    "calendarLabel": "Lịch",
+    "calendarSolar": "Dương lịch",
+    "calendarLunar": "Âm lịch",
+    "prev": "Quay lại",
+    "startAnalysis": "Bắt đầu phân tích miễn phí",
+    "loading": "Đang tải..."
+  },
+  "comingSoon": {
+    "emailPlaceholder": "Nhận thông báo khi ra mắt",
+    "emailAria": "Địa chỉ email",
+    "notify": "Thông báo",
+    "submitting": "...",
+    "submitted": "Đăng ký thành công! Chúng tôi sẽ thông báo khi ra mắt.",
+    "emailError": "Vui lòng nhập địa chỉ email hợp lệ.",
+    "registerFail": "Đăng ký thất bại",
+    "ctaButton": "Phân tích Tứ Trụ đã sẵn sàng →",
+    "dream": {
+      "emoji": "🌙",
+      "title": "Giải mộng",
+      "desc": "AI phân tích ý nghĩa giấc mơ của bạn. Sắp ra mắt!",
+      "features": [
+        "Mô tả giấc mơ bằng văn bản",
+        "Giải mã cá nhân hóa liên kết với Tứ Trụ",
+        "Phân tích biểu tượng và thông điệp trong mơ",
+        "Số may mắn và hướng may mắn"
+      ]
+    },
+    "tarot": {
+      "emoji": "🃏",
+      "title": "AI Tarot",
+      "desc": "AI giải mã trí tuệ của lá bài Tarot. Sắp ra mắt!",
+      "features": [
+        "Trải bài theo câu hỏi của bạn",
+        "Giải đọc tích hợp với phân tích Tứ Trụ",
+        "Đọc bài riêng cho tình yêu, sự nghiệp và tài lộc",
+        "Tarot mỗi ngày một lá"
+      ]
+    },
+    "palm": {
+      "emoji": "✋",
+      "title": "Xem chỉ tay",
+      "desc": "Chụp ảnh lòng bàn tay để AI phân tích. Sắp ra mắt!",
+      "features": [
+        "Chụp ảnh lòng bàn tay → AI nhận diện",
+        "Phân tích đường sinh mệnh, tình cảm và trí tuệ",
+        "Đối chiếu chéo với Tứ Trụ",
+        "Điểm thay đổi quan trọng trong tương lai"
+      ]
+    },
+    "face": {
+      "emoji": "😊",
+      "title": "Xem tướng mặt",
+      "desc": "Chụp ảnh selfie để AI phân tích tướng mặt. Sắp ra mắt!",
+      "features": [
+        "Phân tích tướng mặt từ một ảnh selfie",
+        "Mối tương quan giữa ngũ quan và Tứ Trụ",
+        "Phân tích ấn tượng đầu tiên",
+        "Gợi ý tăng cường điểm mạnh"
+      ]
+    },
+    "name": {
+      "emoji": "✍️",
+      "title": "Phân tích tên",
+      "desc": "AI phân tích ý nghĩa tên và sự hài hòa với Tứ Trụ. Sắp ra mắt!",
+      "features": [
+        "Phân tích ý nghĩa của tên",
+        "Độ tương hợp với Ngũ Hành",
+        "Gợi ý đổi tên và hướng đi",
+        "Gợi ý tên cho bé"
+      ]
+    }
+  }
+}

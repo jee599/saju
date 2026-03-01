@@ -1,0 +1,175 @@
+{
+  "steps": [
+    { "emoji": "📅", "label": "Menghitung kalender abadi" },
+    { "emoji": "☯", "label": "Menganalisis lima elemen" },
+    { "emoji": "⭐", "label": "Menempatkan sepuluh dewa" },
+    { "emoji": "📊", "label": "Menafsirkan siklus besar" },
+    { "emoji": "🤖", "label": "AI menghasilkan laporan" }
+  ],
+  "analyzing": "Menganalisis",
+  "preparing": "Mempersiapkan...",
+  "aiGenerating": "AI sedang menganalisis secara mendalam diagram BaZi unik Anda ✨",
+  "retry": "Coba lagi",
+  "confirmFail": "Konfirmasi pembayaran gagal.",
+  "reportFail": "Pembuatan laporan gagal.",
+  "genericError": "Terjadi kesalahan.",
+  "timeFormat": { "min": "mnt", "sec": "dtk" },
+  "pillarsVisual": {
+    "cols": ["Pilar Tahun", "Pilar Bulan", "Pilar Hari", "Pilar Jam"],
+    "heaven": "Batang Langit (天干)",
+    "earth": "Cabang Bumi (地支)"
+  },
+  "ohang": [
+    {
+      "ko": "Kayu (木)",
+      "season": "Musim Semi",
+      "direction": "Timur",
+      "organ": "Hati·Kantung Empedu",
+      "personality": "Pertumbuhan, kreativitas, inisiatif",
+      "description": [
+        "木 (Kayu) melambangkan energi musim semi — daya hidup yang merekah.",
+        "Ini adalah energi yang memulai hal baru dan mendorong pertumbuhan.",
+        "Orang dengan Kayu kuat bersifat progresif dan memiliki jiwa kepemimpinan,",
+        "namun jika kurang dapat menjadi kurang tegas atau mudah cemas."
+      ]
+    },
+    {
+      "ko": "Api (火)",
+      "season": "Musim Panas",
+      "direction": "Selatan",
+      "organ": "Jantung·Usus Halus",
+      "personality": "Semangat, ekspresi, ekspansi",
+      "description": [
+        "火 (Api) melambangkan energi panas musim panas — cahaya dan antusiasme.",
+        "Kaya dalam ekspresi emosional dan bersifat sosial.",
+        "Orang dengan Api kuat bersemangat dan karismatik,",
+        "namun jika berlebihan dapat menjadi impulsif atau mudah bergejolak emosinya."
+      ]
+    },
+    {
+      "ko": "Tanah (土)",
+      "season": "Peralihan musim",
+      "direction": "Pusat",
+      "organ": "Lambung·Limpa",
+      "personality": "Stabilitas, kepercayaan, toleransi",
+      "description": [
+        "土 (Tanah) melambangkan peralihan musim — energi penstabil yang menjaga pusat.",
+        "Berperan sebagai mediator dan fondasi dari semua lima elemen.",
+        "Orang dengan Tanah kuat dapat diandalkan dan berpikiran luas,",
+        "namun jika kurang dapat merasa tidak menentu dan sulit menemukan keseimbangan."
+      ]
+    },
+    {
+      "ko": "Logam (金)",
+      "season": "Musim Gugur",
+      "direction": "Barat",
+      "organ": "Paru-paru·Usus Besar",
+      "personality": "Ketegasan, keadilan, presisi",
+      "description": [
+        "金 (Logam) melambangkan energi musim gugur — panen dan pengaturan.",
+        "Melambangkan penilaian yang jernih dan kemampuan pelaksanaan.",
+        "Orang dengan Logam kuat berprinsip dan tegas,",
+        "namun jika berlebihan dapat menjadi keras kepala atau terjebak perfeksionisme."
+      ]
+    },
+    {
+      "ko": "Air (水)",
+      "season": "Musim Dingin",
+      "direction": "Utara",
+      "organ": "Ginjal·Kandung Kemih",
+      "personality": "Kebijaksanaan, fleksibilitas, kedalaman",
+      "description": [
+        "水 (Air) melambangkan ketenangan musim dingin — pemikiran mendalam dan kebijaksanaan.",
+        "Mengalir fleksibel, beradaptasi dengan wadah apa pun.",
+        "Orang dengan Air kuat cerdas dan sangat perceptif,",
+        "namun jika kurang dapat menjadi penakut atau kurang tekad."
+      ]
+    }
+  ],
+  "slides": [
+    {
+      "title": "Apa itu BaZi (Empat Pilar)?",
+      "content": [
+        "BaZi (四柱) berarti empat pilar tahun, bulan, hari, dan jam kelahiran.",
+        "Setiap pilar terdiri dari dua karakter — Batang Langit (天干) dan Cabang Bumi (地支),",
+        "totalnya delapan karakter — Delapan Karakter (八字).",
+        "Delapan karakter ini menyimpan cetak biru kepribadian, bakat, dan nasib Anda."
+      ]
+    },
+    {
+      "title": "Lima Elemen — Lima Kekuatan Alam Semesta",
+      "content": [
+        "Semua hal di alam semesta terdiri dari lima energi elemental: Kayu·Api·Tanah·Logam·Air.",
+        "Setiap elemen terhubung dengan musim, arah, warna, dan emosi.",
+        "Keseimbangan elemen-elemen ini dalam diagram BaZi menentukan watak bawaan Anda,",
+        "kekurangan atau kelebihan membentuk ritme nasib baik dan buruk."
+      ]
+    },
+    {
+      "title": "Siklus Menghasilkan — Hubungan yang Memelihara",
+      "content": [
+        "Kayu → Api: Kayu menjadi bahan bakar Api",
+        "Api → Tanah: Api membakar menjadi abu, membentuk Tanah",
+        "Tanah → Logam: Logam lahir di dalam Tanah",
+        "Logam → Air: Embun mengembun di permukaan Logam",
+        "Air → Kayu: Air menyuburkan Kayu untuk tumbuh"
+      ]
+    },
+    {
+      "title": "Siklus Mengendalikan — Hubungan yang Membatasi",
+      "content": [
+        "Kayu → Tanah: Akar pohon menembus dan memecah Tanah",
+        "Tanah → Air: Tanah membendung dan menghalangi Air",
+        "Air → Api: Air memadamkan Api",
+        "Api → Logam: Api melelehkan Logam",
+        "Logam → Kayu: Mata pisau (Logam) memotong Kayu"
+      ]
+    },
+    {
+      "title": "Batang Langit — Sepuluh Energi Langit",
+      "content": [
+        "Jiǎ·Yǐ → Kayu | Bǐng·Dīng → Api",
+        "Wù·Jǐ → Tanah | Gēng·Xīn → Logam",
+        "Rén·Guǐ → Air",
+        "Batang Yang (陽) bersifat aktif dan tegas; Batang Yin (陰) halus dan reseptif."
+      ]
+    },
+    {
+      "title": "Cabang Bumi — Dua Belas Energi Zodiak",
+      "content": [
+        "Zǐ(Tikus)·Chǒu(Kerbau)·Yín(Macan)·Mǎo(Kelinci)",
+        "Chén(Naga)·Sì(Ular)·Wǔ(Kuda)·Wèi(Kambing)",
+        "Shēn(Monyet)·Yǒu(Ayam)·Xū(Anjing)·Hài(Babi)",
+        "12 Cabang mewakili hewan, waktu, arah, dan musim sekaligus."
+      ]
+    },
+    {
+      "title": "Sepuluh Dewa — Hubungan Diri dengan Dunia",
+      "content": [
+        "Bi Jian·Jie Cai: rekan, pesaing (elemen sama dengan diri sendiri)",
+        "Shi Shen·Shang Guan: bakat, ekspresi (elemen yang dihasilkan diri sendiri)",
+        "Pian Cai·Zheng Cai: harta, ayah (elemen yang dikendalikan diri sendiri)",
+        "Pian Guan·Zheng Guan: karier, status (elemen yang mengendalikan diri sendiri)",
+        "Pian Yin·Zheng Yin: studi, ibu (elemen yang menghasilkan diri sendiri)"
+      ]
+    },
+    {
+      "title": "Siklus Besar — Ritme Utama 10 Tahun",
+      "content": [
+        "Siklus Besar (大運) membagi kehidupan menjadi bab-bab besar setiap 10 tahun.",
+        "Misalnya, Siklus Api di usia 30-an menandakan periode aktif dan penuh interaksi sosial;",
+        "Siklus Logam di usia 40-an menandakan waktu memanen pencapaian dan menata ulang.",
+        "Mengetahui Siklus Besar mana yang sedang berlaku adalah inti pembacaan nasib."
+      ]
+    },
+    {
+      "title": "Yong Shen — Kunci BaZi Anda",
+      "content": [
+        "Yong Shen (用神) adalah elemen terpenting untuk menyeimbangkan diagram BaZi Anda.",
+        "Seperti melengkapi nutrisi yang kurang untuk kesehatan yang baik,",
+        "memanfaatkan warna, arah, dan karier yang sesuai dengan Yong Shen Anda",
+        "konon dapat mengubah aliran nasib menjadi lebih menguntungkan."
+      ]
+    }
+  ]
+}

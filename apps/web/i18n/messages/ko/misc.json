@@ -1,0 +1,87 @@
+{
+  "freeFortune": {
+    "title": "무료 사주 분석",
+    "desc": "기본 정보를 입력하면 타고난 기질과 오행 분석을 무료로 받을 수 있습니다.",
+    "nameLabel": "이름",
+    "namePlaceholder": "홍길동",
+    "birthDateLabel": "생년월일",
+    "nextStep": "다음 단계",
+    "birthTimeLabel": "태어난 시간 (선택)",
+    "birthTimeHelp": "모르시면 비워두셔도 됩니다.",
+    "genderLabel": "성별",
+    "genderOther": "선택 안 함",
+    "genderMale": "남성",
+    "genderFemale": "여성",
+    "calendarLabel": "달력",
+    "calendarSolar": "양력",
+    "calendarLunar": "음력",
+    "prev": "이전",
+    "startAnalysis": "무료 분석 시작",
+    "loading": "로딩 중..."
+  },
+  "comingSoon": {
+    "emailPlaceholder": "출시 알림 받기",
+    "emailAria": "이메일 주소",
+    "notify": "알림",
+    "submitting": "...",
+    "submitted": "등록 완료! 출시 시 알려드릴게요.",
+    "emailError": "올바른 이메일을 입력해주세요.",
+    "registerFail": "등록 실패",
+    "ctaButton": "사주 분석은 지금 바로 가능합니다 →",
+    "dream": {
+      "emoji": "🌙",
+      "title": "꿈해몽",
+      "desc": "지난밤 꾼 꿈의 의미를 AI가 분석합니다. 곧 만나보세요!",
+      "features": [
+        "꿈 내용을 텍스트로 입력",
+        "사주와 연결한 개인화 해석",
+        "꿈의 상징과 메시지 분석",
+        "행운의 숫자와 방향 제시"
+      ]
+    },
+    "tarot": {
+      "emoji": "🃏",
+      "title": "AI 타로",
+      "desc": "타로 카드의 지혜를 AI가 해석합니다. 곧 만나보세요!",
+      "features": [
+        "원하는 질문에 맞춘 카드 배치",
+        "사주와 결합한 통합 해석",
+        "연애·직장·재물 맞춤 리딩",
+        "매일 한 장 데일리 타로"
+      ]
+    },
+    "palm": {
+      "emoji": "✋",
+      "title": "손금 분석",
+      "desc": "손금 사진을 촬영하면 AI가 분석합니다. 곧 만나보세요!",
+      "features": [
+        "손금 사진 촬영 → AI 인식",
+        "생명선·감정선·두뇌선 분석",
+        "사주와 교차 검증",
+        "미래 변화 포인트 제시"
+      ]
+    },
+    "face": {
+      "emoji": "😊",
+      "title": "관상 분석",
+      "desc": "얼굴 사진을 촬영하면 AI가 관상을 분석합니다. 곧 만나보세요!",
+      "features": [
+        "셀카 한 장으로 관상 분석",
+        "오관과 사주의 상관관계",
+        "인상이 주는 첫인상 분석",
+        "강점 강화 포인트 제안"
+      ]
+    },
+    "name": {
+      "emoji": "✍️",
+      "title": "작명/이름 풀이",
+      "desc": "이름의 의미와 사주와의 조화를 AI가 분석합니다. 곧 만나보세요!",
+      "features": [
+        "이름의 한자 의미 분석",
+        "사주 오행과의 궁합",
+        "개명 추천 및 방향 제시",
+        "아기 이름 추천 기능"
+      ]
+    }
+  }
+}

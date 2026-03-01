@@ -1,0 +1,175 @@
+{
+  "steps": [
+    { "emoji": "📅", "label": "Calculating pillars" },
+    { "emoji": "☯", "label": "Analyzing five elements" },
+    { "emoji": "⭐", "label": "Placing ten gods" },
+    { "emoji": "📊", "label": "Reading grand cycles" },
+    { "emoji": "🤖", "label": "AI generation" }
+  ],
+  "analyzing": "Analyzing",
+  "preparing": "Preparing...",
+  "aiGenerating": "AI is precisely analyzing your unique BaZi chart ✨",
+  "retry": "Try again",
+  "confirmFail": "Payment confirmation failed.",
+  "reportFail": "Report generation failed.",
+  "genericError": "An error occurred.",
+  "timeFormat": { "min": "min", "sec": "sec" },
+  "pillarsVisual": {
+    "cols": ["Year", "Month", "Day", "Hour"],
+    "heaven": "Heavenly Stem",
+    "earth": "Earthly Branch"
+  },
+  "ohang": [
+    {
+      "ko": "Wood",
+      "season": "Spring",
+      "direction": "East",
+      "organ": "Liver · Gallbladder",
+      "personality": "Growth, creativity, initiative",
+      "description": [
+        "木 (Wood) represents the energy of spring — the life force of all things sprouting.",
+        "It is the energy that begins new ventures and fosters growth.",
+        "Those strong in Wood are progressive and natural leaders,",
+        "but in deficiency may struggle with decisiveness or become overly anxious."
+      ]
+    },
+    {
+      "ko": "Fire",
+      "season": "Summer",
+      "direction": "South",
+      "organ": "Heart · Small Intestine",
+      "personality": "Passion, expression, expansion",
+      "description": [
+        "火 (Fire) represents the warm energy of summer — light and passion.",
+        "It is rich in emotional expression and sociable by nature.",
+        "Those strong in Fire are vibrant and charismatic,",
+        "but in excess may be impulsive or prone to mood swings."
+      ]
+    },
+    {
+      "ko": "Earth",
+      "season": "Between seasons",
+      "direction": "Center",
+      "organ": "Stomach · Spleen",
+      "personality": "Stability, trust, tolerance",
+      "description": [
+        "土 (Earth) represents seasonal transitions — the stabilizing energy that holds the center.",
+        "It serves as the mediator and foundation for all five elements.",
+        "Those strong in Earth are reliable and broad-minded,",
+        "but in deficiency may feel unsettled or struggle to find balance."
+      ]
+    },
+    {
+      "ko": "Metal",
+      "season": "Autumn",
+      "direction": "West",
+      "organ": "Lungs · Large Intestine",
+      "personality": "Decisiveness, justice, refinement",
+      "description": [
+        "金 (Metal) represents the energy of autumn — harvesting and organizing.",
+        "It symbolizes clear judgment and the ability to execute.",
+        "Those strong in Metal are principled and decisive,",
+        "but in excess may become rigid or fall into perfectionism."
+      ]
+    },
+    {
+      "ko": "Water",
+      "season": "Winter",
+      "direction": "North",
+      "organ": "Kidneys · Bladder",
+      "personality": "Wisdom, flexibility, depth",
+      "description": [
+        "水 (Water) represents the stillness of winter — deep thought and wisdom.",
+        "It adapts fluidly, filling whatever container it enters.",
+        "Those strong in Water are intelligent and highly perceptive,",
+        "but in deficiency may be fearful or lack willpower."
+      ]
+    }
+  ],
+  "slides": [
+    {
+      "title": "What is BaZi (Four Pillars)?",
+      "content": [
+        "BaZi (四柱) means the four pillars of birth year, month, day, and hour.",
+        "Each pillar consists of two characters — a Heavenly Stem (天干) and Earthly Branch (地支),",
+        "totaling eight characters — the Eight Characters (八字).",
+        "These eight characters encode the blueprint of your personality, talents, and destiny."
+      ]
+    },
+    {
+      "title": "Five Elements — The Five Forces of the Universe",
+      "content": [
+        "All things in the universe are composed of five elemental energies: Wood · Fire · Earth · Metal · Water.",
+        "Each element is linked to a season, direction, color, and emotion.",
+        "The balance of these elements in your BaZi chart defines your innate character,",
+        "and deficiencies or excesses shape the rhythms of good and challenging fortune."
+      ]
+    },
+    {
+      "title": "Generating Cycle — Relationships that Nurture",
+      "content": [
+        "Wood → Fire: Wood feeds Fire",
+        "Fire → Earth: Fire burns and becomes ash, forming Earth",
+        "Earth → Metal: Metal is born within Earth",
+        "Metal → Water: Dew condenses on Metal surfaces",
+        "Water → Wood: Water nourishes Wood to grow"
+      ]
+    },
+    {
+      "title": "Controlling Cycle — Relationships that Restrain",
+      "content": [
+        "Wood → Earth: Tree roots penetrate and break up Earth",
+        "Earth → Water: Earth dams and blocks Water",
+        "Water → Fire: Water extinguishes Fire",
+        "Fire → Metal: Fire melts Metal",
+        "Metal → Wood: The blade (Metal) cuts Wood"
+      ]
+    },
+    {
+      "title": "Heavenly Stems — Ten Energies of the Sky",
+      "content": [
+        "甲(jiǎ) · 乙(yǐ) → Wood | 丙(bǐng) · 丁(dīng) → Fire",
+        "戊(wù) · 己(jǐ) → Earth | 庚(gēng) · 辛(xīn) → Metal",
+        "壬(rén) · 癸(guǐ) → Water",
+        "Yang (陽) stems are active and assertive; Yin (陰) stems are subtle and receptive."
+      ]
+    },
+    {
+      "title": "Earthly Branches — Twelve Animal Energies",
+      "content": [
+        "子(Rat) · 丑(Ox) · 寅(Tiger) · 卯(Rabbit)",
+        "辰(Dragon) · 巳(Snake) · 午(Horse) · 未(Goat)",
+        "申(Monkey) · 酉(Rooster) · 戌(Dog) · 亥(Pig)",
+        "The 12 Branches represent animals, time, direction, and seasons all at once."
+      ]
+    },
+    {
+      "title": "Ten Gods — Your Relationship with the World",
+      "content": [
+        "Companion · Rob Wealth: peers, rivals (same element as self)",
+        "Eating God · Hurting Officer: talent, expression (element self generates)",
+        "Indirect Wealth · Direct Wealth: money, father (element self controls)",
+        "Indirect Officer · Direct Officer: career, status (element that controls self)",
+        "Indirect Resource · Direct Resource: study, mother (element that generates self)"
+      ]
+    },
+    {
+      "title": "Grand Cycle — The Major 10-Year Rhythm",
+      "content": [
+        "The Grand Cycle (大運) divides life into major 10-year chapters.",
+        "For example, a Fire Grand Cycle in your 30s signals an active, sociable period;",
+        "a Metal Grand Cycle in your 40s signals a time to harvest achievements and bring order.",
+        "Knowing which Grand Cycle you are in now is the core of reading fortune."
+      ]
+    },
+    {
+      "title": "Yong Shen — The Key to Your BaZi",
+      "content": [
+        "Yong Shen (用神) is the most important element for balancing your BaZi chart.",
+        "Just as good health requires supplementing missing nutrients,",
+        "utilizing the colors, directions, and careers aligned with your Yong Shen",
+        "is said to shift the flow of fortune in your favor."
+      ]
+    }
+  ]
+}

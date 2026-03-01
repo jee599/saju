@@ -1,0 +1,53 @@
+{
+  "eyebrow": "毎日無料",
+  "title": "今日の運勢",
+  "subtitle": "{date} · あなたの四柱推命で見る今日",
+  "inputTitle": "生年月日を入力してください",
+  "nameLabel": "名前",
+  "namePlaceholder": "山田太郎",
+  "birthDateLabel": "生年月日",
+  "viewFortune": "今日の運勢を見る",
+  "yourToday": "{name}さんの今日",
+  "todayEnergy": "今日の気: {emoji} {element}",
+  "weekdayFortune": "{weekday}曜日の運勢",
+  "todayAdvice": "今日のアドバイス",
+  "luckyColor": "ラッキーカラー",
+  "luckyDirection": "ラッキー方角",
+  "ctaTitle": "もっと詳しい四柱推命分析が気になりますか？",
+  "ctaDesc": "3万文字以上の専門AI四柱推命分析をお試しください。",
+  "ctaButton": "無料四柱推命分析を見る",
+  "tryAnother": "別の生年月日で見る",
+  "loading": "読み込み中...",
+  "defaultUser": "ユーザー",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  },
+  "colors": {
+    "wood": "緑", "fire": "赤", "earth": "黄色", "metal": "白/銀", "water": "青/黒"
+  },
+  "directions": {
+    "wood": "東", "fire": "南", "earth": "中央", "metal": "西", "water": "北"
+  },
+  "weekdays": ["日", "月", "火", "水", "木", "金", "土"],
+  "dayMessages": [
+    "日曜日、休息してエネルギーを充電しましょう。",
+    "月曜日、新しいスタートの気運があります。",
+    "火曜日、情熱的に動くのに良い日です。",
+    "水曜日、中間チェックで方向を確認しましょう。",
+    "木曜日、成長と拡大の気運が感じられます。",
+    "金曜日、実りを得るのに良い時間です。",
+    "土曜日、安定と調和を求めましょう。"
+  ],
+  "fortune": {
+    "same": "今日は{element}の気が倍増する日です。自分の本質に忠実であれば、良い結果が得られるでしょう。",
+    "sameAdvice": "自信を持って主体的に行動しましょう。",
+    "generates": "今日の{todayEl}の気はあなたの{myEl}から生まれます。創造的なエネルギーに溢れる一日です。",
+    "generatesAdvice": "新しいアイデアを実行に移すのに良い日です。",
+    "generatedBy": "{todayEl}の気があなたの{myEl}を助けてくれる日です。周りの助けを積極的に受け入れましょう。",
+    "generatedByAdvice": "協力とコミュニケーションが幸運の鍵です。",
+    "overcomes": "あなたの{myEl}の気が今日の{todayEl}をコントロールします。リーダーシップを発揮するのに良い日です。",
+    "overcomesAdvice": "積極的に動けば状況を有利に導けます。",
+    "overcomeBy": "今日の{todayEl}の気が強いので、無理しないでください。内面の力を養うことに集中しましょう。",
+    "overcomeByAdvice": "焦りよりも落ち着いた準備が必要な日です。"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "hero": {
+    "eyebrow": "FortuneLab — Ramalan Shio & Bazi",
+    "title": "Nasib Anda, Dianalisis oleh AI",
+    "copies": [
+      "MBTI punya 16 tipe. Bazi punya 518.400 kombinasi nasib.",
+      "Paranormal mahal, AI gratis — hasilnya sama tepatnya.",
+      "Tambahkan jam lahir untuk ramalan yang jauh lebih akurat.",
+      "Ramalan selalu berbeda tiap kali dicek? Karena siklus nasib terus berubah."
+    ]
+  },
+  "form": {
+    "step1Label": "Nama",
+    "namePlaceholder": "Masukkan nama Anda",
+    "nameAria": "Nama",
+    "step2Label": "Tanggal Lahir",
+    "solar": "Masehi",
+    "lunar": "Imlek",
+    "yearAria": "Tahun lahir",
+    "yearPlaceholder": "Tahun",
+    "yearSuffix": "",
+    "monthAria": "Bulan lahir",
+    "monthPlaceholder": "Bulan",
+    "monthSuffix": "",
+    "dayAria": "Tanggal lahir",
+    "dayPlaceholder": "Tanggal",
+    "daySuffix": "",
+    "step3Label": "Jam Lahir",
+    "skipTime": "Tidak tahu \u2192",
+    "unknownTime": "Tidak tahu",
+    "unknownTimeDesc": "Jika jam lahir tidak diketahui",
+    "step4Label": "Jenis Kelamin",
+    "male": "Pria",
+    "female": "Wanita",
+    "analyzing": "Sedang menganalisis...",
+    "startFree": "Mulai Ramalan Gratis"
+  },
+  "branches": [
+    { "label": "Jam Zi (子)", "time": "23:00~01:00" },
+    { "label": "Jam Chou (丑)", "time": "01:00~03:00" },
+    { "label": "Jam Yin (寅)", "time": "03:00~05:00" },
+    { "label": "Jam Mao (卯)", "time": "05:00~07:00" },
+    { "label": "Jam Chen (辰)", "time": "07:00~09:00" },
+    { "label": "Jam Si (巳)", "time": "09:00~11:00" },
+    { "label": "Jam Wu (午)", "time": "11:00~13:00" },
+    { "label": "Jam Wei (未)", "time": "13:00~15:00" },
+    { "label": "Jam Shen (申)", "time": "15:00~17:00" },
+    { "label": "Jam You (酉)", "time": "17:00~19:00" },
+    { "label": "Jam Xu (戌)", "time": "19:00~21:00" },
+    { "label": "Jam Hai (亥)", "time": "21:00~23:00" }
+  ],
+  "engine": {
+    "heading": "AI yang Membaca Nasib dari Tanggal Lahir",
+    "subheading": "Dapatkan analisis setingkat paranormal profesional kapan saja dan di mana saja. Kedalaman ilmu astrologi Tionghoa bertemu kemudahan AI — semua dalam satu platform.",
+    "pillars": [
+      {
+        "icon": "📐",
+        "title": "Akurasi Tinggi",
+        "subtitle": "Kalkulasi kalender astronomi yang presisi",
+        "desc": "Lulus 139 uji kasus dari kelahiran tahun 1930–2010 dengan akurasi 100%. Sistem otomatis menyesuaikan batas festival musiman, menghilangkan kesalahan perhitungan dari akarnya."
+      },
+      {
+        "icon": "📜",
+        "title": "Otentisitas",
+        "subtitle": "Referensi 5 kitab klasik Tionghoa",
+        "desc": "Berlandaskan kitab-kitab astrologi Tionghoa klasik yang telah teruji ratusan tahun, ditafsirkan secara sistematis oleh AI modern."
+      },
+      {
+        "icon": "⚡",
+        "title": "Kemudahan Akses",
+        "subtitle": "Analisis AI dalam 1 detik",
+        "desc": "Dari kalkulasi Bazi, analisis elemen, hingga penentuan bintang utama — AI menyelesaikannya dalam 1 detik. Cek ramalan kapan saja tanpa perlu menemui paranormal."
+      }
+    ],
+    "cta": "Lihat Laporan Ramalan Saya"
+  },
+  "pricing": {
+    "heading": "Mulai Gratis",
+    "subheading": "Analisis dasar sepenuhnya gratis. Jika ingin lebih lengkap, upgrade ke Premium untuk membuka seluruh ramalan.",
+    "free": {
+      "badge": "Gratis",
+      "title": "Analisis Dasar",
+      "price": "Rp0",
+      "features": [
+        "Analisis karakter oleh AI",
+        "Visualisasi keseimbangan 5 elemen",
+        "Kartu hari batang langit (日干)",
+        "Rasio Yin-Yang"
+      ]
+    },
+    "premium": {
+      "badge": "Premium",
+      "title": "Analisis Lengkap",
+      "price": "Rp49.000",
+      "features": [
+        "Termasuk semua analisis dasar",
+        "Laporan AI lebih dari 20.000 karakter",
+        "9 bagian (karakter, karier, asmara, keuangan, kesehatan, dll.)",
+        "Garis waktu nasib 10 tahun"
+      ],
+      "cta": "Mulai Gratis"
+    }
+  },
+  "faq": {
+    "heading": "Pertanyaan yang Sering Diajukan",
+    "items": [
+      {
+        "q": "Ramalan Shio & Bazi berdasarkan prinsip apa?",
+        "a": "Bazi adalah ilmu penanggalan Tionghoa yang menganalisis 4 pilar (tahun, bulan, tanggal, jam lahir) untuk membaca alur nasib seseorang. Sistem ini mengacu pada 5 kitab klasik yang telah diuji selama berabad-abad."
+      },
+      {
+        "q": "Apa perbedaan paket Gratis dan Premium?",
+        "a": "Paket Gratis mencakup analisis karakter AI, kartu hari, keseimbangan 5 elemen, dan rasio Yin-Yang. Paket Premium mencakup 9 bagian analisis mendalam: karakter, karier, asmara & keluarga, keuangan, kesehatan, masa lalu, masa kini, masa depan, dan garis waktu nasib."
+      },
+      {
+        "q": "Bagaimana AI menganalisis Bazi?",
+        "a": "Mesin penanggalan terlebih dahulu menghitung 4 pilar dan festival musiman secara presisi, kemudian AI seperti Claude/GPT menerapkan sistem tafsir dari kitab klasik untuk menghasilkan laporan yang dipersonalisasi."
+      },
+      {
+        "q": "Bagaimana jika tidak tahu jam lahir?",
+        "a": "Tetap bisa dianalisis, namun akurasi sedikit berkurang karena pilar jam tidak tersedia. Kami sarankan memeriksa akta kelahiran atau menanyakan kepada orang tua untuk hasil terbaik."
+      },
+      {
+        "q": "Apakah data pribadi saya aman?",
+        "a": "Kami hanya menggunakan tanggal lahir dan jenis kelamin. Nama hanya digunakan untuk tampilan laporan. Analisis gratis tidak memerlukan login, dan data dihapus otomatis setelah 90 hari."
+      },
+      {
+        "q": "Apakah ada nasib baik atau buruk dalam Bazi?",
+        "a": "Bazi tidak mengenal nasib mutlak baik atau buruk — hanya perbedaan karakter bawaan dan siklus waktu. Layanan ini memberikan interpretasi berbasis probabilitas dan tidak boleh dijadikan dasar keputusan medis, hukum, atau investasi."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Baca Nasib Anda Sekarang",
+    "subheading": "Mulai gratis — dapatkan laporan ramalan personal yang dianalisis oleh AI.",
+    "cta": "Mulai Ramalan Gratis"
+  }
+}

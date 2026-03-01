@@ -1,0 +1,53 @@
+{
+  "eyebrow": "Miễn phí hàng ngày",
+  "title": "Vận mệnh hôm nay",
+  "subtitle": "{date} · Xem vận mệnh hôm nay qua Tứ Trụ của bạn",
+  "inputTitle": "Nhập ngày sinh của bạn",
+  "nameLabel": "Họ tên",
+  "namePlaceholder": "Nguyễn Văn A",
+  "birthDateLabel": "Ngày sinh",
+  "viewFortune": "Xem vận mệnh hôm nay",
+  "yourToday": "Hôm nay của {name}",
+  "todayEnergy": "Năng lượng hôm nay: {emoji} {element}",
+  "weekdayFortune": "Vận mệnh {weekday}",
+  "todayAdvice": "Lời khuyên hôm nay",
+  "luckyColor": "Màu may mắn",
+  "luckyDirection": "Hướng may mắn",
+  "ctaTitle": "Muốn phân tích Tứ Trụ chi tiết hơn?",
+  "ctaDesc": "Nhận bản phân tích Tứ Trụ chuyên sâu bằng AI với hơn 30.000 ký tự.",
+  "ctaButton": "Xem phân tích Tứ Trụ miễn phí",
+  "tryAnother": "Thử ngày sinh khác",
+  "loading": "Đang tải...",
+  "defaultUser": "Người dùng",
+  "elements": {
+    "wood": "Mộc", "fire": "Hỏa", "earth": "Thổ", "metal": "Kim", "water": "Thủy"
+  },
+  "colors": {
+    "wood": "Xanh lá", "fire": "Đỏ", "earth": "Vàng", "metal": "Trắng/Bạc", "water": "Xanh dương/Đen"
+  },
+  "directions": {
+    "wood": "Đông", "fire": "Nam", "earth": "Trung tâm", "metal": "Tây", "water": "Bắc"
+  },
+  "weekdays": ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+  "dayMessages": [
+    "Chủ nhật, nghỉ ngơi và nạp lại năng lượng.",
+    "Thứ hai, khí vận khởi đầu mới đang đến.",
+    "Thứ ba, ngày tốt để hành động đầy nhiệt huyết.",
+    "Thứ tư, kiểm tra giữa tuần để điều chỉnh hướng đi.",
+    "Thứ năm, năng lượng tăng trưởng và mở rộng.",
+    "Thứ sáu, thời điểm tốt để gặt hái thành quả.",
+    "Thứ bảy, tìm kiếm sự ổn định và hài hòa."
+  ],
+  "fortune": {
+    "same": "Hôm nay năng lượng {element} tăng gấp đôi. Trung thành với bản chất của mình sẽ mang lại kết quả tốt.",
+    "sameAdvice": "Hãy tự tin và chủ động hành động.",
+    "generates": "Năng lượng {todayEl} hôm nay bắt nguồn từ {myEl} của bạn. Một ngày tràn đầy năng lượng sáng tạo.",
+    "generatesAdvice": "Ngày tốt để biến ý tưởng mới thành hành động.",
+    "generatedBy": "Năng lượng {todayEl} hỗ trợ {myEl} của bạn hôm nay. Hãy đón nhận sự giúp đỡ từ mọi người xung quanh.",
+    "generatedByAdvice": "Hợp tác và giao tiếp là chìa khóa may mắn.",
+    "overcomes": "Năng lượng {myEl} của bạn kiểm soát {todayEl} hôm nay. Ngày tốt để thể hiện khả năng lãnh đạo.",
+    "overcomesAdvice": "Chủ động hành động để dẫn dắt tình hình theo hướng có lợi.",
+    "overcomeBy": "Năng lượng {todayEl} hôm nay rất mạnh, đừng ép buộc bản thân. Hãy tập trung xây dựng sức mạnh nội tại.",
+    "overcomeByAdvice": "Chuẩn bị bình tĩnh tốt hơn là vội vàng."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "titleWithName": "Analisis Bazi {name}",
+  "titleDefault": "Laporan Analisis Bazi",
+  "backHome": "Beranda",
+  "error": "Kesalahan",
+  "loading": "Memuat...",
+  "notReady": "Laporan belum dibuat.",
+  "toc": "Daftar Isi",
+  "tocAria": "Daftar isi laporan",
+  "jumpNavAria": "Navigasi cepat laporan",
+  "checklist": "Daftar Tindakan",
+  "fetchFail": "Gagal memuat laporan"
+}

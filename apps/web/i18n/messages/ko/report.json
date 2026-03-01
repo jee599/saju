@@ -1,0 +1,13 @@
+{
+  "titleWithName": "{name}님의 사주 분석",
+  "titleDefault": "사주 분석 리포트",
+  "backHome": "메인으로",
+  "error": "오류",
+  "loading": "로딩중...",
+  "notReady": "리포트가 아직 생성되지 않았습니다.",
+  "toc": "목차",
+  "tocAria": "리포트 목차",
+  "jumpNavAria": "리포트 빠른 이동",
+  "checklist": "실행 체크리스트",
+  "fetchFail": "리포트 조회 실패"
+}

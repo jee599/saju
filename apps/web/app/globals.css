@@ -53,6 +53,9 @@
   --font-serif: "Noto Serif KR", Georgia, serif;
   --font-display: "Cormorant Garamond", "Noto Serif KR", Georgia, serif;
 
+  /* 배경 미드 */
+  --bg-gradient-mid: #2D1248;
+
   /* 이징 */
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -69,7 +72,7 @@ html, body {
 
 body {
   font-family: var(--font-sans);
-  background: linear-gradient(160deg, var(--bg-gradient-top) 0%, #2D1248 35%, var(--bg-gradient-bottom) 100%);
+  background: linear-gradient(160deg, var(--bg-gradient-top) 0%, var(--bg-gradient-mid) 35%, var(--bg-gradient-bottom) 100%);
   background-attachment: fixed;
   color: var(--t1);
   font-size: 16px;
@@ -2871,6 +2874,227 @@ p, li, label, input, select, button, textarea {
   font-size: 0.75rem;
   color: var(--t2);
   margin-top: 10px;
+}
+
+/* ══════════════════════════════════════════════════
+   Locale-Specific Theme Overrides
+   ══════════════════════════════════════════════════ */
+
+/* 🇰🇷 Korea — Rose Gold + Purple (default, inherits :root) */
+
+/* 🇺🇸 US/EN — Deep Purple + Teal + Copper */
+[data-locale="en"] {
+  --bg-gradient-top: #0D0B1A;
+  --bg-gradient-mid: #1A1640;
+  --bg-gradient-bottom: #0A0F14;
+  --bg-card: #141222;
+  --bg-card-glass: rgba(20, 18, 34, 0.65);
+  --accent: #64D8CB;
+  --accent-secondary: #B8A9D4;
+  --accent-gold: #C8956C;
+  --cta-from: #5B86E5;
+  --cta-to: #36D1DC;
+  --cta-glow: rgba(91, 134, 229, 0.3);
+  --glass-border: rgba(100, 216, 203, 0.08);
+  --card-border: rgba(100, 216, 203, 0.04);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+}
+
+/* 🇯🇵 Japan — Indigo + Cherry Blossom Pink */
+[data-locale="ja"] {
+  --bg-gradient-top: #0C0A1F;
+  --bg-gradient-mid: #241440;
+  --bg-gradient-bottom: #0A0814;
+  --bg-card: #171333;
+  --bg-card-glass: rgba(23, 19, 51, 0.65);
+  --accent: #E8A0BF;
+  --accent-secondary: #B8C4E8;
+  --accent-gold: #D4AF37;
+  --cta-from: #C77DBA;
+  --cta-to: #7B8FD4;
+  --cta-glow: rgba(199, 125, 186, 0.3);
+  --glass-border: rgba(232, 160, 191, 0.08);
+  --card-border: rgba(232, 160, 191, 0.04);
+  --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Noto Serif JP", Georgia, serif;
+  --font-display: "Noto Serif JP", Georgia, serif;
+}
+
+/* 🇨🇳 China — Imperial Red + Gold */
+[data-locale="zh"] {
+  --bg-gradient-top: #1A0A0A;
+  --bg-gradient-mid: #3D1010;
+  --bg-gradient-bottom: #0F0808;
+  --bg-card: #241414;
+  --bg-card-glass: rgba(36, 20, 20, 0.65);
+  --accent: #D4363C;
+  --accent-secondary: #F0D6A8;
+  --accent-gold: #D4A017;
+  --cta-from: #C43E42;
+  --cta-to: #D4A017;
+  --cta-glow: rgba(196, 62, 66, 0.3);
+  --glass-border: rgba(212, 54, 60, 0.08);
+  --card-border: rgba(212, 54, 60, 0.04);
+  --font-sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Noto Serif SC", Georgia, serif;
+  --font-display: "Noto Serif SC", Georgia, serif;
+}
+
+/* 🇹🇭 Thailand — Gold + Burgundy (Royal) */
+[data-locale="th"] {
+  --bg-gradient-top: #1A120A;
+  --bg-gradient-mid: #3D2510;
+  --bg-gradient-bottom: #0F0A06;
+  --bg-card: #241C12;
+  --bg-card-glass: rgba(36, 28, 18, 0.65);
+  --accent: #D4A830;
+  --accent-secondary: #E8D0A0;
+  --accent-gold: #D4A830;
+  --cta-from: #8B2252;
+  --cta-to: #D4A830;
+  --cta-glow: rgba(139, 34, 82, 0.3);
+  --glass-border: rgba(212, 168, 48, 0.08);
+  --card-border: rgba(212, 168, 48, 0.04);
+  --font-sans: "Noto Sans Thai", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Noto Sans Thai", Georgia, serif;
+  --font-display: "Noto Sans Thai", Georgia, serif;
+}
+
+/* 🇻🇳 Vietnam — Red + Yellow (National) */
+[data-locale="vi"] {
+  --bg-gradient-top: #1A0C0A;
+  --bg-gradient-mid: #3D1810;
+  --bg-gradient-bottom: #0F0806;
+  --bg-card: #241810;
+  --bg-card-glass: rgba(36, 24, 16, 0.65);
+  --accent: #D43D2F;
+  --accent-secondary: #F0C850;
+  --accent-gold: #E8B830;
+  --cta-from: #D43D2F;
+  --cta-to: #E8B830;
+  --cta-glow: rgba(212, 61, 47, 0.3);
+  --glass-border: rgba(212, 61, 47, 0.08);
+  --card-border: rgba(212, 61, 47, 0.04);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+}
+
+/* 🇮🇩 Indonesia — Teal + Gold (Batik-inspired) */
+[data-locale="id"] {
+  --bg-gradient-top: #0A1A18;
+  --bg-gradient-mid: #103D35;
+  --bg-gradient-bottom: #060F0E;
+  --bg-card: #122420;
+  --bg-card-glass: rgba(18, 36, 32, 0.65);
+  --accent: #30B8A0;
+  --accent-secondary: #E0C878;
+  --accent-gold: #D4A830;
+  --cta-from: #30B8A0;
+  --cta-to: #D4A830;
+  --cta-glow: rgba(48, 184, 160, 0.3);
+  --glass-border: rgba(48, 184, 160, 0.08);
+  --card-border: rgba(48, 184, 160, 0.04);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+}
+
+/* 🇮🇳 India — Saffron + Gold (Festival) */
+[data-locale="hi"] {
+  --bg-gradient-top: #1A100A;
+  --bg-gradient-mid: #3D2010;
+  --bg-gradient-bottom: #0F0A06;
+  --bg-card: #241A10;
+  --bg-card-glass: rgba(36, 26, 16, 0.65);
+  --accent: #E87D2F;
+  --accent-secondary: #F0D060;
+  --accent-gold: #D4A830;
+  --cta-from: #E87D2F;
+  --cta-to: #D4A830;
+  --cta-glow: rgba(232, 125, 47, 0.3);
+  --glass-border: rgba(232, 125, 47, 0.08);
+  --card-border: rgba(232, 125, 47, 0.04);
+  --font-sans: "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Noto Sans Devanagari", Georgia, serif;
+  --font-display: "Noto Sans Devanagari", Georgia, serif;
+}
+
+/* ── Language Selector ─────────────────────────────── */
+.languageSelector {
+  position: relative;
+}
+
+.languageSelectorBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-card-glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--t2);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+  white-space: nowrap;
+}
+.languageSelectorBtn:hover {
+  color: var(--t1);
+  border-color: var(--accent);
+}
+.languageSelectorBtn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s var(--ease-smooth);
+}
+.languageSelectorBtn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.languageDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 0;
+  z-index: 100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: dropdownIn 0.15s var(--ease-smooth);
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.languageOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  color: var(--t2);
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.languageOption:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--t1);
+}
+.languageOption[data-active="true"] {
+  color: var(--accent);
+}
+.languageOptionFlag {
+  font-size: 1.1rem;
 }
 
 /* ── Reduced Motion ──────────────────────────────── */

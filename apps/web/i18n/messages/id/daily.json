@@ -1,0 +1,53 @@
+{
+  "eyebrow": "Gratis Setiap Hari",
+  "title": "Ramalan Hari Ini",
+  "subtitle": "{date} · Ramalan hari ini berdasarkan Empat Pilar Anda",
+  "inputTitle": "Masukkan tanggal lahir Anda",
+  "nameLabel": "Nama",
+  "namePlaceholder": "Budi Santoso",
+  "birthDateLabel": "Tanggal Lahir",
+  "viewFortune": "Lihat Ramalan Hari Ini",
+  "yourToday": "Hari ini untuk {name}",
+  "todayEnergy": "Energi hari ini: {emoji} {element}",
+  "weekdayFortune": "Ramalan hari {weekday}",
+  "todayAdvice": "Saran Hari Ini",
+  "luckyColor": "Warna Keberuntungan",
+  "luckyDirection": "Arah Keberuntungan",
+  "ctaTitle": "Ingin analisis Empat Pilar yang lebih detail?",
+  "ctaDesc": "Dapatkan analisis Empat Pilar mendalam oleh AI dengan lebih dari 30.000 karakter.",
+  "ctaButton": "Lihat Analisis Empat Pilar Gratis",
+  "tryAnother": "Coba tanggal lahir lain",
+  "loading": "Memuat...",
+  "defaultUser": "Pengguna",
+  "elements": {
+    "wood": "Kayu", "fire": "Api", "earth": "Tanah", "metal": "Logam", "water": "Air"
+  },
+  "colors": {
+    "wood": "Hijau", "fire": "Merah", "earth": "Kuning", "metal": "Putih/Perak", "water": "Biru/Hitam"
+  },
+  "directions": {
+    "wood": "Timur", "fire": "Selatan", "earth": "Tengah", "metal": "Barat", "water": "Utara"
+  },
+  "weekdays": ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+  "dayMessages": [
+    "Hari Minggu, istirahat dan isi ulang energi Anda.",
+    "Hari Senin, energi awal baru sedang menghampiri.",
+    "Hari Selasa, hari yang baik untuk bertindak dengan semangat.",
+    "Hari Rabu, evaluasi pertengahan minggu untuk menyesuaikan arah.",
+    "Hari Kamis, energi pertumbuhan dan ekspansi terasa.",
+    "Hari Jumat, waktu yang tepat untuk menuai hasil.",
+    "Hari Sabtu, carilah stabilitas dan keharmonisan."
+  ],
+  "fortune": {
+    "same": "Hari ini energi {element} berlipat ganda. Tetap setia pada esensi diri Anda dan hasil baik akan mengikuti.",
+    "sameAdvice": "Percaya diri dan ambil inisiatif.",
+    "generates": "Energi {todayEl} hari ini bersumber dari {myEl} Anda. Hari yang penuh energi kreatif.",
+    "generatesAdvice": "Hari yang tepat untuk mewujudkan ide-ide baru.",
+    "generatedBy": "Energi {todayEl} mendukung {myEl} Anda hari ini. Terimalah bantuan dari orang-orang di sekitar Anda.",
+    "generatedByAdvice": "Kerja sama dan komunikasi adalah kunci keberuntungan.",
+    "overcomes": "Energi {myEl} Anda mengendalikan {todayEl} hari ini. Hari yang tepat untuk menunjukkan kepemimpinan.",
+    "overcomesAdvice": "Bertindak proaktif untuk mengarahkan situasi ke arah yang menguntungkan.",
+    "overcomeBy": "Energi {todayEl} hari ini sangat kuat, jangan memaksakan diri. Fokus membangun kekuatan dari dalam.",
+    "overcomeByAdvice": "Persiapan yang tenang lebih baik daripada terburu-buru."
+  }
+}

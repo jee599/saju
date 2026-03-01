@@ -17,10 +17,12 @@
     "@saju/shared": "workspace:*",
     "@tailwindcss/postcss": "^4.2.1",
     "next": "15.5.12",
+    "next-intl": "^4.8.3",
     "postcss": "^8.5.6",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "resend": "^6.9.3",
+    "stripe": "^20.4.0",
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
@@ -28,6 +30,7 @@
     "@types/node": "^22.10.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@types/stripe": "^8.0.417",
     "prisma": "^6",
     "typescript": "^5.6.3"
   }

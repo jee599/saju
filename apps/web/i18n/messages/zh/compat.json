@@ -1,0 +1,17 @@
+{
+  "title": "合婚分析",
+  "desc": "输入两人的出生日期，为你分析五行合婚。",
+  "myBirthDate": "我的出生日期",
+  "partnerBirthDate": "对方的出生日期",
+  "myBirthDateAria": "我的出生日期",
+  "partnerBirthDateAria": "对方的出生日期",
+  "viewCompat": "查看合婚",
+  "me": "我",
+  "partner": "对方",
+  "score": "{score}分",
+  "shareButton": "分享给对方",
+  "detailButton": "查看我的详细分析",
+  "shareText": "我们的合婚得分{score}分！你也来试试吧？\n{url}",
+  "shareTitle": "FortuneLab 合婚",
+  "loading": "合婚分析中..."
+}

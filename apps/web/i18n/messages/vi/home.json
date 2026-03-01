@@ -1,0 +1,138 @@
+{
+  "hero": {
+    "eyebrow": "FortuneLab — Tử Vi Bát Tự",
+    "title": "Lá số tử vi — Dữ liệu lớn của bạn",
+    "copies": [
+      "MBTI có 16 loại. Bát Tự có tới 518.400 lá số.",
+      "Thầy tử vi tính phí cao, AI miễn phí — cùng một kết quả.",
+      "Thêm giờ sinh, lá số sẽ chính xác hơn nhiều.",
+      "Xem tử vi lúc nào cũng khác? Vì vận hạn luôn thay đổi."
+    ]
+  },
+  "form": {
+    "step1Label": "Họ tên",
+    "namePlaceholder": "Nhập họ tên của bạn",
+    "nameAria": "Họ tên",
+    "step2Label": "Ngày tháng năm sinh",
+    "solar": "Dương lịch",
+    "lunar": "Âm lịch",
+    "yearAria": "Năm sinh",
+    "yearPlaceholder": "Năm",
+    "yearSuffix": "",
+    "monthAria": "Tháng sinh",
+    "monthPlaceholder": "Tháng",
+    "monthSuffix": "",
+    "dayAria": "Ngày sinh",
+    "dayPlaceholder": "Ngày",
+    "daySuffix": "",
+    "step3Label": "Giờ sinh",
+    "skipTime": "Không biết \u2192",
+    "unknownTime": "Không biết",
+    "unknownTimeDesc": "Khi không rõ giờ sinh",
+    "step4Label": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "analyzing": "Đang phân tích...",
+    "startFree": "Xem tử vi miễn phí"
+  },
+  "branches": [
+    { "label": "Giờ Tý (子)", "time": "23:00~01:00" },
+    { "label": "Giờ Sửu (丑)", "time": "01:00~03:00" },
+    { "label": "Giờ Dần (寅)", "time": "03:00~05:00" },
+    { "label": "Giờ Mão (卯)", "time": "05:00~07:00" },
+    { "label": "Giờ Thìn (辰)", "time": "07:00~09:00" },
+    { "label": "Giờ Tỵ (巳)", "time": "09:00~11:00" },
+    { "label": "Giờ Ngọ (午)", "time": "11:00~13:00" },
+    { "label": "Giờ Mùi (未)", "time": "13:00~15:00" },
+    { "label": "Giờ Thân (申)", "time": "15:00~17:00" },
+    { "label": "Giờ Dậu (酉)", "time": "17:00~19:00" },
+    { "label": "Giờ Tuất (戌)", "time": "19:00~21:00" },
+    { "label": "Giờ Hợi (亥)", "time": "21:00~23:00" }
+  ],
+  "engine": {
+    "heading": "AI Giải Mã Tử Vi Bát Tự",
+    "subheading": "Nhận phân tích chuyên sâu như từ thầy tử vi giỏi — không cần hẹn gặp. Chiều sâu học thuật kết hợp sự tiện lợi của AI, tất cả trong một.",
+    "pillars": [
+      {
+        "icon": "📐",
+        "title": "Độ chính xác",
+        "subtitle": "Tính toán lịch thiên văn chính xác tuyệt đối",
+        "desc": "Vượt qua 139 bộ kiểm tra vàng từ người sinh năm 1930–2010 với độ chính xác 100%. Hệ thống tự động hiệu chỉnh ranh giới tiết khí, loại bỏ sai số từ gốc."
+      },
+      {
+        "icon": "📜",
+        "title": "Tính chính thống",
+        "subtitle": "Tham chiếu 5 cổ thư kinh điển",
+        "desc": "Dựa trên Tích Thiên Tủy, Tử Bình Chân Thuyên và các kinh điển tử vi đã được kiểm chứng hàng trăm năm, được AI hiện đại diễn giải có hệ thống."
+      },
+      {
+        "icon": "⚡",
+        "title": "Tiện lợi tức thì",
+        "subtitle": "AI phân tích trong vòng 1 giây",
+        "desc": "Từ lập bát tự, luận ngũ hành, đến đoán dụng thần — AI hoàn tất trong 1 giây. Xem tử vi bất cứ lúc nào, không cần thầy bói."
+      }
+    ],
+    "cta": "Xem lá số của tôi"
+  },
+  "pricing": {
+    "heading": "Bắt đầu miễn phí",
+    "subheading": "Phân tích cơ bản hoàn toàn miễn phí. Nếu muốn xem chi tiết toàn bộ lá số, hãy nâng lên gói Premium.",
+    "free": {
+      "badge": "Miễn phí",
+      "title": "Phân tích cơ bản",
+      "price": "0₫",
+      "features": [
+        "Phân tích tính cách bởi AI",
+        "Biểu đồ cân bằng ngũ hành",
+        "Thẻ nhật can (日干)",
+        "Tỷ lệ âm dương"
+      ]
+    },
+    "premium": {
+      "badge": "Premium",
+      "title": "Phân tích toàn diện",
+      "price": "89.000₫",
+      "features": [
+        "Bao gồm toàn bộ phân tích cơ bản",
+        "Báo cáo AI dài hơn 20.000 ký tự",
+        "9 mục (tính cách, sự nghiệp, tình duyên, tài chính, sức khỏe…)",
+        "Lộ trình vận hạn 10 năm"
+      ],
+      "cta": "Bắt đầu miễn phí"
+    }
+  },
+  "faq": {
+    "heading": "Câu hỏi thường gặp",
+    "items": [
+      {
+        "q": "Tử Vi Bát Tự dựa trên nguyên lý gì?",
+        "a": "Đây là môn mệnh lý học phương Đông phân tích 4 trụ (năm, tháng, ngày, giờ sinh) để luận đoán vận mệnh. Hệ thống tham chiếu 5 cổ thư kinh điển đã được kiểm chứng qua nhiều thế kỷ."
+      },
+      {
+        "q": "Gói miễn phí và Premium khác nhau thế nào?",
+        "a": "Gói miễn phí cung cấp phân tích tính cách AI, nhật can, biểu đồ ngũ hành và tỷ lệ âm dương. Gói Premium bao gồm 9 mục phân tích chuyên sâu: tính cách, sự nghiệp, tình duyên & gia đình, tài chính, sức khỏe, quá khứ, hiện tại, tương lai và lộ trình vận hạn."
+      },
+      {
+        "q": "AI phân tích tử vi như thế nào?",
+        "a": "Công cụ tính lịch lập bát tự và tiết khí chính xác trước, sau đó AI như Claude/GPT áp dụng hệ thống diễn giải từ cổ thư để tạo báo cáo cá nhân hóa."
+      },
+      {
+        "q": "Không biết giờ sinh thì có xem được không?",
+        "a": "Vẫn xem được, nhưng độ chính xác giảm đôi chút vì thiếu trụ giờ. Bạn nên kiểm tra giấy khai sinh hoặc hỏi bố mẹ để có kết quả tốt nhất."
+      },
+      {
+        "q": "Thông tin cá nhân có được bảo mật không?",
+        "a": "Chúng tôi chỉ dùng ngày sinh và giới tính. Tên hiển thị chỉ dùng trong báo cáo. Xem miễn phí không cần đăng nhập, dữ liệu tự động xóa sau 90 ngày."
+      },
+      {
+        "q": "Lá số tử vi có tốt xấu không?",
+        "a": "Bát Tự không có tốt xấu tuyệt đối — chỉ có sự khác biệt về tính cách và vận hạn theo từng giai đoạn. Dịch vụ này cung cấp diễn giải xác suất, không dùng làm căn cứ cho quyết định y tế, pháp lý hay đầu tư."
+      }
+    ]
+  },
+  "finalCta": {
+    "heading": "Xem lá số tử vi của bạn ngay hôm nay",
+    "subheading": "Bắt đầu miễn phí — nhận báo cáo tử vi cá nhân hóa do AI phân tích.",
+    "cta": "Xem tử vi miễn phí"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "eyebrow": "Free Daily",
+  "title": "Today's Horoscope",
+  "subtitle": "{date} · Your destiny reading for today",
+  "inputTitle": "Enter your date of birth",
+  "nameLabel": "Name",
+  "namePlaceholder": "Rahul Sharma",
+  "birthDateLabel": "Date of Birth",
+  "viewFortune": "View Today's Horoscope",
+  "yourToday": "{name}'s Today",
+  "todayEnergy": "Today's Energy: {emoji} {element}",
+  "weekdayFortune": "{weekday} Horoscope",
+  "todayAdvice": "Today's Advice",
+  "luckyColor": "Lucky Colour",
+  "luckyDirection": "Lucky Direction",
+  "ctaTitle": "Want a more detailed destiny analysis?",
+  "ctaDesc": "Get a comprehensive AI-powered destiny analysis with over 30,000 characters of insight.",
+  "ctaButton": "View Free Destiny Analysis",
+  "tryAnother": "Try a different date of birth",
+  "loading": "Loading...",
+  "defaultUser": "User",
+  "elements": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  },
+  "colors": {
+    "wood": "Green", "fire": "Red", "earth": "Yellow", "metal": "White/Silver", "water": "Blue/Black"
+  },
+  "directions": {
+    "wood": "East", "fire": "South", "earth": "Centre", "metal": "West", "water": "North"
+  },
+  "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "dayMessages": [
+    "Sunday — take rest and recharge your energy.",
+    "Monday — a fresh start awaits you this week.",
+    "Tuesday — a wonderful day to act with full energy.",
+    "Wednesday — midweek check to realign your path.",
+    "Thursday — energies of growth and expansion are with you.",
+    "Friday — a great time to enjoy the fruits of your efforts.",
+    "Saturday — seek balance and harmony in your day."
+  ],
+  "fortune": {
+    "same": "Today, the energy of {element} is doubled for you. Stay true to yourself and good results shall follow.",
+    "sameAdvice": "Be confident and take charge of your actions.",
+    "generates": "Today's {todayEl} energy originates from your {myEl}. A day brimming with creative energy awaits you.",
+    "generatesAdvice": "An excellent day to turn your new ideas into reality.",
+    "generatedBy": "The energy of {todayEl} is supporting your {myEl} today. Welcome help from those around you.",
+    "generatedByAdvice": "Teamwork and good communication will bring you luck.",
+    "overcomes": "Your {myEl} energy is commanding today's {todayEl}. A fine day to demonstrate leadership.",
+    "overcomesAdvice": "Take the initiative and guide the situation to your advantage.",
+    "overcomeBy": "Today's {todayEl} energy is quite strong, so do not overexert yourself. Focus on building your inner strength.",
+    "overcomeByAdvice": "Patient preparation is better than rushing ahead today."
+  }
+}

@@ -1,17 +1,15 @@
 import { NextResponse } from 'next/server';
-import { isValidFortuneInput } from '@saju/shared';
+import { isValidFortuneInput, getCountryByLocale } from '@saju/shared';
 import { prisma } from '@saju/api/db';
 import type { CheckoutCreateRequest, OrderSummary } from '../../../../lib/types';
 
 /**
- * 테스트 모드: 단일 ₩5,900 고정 가격. 모델 선택 없음.
- * 나중에 원복 시 modelPrices 및 body.model 로직 복원.
+ * Generic checkout/create — used for Korean Toss (test mode) and fallback.
+ * For Stripe countries, the frontend uses /api/checkout/stripe/create instead.
  */
-const FIXED_PRICE = 5900;
-
 export async function POST(req: Request) {
   try {
-    const body = (await req.json()) as CheckoutCreateRequest;
+    const body = (await req.json()) as CheckoutCreateRequest & { locale?: string };
     if (!body?.input || body?.productCode !== 'full' || !isValidFortuneInput(body.input)) {
       return NextResponse.json(
         { ok: false, error: { code: 'INVALID_INPUT', message: '입력값이 유효하지 않습니다.' } },
@@ -19,7 +17,10 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1. Create FortuneRequest record
+    const locale = body.locale ?? 'ko';
+    const country = getCountryByLocale(locale);
+
+    // Create FortuneRequest record
     const fortuneRequest = await prisma.fortuneRequest.create({
       data: {
         name: body.input.name.trim(),
@@ -30,12 +31,17 @@ export async function POST(req: Request) {
       },
     });
 
-    // 2. Create Order record linked to the FortuneRequest
+    // Create Order record
     const order = await prisma.order.create({
       data: {
         requestId: fortuneRequest.id,
         productCode: body.productCode,
-        amountKrw: FIXED_PRICE,
+        amountKrw: country.currency === 'KRW' ? country.pricing.saju.premium : 0,
+        amount: country.pricing.saju.premium,
+        currency: country.currency,
+        countryCode: country.code,
+        locale,
+        paymentProvider: country.paymentProvider,
         status: 'created',
         email: body.email?.trim() || null,
       },

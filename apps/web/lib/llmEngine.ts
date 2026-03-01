@@ -1,5 +1,6 @@
 import type { FortuneInput, ModelReportDetail, ProductCode, ReportModel, ReportDetail } from "./types";
 import { buildLengthInfo, countReportChars } from "./reportLength";
+import { getCountryByLocale } from "@saju/shared";
 
 export const FIXED_JASI_NOTICE_KO =
   "※ 자시(23:00~01:00) 해석은 lunar-javascript 기본 규칙(초자시 기준)을 따릅니다. 전통/학파에 따라 초·후자시 기준이 다를 수 있으며, 본 리포트는 참고용입니다.";
@@ -433,20 +434,87 @@ export const hasGeminiKey = (): boolean => {
   return Boolean(process.env.GOOGLE_API_KEY);
 };
 
-/** 유료 전용 — 2섹션씩 4번 호출 (성격 제외, 연애+가족 합침) */
-const SECTION_CHUNKS: Array<Array<{ key: string; title: string }>> = [
+// ── Locale-aware section definitions ──────────────────────
+
+/** Personality section key/title per locale */
+export const getPersonalityDef = (locale: string) =>
+  locale === "ko"
+    ? { key: "성격", title: "성격" }
+    : { key: "personality", title: "Personality" };
+
+/** Korean section chunks */
+const SECTION_CHUNKS_KO: Array<Array<{ key: string; title: string }>> = [
   [{ key: "직업", title: "직업" }, { key: "연애·가족·배우자", title: "연애·가족·배우자" }],
   [{ key: "금전", title: "금전" }, { key: "건강", title: "건강" }],
   [{ key: "과거", title: "과거" }, { key: "현재", title: "현재" }],
   [{ key: "미래", title: "미래" }, { key: "대운 타임라인", title: "대운 타임라인" }],
 ];
 
-/** 실시간 연도를 반영한 섹션별 프롬프트 */
-const getSectionPrompts = (): Record<string, string> => {
+/** International section chunks (English keys) */
+const SECTION_CHUNKS_INTL: Array<Array<{ key: string; title: string }>> = [
+  [{ key: "career", title: "Career" }, { key: "love_family", title: "Love & Family" }],
+  [{ key: "finance", title: "Finance" }, { key: "health", title: "Health" }],
+  [{ key: "past", title: "Past" }, { key: "present", title: "Present" }],
+  [{ key: "future", title: "Future" }, { key: "fortune_timeline", title: "Life Timeline" }],
+];
+
+const getSectionChunks = (locale: string) =>
+  locale === "ko" ? SECTION_CHUNKS_KO : SECTION_CHUNKS_INTL;
+
+/** Per-locale disclaimers */
+const DISCLAIMERS: Record<string, string> = {
+  ko: "본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.",
+  ja: "本サービスは参考情報であり、医療・法律・投資判断の唯一の根拠として使用することはできません。",
+  zh: "本服务仅供参考，不能作为医疗、法律或投资决策的唯一依据。",
+  th: "บริการนี้เป็นข้อมูลอ้างอิงเท่านั้น ไม่สามารถใช้เป็นหลักฐานเดียวในการตัดสินใจทางการแพทย์ กฎหมาย หรือการลงทุน",
+  vi: "Dịch vụ này chỉ mang tính tham khảo, không thể dùng làm căn cứ duy nhất cho quyết định y tế, pháp lý hoặc đầu tư.",
+  id: "Layanan ini hanya untuk referensi dan tidak dapat digunakan sebagai dasar tunggal untuk keputusan medis, hukum, atau investasi.",
+  en: "This service is for reference only and should not be used as the sole basis for medical, legal, or investment decisions.",
+  hi: "This service is for reference only and should not be used as the sole basis for medical, legal, or investment decisions.",
+};
+
+const getDisclaimer = (locale: string) => DISCLAIMERS[locale] ?? DISCLAIMERS.en!;
+
+/** Language map for i18n prompts */
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: "English", ja: "Japanese (日本語)", zh: "Simplified Chinese (简体中文)",
+  th: "Thai (ภาษาไทย)", vi: "Vietnamese (tiếng Việt)",
+  id: "Indonesian (Bahasa Indonesia)", hi: "English (for Hindi-speaking Indian audience)",
+};
+
+/** International system prompt with cultural context */
+const getI18nSystemPrompt = (locale: string, country: import("@saju/shared").CountryConfig) => {
+  const targetLang = LANGUAGE_NAMES[locale] ?? "English";
+  const ctx = country.culturalContext;
+  return (
+    `You are a world-class K-Saju (Korean Four Pillars) destiny reading expert and life counselor with over 20 years of experience.\n\n` +
+    `## Cultural Framework\n` +
+    `- ${ctx.framework}\n` +
+    `- Terminology: ${ctx.terminology}\n` +
+    `- Advice style: ${ctx.culturalTips}\n` +
+    `- Sensitivities: ${ctx.sensitivities}\n\n` +
+    `## Language & Writing Style\n` +
+    `- Write ALL output in ${targetLang}.\n` +
+    `- Tone: ${country.llmTone}\n` +
+    `- ${ctx.writingStyle}\n` +
+    `- CRITICAL: Write as a NATIVE ${targetLang} speaker. Do NOT translate from English or any other language. Use natural ${targetLang} expressions, idioms, proverbs, and sentence structures that feel authentic to a native reader.\n\n` +
+    `## Core Principles\n` +
+    `1. **Plain language**: Never use raw Four Pillars jargon (Day Master, Heavenly Stems, Earthly Branches, etc.) directly. Use nature metaphors (water, fire, wood, earth, metal) to explain concepts.\n` +
+    `2. **Specific descriptions**: Use vivid metaphors, concrete situational examples, and actionable life tips.\n` +
+    `3. **Personalized**: Address the person by name in a warm 1-on-1 counseling tone.\n` +
+    `4. **Balanced perspective**: Praise strengths specifically, present cautions with positive alternatives.\n` +
+    `5. **Practical advice**: Include 2-3 actionable tips at the end of each section.\n` +
+    `6. **No absolutes**: Avoid medical/legal/investment assertions, fear-mongering, or excessive certainty.\n` +
+    `7. **Output format**: Output ONLY valid JSON (no markdown, no extra text).`
+  );
+};
+
+/** Korean section prompts (실시간 연도 반영) */
+const getSectionPromptsKo = (): Record<string, string> => {
   const now = new Date();
   const year = now.getFullYear();
   const nextYear = year + 1;
-  const month = now.getMonth() + 1; // 1~12
+  const month = now.getMonth() + 1;
   return {
     "성격": "타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.",
     "직업": "적합한 직업군, 일하는 스타일, 리더십/팔로워십 특성, 직장에서의 강점과 주의점. 추천 업종/직종 3~5가지와 이유. 사업 적합성.",
@@ -460,36 +528,152 @@ const getSectionPrompts = (): Record<string, string> => {
   };
 };
 
+/** Per-locale cultural additions to section guides */
+const SECTION_CULTURAL_ADDITIONS: Record<string, Partial<Record<string, string>>> = {
+  en: {
+    career: "Consider American work culture: career pivots, entrepreneurship, side hustles, work-life balance, remote work trends.",
+    love_family: "Frame relationship advice in modern dating context: communication styles, attachment theory, boundary-setting.",
+    health: "Include wellness trends: mindfulness, therapy, fitness routines, nutrition science.",
+  },
+  ja: {
+    career: "日本の職場文化を考慮：終身雇用の変化、転職トレンド、ワークライフバランス、副業、フリーランス。",
+    love_family: "日本の結婚観：晩婚化、パートナーシップの多様化、義実家関係、共働きの課題。",
+    health: "季節の変わり目の体調管理、温泉・入浴文化、和食の養生法。",
+    finance: "日本の金融環境：NISA、iDeCo、円安の影響、老後資金2000万円問題。",
+  },
+  zh: {
+    career: "考虑中国职场文化：体制内vs体制外、创业浪潮、副业经济、35岁焦虑。",
+    love_family: "中国婚恋观：彩礼/嫁妆文化、房产问题、催婚压力、婆媳关系。",
+    finance: "中国理财环境：房产投资、基金股票、创业机会、存款习惯。",
+    health: "中医养生建议：食疗、穴位按摩、四季养生、体质调理。",
+  },
+  th: {
+    career: "อาชีพในบริบทไทย：ธุรกิจส่วนตัว/ค้าขาย、ราชการ、สตาร์ทอัพ、อาชีพอิสระ",
+    love_family: "วัฒนธรรมครอบครัวไทย：ความกตัญญู、การดูแลพ่อแม่、สินสอด、ความเชื่อเรื่องวันแต่งงาน",
+    health: "สุขภาพแบบไทย：สมุนไพรไทย、นวดแผนโบราณ、อาหารตามธาตุ",
+    finance: "การเงินในบริบทไทย：ทอง/ที่ดิน、ธุรกิจ SME、กองทุนรวม、หวย/โชคลาภ",
+  },
+  vi: {
+    career: "Bối cảnh nghề nghiệp Việt Nam：kinh doanh gia đình、công chức、startup、xuất khẩu lao động。",
+    love_family: "Văn hóa gia đình Việt：thờ cúng tổ tiên、hiếu thảo、sính lễ、mẹ chồng-nàng dâu。",
+    health: "Y học cổ truyền Việt：thuốc nam、châm cứu、dưỡng sinh theo mùa。",
+    finance: "Tài chính Việt Nam：vàng、bất động sản、gửi tiết kiệm、buôn bán nhỏ。",
+  },
+  id: {
+    career: "Konteks karir Indonesia: bisnis keluarga, PNS/ASN, startup, UMKM, kerja di luar negeri.",
+    love_family: "Budaya keluarga Indonesia: restu orang tua, mas kawin/mahar, keharmonisan keluarga besar.",
+    health: "Kesehatan khas Indonesia: jamu tradisional, pijat refleksi, makanan sehat Nusantara.",
+    finance: "Keuangan Indonesia: emas/properti, reksadana, usaha sampingan, arisan.",
+  },
+  hi: {
+    career: "Indian career context: family business, IT/engineering preference, government jobs (sarkari naukri), startup ecosystem, NRI opportunities.",
+    love_family: "Indian family dynamics: arranged vs love marriage, joint family system, in-law relationships, dowry sensitivity, family honour.",
+    health: "Ayurvedic wellness: dosha balance, yoga, pranayama, seasonal diet (ritucharya), gemstone therapy.",
+    finance: "Indian financial context: gold investment, real estate, FDs, SIPs/mutual funds, family financial obligations.",
+  },
+};
+
+/** International section prompts with cultural additions */
+const getSectionPromptsIntl = (locale: string): Record<string, string> => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const nextYear = year + 1;
+  const month = now.getMonth() + 1;
+  const base: Record<string, string> = {
+    "career": "Suitable career paths, work style, leadership qualities, strengths and cautions at work. 3-5 recommended industries/roles with reasons. Business aptitude.",
+    "love_family": "Dating style, love language, ideal partner traits. Family dynamics, parent relationships, spouse fortune, marriage characteristics, children fortune. Conflict resolution tips.",
+    "finance": "Wealth flow patterns, attitude toward money, spending habits, savings/investment tendencies. Income channels and financial blind spots.",
+    "health": "Constitutional traits, health areas requiring attention, how stress manifests physically, seasonal care tips. Recommended exercises, foods, and habits.",
+    "past": "Interpretation of past periods: childhood, school years, twenties challenges and growth, major turning points.",
+    "present": `${year}-${nextYear} fortune flow. Current date: ${year}/${month}. Three key themes for this year, cautious periods, opportunity windows, 3 actions to start this month.`,
+    "future": `From ${year}, 3-5 year outlook (${year+1}-${year+5}): career/wealth/relationship trajectory, major opportunities and preparation.`,
+    "fortune_timeline": "Decade-by-decade life fortune flow: core theme, characteristics, cautions, and advice from teens through eighties.",
+  };
+
+  // Merge cultural additions for this locale
+  const additions = SECTION_CULTURAL_ADDITIONS[locale];
+  if (additions) {
+    for (const [key, addition] of Object.entries(additions)) {
+      if (base[key] && addition) {
+        base[key] += `\n\nCultural context: ${addition}`;
+      }
+    }
+  }
+  return base;
+};
+
+/** Get section prompts based on locale */
+const getSectionPromptsForLocale = (locale: string) =>
+  locale === "ko" ? getSectionPromptsKo() : getSectionPromptsIntl(locale);
+
+/** Get report fallback texts */
+export const getReportTexts = (locale: string, name: string, sectionCount: number) => ({
+  headline: locale === "ko"
+    ? `${name}님 사주 분석 리포트`
+    : `${name}'s K-Saju Analysis Report`,
+  summary: locale === "ko"
+    ? `${sectionCount}개 섹션 분석 완료`
+    : `${sectionCount} section analysis complete`,
+  disclaimer: getDisclaimer(locale),
+});
+
 /** 무료 성격 1섹션만 GPT-mini로 생성 */
 export const generateFreePersonality = async (params: {
   input: FortuneInput;
+  locale?: string;
 }): Promise<{ section: { key: string; title: string; text: string }; usage?: LlmUsage }> => {
-  const { input } = params;
+  const { input, locale = "ko" } = params;
+  const pDef = getPersonalityDef(locale);
 
-  const system =
-    "당신은 한국 최고의 사주명리학자이자 인생 상담 전문가입니다. 20년 이상의 상담 경험을 바탕으로, 사주팔자를 깊이 분석하여 의뢰인에게 실질적으로 도움이 되는 따뜻하고 통찰력 있는 글을 작성합니다.\n\n" +
-    "## 핵심 원칙\n" +
-    "1. 사주 전문용어(일간, 천간, 지지, 비견, 식신, 정관 등)를 절대 그대로 쓰지 마세요. 자연물 비유(물, 불, 나무, 땅, 금속)로 풀어 설명하세요.\n" +
-    "2. 구체적 상황 예시를 들어 공감을 이끌어내세요.\n" +
-    "3. 각 섹션 끝에 실천 가능한 행동 팁 2~3개를 포함하세요.\n" +
-    "4. 문체: 존댓말, 따뜻하고 친근한 톤. 이름을 직접 호명하며 1:1 상담처럼 작성.\n" +
-    "5. 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신, 한자 남발\n" +
-    "6. 출력: 반드시 JSON 형식으로만 출력하세요.";
+  let system: string;
+  let userPrompt: string;
 
-  const userPrompt =
-    `사용자 정보: ${JSON.stringify(input)}\n\n` +
-    `위 사용자의 사주를 바탕으로 "성격" 섹션을 작성해 주세요.\n\n` +
-    `## 성격\n` +
-    `타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.\n\n` +
-    `### 작성 규칙\n` +
-    `- 최소 2000자 이상 작성하세요.\n` +
-    `- 여러 문단으로 나눠서 풍성하게 작성하세요 (최소 4~6문단).\n` +
-    `- 사주 전문용어 대신 자연물 비유(물, 불, 나무, 땅, 금속)로 쉽게 설명하세요.\n` +
-    `- 구체적인 상황 예시를 들어 '아, 나 그래!' 하고 공감할 수 있게 쓰세요.\n` +
-    `- 끝에 실천 가능한 구체적 행동 팁 2~3가지를 포함하세요.\n` +
-    `- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 존댓말을 사용하세요.\n\n` +
-    `반드시 아래 JSON 형식으로만 출력하세요:\n` +
-    `{"sections":[{"key":"성격","title":"성격","text":"본문..."}]}`;
+  if (locale === "ko") {
+    system =
+      "당신은 한국 최고의 사주명리학자이자 인생 상담 전문가입니다. 20년 이상의 상담 경험을 바탕으로, 사주팔자를 깊이 분석하여 의뢰인에게 실질적으로 도움이 되는 따뜻하고 통찰력 있는 글을 작성합니다.\n\n" +
+      "## 핵심 원칙\n" +
+      "1. 사주 전문용어(일간, 천간, 지지, 비견, 식신, 정관 등)를 절대 그대로 쓰지 마세요. 자연물 비유(물, 불, 나무, 땅, 금속)로 풀어 설명하세요.\n" +
+      "2. 구체적 상황 예시를 들어 공감을 이끌어내세요.\n" +
+      "3. 각 섹션 끝에 실천 가능한 행동 팁 2~3개를 포함하세요.\n" +
+      "4. 문체: 존댓말, 따뜻하고 친근한 톤. 이름을 직접 호명하며 1:1 상담처럼 작성.\n" +
+      "5. 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신, 한자 남발\n" +
+      "6. 출력: 반드시 JSON 형식으로만 출력하세요.";
+
+    userPrompt =
+      `사용자 정보: ${JSON.stringify(input)}\n\n` +
+      `위 사용자의 사주를 바탕으로 "성격" 섹션을 작성해 주세요.\n\n` +
+      `## 성격\n` +
+      `타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.\n\n` +
+      `### 작성 규칙\n` +
+      `- 최소 2000자 이상 작성하세요.\n` +
+      `- 여러 문단으로 나눠서 풍성하게 작성하세요 (최소 4~6문단).\n` +
+      `- 사주 전문용어 대신 자연물 비유(물, 불, 나무, 땅, 금속)로 쉽게 설명하세요.\n` +
+      `- 구체적인 상황 예시를 들어 '아, 나 그래!' 하고 공감할 수 있게 쓰세요.\n` +
+      `- 끝에 실천 가능한 구체적 행동 팁 2~3가지를 포함하세요.\n` +
+      `- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 존댓말을 사용하세요.\n\n` +
+      `반드시 아래 JSON 형식으로만 출력하세요:\n` +
+      `{"sections":[{"key":"성격","title":"성격","text":"본문..."}]}`;
+  } else {
+    const country = getCountryByLocale(locale);
+    system = getI18nSystemPrompt(locale, country);
+    const targetLang = LANGUAGE_NAMES[locale] ?? "English";
+
+    userPrompt =
+      `User information: ${JSON.stringify(input)}\n\n` +
+      `Based on this person's K-Saju (Korean Four Pillars) reading, write a "Personality" section.\n\n` +
+      `## Personality\n` +
+      `Innate personality traits, strengths and weaknesses, interpersonal style, emotional expression, stress coping patterns. The contrast between first impressions and deeper understanding.\n\n` +
+      `### Writing Rules\n` +
+      `- Write at least 2000 characters.\n` +
+      `- Use multiple paragraphs (at least 4-6).\n` +
+      `- Use nature metaphors (water, fire, wood, earth, metal) instead of technical jargon.\n` +
+      `- Include specific situational examples that create an "ah, that's so me!" feeling.\n` +
+      `- End with 2-3 actionable tips.\n` +
+      `- Use warm, friendly, polite language.\n\n` +
+      `IMPORTANT: You are writing for a native ${targetLang} reader. Do NOT translate from English — compose original text in ${targetLang} using natural grammar, local idioms, and culturally resonant expressions.\n\n` +
+      `Output ONLY this JSON format:\n` +
+      `{"sections":[{"key":"personality","title":"Personality","text":"content..."}]}`;
+  }
 
   const res = await callLlm({
     model: "gpt",
@@ -507,7 +691,7 @@ export const generateFreePersonality = async (params: {
   if (!section?.text) throw new Error("FREE_PERSONALITY_PARSE_FAILED");
 
   return {
-    section: { key: "성격", title: "성격", text: String(section.text) },
+    section: { key: pDef.key, title: pDef.title, text: String(section.text) },
     usage: res.usage,
   };
 };
@@ -517,8 +701,10 @@ export const generateChunkedReport = async (params: {
   input: FortuneInput;
   productCode: ProductCode;
   targetModel: string; // "opus" | "gemini-flash" | "haiku" | "gpt-mini"
+  locale?: string;
 }): Promise<ModelReportDetail & { totalCostUsd: number }> => {
   const { orderId, input, productCode, targetModel } = params;
+  const locale = params.locale ?? "ko";
   // 2섹션 묶음당 목표: 각 섹션 2000자 × 2 = 4000자
   const charPerChunk = 4000;
   // Claude 토크나이저는 한국어 1자당 ~1.5-2.5 토큰 소비 → 6000으로는 부족
@@ -556,19 +742,23 @@ export const generateChunkedReport = async (params: {
     anthropicModelId = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
   }
 
-  const system =
-    "당신은 한국 최고의 사주명리학자이자 인생 상담 전문가입니다. 20년 이상의 상담 경험을 바탕으로, 사주팔자를 깊이 분석하여 의뢰인에게 실질적으로 도움이 되는 따뜻하고 통찰력 있는 글을 작성합니다.\n\n" +
-    "## 핵심 원칙\n" +
-    "1. 사주 전문용어(일간, 천간, 지지, 비견, 식신, 정관 등)를 절대 그대로 쓰지 마세요. 자연물 비유(물, 불, 나무, 땅, 금속)로 풀어 설명하세요.\n" +
-    "2. 구체적 상황 예시를 들어 공감을 이끌어내세요.\n" +
-    "3. 각 섹션 끝에 실천 가능한 행동 팁 2~3개를 포함하세요.\n" +
-    "4. 문체: 존댓말, 따뜻하고 친근한 톤. 이름을 직접 호명하며 1:1 상담처럼 작성.\n" +
-    "5. 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신, 한자 남발\n" +
-    "6. 출력: 반드시 JSON 형식으로만 출력하세요.";
+  const system = locale === "ko"
+    ? (
+      "당신은 한국 최고의 사주명리학자이자 인생 상담 전문가입니다. 20년 이상의 상담 경험을 바탕으로, 사주팔자를 깊이 분석하여 의뢰인에게 실질적으로 도움이 되는 따뜻하고 통찰력 있는 글을 작성합니다.\n\n" +
+      "## 핵심 원칙\n" +
+      "1. 사주 전문용어(일간, 천간, 지지, 비견, 식신, 정관 등)를 절대 그대로 쓰지 마세요. 자연물 비유(물, 불, 나무, 땅, 금속)로 풀어 설명하세요.\n" +
+      "2. 구체적 상황 예시를 들어 공감을 이끌어내세요.\n" +
+      "3. 각 섹션 끝에 실천 가능한 행동 팁 2~3개를 포함하세요.\n" +
+      "4. 문체: 존댓말, 따뜻하고 친근한 톤. 이름을 직접 호명하며 1:1 상담처럼 작성.\n" +
+      "5. 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신, 한자 남발\n" +
+      "6. 출력: 반드시 JSON 형식으로만 출력하세요."
+    )
+    : getI18nSystemPrompt(locale, getCountryByLocale(locale));
 
   const inputJson = JSON.stringify(input);
   const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
-  const sectionPrompts = getSectionPrompts(); // 실시간 연도 반영
+  const sectionPrompts = getSectionPromptsForLocale(locale);
+  const sectionChunks = getSectionChunks(locale);
 
   /** 단일 청크 호출 + 파싱 (1회 시도) */
   const callAndParseChunk = async (
@@ -579,20 +769,41 @@ export const generateChunkedReport = async (params: {
     const guide1 = sectionPrompts[sec1.title] ?? "";
     const guide2 = sectionPrompts[sec2.title] ?? "";
 
-    const userPrompt =
-      `사용자 정보: ${inputJson}\n\n` +
-      `위 사용자의 사주를 바탕으로 아래 2개 섹션을 작성해 주세요.\n\n` +
-      `## 섹션 1: "${sec1.title}"\n${guide1}\n\n` +
-      `## 섹션 2: "${sec2.title}"\n${guide2}\n\n` +
-      `### 작성 규칙\n` +
-      `- 이것은 유료 프리미엄 리포트입니다. 각 섹션을 최소 2000자 이상 작성하세요.\n` +
-      `- 여러 문단으로 나눠서 풍성하게 작성하세요 (섹션당 최소 4~6문단).\n` +
-      `- 사주 전문용어 대신 자연물 비유(물, 불, 나무, 땅, 금속)로 쉽게 설명하세요.\n` +
-      `- 구체적인 상황 예시를 들어 '아, 나 그래!' 하고 공감할 수 있게 쓰세요.\n` +
-      `- 각 섹션 끝에 실천 가능한 구체적 행동 팁 2~3가지를 포함하세요.\n` +
-      `- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 존댓말을 사용하세요.\n\n` +
-      `반드시 아래 JSON 형식으로만 출력하세요:\n` +
-      `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"본문..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"본문..."}]}`;
+    const userPrompt = locale === "ko"
+      ? (
+        `사용자 정보: ${inputJson}\n\n` +
+        `위 사용자의 사주를 바탕으로 아래 2개 섹션을 작성해 주세요.\n\n` +
+        `## 섹션 1: "${sec1.title}"\n${guide1}\n\n` +
+        `## 섹션 2: "${sec2.title}"\n${guide2}\n\n` +
+        `### 작성 규칙\n` +
+        `- 이것은 유료 프리미엄 리포트입니다. 각 섹션을 최소 2000자 이상 작성하세요.\n` +
+        `- 여러 문단으로 나눠서 풍성하게 작성하세요 (섹션당 최소 4~6문단).\n` +
+        `- 사주 전문용어 대신 자연물 비유(물, 불, 나무, 땅, 금속)로 쉽게 설명하세요.\n` +
+        `- 구체적인 상황 예시를 들어 '아, 나 그래!' 하고 공감할 수 있게 쓰세요.\n` +
+        `- 각 섹션 끝에 실천 가능한 구체적 행동 팁 2~3가지를 포함하세요.\n` +
+        `- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 존댓말을 사용하세요.\n\n` +
+        `반드시 아래 JSON 형식으로만 출력하세요:\n` +
+        `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"본문..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"본문..."}]}`
+      )
+      : (() => {
+        const tLang = LANGUAGE_NAMES[locale] ?? "English";
+        return (
+        `User information: ${inputJson}\n\n` +
+        `Based on this person's K-Saju (Korean Four Pillars) reading, write the following 2 sections.\n\n` +
+        `## Section 1: "${sec1.title}"\n${guide1}\n\n` +
+        `## Section 2: "${sec2.title}"\n${guide2}\n\n` +
+        `### Writing Rules\n` +
+        `- This is a premium paid report. Write each section with at least 2000 characters.\n` +
+        `- Use multiple paragraphs (at least 4-6 per section).\n` +
+        `- Use nature metaphors (water, fire, wood, earth, metal) instead of technical jargon.\n` +
+        `- Include specific situational examples that create an "ah, that's so me!" feeling.\n` +
+        `- End each section with 2-3 actionable tips.\n` +
+        `- Use warm, friendly, polite language.\n\n` +
+        `IMPORTANT: You are writing for a native ${tLang} reader. Do NOT translate from English — compose original text in ${tLang} using natural grammar, local idioms, and culturally resonant expressions.\n\n` +
+        `Output ONLY this JSON format:\n` +
+        `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"content..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"content..."}]}`
+        );
+      })();
 
     const res = await callLlm({
       model: llmModel, system, user: userPrompt,
@@ -664,7 +875,7 @@ export const generateChunkedReport = async (params: {
   };
 
   // 2섹션씩 4번 **병렬** 호출 (Promise.all) + 개별 청크 재시도
-  const chunkResults = await Promise.all(SECTION_CHUNKS.map(callChunkWithRetry));
+  const chunkResults = await Promise.all(sectionChunks.map(callChunkWithRetry));
 
   // 결과 취합 (순서 보존)
   const results: Array<{ key: string; title: string; text: string }> = [];
@@ -695,17 +906,18 @@ export const generateChunkedReport = async (params: {
   }
 
   const fullText = validSections.map((s) => `${s.title}\n${s.text}`).join("\n");
+  const texts = getReportTexts(locale, input.name, validSections.length);
 
   return {
     reportId: `rep_${orderId}`,
     orderId,
     productCode,
     generatedAt: new Date().toISOString(),
-    headline: `${input.name}님 사주 분석 리포트`,
-    summary: `${validSections.length}개 섹션 분석 완료`,
+    headline: texts.headline,
+    summary: texts.summary,
     sections: validSections,
     recommendations: [],
-    disclaimer: "본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.",
+    disclaimer: texts.disclaimer,
     debugLength: buildLengthInfo("paid", fullText),
     model: llmModel,
     usage: totalUsage,

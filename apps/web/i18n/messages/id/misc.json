@@ -1,0 +1,87 @@
+{
+  "freeFortune": {
+    "title": "Analisis Empat Pilar Gratis",
+    "desc": "Masukkan informasi dasar untuk mendapatkan analisis kepribadian dan Lima Elemen secara gratis.",
+    "nameLabel": "Nama",
+    "namePlaceholder": "Budi Santoso",
+    "birthDateLabel": "Tanggal Lahir",
+    "nextStep": "Langkah Berikutnya",
+    "birthTimeLabel": "Waktu Lahir (opsional)",
+    "birthTimeHelp": "Bisa dikosongkan jika tidak diketahui.",
+    "genderLabel": "Jenis Kelamin",
+    "genderOther": "Tidak memilih",
+    "genderMale": "Laki-laki",
+    "genderFemale": "Perempuan",
+    "calendarLabel": "Kalender",
+    "calendarSolar": "Masehi",
+    "calendarLunar": "Lunar",
+    "prev": "Kembali",
+    "startAnalysis": "Mulai Analisis Gratis",
+    "loading": "Memuat..."
+  },
+  "comingSoon": {
+    "emailPlaceholder": "Dapatkan notifikasi saat diluncurkan",
+    "emailAria": "Alamat email",
+    "notify": "Notifikasi",
+    "submitting": "...",
+    "submitted": "Pendaftaran berhasil! Kami akan memberitahu Anda saat diluncurkan.",
+    "emailError": "Masukkan alamat email yang valid.",
+    "registerFail": "Pendaftaran gagal",
+    "ctaButton": "Analisis Empat Pilar sudah tersedia sekarang →",
+    "dream": {
+      "emoji": "🌙",
+      "title": "Tafsir Mimpi",
+      "desc": "AI menganalisis makna mimpi Anda semalam. Segera hadir!",
+      "features": [
+        "Ceritakan mimpi Anda dalam bentuk teks",
+        "Interpretasi personal yang terhubung dengan Empat Pilar",
+        "Analisis simbol dan pesan dalam mimpi",
+        "Angka dan arah keberuntungan"
+      ]
+    },
+    "tarot": {
+      "emoji": "🃏",
+      "title": "AI Tarot",
+      "desc": "AI menafsirkan kebijaksanaan kartu tarot. Segera hadir!",
+      "features": [
+        "Susunan kartu sesuai pertanyaan Anda",
+        "Pembacaan terintegrasi dengan analisis Empat Pilar",
+        "Pembacaan khusus untuk cinta, karier, dan keuangan",
+        "Tarot harian satu kartu"
+      ]
+    },
+    "palm": {
+      "emoji": "✋",
+      "title": "Pembacaan Garis Tangan",
+      "desc": "Foto telapak tangan Anda untuk dianalisis AI. Segera hadir!",
+      "features": [
+        "Foto telapak tangan → pengenalan AI",
+        "Analisis garis kehidupan, garis hati, dan garis kepala",
+        "Verifikasi silang dengan Empat Pilar",
+        "Titik perubahan penting di masa depan"
+      ]
+    },
+    "face": {
+      "emoji": "😊",
+      "title": "Pembacaan Wajah",
+      "desc": "Ambil selfie untuk analisis fisiognomi oleh AI. Segera hadir!",
+      "features": [
+        "Analisis wajah dari satu selfie",
+        "Korelasi antara fitur wajah dan Empat Pilar",
+        "Analisis kesan pertama",
+        "Saran untuk memperkuat kelebihan Anda"
+      ]
+    },
+    "name": {
+      "emoji": "✍️",
+      "title": "Analisis Nama",
+      "desc": "AI menganalisis makna nama dan keharmonisannya dengan Empat Pilar. Segera hadir!",
+      "features": [
+        "Analisis makna nama Anda",
+        "Kecocokan dengan Lima Elemen",
+        "Rekomendasi ganti nama dan arah",
+        "Saran nama untuk bayi"
+      ]
+    }
+  }
+}

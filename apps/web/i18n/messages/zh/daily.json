@@ -1,0 +1,53 @@
+{
+  "eyebrow": "每日免费",
+  "title": "今日运势",
+  "subtitle": "{date} · 根据你的八字看今天",
+  "inputTitle": "请输入出生日期",
+  "nameLabel": "姓名",
+  "namePlaceholder": "张三",
+  "birthDateLabel": "出生日期",
+  "viewFortune": "查看今日运势",
+  "yourToday": "{name}的今天",
+  "todayEnergy": "今日能量：{emoji} {element}",
+  "weekdayFortune": "周{weekday}运势",
+  "todayAdvice": "今日建议",
+  "luckyColor": "幸运色",
+  "luckyDirection": "幸运方位",
+  "ctaTitle": "想了解更详细的八字分析？",
+  "ctaDesc": "获取超过30000字的专业AI八字分析报告。",
+  "ctaButton": "查看免费八字分析",
+  "tryAnother": "换一个出生日期",
+  "loading": "加载中...",
+  "defaultUser": "用户",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  },
+  "colors": {
+    "wood": "绿色", "fire": "红色", "earth": "黄色", "metal": "白色/银色", "water": "蓝色/黑色"
+  },
+  "directions": {
+    "wood": "东", "fire": "南", "earth": "中央", "metal": "西", "water": "北"
+  },
+  "weekdays": ["日", "一", "二", "三", "四", "五", "六"],
+  "dayMessages": [
+    "周日，休息充电，恢复能量。",
+    "周一，新的开始充满机遇。",
+    "周二，适合充满热情地行动。",
+    "周三，中期检视，调整方向。",
+    "周四，成长与扩展的能量涌现。",
+    "周五，收获成果的好时机。",
+    "周六，追求稳定与和谐。"
+  ],
+  "fortune": {
+    "same": "今天{element}的能量加倍。忠于自己的本质，就能收获好结果。",
+    "sameAdvice": "自信地主动出击吧。",
+    "generates": "今天{todayEl}的能量源自你的{myEl}。这是充满创造力的一天。",
+    "generatesAdvice": "适合将新想法付诸行动的一天。",
+    "generatedBy": "{todayEl}的能量今天助力你的{myEl}。积极接受身边人的帮助吧。",
+    "generatedByAdvice": "合作与沟通是今日好运的关键。",
+    "overcomes": "你的{myEl}能量掌控今天的{todayEl}。适合展现领导力。",
+    "overcomesAdvice": "主动出击，就能掌握有利局面。",
+    "overcomeBy": "今天{todayEl}的能量较强，不要勉强自己。专注于积蓄内在力量。",
+    "overcomeByAdvice": "沉着准备比急躁行动更重要。"
+  }
+}

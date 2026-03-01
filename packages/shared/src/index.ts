@@ -1,3 +1,7 @@
+// ── Country config ────────────────────────────────────────
+export type { CountryConfig } from "./config/countries";
+export { COUNTRY_CONFIGS, getCountryConfig, getCountryByLocale } from "./config/countries";
+
 // ── Primitives ────────────────────────────────────────────
 export type Gender = "male" | "female" | "other";
 export type CalendarType = "solar" | "lunar";

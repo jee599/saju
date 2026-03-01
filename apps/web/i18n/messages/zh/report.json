@@ -1,0 +1,13 @@
+{
+  "titleWithName": "{name}的八字命理分析",
+  "titleDefault": "八字命理分析报告",
+  "backHome": "返回首页",
+  "error": "错误",
+  "loading": "加载中...",
+  "notReady": "报告尚未生成。",
+  "toc": "目录",
+  "tocAria": "报告目录",
+  "jumpNavAria": "报告快速跳转",
+  "checklist": "行动清单",
+  "fetchFail": "报告加载失败"
+}

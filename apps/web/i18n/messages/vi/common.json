@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "title": "FortuneLab | Phân Tích Tử Vi Bằng AI",
+    "description": "518,400 lá số tử vi được AI phân tích. Bắt đầu miễn phí.",
+    "ogTitle": "FortuneLab | Phân Tích Tử Vi Bằng AI",
+    "ogDescription": "518,400 lá số tử vi được AI phân tích chính xác."
+  },
+  "brand": "FortuneLab",
+  "nav": {
+    "label": "Menu chính",
+    "daily": "Vận hạn hôm nay",
+    "saju": "Tử Vi",
+    "palm": "Xem tay",
+    "naming": "Đặt tên",
+    "face": "Nhân tướng",
+    "dream": "Giải mộng",
+    "tarot": "Tarot"
+  },
+  "footer": {
+    "title": "FortuneLab",
+    "description": "Tử vi Bát Tự truyền thống kết hợp AI phân tích vận mệnh.",
+    "disclaimer": "Không dùng làm cơ sở cho y tế, pháp lý hoặc đầu tư.",
+    "terms": "Điều khoản sử dụng",
+    "privacy": "Chính sách bảo mật",
+    "refund": "Chính sách hoàn tiền",
+    "legal": "Miễn trừ trách nhiệm"
+  },
+  "elements": {
+    "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
+    "native": { "wood": "Mộc", "fire": "Hỏa", "earth": "Thổ", "metal": "Kim", "water": "Thủy" },
+    "emoji": { "wood": "🌿", "fire": "🔥", "earth": "⛰️", "metal": "⚙️", "water": "🌊" }
+  }
+}

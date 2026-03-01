@@ -1,0 +1,87 @@
+{
+  "freeFortune": {
+    "title": "免费八字分析",
+    "desc": "输入基本信息，即可免费获取先天气质与五行分析。",
+    "nameLabel": "姓名",
+    "namePlaceholder": "张三",
+    "birthDateLabel": "出生日期",
+    "nextStep": "下一步",
+    "birthTimeLabel": "出生时间（选填）",
+    "birthTimeHelp": "不清楚可以留空。",
+    "genderLabel": "性别",
+    "genderOther": "不选择",
+    "genderMale": "男",
+    "genderFemale": "女",
+    "calendarLabel": "历法",
+    "calendarSolar": "公历",
+    "calendarLunar": "农历",
+    "prev": "上一步",
+    "startAnalysis": "开始免费分析",
+    "loading": "加载中..."
+  },
+  "comingSoon": {
+    "emailPlaceholder": "订阅上线通知",
+    "emailAria": "电子邮箱",
+    "notify": "通知",
+    "submitting": "...",
+    "submitted": "注册成功！上线时我们会通知您。",
+    "emailError": "请输入有效的电子邮箱地址。",
+    "registerFail": "注册失败",
+    "ctaButton": "八字分析现在就可以使用 →",
+    "dream": {
+      "emoji": "🌙",
+      "title": "解梦",
+      "desc": "AI为你分析昨晚梦境的含义。即将上线！",
+      "features": [
+        "用文字描述你的梦境",
+        "结合八字的个性化解读",
+        "梦境象征与寓意分析",
+        "幸运数字与方位提示"
+      ]
+    },
+    "tarot": {
+      "emoji": "🃏",
+      "title": "AI塔罗",
+      "desc": "AI解读塔罗牌的智慧。即将上线！",
+      "features": [
+        "根据你的问题定制牌阵",
+        "结合八字的综合解读",
+        "爱情·事业·财运专属解读",
+        "每日一张塔罗牌"
+      ]
+    },
+    "palm": {
+      "emoji": "✋",
+      "title": "手相分析",
+      "desc": "拍摄手掌照片，AI为你分析手相。即将上线！",
+      "features": [
+        "拍摄手掌照片 → AI识别",
+        "生命线·感情线·智慧线分析",
+        "与八字交叉验证",
+        "未来变化关键节点提示"
+      ]
+    },
+    "face": {
+      "emoji": "😊",
+      "title": "面相分析",
+      "desc": "拍摄面部照片，AI为你分析面相。即将上线！",
+      "features": [
+        "一张自拍即可分析面相",
+        "五官与八字的关联分析",
+        "第一印象解读",
+        "优势强化建议"
+      ]
+    },
+    "name": {
+      "emoji": "✍️",
+      "title": "姓名分析",
+      "desc": "AI分析姓名的含义及与八字的和谐度。即将上线！",
+      "features": [
+        "姓名汉字含义解析",
+        "五行匹配度分析",
+        "改名建议与方向",
+        "宝宝起名推荐"
+      ]
+    }
+  }
+}
