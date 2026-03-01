@@ -280,7 +280,10 @@ export default function ReportPage() {
   }, [orderId]);
 
   const activeReport = activeModel ? modelResults[activeModel]?.report : null;
-  const toc = useMemo(() => activeReport?.sections ?? [], [activeReport]);
+  const toc = useMemo(() =>
+    (activeReport?.sections ?? []).filter(s => s.text && !s.text.includes("(생성 실패)") && s.text.trim().length > 10),
+    [activeReport]
+  );
 
   return (
     <PageContainer>
@@ -475,7 +478,9 @@ export default function ReportPage() {
                     ))}
                   </nav>
 
-                  {activeReport.sections.map((section) => (
+                  {activeReport.sections
+                    .filter((s) => s.text && !s.text.includes("(생성 실패)") && s.text.trim().length > 10)
+                    .map((section) => (
                     <article key={section.key} id={section.key} className="reportSection">
                       <h3>{section.title}</h3>
                       <SectionText text={section.text} />
