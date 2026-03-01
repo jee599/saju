@@ -27,7 +27,6 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
   'sonnet-single': { targetModel: 'sonnet', strategy: 'chunked' },
   'gpt': { targetModel: 'gpt', strategy: 'chunked' },
   'gpt-mini-chunked': { targetModel: 'gpt-mini', strategy: 'chunked' },
-  'gemini': { targetModel: 'gemini', strategy: 'chunked' },
   'gemini-flash-chunked': { targetModel: 'gemini-flash', strategy: 'chunked' },
   'haiku-chunked': { targetModel: 'haiku', strategy: 'chunked' },
 };
@@ -36,7 +35,6 @@ const MODEL_NAME_MAP: Record<string, string> = {
   'sonnet-single': 'claude-sonnet-4-6',
   'gpt': 'gpt-5.2',
   'gpt-mini-chunked': 'gpt-5-mini',
-  'gemini': 'gemini-3.1-pro-preview',
   'gemini-flash-chunked': 'gemini-3-flash-preview',
   'haiku-chunked': 'claude-haiku-4-5-20251001',
 };
