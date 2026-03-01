@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useMemo, useEffect, useState } from "react";
+import { Suspense, useMemo, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { calculateFourPillars, ELEMENT_KR, ELEMENT_EMOJI, ELEMENT_KR_NATIVE } from "@saju/engine-saju";
 import type { Element, FourPillars } from "@saju/engine-saju";
@@ -279,6 +279,73 @@ const LOCKED_SECTIONS = [
 // 더미 블러 텍스트 (모든 잠금 섹션에 동일하게 사용)
 const BLUR_DUMMY = "당신의 사주를 기반으로 분석한 상세한 내용이 이 섹션에 포함되어 있습니다. 오행의 흐름과 타고난 기운의 조화를 고려한 전문적인 해석을 통해 과거의 패턴과 현재의 에너지 그리고 미래의 가능성을 종합적으로 살펴봅니다. 구체적인 행동 팁과 실천 가능한 조언이 함께 제공됩니다.";
 
+/** 명리학 분석 30단계 */
+const SAJU_STEPS = [
+  "생년월일시를 만세력으로 변환하고 있습니다",
+  "천간(天干) 10간을 배치하고 있습니다",
+  "지지(地支) 12지를 배치하고 있습니다",
+  "사주팔자 네 기둥을 세우고 있습니다",
+  "일간(日干)을 확인하여 본명성을 파악 중입니다",
+  "오행(木火土金水) 분포를 계산하고 있습니다",
+  "음양 밸런스를 분석하고 있습니다",
+  "용신(用神)과 희신을 찾고 있습니다",
+  "십성(十星) 관계를 매핑하고 있습니다",
+  "비견·겁재 — 자아와 경쟁심을 읽고 있습니다",
+  "식신·상관 — 표현력과 창의성을 분석 중입니다",
+  "정재·편재 — 재물운의 흐름을 파악 중입니다",
+  "정관·편관 — 직업운과 사회적 역할을 읽고 있습니다",
+  "정인·편인 — 학업운과 지적 성향을 분석 중입니다",
+  "지장간(地藏干)을 풀어 숨은 기운을 찾고 있습니다",
+  "12운성을 배치하여 에너지 리듬을 확인 중입니다",
+  "합·충·형·파·해 관계를 분석하고 있습니다",
+  "삼합(三合)과 방합을 확인하여 조화를 읽고 있습니다",
+  "공망(空亡)을 확인하고 있습니다",
+  "대운(大運) 타임라인을 계산하고 있습니다",
+  "현재 대운의 흐름과 영향을 분석 중입니다",
+  "세운(歲運) — 올해의 운세를 읽고 있습니다",
+  "월운 흐름을 파악하여 시기별 조언을 준비 중입니다",
+  "성격과 기질 해석을 작성하고 있습니다",
+  "직업 적성과 재물운을 정리 중입니다",
+  "연애·결혼운을 해석하고 있습니다",
+  "건강 체질과 주의사항을 분석하고 있습니다",
+  "가족·대인관계 운을 읽고 있습니다",
+  "미래 3~5년 전망을 정리하고 있습니다",
+  "최종 리포트를 마무리하고 있습니다",
+];
+
+const EXPECTED_DURATION_MS = 20_000; // 무료 성격분석은 ~20초
+
+function SajuLoadingProgress({ startTime }: { startTime: number }) {
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsed(Date.now() - startTime);
+    }, 300);
+    return () => clearInterval(interval);
+  }, [startTime]);
+
+  const rawPct = Math.min(95, (elapsed / EXPECTED_DURATION_MS) * 100);
+  const pct = Math.min(95, Math.sqrt(rawPct / 95) * 95);
+  const stepIndex = Math.min(
+    SAJU_STEPS.length - 1,
+    Math.floor((pct / 100) * SAJU_STEPS.length)
+  );
+  const stepText = SAJU_STEPS[stepIndex];
+  const elapsedSec = Math.floor(elapsed / 1000);
+
+  return (
+    <div className="sajuLoading">
+      <div className="sajuLoadingBar">
+        <div className="sajuLoadingFill" style={{ width: `${pct}%` }} />
+      </div>
+      <div className="sajuLoadingPct">{Math.round(pct)}%</div>
+      <div className="sajuLoadingStep">{stepText}</div>
+      <div className="sajuLoadingTime">{elapsedSec}초 경과</div>
+    </div>
+  );
+}
+
 function ResultContent() {
   const params = useSearchParams();
   const router = useRouter();
@@ -291,6 +358,7 @@ function ResultContent() {
   const [personalityText, setPersonalityText] = useState<string | null>(null);
   const [personalityLoading, setPersonalityLoading] = useState(false);
   const [personalityError, setPersonalityError] = useState<string | null>(null);
+  const loadingStartRef = useRef(0);
 
   useEffect(() => {
     if (!birthDate) {
@@ -310,6 +378,7 @@ function ResultContent() {
     }
 
     setPersonalityLoading(true);
+    loadingStartRef.current = Date.now();
     fetch("/api/report/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -454,47 +523,47 @@ function ResultContent() {
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ marginBottom: 12 }}>성격 분석</h3>
           {personalityLoading && (
-            <div style={{ textAlign: "center", padding: "24px 0" }}>
-              <div className="spinner" style={{ margin: "0 auto 12px" }} />
-              <p className="muted">{name}님의 성격을 AI가 분석 중입니다...</p>
-            </div>
+            <SajuLoadingProgress startTime={loadingStartRef.current || Date.now()} />
           )}
           {personalityError && (
             <p style={{ color: "#ef4444", fontSize: "0.9rem" }}>{personalityError}</p>
           )}
           {personalityText && (
-            <div style={{ fontSize: "0.92rem", lineHeight: 1.8, color: "var(--t1)", whiteSpace: "pre-wrap" }}>
-              {personalityText}
+            <div className="personalityResult">
+              {personalityText.split(/\n\s*\n/).filter(Boolean).map((block, i) => {
+                const lines = block.trim().split("\n");
+                const first = lines[0]?.trim() ?? "";
+                const isHeading = /^[■●★▶▷◆◇►☆※✦✧⭐🔮💫🌟📌🎯💡🔑]/.test(first)
+                  || /^#+\s/.test(first)
+                  || /^【.*】$/.test(first)
+                  || /^\[.*\]$/.test(first)
+                  || (first.length <= 20 && lines.length === 1);
+                if (isHeading) {
+                  const cleaned = first.replace(/^#+\s*/, "").replace(/^[■●★▶▷◆◇►☆※✦✧⭐🔮💫🌟📌🎯💡🔑]\s*/, "");
+                  return <h4 key={i} className="personalityHeading">{cleaned || first}</h4>;
+                }
+                return <p key={i} className="personalityParagraph">{block.trim()}</p>;
+              })}
             </div>
           )}
         </section>
 
-        {/* 잠금 섹션 8개 (블러) */}
+        {/* 잠금 섹션 8개 (블러) + 통합 잠금해제 버튼 */}
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ marginBottom: 12 }}>
             <span className="badge badge-premium">프리미엄 분석</span>
           </h3>
           {LOCKED_SECTIONS.map((sec) => (
             <div key={sec.key} className={`blurSection ${dayEl}`}>
-              <h4 style={{ color: "var(--t1)" }}>{sec.title}</h4>
+              <h4 className="lockedSectionTitle">{sec.title}</h4>
               <div className="blurContent">{BLUR_DUMMY}</div>
-              <div className="blurOverlay">
-                <Link href={`/paywall?${paywallParams}`} className="blurUnlockBtn">
-                  잠금 해제
-                </Link>
-              </div>
             </div>
           ))}
-        </section>
-
-        {/* CTA */}
-        <section className="ctaPanel" style={{ marginTop: 16 }}>
-          <h3>전체 분석 잠금 해제</h3>
-          <p className="muted">나머지 8개 섹션의 상세 분석을 확인하세요.</p>
-          <div className="buttonRow">
+          <div style={{ textAlign: "center", marginTop: 20 }}>
             <Link href={`/paywall?${paywallParams}`} className="btn btn-primary btn-lg btn-full">
               전체 분석 잠금 해제 — ₩5,900
             </Link>
+            <p className="muted" style={{ marginTop: 8, fontSize: "0.8rem" }}>나머지 8개 섹션의 상세 분석을 확인하세요</p>
           </div>
         </section>
 
