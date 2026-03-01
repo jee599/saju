@@ -123,6 +123,11 @@ export default function HomePage() {
     router.push(`/loading-analysis?redirect=${encodeURIComponent(`/result?${q.toString()}`)}`);
   };
 
+  const handleTestPaid = (preset: { name: string; birthDate: string; birthTime: string; gender: string; calendarType: string }) => {
+    const q = new URLSearchParams(preset);
+    router.push(`/paywall?${q.toString()}`);
+  };
+
   return (
     <main className="page">
       <div className="container">
@@ -284,6 +289,43 @@ export default function HomePage() {
                 </button>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── TEST BUTTONS (개발용) ─── */}
+        <section className="glassCard" style={{ marginTop: 16, padding: "16px 20px" }}>
+          <p style={{ fontSize: "0.75rem", color: "var(--t2)", marginBottom: 12, textAlign: "center" }}>
+            🧪 테스트용 (유료 리포트 바로가기)
+          </p>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button
+              className="btn btn-secondary"
+              style={{ flex: 1, minWidth: 140, fontSize: "0.82rem", padding: "10px 12px" }}
+              onClick={() => handleTestPaid({
+                name: "지동석",
+                birthDate: "1992-08-02",
+                birthTime: "20:30",
+                gender: "male",
+                calendarType: "solar",
+              })}
+            >
+              🧑 지동석<br />
+              <span style={{ fontSize: "0.7rem", opacity: 0.7 }}>1992.08.02 오후8:30 남</span>
+            </button>
+            <button
+              className="btn btn-secondary"
+              style={{ flex: 1, minWidth: 140, fontSize: "0.82rem", padding: "10px 12px" }}
+              onClick={() => handleTestPaid({
+                name: "정은영",
+                birthDate: "1995-04-28",
+                birthTime: "11:00",
+                gender: "female",
+                calendarType: "solar",
+              })}
+            >
+              👩 정은영<br />
+              <span style={{ fontSize: "0.7rem", opacity: 0.7 }}>1995.04.28 오전11:00 여</span>
+            </button>
           </div>
         </section>
 
