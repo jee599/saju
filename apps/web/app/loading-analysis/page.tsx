@@ -491,17 +491,17 @@ function LoadingContent() {
 
   return (
     <main className="page loadingAnalysis">
-      {/* 부드러운 빛 파티클 (느린 속도) */}
+      {/* 은은한 빛 파티클 */}
       <div className="loadingParticles" aria-hidden="true">
-        {Array.from({ length: 15 }).map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <span
             key={i}
             className="particle"
             style={{
-              left: `${5 + Math.random() * 90}%`,
-              animationDelay: `${Math.random() * 20}s`,
-              animationDuration: `${25 + Math.random() * 20}s`,
-              "--particle-size": `${4 + Math.random() * 8}px`,
+              left: `${10 + Math.random() * 80}%`,
+              animationDelay: `${Math.random() * 30}s`,
+              animationDuration: `${40 + Math.random() * 30}s`,
+              "--particle-size": `${3 + Math.random() * 5}px`,
               "--particle-hue": `${[330, 40, 210, 270, 190][i % 5]}`,
             } as React.CSSProperties}
           />
