@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@saju/api/db';
-import type { FortuneInput, GetReportResponse, ModelReportDetail, OrderSummary, ReportDetail } from '../../../../lib/types';
-import { countReportChars } from '../../../../lib/reportLength';
+import type { FortuneInput, GetReportResponse, ReportDetail, OrderSummary } from '../../../../lib/types';
 
 /**
- * 테스트 모드: 모든 모델의 리포트를 반환.
- * 나중에 원복 시 단일 리포트만 반환.
+ * 단일 리포트 조회 API.
+ * GET /api/report/:orderId
  */
 export async function GET(req: Request, ctx: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await ctx.params;
 
-  // Validate orderId format to prevent enumeration
   if (!orderId || orderId.length < 8) {
     return NextResponse.json(
       { ok: false, error: { code: 'INVALID_ORDER', message: '유효하지 않은 주문 ID입니다.' } },
@@ -19,12 +17,11 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
   }
 
   try {
-    // Find order with ALL its reports and fortune request
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       include: {
         request: true,
-        reports: { orderBy: { generatedAt: 'desc' } },
+        reports: { orderBy: { generatedAt: 'desc' }, take: 1 },
       },
     });
 
@@ -35,9 +32,6 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       );
     }
 
-    // 리포트가 0개여도 OK (개별 생성 모드에서는 아직 없을 수 있음)
-
-    // Build OrderSummary
     const orderSummary: OrderSummary = {
       orderId: order.id,
       productCode: order.productCode as OrderSummary['productCode'],
@@ -47,7 +41,6 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       confirmedAt: order.confirmedAt?.toISOString(),
     };
 
-    // Build FortuneInput from the stored request
     const input: FortuneInput = {
       name: order.request.name,
       birthDate: order.request.birthDate,
@@ -56,19 +49,16 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       calendarType: order.request.calendarType as FortuneInput['calendarType'],
     };
 
-    // Parse all reports
-    const reportsByModel: Record<string, ModelReportDetail> = {};
-    let primaryReport: ReportDetail | null = null;
+    let report: ReportDetail | undefined;
+    const dbReport = order.reports[0];
 
-    for (const dbReport of order.reports) {
+    if (dbReport) {
       let sections: ReportDetail['sections'] = [];
       let recommendations: string[] = [];
       try { sections = JSON.parse(dbReport.sectionsJson); } catch { sections = []; }
       try { recommendations = JSON.parse(dbReport.recommendationsJson); } catch { recommendations = []; }
 
-      const charCount = countReportChars(sections.map((s: any) => s.text ?? '').join('\n'));
-
-      const report: ModelReportDetail = {
+      report = {
         reportId: dbReport.id,
         orderId: order.id,
         productCode: dbReport.productCode as ReportDetail['productCode'],
@@ -78,23 +68,13 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
         sections,
         recommendations,
         disclaimer: dbReport.disclaimer,
-        model: dbReport.model as ModelReportDetail['model'],
-        charCount,
       };
-
-      reportsByModel[dbReport.model] = report;
-
-      // Use sonnet as primary, or first available
-      if (dbReport.model === 'sonnet' || !primaryReport) {
-        primaryReport = report;
-      }
     }
 
     const data: GetReportResponse = {
       order: orderSummary,
-      report: primaryReport ?? undefined as any,
+      report: report as any,
       input,
-      reportsByModel: Object.keys(reportsByModel).length > 0 ? reportsByModel : undefined,
     };
     return NextResponse.json({ ok: true, data });
   } catch (err) {

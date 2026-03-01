@@ -152,16 +152,12 @@ export interface ModelReportDetail extends ReportDetail {
 export interface CheckoutConfirmResponse {
   order: OrderSummary;
   report: ReportDetail;
-  /** 테스트 모드: 모든 모델 결과 비교 */
-  reportsByModel?: Record<string, ModelReportDetail>;
 }
 
 export interface GetReportResponse {
   order: OrderSummary;
   report: ReportDetail;
   input?: FortuneInput;
-  /** 테스트 모드: 모든 모델 결과 비교 */
-  reportsByModel?: Record<string, ModelReportDetail>;
 }
 
 // ── LLM compare (API server) ─────────────────────────────

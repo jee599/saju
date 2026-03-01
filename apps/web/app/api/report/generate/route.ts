@@ -1,207 +1,208 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@saju/api/db';
-import type { FortuneInput, ReportDetail, ModelReportDetail } from '../../../../lib/types';
+import type { FortuneInput, ReportDetail } from '../../../../lib/types';
 import { countReportChars } from '../../../../lib/reportLength';
 import { sendReportEmail } from '../../../../lib/sendReportEmail';
 
 /**
- * 단일 모델 리포트 생성 API.
- * POST { orderId, modelKey }
+ * 리포트 생성 API (free / paid 듀얼)
  *
- * 모델 키:
- * - sonnet-single: Sonnet 4.6, 4000자 × 5청크
- * - gpt: GPT-5.2, 4000자 × 5청크
- * - gpt-mini-chunked: GPT-5-mini, 4000자 × 5청크
- * - gemini: Gemini 3.1 Pro, 4000자 × 5청크
- * - gemini-flash-chunked: Gemini Flash, 4000자 × 5청크
- * - haiku-chunked: Haiku 4.5, 4000자 × 5청크
+ * 무료: POST { type: "free", input: FortuneInput }
+ *   → GPT-mini로 성격 1섹션만 생성, DB 저장 X
+ *
+ * 유료: POST { type: "paid", orderId: string, personalityText?: string }
+ *   → Haiku 4청크(8섹션) + 성격(캐시 또는 GPT-mini 재생성)
+ *   → 9섹션 전체 DB 저장 + 이메일 발송
  */
-
-interface ModelConfig {
-  targetModel: string;
-  strategy: 'single' | 'chunked';
-  charTarget?: number;
-}
-
-const MODEL_CONFIGS: Record<string, ModelConfig> = {
-  'sonnet-single': { targetModel: 'sonnet', strategy: 'chunked' },
-  'gpt': { targetModel: 'gpt', strategy: 'chunked' },
-  'gpt-mini-chunked': { targetModel: 'gpt-mini', strategy: 'chunked' },
-  'gemini-flash-chunked': { targetModel: 'gemini-flash', strategy: 'chunked' },
-  'haiku-chunked': { targetModel: 'haiku', strategy: 'chunked' },
-};
-
-const MODEL_NAME_MAP: Record<string, string> = {
-  'sonnet-single': 'claude-sonnet-4-6',
-  'gpt': 'gpt-5.2',
-  'gpt-mini-chunked': 'gpt-5-mini',
-  'gemini-flash-chunked': 'gemini-3-flash-preview',
-  'haiku-chunked': 'claude-haiku-4-5',
-};
 
 // Vercel serverless: 최대 5분
 export const maxDuration = 300;
 
 export async function POST(req: Request) {
   try {
-    const body = (await req.json()) as { orderId?: string; modelKey?: string };
+    const body = await req.json();
+    const type = body?.type as string | undefined;
 
-    if (!body?.orderId || !body?.modelKey) {
-      return NextResponse.json(
-        { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId와 modelKey가 필요합니다.' } },
-        { status: 400 }
-      );
-    }
+    // ── 무료: 성격만 생성 ──
+    if (type === 'free') {
+      const input = body?.input as FortuneInput | undefined;
+      if (!input?.name || !input?.birthDate || !input?.gender || !input?.calendarType) {
+        return NextResponse.json(
+          { ok: false, error: { code: 'INVALID_INPUT', message: '사용자 정보가 부족합니다.' } },
+          { status: 400 }
+        );
+      }
 
-    const config = MODEL_CONFIGS[body.modelKey];
-    if (!config) {
-      return NextResponse.json(
-        { ok: false, error: { code: 'INVALID_MODEL', message: `지원하지 않는 모델: ${body.modelKey}` } },
-        { status: 400 }
-      );
-    }
-
-    // 1. Find order
-    const order = await prisma.order.findUnique({
-      where: { id: body.orderId },
-      include: { request: true },
-    });
-
-    if (!order || order.status !== 'confirmed') {
-      return NextResponse.json(
-        { ok: false, error: { code: 'ORDER_NOT_FOUND', message: '확인된 주문을 찾을 수 없습니다.' } },
-        { status: 404 }
-      );
-    }
-
-    // 2. 이미 생성된 리포트가 있으면 그대로 반환
-    const existing = await prisma.report.findFirst({
-      where: { orderId: order.id, model: body.modelKey },
-    });
-
-    if (existing) {
-      let sections: any[] = [];
-      let recommendations: string[] = [];
-      try { sections = JSON.parse(existing.sectionsJson); } catch {}
-      try { recommendations = JSON.parse(existing.recommendationsJson); } catch {}
+      const { generateFreePersonality } = await import('../../../../lib/llmEngine');
+      const result = await generateFreePersonality({ input });
 
       return NextResponse.json({
         ok: true,
         data: {
-          modelKey: body.modelKey,
-          report: {
-            reportId: existing.id,
-            orderId: order.id,
-            productCode: existing.productCode,
-            generatedAt: existing.generatedAt.toISOString(),
-            headline: existing.headline,
-            summary: existing.summary,
-            sections,
-            recommendations,
-            disclaimer: existing.disclaimer,
-            model: existing.model,
-            charCount: countReportChars(sections.map((s: any) => s.text ?? '').join('\n')),
+          type: 'free',
+          section: result.section,
+        },
+      });
+    }
+
+    // ── 유료: 9섹션 전체 생성 ──
+    if (type === 'paid') {
+      const orderId = body?.orderId as string | undefined;
+      const personalityText = body?.personalityText as string | undefined;
+
+      if (!orderId) {
+        return NextResponse.json(
+          { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId가 필요합니다.' } },
+          { status: 400 }
+        );
+      }
+
+      // 1. 주문 확인
+      const order = await prisma.order.findUnique({
+        where: { id: orderId },
+        include: { request: true },
+      });
+
+      if (!order || order.status !== 'confirmed') {
+        return NextResponse.json(
+          { ok: false, error: { code: 'ORDER_NOT_FOUND', message: '확인된 주문을 찾을 수 없습니다.' } },
+          { status: 404 }
+        );
+      }
+
+      // 2. 이미 생성된 리포트 → 캐시 반환
+      const existing = await prisma.report.findFirst({
+        where: { orderId: order.id },
+      });
+
+      if (existing) {
+        let sections: any[] = [];
+        let recommendations: string[] = [];
+        try { sections = JSON.parse(existing.sectionsJson); } catch {}
+        try { recommendations = JSON.parse(existing.recommendationsJson); } catch {}
+
+        return NextResponse.json({
+          ok: true,
+          data: {
+            type: 'paid',
+            report: {
+              reportId: existing.id,
+              orderId: order.id,
+              productCode: existing.productCode,
+              generatedAt: existing.generatedAt.toISOString(),
+              headline: existing.headline,
+              summary: existing.summary,
+              sections,
+              recommendations,
+              disclaimer: existing.disclaimer,
+              charCount: countReportChars(sections.map((s: any) => s.text ?? '').join('\n')),
+            },
+            cached: true,
           },
-          cached: true,
+        });
+      }
+
+      // 3. FortuneInput 구성
+      const input: FortuneInput = {
+        name: order.request.name,
+        birthDate: order.request.birthDate,
+        birthTime: order.request.birthTime ?? undefined,
+        gender: order.request.gender as FortuneInput['gender'],
+        calendarType: order.request.calendarType as FortuneInput['calendarType'],
+      };
+
+      // 4. 성격 섹션 준비 (캐시 or 재생성)
+      const { generateFreePersonality, generateChunkedReport } = await import('../../../../lib/llmEngine');
+
+      let personalitySection: { key: string; title: string; text: string };
+      if (personalityText && personalityText.length > 100) {
+        personalitySection = { key: '성격', title: '성격', text: personalityText };
+      } else {
+        const freeResult = await generateFreePersonality({ input });
+        personalitySection = freeResult.section;
+      }
+
+      // 5. Haiku 4청크 = 8섹션 생성
+      const chunkedReport = await generateChunkedReport({
+        orderId: order.id,
+        input,
+        productCode: order.productCode as ReportDetail['productCode'],
+        targetModel: 'haiku',
+      });
+
+      // 6. 성격 + 8섹션 합치기 (총 9섹션)
+      const allSections = [personalitySection, ...chunkedReport.sections];
+      const charCount = countReportChars(allSections.map(s => s.text).join('\n'));
+
+      const headline = chunkedReport.headline || `${input.name}님 사주 분석 리포트`;
+      const summary = `9개 섹션 분석 완료`;
+      const disclaimer = chunkedReport.disclaimer || '본 서비스는 참고용 해석 정보이며, 의료·법률·투자 판단의 단독 근거로 사용할 수 없습니다.';
+
+      // 7. DB 저장
+      await prisma.report.create({
+        data: {
+          orderId: order.id,
+          model: 'haiku',
+          productCode: order.productCode,
+          tier: 'paid',
+          headline,
+          summary,
+          sectionsJson: JSON.stringify(allSections),
+          recommendationsJson: JSON.stringify(chunkedReport.recommendations),
+          disclaimer,
+          generatedAt: new Date(),
         },
       });
-    }
 
-    // 3. Build FortuneInput
-    const input: FortuneInput = {
-      name: order.request.name,
-      birthDate: order.request.birthDate,
-      birthTime: order.request.birthTime ?? undefined,
-      gender: order.request.gender as FortuneInput['gender'],
-      calendarType: order.request.calendarType as FortuneInput['calendarType'],
-    };
-
-    // 4. Generate report
-    const { generateSingleModelReport, generateChunkedReport, estimateCostUsd } = await import('../../../../lib/llmEngine');
-
-    const startMs = Date.now();
-    let report: ModelReportDetail;
-
-    if (config.strategy === 'chunked') {
-      report = await generateChunkedReport({
-        orderId: order.id,
-        input,
-        productCode: order.productCode as ReportDetail['productCode'],
-        targetModel: config.targetModel,
-      });
-    } else {
-      report = await generateSingleModelReport({
-        orderId: order.id,
-        input,
-        productCode: order.productCode as ReportDetail['productCode'],
-        targetModel: config.targetModel,
-        charTarget: config.charTarget,
-      });
-    }
-
-    const durationMs = Date.now() - startMs;
-    const charCount = countReportChars(report.sections.map(s => s.text).join('\n'));
-
-    // Calculate cost
-    let estimatedCostUsd = 0;
-    if (report.usage) {
-      const provider = report.model === 'gpt' ? 'openai' : report.model === 'gemini' ? 'google' : 'anthropic';
-      estimatedCostUsd = estimateCostUsd(provider, MODEL_NAME_MAP[body.modelKey] ?? 'unknown', report.usage);
-    }
-
-    // 5. Save to DB
-    await prisma.report.create({
-      data: {
-        orderId: order.id,
-        model: body.modelKey,
-        productCode: order.productCode,
-        tier: 'paid',
-        headline: report.headline,
-        summary: report.summary,
-        sectionsJson: JSON.stringify(report.sections),
-        recommendationsJson: JSON.stringify(report.recommendations),
-        disclaimer: report.disclaimer,
-        generatedAt: new Date(report.generatedAt),
-      },
-    });
-
-    // 6. 이메일 발송 (첫 리포트 생성 시에만)
-    if (order.email && !order.emailSentAt) {
-      const reportUrl = `https://fortunelab.store/report/${order.id}`;
-      sendReportEmail({
-        to: order.email,
-        userName: input.name,
-        headline: report.headline,
-        summary: report.summary,
-        sections: report.sections,
-        recommendations: report.recommendations,
-        disclaimer: report.disclaimer,
-        reportUrl,
-      })
-        .then(async (result) => {
-          if (result.success) {
-            await prisma.order.update({
-              where: { id: order.id },
-              data: { emailSentAt: new Date() },
-            }).catch(() => {});
-          }
+      // 8. 이메일 발송 (첫 리포트)
+      if (order.email && !order.emailSentAt) {
+        const reportUrl = `https://fortunelab.store/report/${order.id}`;
+        sendReportEmail({
+          to: order.email,
+          userName: input.name,
+          headline,
+          summary,
+          sections: allSections,
+          recommendations: chunkedReport.recommendations,
+          disclaimer,
+          reportUrl,
         })
-        .catch((err) => console.error("[report/generate] Email error:", err));
+          .then(async (result) => {
+            if (result.success) {
+              await prisma.order.update({
+                where: { id: order.id },
+                data: { emailSentAt: new Date() },
+              }).catch(() => {});
+            }
+          })
+          .catch((err) => console.error('[report/generate] Email error:', err));
+      }
+
+      return NextResponse.json({
+        ok: true,
+        data: {
+          type: 'paid',
+          report: {
+            reportId: `rep_${order.id}`,
+            orderId: order.id,
+            productCode: order.productCode,
+            generatedAt: new Date().toISOString(),
+            headline,
+            summary,
+            sections: allSections,
+            recommendations: chunkedReport.recommendations,
+            disclaimer,
+            charCount,
+          },
+          cached: false,
+        },
+      });
     }
 
-    return NextResponse.json({
-      ok: true,
-      data: {
-        modelKey: body.modelKey,
-        report: {
-          ...report,
-          durationMs,
-          estimatedCostUsd,
-          charCount,
-        },
-        cached: false,
-      },
-    });
+    return NextResponse.json(
+      { ok: false, error: { code: 'INVALID_TYPE', message: 'type은 "free" 또는 "paid"여야 합니다.' } },
+      { status: 400 }
+    );
   } catch (err) {
     console.error('[report/generate]', err);
     return NextResponse.json(

@@ -77,19 +77,20 @@ function PaywallContent() {
         <section className="glassCard">
           <h2 style={{ textAlign: "center", fontSize: "1.2rem" }}>{name}님의 전체 사주 분석</h2>
           <p className="muted" style={{ textAlign: "center", marginTop: 4 }}>
-            10개 섹션 상세 AI 분석
+            9개 섹션 상세 AI 분석
           </p>
 
           <div style={{ marginTop: 20, textAlign: "left" }}>
             <ul className="flatList compactList">
-              <li>📊 올해 총운 — 전체적인 운세 흐름</li>
-              <li>💼 직업/재물 — 커리어와 재물의 방향</li>
-              <li>💕 연애/결혼 — 인연의 시기와 특성</li>
-              <li>💰 금전운 — 재물의 흐름과 투자 시기</li>
-              <li>🏥 건강 — 주의할 건강 포인트</li>
-              <li>👨‍👩‍👧‍👦 가족·배우자 — 관계의 흐름</li>
-              <li>⏳ 과거·현재·미래 — 시간 흐름 분석</li>
-              <li>📅 대운 타임라인 — 10년 주기 분석</li>
+              <li>성격 — 타고난 기질과 대인관계</li>
+              <li>직업 — 커리어와 적성</li>
+              <li>연애·가족·배우자 — 인연과 관계</li>
+              <li>금전 — 재물의 흐름</li>
+              <li>건강 — 주의할 건강 포인트</li>
+              <li>과거 — 지나온 시간 분석</li>
+              <li>현재 — 올해의 운세</li>
+              <li>미래 — 앞으로 3~5년 전망</li>
+              <li>대운 타임라인 — 10년 주기 분석</li>
             </ul>
           </div>
 

@@ -454,22 +454,41 @@ function LoadingContent() {
     }
   }, [legacyRedirect, orderId, router]);
 
-  // checkout/confirm 호출
+  // checkout/confirm + 유료 리포트 생성
   const callConfirm = useCallback(async () => {
     if (!orderId || confirmCalled.current) return;
     confirmCalled.current = true;
     setIsGenerating(true);
 
     try {
-      const res = await fetch("/api/checkout/confirm", {
+      // 1. 결제 확인
+      const confirmRes = await fetch("/api/checkout/confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderId }),
       });
 
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error(body?.error?.message ?? "분석 생성에 실패했습니다.");
+      if (!confirmRes.ok) {
+        const body = await confirmRes.json().catch(() => null);
+        throw new Error(body?.error?.message ?? "결제 확인에 실패했습니다.");
+      }
+
+      // 2. 캐시된 성격 텍스트 가져오기
+      let personalityText: string | undefined;
+      try {
+        personalityText = sessionStorage.getItem("free_personality") ?? undefined;
+      } catch {}
+
+      // 3. 유료 리포트 생성 (9섹션)
+      const genRes = await fetch("/api/report/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "paid", orderId, personalityText }),
+      });
+
+      if (!genRes.ok) {
+        const body = await genRes.json().catch(() => null);
+        throw new Error(body?.error?.message ?? "리포트 생성에 실패했습니다.");
       }
 
       router.push(`/report/${orderId}`);
