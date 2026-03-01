@@ -36,7 +36,7 @@ const MODEL_NAME_MAP: Record<string, string> = {
   'gpt': 'gpt-5.2',
   'gpt-mini-chunked': 'gpt-5-mini',
   'gemini-flash-chunked': 'gemini-3-flash-preview',
-  'haiku-chunked': 'claude-haiku-4-5-20251001',
+  'haiku-chunked': 'claude-haiku-4-5',
 };
 
 // Vercel serverless: 최대 5분
