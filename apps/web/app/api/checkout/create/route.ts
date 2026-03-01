@@ -37,6 +37,7 @@ export async function POST(req: Request) {
         productCode: body.productCode,
         amountKrw: FIXED_PRICE,
         status: 'created',
+        email: body.email?.trim() || null,
       },
     });
 

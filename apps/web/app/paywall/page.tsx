@@ -41,6 +41,7 @@ function PaywallContent() {
         body: JSON.stringify({
           productCode: "full",
           input: { name, birthDate, birthTime, gender, calendarType },
+          email: email || undefined,
         }),
       });
 

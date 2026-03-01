@@ -3,6 +3,7 @@ import { prisma } from '@saju/api/db';
 import type { FortuneInput, OrderSummary, ReportDetail, ModelReportDetail } from '../../../../lib/types';
 import { buildReport } from '../../../../lib/mockEngine';
 import { countReportChars } from '../../../../lib/reportLength';
+import { sendReportEmail } from '../../../../lib/sendReportEmail';
 
 /**
  * 테스트 모드: 결제 확인 후 7개 모델 변형을 병렬 생성.
@@ -182,6 +183,30 @@ export async function POST(req: Request) {
           generatedAt: new Date(report.generatedAt),
         },
       });
+    }
+
+    // 6. 이메일 발송 (fire-and-forget: 실패해도 응답에 영향 없음)
+    if (order.email) {
+      const reportUrl = `https://fortunelab.store/report/${order.id}`;
+      sendReportEmail({
+        to: order.email,
+        userName: input.name,
+        headline: primaryReport.headline,
+        summary: primaryReport.summary,
+        sections: primaryReport.sections,
+        recommendations: primaryReport.recommendations,
+        disclaimer: primaryReport.disclaimer,
+        reportUrl,
+      })
+        .then(async (result) => {
+          if (result.success) {
+            await prisma.order.update({
+              where: { id: order.id },
+              data: { emailSentAt: new Date() },
+            }).catch(() => {});
+          }
+        })
+        .catch((err) => console.error("[checkout/confirm] Email send error:", err));
     }
 
     return NextResponse.json({
