@@ -131,7 +131,12 @@ export default function ReportPage() {
         body: JSON.stringify({ orderId, modelKey }),
       });
 
-      const json = await res.json();
+      let json: any;
+      try {
+        json = await res.json();
+      } catch {
+        throw new Error(`서버 응답 오류 (${res.status})`);
+      }
 
       if (!res.ok || !json.ok) {
         throw new Error(json?.error?.message ?? "생성 실패");
