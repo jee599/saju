@@ -505,15 +505,21 @@ export const generateChunkedReport = async (params: {
   let geminiModelId: string | undefined;
   let openaiModelId: string | undefined;
 
-  if (targetModel === "gemini-flash") {
+  if (targetModel === "gemini") {
+    llmModel = "gemini";
+    geminiModelId = "gemini-3.1-pro-preview";
+  } else if (targetModel === "gemini-flash") {
     llmModel = "gemini";
     geminiModelId = "gemini-3-flash-preview";
-  } else if (targetModel === "haiku") {
-    llmModel = "claude";
-    anthropicModelId = "claude-haiku-4-5-20251001";
+  } else if (targetModel === "gpt") {
+    llmModel = "gpt";
+    openaiModelId = process.env.OPENAI_MODEL ?? "gpt-5.2";
   } else if (targetModel === "gpt-mini") {
     llmModel = "gpt";
     openaiModelId = "gpt-5-mini";
+  } else if (targetModel === "haiku") {
+    llmModel = "claude";
+    anthropicModelId = "claude-haiku-4-5-20251001";
   } else if (targetModel === "opus") {
     llmModel = "claude";
     anthropicModelId = "claude-opus-4-6";
