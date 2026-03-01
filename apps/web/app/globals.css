@@ -747,6 +747,133 @@ p, li, label, input, select, button, textarea {
   vertical-align: middle;
 }
 
+/* ── 모델 버튼 그리드 ─────────────────────────────── */
+
+.modelButtonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.modelCard {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.modelCard.active {
+  border-color: var(--model-color, var(--accent));
+  background: rgba(196, 139, 159, 0.06);
+}
+
+.modelCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.modelCardName {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--t1);
+}
+
+.modelCardDesc {
+  font-size: 0.68rem;
+  color: var(--t3);
+  margin-left: auto;
+}
+
+.modelGenBtn {
+  width: 100%;
+  font-size: 0.78rem;
+  padding: 6px 0;
+}
+
+.modelCardLoading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--t2);
+  padding: 4px 0;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--glass-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.modelCardResult {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.modelCardStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--t2);
+}
+
+.modelCardStats span {
+  white-space: nowrap;
+}
+
+.cachedBadge {
+  background: rgba(255,255,255,0.08);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.62rem;
+  color: var(--t3);
+}
+
+.modelViewBtn {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.modelActiveBadge {
+  font-size: 0.68rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.modelCardError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: #e57373;
+}
+
+@media (max-width: 480px) {
+  .modelButtonGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .modelCard { padding: 10px; }
+  .modelCardDesc { display: none; }
+}
+
 /* ── Report ───────────────────────────────────────── */
 
 .reportLayout {
