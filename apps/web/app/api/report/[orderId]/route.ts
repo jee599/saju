@@ -35,12 +35,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       );
     }
 
-    if (order.reports.length === 0) {
-      return NextResponse.json(
-        { ok: false, error: { code: 'REPORT_NOT_FOUND', message: '리포트가 아직 생성되지 않았습니다.' } },
-        { status: 404 }
-      );
-    }
+    // 리포트가 0개여도 OK (개별 생성 모드에서는 아직 없을 수 있음)
 
     // Build OrderSummary
     const orderSummary: OrderSummary = {
@@ -97,9 +92,9 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
 
     const data: GetReportResponse = {
       order: orderSummary,
-      report: primaryReport!,
+      report: primaryReport ?? undefined as any,
       input,
-      reportsByModel: Object.keys(reportsByModel).length > 1 ? reportsByModel : undefined,
+      reportsByModel: Object.keys(reportsByModel).length > 0 ? reportsByModel : undefined,
     };
     return NextResponse.json({ ok: true, data });
   } catch (err) {
