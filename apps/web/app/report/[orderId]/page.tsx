@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import type { GetReportResponse, ModelReportDetail } from "../../../lib/types";
 import { webApi } from "../../../lib/api";
 import { ButtonLink, GlassCard, LengthDebugBar, PageContainer, StatusBox } from "../../components/ui";
@@ -9,6 +9,75 @@ import { ButtonLink, GlassCard, LengthDebugBar, PageContainer, StatusBox } from 
 /**
  * 테스트 모드 리포트 페이지: 모델별 개별 생성 버튼.
  */
+
+/** 명리학 분석 30단계 */
+const SAJU_STEPS = [
+  "생년월일시를 만세력으로 변환하고 있습니다",
+  "천간(天干) 10간을 배치하고 있습니다",
+  "지지(地支) 12지를 배치하고 있습니다",
+  "사주팔자 네 기둥을 세우고 있습니다",
+  "일간(日干)을 확인하여 본명성을 파악 중입니다",
+  "오행(木火土金水) 분포를 계산하고 있습니다",
+  "음양 밸런스를 분석하고 있습니다",
+  "용신(用神)과 희신을 찾고 있습니다",
+  "십성(十星) 관계를 매핑하고 있습니다",
+  "비견·겁재 — 자아와 경쟁심을 읽고 있습니다",
+  "식신·상관 — 표현력과 창의성을 분석 중입니다",
+  "정재·편재 — 재물운의 흐름을 파악 중입니다",
+  "정관·편관 — 직업운과 사회적 역할을 읽고 있습니다",
+  "정인·편인 — 학업운과 지적 성향을 분석 중입니다",
+  "지장간(地藏干)을 풀어 숨은 기운을 찾고 있습니다",
+  "12운성을 배치하여 에너지 리듬을 확인 중입니다",
+  "합·충·형·파·해 관계를 분석하고 있습니다",
+  "삼합(三合)과 방합을 확인하여 조화를 읽고 있습니다",
+  "공망(空亡)을 확인하고 있습니다",
+  "대운(大運) 타임라인을 계산하고 있습니다",
+  "현재 대운의 흐름과 영향을 분석 중입니다",
+  "세운(歲運) — 올해의 운세를 읽고 있습니다",
+  "월운 흐름을 파악하여 시기별 조언을 준비 중입니다",
+  "성격과 기질 해석을 작성하고 있습니다",
+  "직업 적성과 재물운을 정리 중입니다",
+  "연애·결혼운을 해석하고 있습니다",
+  "건강 체질과 주의사항을 분석하고 있습니다",
+  "가족·대인관계 운을 읽고 있습니다",
+  "미래 3~5년 전망을 정리하고 있습니다",
+  "최종 리포트를 마무리하고 있습니다",
+];
+
+const EXPECTED_DURATION_MS = 90_000; // 예상 90초
+
+function SajuLoadingProgress({ startTime }: { startTime: number }) {
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsed(Date.now() - startTime);
+    }, 300);
+    return () => clearInterval(interval);
+  }, [startTime]);
+
+  // 0~95%까지 점진적으로 (실제 완료되면 100%)
+  const rawPct = Math.min(95, (elapsed / EXPECTED_DURATION_MS) * 100);
+  // 살짝 느려지는 곡선 (제곱근)
+  const pct = Math.min(95, Math.sqrt(rawPct / 95) * 95);
+  const stepIndex = Math.min(
+    SAJU_STEPS.length - 1,
+    Math.floor((pct / 100) * SAJU_STEPS.length)
+  );
+  const stepText = SAJU_STEPS[stepIndex];
+  const elapsedSec = Math.floor(elapsed / 1000);
+
+  return (
+    <div className="sajuLoading">
+      <div className="sajuLoadingBar">
+        <div className="sajuLoadingFill" style={{ width: `${pct}%` }} />
+      </div>
+      <div className="sajuLoadingPct">{Math.round(pct)}%</div>
+      <div className="sajuLoadingStep">{stepText}</div>
+      <div className="sajuLoadingTime">{elapsedSec}초 경과</div>
+    </div>
+  );
+}
 
 function splitParagraphs(text: string): string[] {
   return text
@@ -87,6 +156,7 @@ export default function ReportPage() {
   const [modelStatus, setModelStatus] = useState<Record<string, ModelStatus>>({});
   const [modelResults, setModelResults] = useState<Record<string, ModelResult>>({});
   const [modelErrors, setModelErrors] = useState<Record<string, string>>({});
+  const [modelStartTimes, setModelStartTimes] = useState<Record<string, number>>({});
   const [activeModel, setActiveModel] = useState<string | null>(null);
 
   // 초기 데이터 로딩 (이미 생성된 리포트 불러오기)
@@ -122,6 +192,7 @@ export default function ReportPage() {
     if (!orderId) return;
 
     setModelStatus((prev) => ({ ...prev, [modelKey]: "loading" }));
+    setModelStartTimes((prev) => ({ ...prev, [modelKey]: Date.now() }));
     setModelErrors((prev) => { const n = { ...prev }; delete n[modelKey]; return n; });
 
     try {
@@ -211,9 +282,7 @@ export default function ReportPage() {
                       )}
 
                       {status === "loading" && (
-                        <div className="modelCardLoading">
-                          <span className="spinner" /> 생성 중...
-                        </div>
+                        <SajuLoadingProgress startTime={modelStartTimes[m.key] ?? Date.now()} />
                       )}
 
                       {status === "done" && result && (
