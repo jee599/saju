@@ -25,7 +25,7 @@ interface ModelConfig {
 }
 
 const MODEL_CONFIGS: Record<string, ModelConfig> = {
-  'sonnet-single': { targetModel: 'sonnet', strategy: 'single', charTarget: 20000 },
+  'sonnet-single': { targetModel: 'sonnet', strategy: 'chunked' },
   'opus': { targetModel: 'opus', strategy: 'chunked' },
   'gpt': { targetModel: 'gpt', strategy: 'single', charTarget: 20000 },
   'gpt-mini-chunked': { targetModel: 'gpt-mini', strategy: 'chunked' },
