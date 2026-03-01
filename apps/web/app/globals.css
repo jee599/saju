@@ -882,6 +882,10 @@ p, li, label, input, select, button, textarea {
   gap: 16px;
 }
 
+.reportLayout > .modelTestPanel {
+  grid-column: 1 / -1; /* 전체 너비 차지 */
+}
+
 .reportHead {
   border-radius: var(--radius-md);
   border: 1px solid var(--glass-border);
@@ -2597,6 +2601,7 @@ p, li, label, input, select, button, textarea {
   :root { --container: min(1100px, calc(100vw - 80px)); }
   .page { padding-top: 64px; padding-bottom: 100px; }
   .reportLayout { grid-template-columns: 240px minmax(0, 1fr); align-items: start; }
+  .reportLayout > .modelTestPanel { grid-column: 1 / -1; }
   .reportToc { display: block; }
   .reportJumpNav { display: none; }
   .legal { max-width: min(920px, 100%); }
