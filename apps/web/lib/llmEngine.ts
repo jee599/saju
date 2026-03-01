@@ -262,16 +262,9 @@ const callLlm = async (params: Parameters<typeof callLlmOnce>[0]): Promise<LlmRe
   return withRetry(() => callLlmOnce(params), 3, 2000);
 };
 
-const MODEL_CHAR_TARGETS: Record<string, number> = {
-  opus: 20000,
-  sonnet: 20000,
-  gpt: 20000,
-  gemini: 20000,
-};
-
-const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: ProductCode; targetModel?: string; charTarget?: number }) => {
-  const { input, productCode, targetModel } = params;
-  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel ?? "sonnet"] ?? 20000;
+const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: ProductCode; charTarget?: number }) => {
+  const { input, productCode } = params;
+  const charTarget = params.charTarget ?? 20000;
 
   const lengthGuide =
     `유료 기준으로 최대한 길고 상세하게 작성하세요. 목표: 약 ${charTarget.toLocaleString()}자(±15%) 수준의 한국어 장문. ` +
@@ -306,10 +299,9 @@ const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: Produ
     '  "sections": [\n' +
     '    {"key":"성격","title":"성격","text":string},  // 타고난 성격, 장단점, 대인관계 스타일, 스트레스 대처법\n' +
     '    {"key":"직업","title":"직업","text":string},  // 적성, 추천 직종/업종, 직장생활 팁, 사업 적합성\n' +
-    '    {"key":"연애","title":"연애","text":string},  // 연애 스타일, 이상형, 연애 시 주의점, 좋은 궁합 특성\n' +
+    '    {"key":"연애·가족·배우자","title":"연애·가족·배우자","text":string},  // 연애 스타일, 이상형, 가족 관계, 배우자운, 결혼생활, 부모/자녀 관계\n' +
     '    {"key":"금전","title":"금전","text":string},  // 재물운 흐름, 돈 관리 스타일, 투자 성향, 재테크 팁\n' +
     '    {"key":"건강","title":"건강","text":string},  // 체질적 특성, 주의할 건강 영역, 건강 관리 팁, 스트레스 해소법\n' +
-    '    {"key":"가족·배우자","title":"가족·배우자","text":string},  // 가족관계 특성, 배우자운, 결혼생활 팁, 부모/자녀 관계\n' +
     '    {"key":"과거","title":"과거","text":string},  // 지나온 시기 해석 (어린 시절~현재까지 시기별 특성)\n' +
     `    {"key":"현재","title":"현재","text":string},  // ${new Date().getFullYear()}년 ${new Date().getMonth() + 1}월 기준 현재 운의 흐름, 올해 주요 키워드, 당장 실천할 것\n` +
     `    {"key":"미래","title":"미래","text":string},  // ${new Date().getFullYear()}년 기준 앞으로 3~5년 전망, 기회의 시기, 준비해야 할 것\n` +
@@ -326,7 +318,7 @@ const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: Produ
     "- 각 섹션 끝에 실천 가능한 구체적 행동 팁 2~3개를 포함하세요.\n" +
     "- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 표현을 사용하세요.\n" +
     "- 중복 문장/상투어를 줄이고, 읽는 사람이 자기 이야기처럼 느끼도록 작성하세요.\n" +
-    "- 모든 섹션의 text는 반드시 한국어 " + Math.round(charTarget / 10) + "자 이상이어야 합니다.\n";
+    "- 모든 섹션의 text는 반드시 한국어 " + Math.round(charTarget / 9) + "자 이상이어야 합니다.\n";
 
   return { system, user };
 };
@@ -441,62 +433,10 @@ export const hasGeminiKey = (): boolean => {
   return Boolean(process.env.GOOGLE_API_KEY);
 };
 
-/** Generate a single-model report based on user's model selection */
-export const generateSingleModelReport = async (params: {
-  orderId: string;
-  input: FortuneInput;
-  productCode: ProductCode;
-  targetModel: string; // "opus" | "sonnet" | "gpt" | "gemini" | "gemini-flash"
-  charTarget?: number;
-}): Promise<ModelReportDetail> => {
-  const { orderId, input, productCode, targetModel } = params;
-  const charTarget = params.charTarget ?? MODEL_CHAR_TARGETS[targetModel] ?? 20000;
-  const { system, user } = buildPaidReportPrompt({ input, productCode, targetModel, charTarget });
-
-  // 한국어 1자 ≈ 1~1.5 토큰 (JSON 구조 포함), Vercel 300s 타임아웃 고려
-  const maxTokens = Math.max(16000, Math.round(charTarget * 1.0));
-
-  let llmModel: ReportModel;
-  let anthropicModelId: string | undefined;
-  let geminiModelId: string | undefined;
-  let openaiModelId: string | undefined;
-
-  if (targetModel === "gpt") {
-    llmModel = "gpt";
-    openaiModelId = process.env.OPENAI_MODEL ?? "gpt-5.2";
-  } else if (targetModel === "gemini") {
-    llmModel = "gemini";
-    geminiModelId = "gemini-3.1-pro-preview";
-  } else if (targetModel === "gemini-flash") {
-    llmModel = "gemini";
-    geminiModelId = "gemini-3-flash-preview";
-  } else if (targetModel === "opus") {
-    llmModel = "claude";
-    anthropicModelId = "claude-opus-4-6";
-  } else {
-    llmModel = "claude";
-    anthropicModelId = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
-  }
-
-  const res = await callLlm({
-    model: llmModel, system, user, maxTokens, temperature: 0.7,
-    anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
-  });
-
-  const provider = llmModel === "gpt" ? "openai" : llmModel === "gemini" ? "google" : "anthropic";
-  const modelName = openaiModelId ?? geminiModelId ?? anthropicModelId ?? "unknown";
-  logLlmUsage({ provider, model: modelName, usage: res.usage, durationMs: res.durationMs });
-
-  const json = safeJsonParse(res.text);
-  const base = normalizeToReportDetail({ orderId, productCode, json });
-  return { ...base, model: llmModel, usage: res.usage };
-};
-
-/** 2섹션씩 묶어서 5번 호출 (4000자 × 5 = 총 20000자 목표) */
+/** 유료 전용 — 2섹션씩 4번 호출 (성격 제외, 연애+가족 합침) */
 const SECTION_CHUNKS: Array<Array<{ key: string; title: string }>> = [
-  [{ key: "성격", title: "성격" }, { key: "직업", title: "직업" }],
-  [{ key: "연애", title: "연애" }, { key: "금전", title: "금전" }],
-  [{ key: "건강", title: "건강" }, { key: "가족·배우자", title: "가족·배우자" }],
+  [{ key: "직업", title: "직업" }, { key: "연애·가족·배우자", title: "연애·가족·배우자" }],
+  [{ key: "금전", title: "금전" }, { key: "건강", title: "건강" }],
   [{ key: "과거", title: "과거" }, { key: "현재", title: "현재" }],
   [{ key: "미래", title: "미래" }, { key: "대운 타임라인", title: "대운 타임라인" }],
 ];
@@ -510,14 +450,65 @@ const getSectionPrompts = (): Record<string, string> => {
   return {
     "성격": "타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.",
     "직업": "적합한 직업군, 일하는 스타일, 리더십/팔로워십 특성, 직장에서의 강점과 주의점. 추천 업종/직종 3~5가지와 이유. 사업 적합성.",
-    "연애": "연애 스타일, 사랑 표현 방식, 이상형 특성, 연애 패턴(밀당/헌신/질투 등). 좋은 궁합 상대방 특성과 피해야 할 관계 유형.",
+    "연애·가족·배우자": "연애 스타일, 사랑 표현 방식, 이상형, 연애 패턴. 가족 관계 특성, 부모님 관계 패턴, 배우자운, 결혼생활 특성, 자녀운. 갈등 해소법과 관계 개선 팁.",
     "금전": "재물운 흐름, 돈 대하는 태도, 소비 패턴, 저축/투자 성향. 재물 유입 경로(월급형/사업형/투자형)와 돈 새는 포인트.",
     "건강": "체질적 특성, 주의할 건강 영역, 스트레스가 몸에 나타나는 방식, 계절별 관리 팁. 좋은 운동/음식/생활습관.",
-    "가족·배우자": "가족 관계 특성, 부모님 관계 패턴, 배우자운, 결혼생활 특성, 자녀운. 갈등 해소법과 관계 개선 팁.",
     "과거": "지나온 시기 해석: 어린 시절, 학창 시절, 20대 도전과 성장, 큰 전환점들을 시기별로.",
     "현재": `${year}~${nextYear}년 운의 흐름. 지금은 ${year}년 ${month}월입니다. 올해 핵심 키워드 3가지, 주의할 시기, 기회 시기, 이번 달부터 실천할 행동 3가지.`,
     "미래": `${year}년 기준 앞으로 3~5년(${year+1}~${year+5}년) 전망: 커리어/재물/인간관계 변화 흐름, 큰 기회 시기와 준비 사항.`,
     "대운 타임라인": "10년 단위 대운 흐름: 10대~80대 각 시기 핵심 테마, 특징, 주의사항, 인생 조언.",
+  };
+};
+
+/** 무료 성격 1섹션만 GPT-mini로 생성 */
+export const generateFreePersonality = async (params: {
+  input: FortuneInput;
+}): Promise<{ section: { key: string; title: string; text: string }; usage?: LlmUsage }> => {
+  const { input } = params;
+
+  const system =
+    "당신은 한국 최고의 사주명리학자이자 인생 상담 전문가입니다. 20년 이상의 상담 경험을 바탕으로, 사주팔자를 깊이 분석하여 의뢰인에게 실질적으로 도움이 되는 따뜻하고 통찰력 있는 글을 작성합니다.\n\n" +
+    "## 핵심 원칙\n" +
+    "1. 사주 전문용어(일간, 천간, 지지, 비견, 식신, 정관 등)를 절대 그대로 쓰지 마세요. 자연물 비유(물, 불, 나무, 땅, 금속)로 풀어 설명하세요.\n" +
+    "2. 구체적 상황 예시를 들어 공감을 이끌어내세요.\n" +
+    "3. 각 섹션 끝에 실천 가능한 행동 팁 2~3개를 포함하세요.\n" +
+    "4. 문체: 존댓말, 따뜻하고 친근한 톤. 이름을 직접 호명하며 1:1 상담처럼 작성.\n" +
+    "5. 금지: 의료/법률/투자 단정, 공포 조장, 과도한 확신, 한자 남발\n" +
+    "6. 출력: 반드시 JSON 형식으로만 출력하세요.";
+
+  const userPrompt =
+    `사용자 정보: ${JSON.stringify(input)}\n\n` +
+    `위 사용자의 사주를 바탕으로 "성격" 섹션을 작성해 주세요.\n\n` +
+    `## 성격\n` +
+    `타고난 성격적 특성, 강점과 약점, 대인관계 스타일, 감정 표현 방식, 스트레스 대처 패턴. 주변 사람들이 느끼는 첫인상과 깊이 알게 된 후의 인상 차이.\n\n` +
+    `### 작성 규칙\n` +
+    `- 최소 2000자 이상 작성하세요.\n` +
+    `- 여러 문단으로 나눠서 풍성하게 작성하세요 (최소 4~6문단).\n` +
+    `- 사주 전문용어 대신 자연물 비유(물, 불, 나무, 땅, 금속)로 쉽게 설명하세요.\n` +
+    `- 구체적인 상황 예시를 들어 '아, 나 그래!' 하고 공감할 수 있게 쓰세요.\n` +
+    `- 끝에 실천 가능한 구체적 행동 팁 2~3가지를 포함하세요.\n` +
+    `- '~할 수 있어요', '~하는 편이에요' 같은 부드러운 존댓말을 사용하세요.\n\n` +
+    `반드시 아래 JSON 형식으로만 출력하세요:\n` +
+    `{"sections":[{"key":"성격","title":"성격","text":"본문..."}]}`;
+
+  const res = await callLlm({
+    model: "gpt",
+    system,
+    user: userPrompt,
+    maxTokens: 4000,
+    temperature: 0.7,
+    openaiModel: "gpt-5-mini",
+  });
+
+  logLlmUsage({ provider: "openai", model: "gpt-5-mini", usage: res.usage, durationMs: res.durationMs });
+
+  const parsed = safeJsonParse(res.text);
+  const section = parsed?.sections?.[0];
+  if (!section?.text) throw new Error("FREE_PERSONALITY_PARSE_FAILED");
+
+  return {
+    section: { key: "성격", title: "성격", text: String(section.text) },
+    usage: res.usage,
   };
 };
 
@@ -672,7 +663,7 @@ export const generateChunkedReport = async (params: {
     }
   };
 
-  // 2섹션씩 5번 **병렬** 호출 (Promise.all) + 개별 청크 재시도
+  // 2섹션씩 4번 **병렬** 호출 (Promise.all) + 개별 청크 재시도
   const chunkResults = await Promise.all(SECTION_CHUNKS.map(callChunkWithRetry));
 
   // 결과 취합 (순서 보존)
@@ -722,44 +713,3 @@ export const generateChunkedReport = async (params: {
   };
 };
 
-export const generateDualModelPaidReports = async (params: {
-  orderId: string;
-  input: FortuneInput;
-  productCode: ProductCode;
-}): Promise<{ gpt: ModelReportDetail; claude: ModelReportDetail; preferred: ReportModel }> => {
-  const { orderId, input, productCode } = params;
-  const { system, user } = buildPaidReportPrompt({ input, productCode, targetModel: "sonnet" });
-
-  const maxTokens = Number(process.env.REPORT_MAX_TOKENS ?? 8000);
-
-  const [gptRes, claudeRes] = await Promise.all([
-    callLlm({ model: "gpt", system, user, maxTokens, temperature: 0.7 }),
-    callLlm({ model: "claude", system, user, maxTokens, temperature: 0.7 })
-  ]);
-
-  const anthropicModel = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
-  const openaiModel = process.env.OPENAI_MODEL ?? "gpt-5.2";
-  logLlmUsage({ provider: "openai", model: openaiModel, usage: gptRes.usage, durationMs: gptRes.durationMs });
-  logLlmUsage({ provider: "anthropic", model: anthropicModel, usage: claudeRes.usage, durationMs: claudeRes.durationMs });
-
-  const gptJson = safeJsonParse(gptRes.text);
-  const claudeJson = safeJsonParse(claudeRes.text);
-
-  const gptBase = normalizeToReportDetail({ orderId, productCode, json: gptJson });
-  const claudeBase = normalizeToReportDetail({ orderId, productCode, json: claudeJson });
-
-  const gpt: ModelReportDetail = { ...gptBase, model: "gpt", usage: gptRes.usage };
-  const claude: ModelReportDetail = { ...claudeBase, model: "claude", usage: claudeRes.usage };
-
-  const score = (r: ModelReportDetail) => {
-    const empties = r.sections.filter((s) => !s.text || s.text.trim().length < 80).length;
-    const chars = countReportChars(r.sections.map((s) => s.text).join("\n"));
-    const target = 30000;
-    const dist = Math.abs(chars - target);
-    return -(empties * 5000 + dist);
-  };
-
-  const preferred: ReportModel = score(claude) >= score(gpt) ? "claude" : "gpt";
-
-  return { gpt, claude, preferred };
-};

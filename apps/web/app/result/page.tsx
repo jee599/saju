@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useMemo, useEffect, useState, useCallback } from "react";
+import { Suspense, useMemo, useEffect, useState } from "react";
 import Link from "next/link";
 import { calculateFourPillars, ELEMENT_KR, ELEMENT_EMOJI, ELEMENT_KR_NATIVE } from "@saju/engine-saju";
 import type { Element, FourPillars } from "@saju/engine-saju";
@@ -264,97 +264,20 @@ function FourPillarsTable({ pillars, dayMaster }: { pillars: FourPillars; dayMas
   );
 }
 
-// 오행별 블러 맛보기 템플릿
-const BLUR_TEASERS: Record<Element, { sections: Array<{ title: string; teaser: string; icon: string }> }> = {
-  wood: {
-    sections: [
-      { title: "올해 총운", teaser: "2026년은 성장과 확장의 기운이 강한 해입니다...", icon: "📊" },
-      { title: "직업/재물", teaser: "木의 기운이 재물운에 새로운 싹을 틔우고 있습니다...", icon: "💼" },
-      { title: "연애/결혼", teaser: "봄처럼 새로운 만남의 에너지가 감지됩니다...", icon: "💕" },
-      { title: "건강", teaser: "木의 에너지가 간과 담에 영향을 주고 있습니다...", icon: "🏥" },
-      { title: "가족/대인", teaser: "가족 관계에서 새로운 성장의 계기가 보입니다...", icon: "👨‍👩‍👧‍👦" },
-      { title: "월별 운세", teaser: "상반기와 하반기의 흐름이 뚜렷하게 갈립니다...", icon: "📅" },
-      { title: "대운 타임라인", teaser: "10년 주기의 대운 흐름에서 전환점이 다가옵니다...", icon: "⏳" },
-    ],
-  },
-  fire: {
-    sections: [
-      { title: "올해 총운", teaser: "2026년은 열정과 변화의 기운이 강한 해입니다...", icon: "📊" },
-      { title: "직업/재물", teaser: "火의 에너지가 사업운에 강한 추진력을 만들고 있습니다...", icon: "💼" },
-      { title: "연애/결혼", teaser: "뜨거운 인연이 하반기에 찾아올 기운이 보입니다...", icon: "💕" },
-      { title: "건강", teaser: "심장과 소장에 火 기운이 집중되고 있습니다...", icon: "🏥" },
-      { title: "가족/대인", teaser: "주변에 활력을 불어넣는 역할이 강해집니다...", icon: "👨‍👩‍👧‍👦" },
-      { title: "월별 운세", teaser: "여름철 운기가 특히 강하게 작용합니다...", icon: "📅" },
-      { title: "대운 타임라인", teaser: "인생의 가장 활발한 시기가 다가오고 있습니다...", icon: "⏳" },
-    ],
-  },
-  earth: {
-    sections: [
-      { title: "올해 총운", teaser: "2026년은 안정과 수확의 기운이 강한 해입니다...", icon: "📊" },
-      { title: "직업/재물", teaser: "土의 기운이 재물을 단단히 지켜주고 있습니다...", icon: "💼" },
-      { title: "연애/결혼", teaser: "신뢰를 기반으로 한 깊은 인연이 보입니다...", icon: "💕" },
-      { title: "건강", teaser: "비위(소화기)에 土 기운이 집중됩니다...", icon: "🏥" },
-      { title: "가족/대인", teaser: "가족의 중심 역할이 더 강해지는 시기입니다...", icon: "👨‍👩‍👧‍👦" },
-      { title: "월별 운세", teaser: "환절기마다 운기의 변화가 뚜렷합니다...", icon: "📅" },
-      { title: "대운 타임라인", teaser: "안정적인 기반 위에 새로운 도약이 준비됩니다...", icon: "⏳" },
-    ],
-  },
-  metal: {
-    sections: [
-      { title: "올해 총운", teaser: "2026년은 결실과 정리의 기운이 강한 해입니다...", icon: "📊" },
-      { title: "직업/재물", teaser: "金의 에너지가 커리어에 날카로운 판단력을 줍니다...", icon: "💼" },
-      { title: "연애/결혼", teaser: "진지하고 명확한 관계를 원하는 시기입니다...", icon: "💕" },
-      { title: "건강", teaser: "폐와 대장에 金 기운이 집중됩니다...", icon: "🏥" },
-      { title: "가족/대인", teaser: "관계 정리와 핵심 인연에 집중하는 시기입니다...", icon: "👨‍👩‍👧‍👦" },
-      { title: "월별 운세", teaser: "가을철 운기가 절정에 달합니다...", icon: "📅" },
-      { title: "대운 타임라인", teaser: "성과를 거두고 다음 단계를 준비하는 전환기입니다...", icon: "⏳" },
-    ],
-  },
-  water: {
-    sections: [
-      { title: "올해 총운", teaser: "2026년은 지혜와 유연함의 기운이 강한 해입니다...", icon: "📊" },
-      { title: "직업/재물", teaser: "水의 흐름이 새로운 기회를 끌어오고 있습니다...", icon: "💼" },
-      { title: "연애/결혼", teaser: "감성적이고 깊은 교류가 이루어지는 시기입니다...", icon: "💕" },
-      { title: "건강", teaser: "신장과 방광에 水 기운이 집중됩니다...", icon: "🏥" },
-      { title: "가족/대인", teaser: "소통과 이해가 관계를 깊게 만드는 시기입니다...", icon: "👨‍👩‍👧‍👦" },
-      { title: "월별 운세", teaser: "겨울철 운기가 가장 강하게 작용합니다...", icon: "📅" },
-      { title: "대운 타임라인", teaser: "내면의 성장이 외적 변화로 이어지는 시기입니다...", icon: "⏳" },
-    ],
-  },
-};
+// 유료 잠금 섹션 (성격 제외 8개)
+const LOCKED_SECTIONS = [
+  { key: "직업", title: "직업" },
+  { key: "연애·가족·배우자", title: "연애·가족·배우자" },
+  { key: "금전", title: "금전" },
+  { key: "건강", title: "건강" },
+  { key: "과거", title: "과거" },
+  { key: "현재", title: "현재" },
+  { key: "미래", title: "미래" },
+  { key: "대운 타임라인", title: "대운 타임라인" },
+];
 
-// ── 6 Test Strategies ──
-const TEST_STRATEGIES = [
-  { id: 1, label: "Sonnet 4.6", sub: "3,000자 x 10 청크", color: "#7c5cfc" },
-  { id: 2, label: "Sonnet 4.6", sub: "30,000자 원샷", color: "#7c5cfc" },
-  { id: 3, label: "Opus 4.6", sub: "30,000자 원샷", color: "#c04cfc" },
-  { id: 4, label: "GPT 5.2", sub: "30,000자 원샷", color: "#10a37f" },
-  { id: 5, label: "Gemini 3.1 Pro", sub: "30,000자 원샷", color: "#4285f4" },
-  { id: 6, label: "Gemini Flash", sub: "3,000자 x 10 청크", color: "#4285f4" },
-  { id: 7, label: "Haiku 4.5", sub: "3,000자 x 10 청크", color: "#e8954f" },
-] as const;
-
-type TestResult = {
-  strategy: number;
-  label: string;
-  modelName: string;
-  mode: string;
-  totalChars: number;
-  durationMs: number;
-  costUsd: number;
-  usage: { inputTokens?: number; outputTokens?: number; totalTokens?: number };
-  report: {
-    headline: string;
-    summary: string;
-    sections: Array<{ key: string; title: string; text: string }>;
-  };
-};
-
-type TestState = {
-  loading: boolean;
-  error?: string;
-  result?: TestResult;
-};
+// 더미 블러 텍스트 (모든 잠금 섹션에 동일하게 사용)
+const BLUR_DUMMY = "당신의 사주를 기반으로 분석한 상세한 내용이 이 섹션에 포함되어 있습니다. 오행의 흐름과 타고난 기운의 조화를 고려한 전문적인 해석을 통해 과거의 패턴과 현재의 에너지 그리고 미래의 가능성을 종합적으로 살펴봅니다. 구체적인 행동 팁과 실천 가능한 조언이 함께 제공됩니다.";
 
 function ResultContent() {
   const params = useSearchParams();
@@ -365,8 +288,9 @@ function ResultContent() {
   const gender = params.get("gender") ?? "other";
   const calendarType = params.get("calendarType") ?? "solar";
   const [visible, setVisible] = useState(false);
-  const [testStates, setTestStates] = useState<Record<number, TestState>>({});
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [personalityText, setPersonalityText] = useState<string | null>(null);
+  const [personalityLoading, setPersonalityLoading] = useState(false);
+  const [personalityError, setPersonalityError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!birthDate) {
@@ -375,7 +299,38 @@ function ResultContent() {
     }
     track("report_view");
     setTimeout(() => setVisible(true), 100);
-  }, [birthDate, router]);
+
+    // 무료 성격 생성
+    const cached = sessionStorage.getItem("free_personality");
+    const cachedKey = sessionStorage.getItem("free_personality_key");
+    const currentKey = `${name}_${birthDate}_${birthTime}_${gender}_${calendarType}`;
+    if (cached && cachedKey === currentKey) {
+      setPersonalityText(cached);
+      return;
+    }
+
+    setPersonalityLoading(true);
+    fetch("/api/report/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "free",
+        input: { name, birthDate, birthTime, gender, calendarType },
+      }),
+    })
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.ok && json.data?.section?.text) {
+          setPersonalityText(json.data.section.text);
+          sessionStorage.setItem("free_personality", json.data.section.text);
+          sessionStorage.setItem("free_personality_key", currentKey);
+        } else {
+          setPersonalityError("성격 분석 생성에 실패했습니다.");
+        }
+      })
+      .catch(() => setPersonalityError("네트워크 오류가 발생했습니다."))
+      .finally(() => setPersonalityLoading(false));
+  }, [birthDate, birthTime, name, gender, calendarType, router]);
 
   const analysis = useMemo(() => {
     if (!birthDate) return null;
@@ -384,7 +339,6 @@ function ResultContent() {
     const m = parts[1] ?? 1;
     const d = parts[2] ?? 1;
     if (isNaN(y) || isNaN(m) || isNaN(d) || y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31) {
-      // Fallback to safe defaults
       const result = calculateFourPillars({ year: 2000, month: 1, day: 1, hour: 12, minute: 0 });
       return { pillars: result.pillars, elements: result.elements };
     }
@@ -404,42 +358,12 @@ function ResultContent() {
     calendarType,
   }).toString(), [birthDate, birthTime, name, gender, calendarType]);
 
-  const runTest = useCallback(async (strategy: number) => {
-    setTestStates((prev) => ({ ...prev, [strategy]: { loading: true } }));
-    try {
-      const resp = await fetch("/api/test/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          strategy,
-          input: { name, birthDate, birthTime, gender, calendarType },
-        }),
-      });
-      const json = await resp.json();
-      if (!json.ok) {
-        setTestStates((prev) => ({ ...prev, [strategy]: { loading: false, error: json.error?.message ?? "실패" } }));
-        return;
-      }
-      setTestStates((prev) => ({ ...prev, [strategy]: { loading: false, result: json.data } }));
-    } catch (err) {
-      setTestStates((prev) => ({
-        ...prev,
-        [strategy]: { loading: false, error: err instanceof Error ? err.message : "네트워크 오류" },
-      }));
-    }
-  }, [name, birthDate, birthTime, gender, calendarType]);
-
-  const toggleSection = useCallback((key: string) => {
-    setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
-  }, []);
-
   if (!birthDate || !analysis) {
     return <div className="loadingScreen"><p className="muted">생년월일 정보가 없습니다. 홈으로 이동합니다...</p></div>;
   }
 
   const { elements, pillars } = analysis;
   const dayEl = elements.dayMaster;
-  const teasers = BLUR_TEASERS[dayEl];
   const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
 
   return (
@@ -526,176 +450,49 @@ function ResultContent() {
           </div>
         </section>
 
-        {/* CTA #1: 결제 */}
-        <section className="ctaPanel" style={{ marginTop: 16 }}>
-          <h3>프리미엄 분석으로 전체 해석 보기</h3>
-          <p className="muted">블러를 해제하고 전체 분석을 확인하세요.</p>
-          <div className="buttonRow">
-            <Link href={`/paywall?${paywallParams}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
-              나머지 7파트 전체 열기 — ₩5,900
-            </Link>
-          </div>
+        {/* 무료 성격 분석 결과 */}
+        <section className="glassCard" style={{ marginTop: 16 }}>
+          <h3 style={{ marginBottom: 12 }}>성격 분석</h3>
+          {personalityLoading && (
+            <div style={{ textAlign: "center", padding: "24px 0" }}>
+              <div className="spinner" style={{ margin: "0 auto 12px" }} />
+              <p className="muted">{name}님의 성격을 AI가 분석 중입니다...</p>
+            </div>
+          )}
+          {personalityError && (
+            <p style={{ color: "#ef4444", fontSize: "0.9rem" }}>{personalityError}</p>
+          )}
+          {personalityText && (
+            <div style={{ fontSize: "0.92rem", lineHeight: 1.8, color: "var(--t1)", whiteSpace: "pre-wrap" }}>
+              {personalityText}
+            </div>
+          )}
         </section>
 
-        {/* ══════════════════════════════════════════════
-            TEST: 6가지 전략 비교 (dev only)
-           ══════════════════════════════════════════════ */}
-        {process.env.NODE_ENV === "development" && <section className="glassCard" style={{ marginTop: 24, border: "2px dashed #f59e0b", background: "rgba(245,158,11,0.04)" }}>
-          <h3 style={{ color: "#f59e0b", marginBottom: 4 }}>TEST: LLM 품질 비교</h3>
-          <p className="muted" style={{ marginBottom: 16, fontSize: "0.85rem" }}>
-            각 버튼을 클릭하면 해당 전략으로 리포트를 생성합니다. 캐싱 없이 매번 새로 호출합니다.
-          </p>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
-            {TEST_STRATEGIES.map((s) => {
-              const state = testStates[s.id];
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => runTest(s.id)}
-                  disabled={state?.loading}
-                  style={{
-                    padding: "10px 8px",
-                    border: `1.5px solid ${s.color}`,
-                    borderRadius: 10,
-                    background: state?.result ? `${s.color}18` : "var(--bg2)",
-                    cursor: state?.loading ? "wait" : "pointer",
-                    textAlign: "left",
-                    opacity: state?.loading ? 0.6 : 1,
-                  }}
-                >
-                  <div style={{ fontWeight: 600, fontSize: "0.85rem", color: s.color }}>
-                    {s.id}. {s.label}
-                  </div>
-                  <div style={{ fontSize: "0.75rem", color: "var(--t2)" }}>{s.sub}</div>
-                  {state?.loading && (
-                    <div style={{ fontSize: "0.75rem", color: "#f59e0b", marginTop: 4 }}>생성 중...</div>
-                  )}
-                  {state?.result && (
-                    <div style={{ fontSize: "0.7rem", color: "var(--t2)", marginTop: 4 }}>
-                      {state.result.totalChars.toLocaleString()}자 · ${state.result.costUsd} · {(state.result.durationMs / 1000).toFixed(1)}s
-                    </div>
-                  )}
-                  {state?.error && (
-                    <div style={{ fontSize: "0.7rem", color: "#ef4444", marginTop: 4 }}>{state.error}</div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </section>}
-
-        {/* TEST 결과 출력 */}
-        {process.env.NODE_ENV === "development" && TEST_STRATEGIES.map((s) => {
-          const state = testStates[s.id];
-          if (!state?.result) return null;
-          const r = state.result;
-          return (
-            <section key={`result-${s.id}`} className="glassCard" style={{ marginTop: 12 }}>
-              {/* 헤더: 비용 정보 */}
-              <div style={{
-                background: `${s.color}15`,
-                border: `1px solid ${s.color}40`,
-                borderRadius: 8,
-                padding: "10px 14px",
-                marginBottom: 12,
-              }}>
-                <div style={{ fontWeight: 700, fontSize: "0.95rem", color: s.color }}>
-                  {s.id}. {r.label}
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", marginTop: 6, fontSize: "0.8rem", color: "var(--t2)" }}>
-                  <span>모델: <b>{r.modelName}</b></span>
-                  <span>모드: <b>{r.mode === "chunked" ? "청크(x10)" : "원샷"}</b></span>
-                  <span>총 글자: <b>{r.totalChars.toLocaleString()}자</b></span>
-                  <span>소요: <b>{(r.durationMs / 1000).toFixed(1)}s</b></span>
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 16px", marginTop: 4, fontSize: "0.8rem" }}>
-                  <span>입력 토큰: <b>{(r.usage.inputTokens ?? 0).toLocaleString()}</b></span>
-                  <span>출력 토큰: <b>{(r.usage.outputTokens ?? 0).toLocaleString()}</b></span>
-                  <span style={{ color: "#ef4444", fontWeight: 700 }}>비용: ${r.costUsd}</span>
-                </div>
-              </div>
-
-              {/* 섹션별 내용 */}
-              {r.report.sections.map((sec, idx) => {
-                const sectionKey = `${s.id}-${idx}`;
-                const isExpanded = expandedSections[sectionKey] ?? (idx === 0);
-                return (
-                  <div key={idx} style={{ marginBottom: 8 }}>
-                    <button
-                      onClick={() => toggleSection(sectionKey)}
-                      style={{
-                        width: "100%",
-                        textAlign: "left",
-                        padding: "8px 12px",
-                        background: "var(--bg2)",
-                        border: "1px solid var(--border)",
-                        borderRadius: 6,
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>
-                        {sec.title}
-                      </span>
-                      <span style={{ fontSize: "0.75rem", color: "var(--t2)" }}>
-                        {sec.text.length.toLocaleString()}자 {isExpanded ? "▲" : "▼"}
-                      </span>
-                    </button>
-                    {isExpanded && (
-                      <div style={{
-                        padding: "12px",
-                        fontSize: "0.85rem",
-                        lineHeight: 1.7,
-                        color: "var(--t1)",
-                        whiteSpace: "pre-wrap",
-                        borderLeft: `3px solid ${s.color}40`,
-                        marginLeft: 4,
-                        marginTop: 4,
-                      }}>
-                        {sec.text}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </section>
-          );
-        })}
-
-        {/* 블러 7파트 */}
+        {/* 잠금 섹션 8개 (블러) */}
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ marginBottom: 12 }}>
             <span className="badge badge-premium">프리미엄 분석</span>
           </h3>
-          {teasers.sections.map((sec, i) => (
-            <div key={i} className={`blurSection ${dayEl}`}>
-              <h4 style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--t1)" }}>
-                {sec.icon} {sec.title}
-              </h4>
-              <p className="blurTeaser">{sec.teaser}</p>
-              <div className="blurContent">
-                이 섹션에서는 당신의 사주를 기반으로 한 상세한 분석이 포함되어 있습니다.
-                오행의 흐름과 십성의 배치를 고려한 전문적인 해석을 확인해보세요.
-                과거의 패턴과 현재의 기운, 그리고 미래의 흐름을 연결하여 분석합니다.
-              </div>
+          {LOCKED_SECTIONS.map((sec) => (
+            <div key={sec.key} className={`blurSection ${dayEl}`}>
+              <h4 style={{ color: "var(--t1)" }}>{sec.title}</h4>
+              <div className="blurContent">{BLUR_DUMMY}</div>
               <div className="blurOverlay">
-                <Link href={`/paywall?${paywallParams}&model=sonnet`} className="blurUnlockBtn">
-                  🔓 잠금 해제
+                <Link href={`/paywall?${paywallParams}`} className="blurUnlockBtn">
+                  잠금 해제
                 </Link>
               </div>
             </div>
           ))}
         </section>
 
-        {/* CTA #2 */}
+        {/* CTA */}
         <section className="ctaPanel" style={{ marginTop: 16 }}>
-          <h3>블러 해제하고 전체 분석 보기</h3>
-          <p className="muted">위 블러를 해제하고 전체 분석을 확인하세요.</p>
+          <h3>전체 분석 잠금 해제</h3>
+          <p className="muted">나머지 8개 섹션의 상세 분석을 확인하세요.</p>
           <div className="buttonRow">
-            <Link href={`/paywall?${paywallParams}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+            <Link href={`/paywall?${paywallParams}`} className="btn btn-primary btn-lg btn-full">
               전체 분석 잠금 해제 — ₩5,900
             </Link>
           </div>
@@ -715,7 +512,7 @@ function ResultContent() {
         {/* 모바일 스티키 CTA */}
         <div className="stickyCta">
           <div className="stickyCtaInner">
-            <Link href={`/paywall?${paywallParams}&model=sonnet`} className="btn btn-primary btn-lg btn-full">
+            <Link href={`/paywall?${paywallParams}`} className="btn btn-primary btn-lg btn-full">
               전체 분석 보기 ₩5,900
             </Link>
           </div>

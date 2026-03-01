@@ -36,7 +36,7 @@ const ENGINE_PILLARS = [
 
 const FAQ_ITEMS = [
   { q: "사주 분석은 어떤 원리에 기반하나요?", a: "생년월일시를 기반으로 4개의 기둥(년주·월주·일주·시주)을 세워 운명의 흐름을 분석하는 동양 전통 명리학입니다. 적천수·자평진전 등 5대 고전 원전을 참조합니다." },
-  { q: "무료와 프리미엄의 차이는?", a: "무료 분석은 일간(日干), 오행 밸런스, 음양 비율 등 타고난 기질을 제공합니다. 프리미엄은 약 30,000자 분량의 10개 섹션 상세 AI 분석(성격, 직업, 연애, 금전, 건강, 가족, 과거, 현재, 미래, 대운 타임라인)을 포함합니다." },
+  { q: "무료와 프리미엄의 차이는?", a: "무료 분석은 AI 성격 분석, 일간(日干), 오행 밸런스, 음양 비율 등 타고난 기질을 제공합니다. 프리미엄은 9개 섹션 상세 AI 분석(성격, 직업, 연애·가족·배우자, 금전, 건강, 과거, 현재, 미래, 대운 타임라인)을 포함합니다." },
   { q: "AI는 사주를 어떻게 분석하나요?", a: "만세력 엔진이 절기·역법을 정밀 계산한 후, Claude/GPT 등 최신 AI가 5대 고전 원전의 해석 체계를 적용해 개인 맞춤 리포트를 생성합니다." },
   { q: "태어난 시간을 모르면?", a: "시간 없이도 분석 가능합니다. 다만 시주(시간 기둥)가 빠져 정확도가 약간 낮아집니다. 출생신고서나 부모님께 확인해보시는 것을 권장합니다." },
   { q: "개인정보는 안전한가요?", a: "생년월일과 성별만 사용하며, 이름은 리포트 표시용입니다. 무료 분석은 로그인 없이 이용 가능하고, 90일 후 자동 삭제됩니다." },
@@ -121,11 +121,6 @@ export default function HomePage() {
       ...(birthTime ? { birthTime } : {}),
     });
     router.push(`/loading-analysis?redirect=${encodeURIComponent(`/result?${q.toString()}`)}`);
-  };
-
-  const handleTestPaid = (preset: { name: string; birthDate: string; birthTime: string; gender: string; calendarType: string }) => {
-    const q = new URLSearchParams(preset);
-    router.push(`/paywall?${q.toString()}`);
   };
 
   return (
@@ -292,43 +287,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── TEST BUTTONS (개발용) ─── */}
-        <section className="glassCard" style={{ marginTop: 16, padding: "16px 20px" }}>
-          <p style={{ fontSize: "0.75rem", color: "var(--t2)", marginBottom: 12, textAlign: "center" }}>
-            🧪 테스트용 (유료 리포트 바로가기)
-          </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button
-              className="btn btn-secondary"
-              style={{ flex: 1, minWidth: 140, fontSize: "0.82rem", padding: "10px 12px" }}
-              onClick={() => handleTestPaid({
-                name: "지동석",
-                birthDate: "1992-08-02",
-                birthTime: "20:30",
-                gender: "male",
-                calendarType: "solar",
-              })}
-            >
-              🧑 지동석<br />
-              <span style={{ fontSize: "0.7rem", opacity: 0.7 }}>1992.08.02 오후8:30 남</span>
-            </button>
-            <button
-              className="btn btn-secondary"
-              style={{ flex: 1, minWidth: 140, fontSize: "0.82rem", padding: "10px 12px" }}
-              onClick={() => handleTestPaid({
-                name: "정은영",
-                birthDate: "1995-04-28",
-                birthTime: "11:00",
-                gender: "female",
-                calendarType: "solar",
-              })}
-            >
-              👩 정은영<br />
-              <span style={{ fontSize: "0.7rem", opacity: 0.7 }}>1995.04.28 오전11:00 여</span>
-            </button>
-          </div>
-        </section>
-
         {/* ── Section Divider ─── */}
         <div className="sectionDivider" />
 
@@ -381,13 +339,12 @@ export default function HomePage() {
             <article className="pricingCard pricingCardPremium">
               <span className="badge badge-premium">프리미엄</span>
               <h3 style={{ marginTop: 12 }}>상세 분석</h3>
-              <p className="price">₩4,900</p>
+              <p className="price">₩5,900</p>
               <ul className="flatList compactList">
-                <li>기본 분석 포함</li>
-                <li>약 20,000~40,000자 AI 장문 분석</li>
-                <li>10개 섹션 (성격·직업·연애·금전·건강 등)</li>
+                <li>무료 성격 분석 포함</li>
+                <li>약 20,000자 AI 장문 분석</li>
+                <li>9개 섹션 (성격·직업·연애·금전·건강 등)</li>
                 <li>대운 타임라인 (10년 주기)</li>
-                <li>AI 모델 선택 (Opus / Sonnet / GPT)</li>
               </ul>
               <div className="buttonRow">
                 <Link href="/#hero" className="btn btn-primary btn-full">
