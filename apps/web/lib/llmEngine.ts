@@ -534,11 +534,9 @@ export const generateChunkedReport = async (params: {
 
   const inputJson = JSON.stringify(input);
   const totalUsage: LlmUsage = { inputTokens: 0, outputTokens: 0, totalTokens: 0 };
-  let totalDurationMs = 0;
 
-  // 2섹션씩 5번 순차 호출
-  const results: Array<{ key: string; title: string; text: string }> = [];
-  for (const chunk of SECTION_CHUNKS) {
+  // 2섹션씩 5번 **병렬** 호출 (Promise.all)
+  const chunkPromises = SECTION_CHUNKS.map((chunk) => {
     const sec1 = chunk[0];
     const sec2 = chunk[1];
     const guide1 = SECTION_PROMPTS[sec1.title] ?? "";
@@ -559,12 +557,19 @@ export const generateChunkedReport = async (params: {
       `반드시 아래 JSON 형식으로만 출력하세요:\n` +
       `{"sections":[{"key":"${sec1.key}","title":"${sec1.title}","text":"본문..."},{"key":"${sec2.key}","title":"${sec2.title}","text":"본문..."}]}`;
 
-    const res = await callLlm({
+    return callLlm({
       model: llmModel, system, user: userPrompt,
       maxTokens: maxTokensPerChunk, temperature: 0.7,
       anthropicModel: anthropicModelId, geminiModel: geminiModelId, openaiModel: openaiModelId,
-    });
+    }).then((res) => ({ res, sec1, sec2 }));
+  });
 
+  const chunkResults = await Promise.all(chunkPromises);
+
+  // 결과 취합 (순서 보존)
+  const results: Array<{ key: string; title: string; text: string }> = [];
+  let totalDurationMs = 0;
+  for (const { res, sec1, sec2 } of chunkResults) {
     if (res.usage) {
       totalUsage.inputTokens = (totalUsage.inputTokens ?? 0) + (res.usage.inputTokens ?? 0);
       totalUsage.outputTokens = (totalUsage.outputTokens ?? 0) + (res.usage.outputTokens ?? 0);
