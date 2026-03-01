@@ -125,7 +125,6 @@ interface ModelInfo {
 
 const MODELS: ModelInfo[] = [
   { key: "sonnet-single", label: "Sonnet", color: "#e06090", desc: "4000자×5" },
-  { key: "opus", label: "Opus", color: "#7c3aed", desc: "4000자×5" },
   { key: "gpt", label: "GPT-5.2", color: "#10a37f", desc: "4000자×5" },
   { key: "gpt-mini-chunked", label: "GPT-mini", color: "#50d4a0", desc: "4000자×5" },
   { key: "gemini", label: "Gemini 3.1", color: "#4285f4", desc: "4000자×5" },

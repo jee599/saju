@@ -9,13 +9,12 @@ import { sendReportEmail } from '../../../../lib/sendReportEmail';
  * POST { orderId, modelKey }
  *
  * 모델 키:
- * - sonnet-single: Sonnet 4.6, 30000자 × 1회
- * - opus: Opus 4.6, 30000자 × 1회
- * - gpt: GPT-5.2, 30000자 × 1회
- * - gpt-mini-chunked: GPT-5-mini, 3000자 × 10섹션
- * - gemini: Gemini 3.1 Pro, 30000자 × 1회
- * - gemini-flash-chunked: Gemini Flash, 3000자 × 10섹션
- * - haiku-chunked: Haiku 4.5, 3000자 × 10섹션
+ * - sonnet-single: Sonnet 4.6, 4000자 × 5청크
+ * - gpt: GPT-5.2, 4000자 × 5청크
+ * - gpt-mini-chunked: GPT-5-mini, 4000자 × 5청크
+ * - gemini: Gemini 3.1 Pro, 4000자 × 5청크
+ * - gemini-flash-chunked: Gemini Flash, 4000자 × 5청크
+ * - haiku-chunked: Haiku 4.5, 4000자 × 5청크
  */
 
 interface ModelConfig {
@@ -26,7 +25,6 @@ interface ModelConfig {
 
 const MODEL_CONFIGS: Record<string, ModelConfig> = {
   'sonnet-single': { targetModel: 'sonnet', strategy: 'chunked' },
-  'opus': { targetModel: 'opus', strategy: 'chunked' },
   'gpt': { targetModel: 'gpt', strategy: 'chunked' },
   'gpt-mini-chunked': { targetModel: 'gpt-mini', strategy: 'chunked' },
   'gemini': { targetModel: 'gemini', strategy: 'chunked' },
@@ -36,7 +34,6 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
 
 const MODEL_NAME_MAP: Record<string, string> = {
   'sonnet-single': 'claude-sonnet-4-6',
-  'opus': 'claude-opus-4-6',
   'gpt': 'gpt-5.2',
   'gpt-mini-chunked': 'gpt-5-mini',
   'gemini': 'gemini-3.1-pro-preview',
