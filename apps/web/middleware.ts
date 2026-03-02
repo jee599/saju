@@ -73,6 +73,11 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
+  // Admin routes: skip locale routing
+  if (pathname.startsWith("/admin")) {
+    return NextResponse.next();
+  }
+
   // All other paths: locale routing
   return intlMiddleware(request);
 }
