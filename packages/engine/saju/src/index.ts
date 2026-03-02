@@ -334,12 +334,24 @@ export function calculateFourPillars(input: SajuInput): SajuResult {
       longitude: 127, // Seoul baseline
     });
 
-    pillars = {
-      year: parsePillar(saju.yearPillarHanja),
-      month: parsePillar(saju.monthPillarHanja),
-      day: parsePillar(saju.dayPillarHanja),
-      hour: parsePillar(saju.hourPillarHanja),
-    };
+    const hourPillar = saju.hourPillarHanja;
+    if (!hourPillar) {
+      const solarFallback = Solar.fromYmdHms(year, month, day, hour, minute, 0);
+      const baziFallback = solarFallback.getLunar().getEightChar();
+      pillars = {
+        year: parsePillar(saju.yearPillarHanja),
+        month: parsePillar(saju.monthPillarHanja),
+        day: parsePillar(saju.dayPillarHanja),
+        hour: parsePillar(baziFallback.getTime()),
+      };
+    } else {
+      pillars = {
+        year: parsePillar(saju.yearPillarHanja),
+        month: parsePillar(saju.monthPillarHanja),
+        day: parsePillar(saju.dayPillarHanja),
+        hour: parsePillar(hourPillar),
+      };
+    }
   } else {
     const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
     const lunar = solar.getLunar();
