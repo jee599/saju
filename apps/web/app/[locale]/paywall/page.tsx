@@ -40,47 +40,25 @@ function PaywallContent() {
     try {
       const input = { name, birthDate, birthTime, gender, calendarType };
 
-      if (country.paymentProvider === "stripe") {
-        // Stripe: Create checkout session → redirect to Stripe hosted page
-        const res = await fetch("/api/checkout/stripe/create", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            productCode: "full",
-            input,
-            email: email || undefined,
-            locale,
-          }),
-        });
+      // 결제 수단 미등록 시: 주문 생성 → 바로 로딩/리포트 생성으로 이동
+      const res = await fetch("/api/checkout/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productCode: "full",
+          input,
+          email: email || undefined,
+          locale,
+        }),
+      });
 
-        if (!res.ok) throw new Error(t("createFail"));
-        const data = await res.json();
-        const checkoutUrl = data.data?.checkoutUrl;
-        if (!checkoutUrl) throw new Error(t("noOrderId"));
+      if (!res.ok) throw new Error(t("createFail"));
+      const data = await res.json();
+      const orderId = data.data?.order?.orderId ?? data.order?.orderId;
+      if (!orderId) throw new Error(t("noOrderId"));
 
-        track("purchase_complete", { value: country.pricing.saju.premium, currency: country.currency });
-        window.location.href = checkoutUrl;
-      } else {
-        // Toss / Razorpay / test mode: Create order → redirect to loading
-        const res = await fetch("/api/checkout/create", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            productCode: "full",
-            input,
-            email: email || undefined,
-            locale,
-          }),
-        });
-
-        if (!res.ok) throw new Error(t("createFail"));
-        const data = await res.json();
-        const orderId = data.data?.order?.orderId ?? data.order?.orderId;
-        if (!orderId) throw new Error(t("noOrderId"));
-
-        track("purchase_complete", { value: country.pricing.saju.premium, currency: country.currency });
-        router.push(`/loading-analysis?orderId=${orderId}`);
-      }
+      track("purchase_complete", { value: country.pricing.saju.premium, currency: country.currency });
+      router.push(`/loading-analysis?orderId=${orderId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("checkoutError"));
       track("checkout_fail");
