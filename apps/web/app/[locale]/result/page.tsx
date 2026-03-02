@@ -309,6 +309,27 @@ function ResultContent() {
   const { elements, pillars } = analysis;
   const dayEl = elements.dayMaster;
   const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
+  const elementSources = useMemo(() => {
+    const sources: Record<Element, string[]> = {
+      wood: [], fire: [], earth: [], metal: [], water: [],
+    };
+
+    const marks: Array<{ label: string; stem: string; branch: string }> = [
+      { label: "년", stem: pillars.year.stem, branch: pillars.year.branch },
+      { label: "월", stem: pillars.month.stem, branch: pillars.month.branch },
+      { label: "일", stem: pillars.day.stem, branch: pillars.day.branch },
+      { label: "시", stem: pillars.hour.stem, branch: pillars.hour.branch },
+    ];
+
+    for (const m of marks) {
+      const stemEl = STEM_TO_ELEMENT[m.stem];
+      const branchEl = BRANCH_TO_ELEMENT[m.branch];
+      if (stemEl) sources[stemEl].push(`${m.label}간(${m.stem})`);
+      if (branchEl) sources[branchEl].push(`${m.label}지(${m.branch})`);
+    }
+
+    return sources;
+  }, [pillars]);
 
   return (
     <main className="page">
@@ -379,6 +400,9 @@ function ResultContent() {
             <span style={{ color: `var(--element-${elements.weakest})` }}>
               {t("weakEnergy", { emoji: ELEMENT_EMOJI[elements.weakest], name: ELEMENT_KR[elements.weakest] })}
             </span>
+          </p>
+          <p style={{ marginTop: 10, fontSize: "0.82rem", color: "var(--t2)", lineHeight: 1.6 }}>
+            오행 출처: {ELEMENTS.map((el) => `${ELEMENT_KR[el]} ${elementSources[el].length}개${elementSources[el].length ? ` (${elementSources[el].join(", ")})` : ""}`).join(" · ")}
           </p>
 
           <div style={{ marginTop: 16 }}>
