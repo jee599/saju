@@ -80,7 +80,7 @@ export default function HomePage() {
       calendarType,
       ...(birthTime ? { birthTime } : {}),
     });
-    router.push(`/loading-analysis?redirect=${encodeURIComponent(`/result?${q.toString()}`)}`);
+    router.push(`/loading-analysis?${q.toString()}`);
   };
 
   // Read translated arrays

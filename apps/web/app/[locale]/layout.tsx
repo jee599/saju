@@ -95,7 +95,6 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                 </svg>
                 <span className="brandText">{t("brand")}</span>
               </Link>
-              <LanguageSelector />
               <nav className="topNav" aria-label={t("nav.label")}>
                 <Link href="/daily">{t("nav.daily")}</Link>
                 <Link href="/#hero">{t("nav.saju")}</Link>
@@ -105,6 +104,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                 <Link href="/dream">{t("nav.dream")}</Link>
                 <Link href="/tarot">{t("nav.tarot")}</Link>
               </nav>
+              <LanguageSelector />
             </div>
           </header>
           {children}

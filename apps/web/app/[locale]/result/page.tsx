@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useMemo, useEffect, useState, useRef } from "react";
-import { useTranslations, useLocale } from "next-intl";
+import { Suspense, useMemo, useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, ELEMENT_KR, ELEMENT_EMOJI, ELEMENT_KR_NATIVE } from "@saju/engine-saju";
 import type { Element, FourPillars } from "@saju/engine-saju";
@@ -245,44 +245,8 @@ function FourPillarsTable({ pillars, dayMaster, t }: { pillars: FourPillars; day
   );
 }
 
-const EXPECTED_DURATION_MS = 20_000;
-
-function SajuLoadingProgress({ startTime, done, t }: { startTime: number; done: boolean; t: (key: string, values?: Record<string, string>) => string }) {
-  const [elapsed, setElapsed] = useState(0);
-  const stepCount = 30;
-
-  useEffect(() => {
-    if (done) return;
-    const interval = setInterval(() => {
-      setElapsed(Date.now() - startTime);
-    }, 300);
-    return () => clearInterval(interval);
-  }, [startTime, done]);
-
-  const rawPct = done ? 100 : Math.min(95, (elapsed / EXPECTED_DURATION_MS) * 100);
-  const pct = done ? 100 : Math.min(95, Math.sqrt(rawPct / 95) * 95);
-  const stepIndex = done ? stepCount - 1 : Math.min(stepCount - 1, Math.floor((pct / 100) * stepCount));
-  const stepText = t(`sajuSteps.${stepIndex}`);
-  const elapsedSec = Math.floor(elapsed / 1000);
-
-  return (
-    <div className="sajuLoading">
-      <div className="sajuLoadingBar">
-        <div className="sajuLoadingFill" style={{ width: `${pct}%`, transition: done ? "width 0.4s ease" : undefined }} />
-      </div>
-      <div className="sajuLoadingPct">{Math.round(pct)}%</div>
-      <div className="sajuLoadingStep" style={{ display: "flex", justifyContent: "center", gap: 8, alignItems: "center" }}>
-        <span style={{ fontSize: "0.75rem", color: "var(--t2)", flexShrink: 0 }}>{stepIndex + 1} / {stepCount}</span>
-        <span>{stepText}</span>
-      </div>
-      <div className="sajuLoadingTime">{t("elapsedSec", { sec: String(elapsedSec) })}</div>
-    </div>
-  );
-}
-
 function ResultContent() {
   const t = useTranslations("result");
-  const locale = useLocale();
   const params = useSearchParams();
   const router = useRouter();
   const name = params.get("name") ?? t("defaultUser");
@@ -292,10 +256,7 @@ function ResultContent() {
   const calendarType = params.get("calendarType") ?? "solar";
   const [visible, setVisible] = useState(false);
   const [personalityText, setPersonalityText] = useState<string | null>(null);
-  const [personalityLoading, setPersonalityLoading] = useState(false);
-  const [personalityDone, setPersonalityDone] = useState(false);
   const [personalityError, setPersonalityError] = useState<string | null>(null);
-  const loadingStartRef = useRef(0);
 
   useEffect(() => {
     if (!birthDate) {
@@ -310,47 +271,10 @@ function ResultContent() {
     const currentKey = `${name}_${birthDate}_${birthTime}_${gender}_${calendarType}`;
     if (cached && cachedKey === currentKey) {
       setPersonalityText(cached);
-      return;
+    } else {
+      setPersonalityError(t("personalityError"));
     }
-
-    setPersonalityLoading(true);
-    setPersonalityDone(false);
-    loadingStartRef.current = Date.now();
-
-    let resultText: string | null = null;
-    let resultError: string | null = null;
-
-    fetch("/api/report/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "free",
-        input: { name, birthDate, birthTime, gender, calendarType },
-        locale,
-      }),
-    })
-      .then((r) => r.json())
-      .then((json) => {
-        if (json.ok && json.data?.section?.text) {
-          resultText = json.data.section.text;
-          sessionStorage.setItem("free_personality", json.data.section.text);
-          sessionStorage.setItem("free_personality_key", currentKey);
-        } else {
-          resultError = t("personalityError");
-        }
-      })
-      .catch(() => { resultError = t("networkError"); })
-      .finally(() => {
-        // Show 100% for 800ms, then reveal result
-        setPersonalityDone(true);
-        setTimeout(() => {
-          setPersonalityLoading(false);
-          setPersonalityDone(false);
-          if (resultText) setPersonalityText(resultText);
-          if (resultError) setPersonalityError(resultError);
-        }, 800);
-      });
-  }, [birthDate, birthTime, name, gender, calendarType, locale, router, t]);
+  }, [birthDate, birthTime, name, gender, calendarType, router, t]);
 
   const analysis = useMemo(() => {
     if (!birthDate) return null;
@@ -473,9 +397,6 @@ function ResultContent() {
         {/* 성격 분석 */}
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ marginBottom: 12 }}>{t("personality")}</h3>
-          {personalityLoading && (
-            <SajuLoadingProgress startTime={loadingStartRef.current || Date.now()} done={personalityDone} t={t} />
-          )}
           {personalityError && (
             <p style={{ color: "#ef4444", fontSize: "0.9rem" }}>{personalityError}</p>
           )}
