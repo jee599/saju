@@ -46,7 +46,6 @@ export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dateSheetOpen, setDateSheetOpen] = useState(false);
-  const [timeSheetOpen, setTimeSheetOpen] = useState(false);
   const isTouch = useIsTouchDevice();
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -215,20 +214,25 @@ export default function HomePage() {
                     {t("form.skipTime")}
                   </button>
                 </div>
-                {isTouch && (
-                  <button type="button" className="sheetTrigger" onClick={() => setTimeSheetOpen(true)}>
-                    <span className={hour ? "sheetTriggerValue" : ""}>
-                      {hour === "skip" ? t("form.unknownTime") : hour ? t(`branches.${BRANCH_VALUES.indexOf(hour)}.label`) : t("form.step3Label")}
-                    </span>
-                    <span className="sheetTriggerChevron">▼</span>
-                  </button>
-                )}
-                <BottomSheet open={timeSheetOpen} onClose={() => setTimeSheetOpen(false)} title={t("form.step3Label")}>
+                {isTouch ? (
+                  <select
+                    className="select"
+                    value={hour}
+                    onChange={(e) => setHour(e.target.value)}
+                    aria-label={t("form.step3Label")}
+                  >
+                    <option value="">{t("form.step3Label")}</option>
+                    <option value="skip">{t("form.unknownTime")}</option>
+                    {BRANCH_VALUES.map((val, idx) => (
+                      <option key={val} value={val}>{t(`branches.${idx}.label`)} · {t(`branches.${idx}.time`)}</option>
+                    ))}
+                  </select>
+                ) : (
                   <div className="branchGrid">
                     <button
                       type="button"
                       className={`branchPill ${hour === "skip" ? "selected" : ""}`}
-                      onClick={() => { setHour("skip"); if (isTouch) setTimeout(() => setTimeSheetOpen(false), 200); }}
+                      onClick={() => setHour("skip")}
                     >
                       <span className="branchName">{t("form.unknownTime")}</span>
                       <span className="branchTime">{t("form.unknownTimeDesc")}</span>
@@ -238,14 +242,14 @@ export default function HomePage() {
                         key={val}
                         type="button"
                         className={`branchPill ${hour === val ? "selected" : ""}`}
-                        onClick={() => { setHour(val); if (isTouch) setTimeout(() => setTimeSheetOpen(false), 200); }}
+                        onClick={() => setHour(val)}
                       >
                         <span className="branchName">{t(`branches.${idx}.label`)}</span>
                         <span className="branchTime">{t(`branches.${idx}.time`)}</span>
                       </button>
                     ))}
                   </div>
-                </BottomSheet>
+                )}
               </div>
 
               {/* Step 4 */}
