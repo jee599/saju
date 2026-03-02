@@ -1,10 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "../../i18n/navigation";
 import { track } from "../../lib/analytics";
+import BottomSheet from "./components/BottomSheet";
+
+function useIsTouchDevice() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches,
+    () => false,
+  );
+}
 
 const BRANCH_VALUES = ["23", "1", "3", "5", "7", "9", "11", "13", "15", "17", "19", "21"];
 
@@ -33,6 +42,9 @@ export default function HomePage() {
   const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dateSheetOpen, setDateSheetOpen] = useState(false);
+  const [timeSheetOpen, setTimeSheetOpen] = useState(false);
+  const isTouch = useIsTouchDevice();
 
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -128,44 +140,64 @@ export default function HomePage() {
                     {t("form.lunar")}
                   </button>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <select
-                    className="select"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    style={{ flex: 1.2 }}
-                    aria-label={t("form.yearAria")}
-                  >
-                    <option value="">{t("form.yearPlaceholder")}</option>
-                    {YEARS.map((y) => (
-                      <option key={y} value={y}>{y}{t("form.yearSuffix")}</option>
-                    ))}
-                  </select>
-                  <select
-                    className="select"
-                    value={month}
-                    onChange={(e) => setMonth(e.target.value)}
-                    style={{ flex: 1 }}
-                    aria-label={t("form.monthAria")}
-                  >
-                    <option value="">{t("form.monthPlaceholder")}</option>
-                    {MONTHS.map((m) => (
-                      <option key={m} value={m}>{m}{t("form.monthSuffix")}</option>
-                    ))}
-                  </select>
-                  <select
-                    className="select"
-                    value={day}
-                    onChange={(e) => setDay(e.target.value)}
-                    style={{ flex: 1 }}
-                    aria-label={t("form.dayAria")}
-                  >
-                    <option value="">{t("form.dayPlaceholder")}</option>
-                    {availableDays.map((d) => (
-                      <option key={d} value={d}>{d}{t("form.daySuffix")}</option>
-                    ))}
-                  </select>
-                </div>
+                {isTouch && (
+                  <button type="button" className="sheetTrigger" onClick={() => setDateSheetOpen(true)}>
+                    <span className={hasDate ? "sheetTriggerValue" : ""}>
+                      {hasDate ? `${year}${t("form.yearSuffix")} ${month}${t("form.monthSuffix")} ${day}${t("form.daySuffix")}` : t("form.step2Label")}
+                    </span>
+                    <span className="sheetTriggerChevron">▼</span>
+                  </button>
+                )}
+                <BottomSheet open={dateSheetOpen} onClose={() => setDateSheetOpen(false)} title={t("form.step2Label")}>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <select
+                      className="select"
+                      value={year}
+                      onChange={(e) => setYear(e.target.value)}
+                      style={{ flex: 1.2 }}
+                      aria-label={t("form.yearAria")}
+                    >
+                      <option value="">{t("form.yearPlaceholder")}</option>
+                      {YEARS.map((y) => (
+                        <option key={y} value={y}>{y}{t("form.yearSuffix")}</option>
+                      ))}
+                    </select>
+                    <select
+                      className="select"
+                      value={month}
+                      onChange={(e) => setMonth(e.target.value)}
+                      style={{ flex: 1 }}
+                      aria-label={t("form.monthAria")}
+                    >
+                      <option value="">{t("form.monthPlaceholder")}</option>
+                      {MONTHS.map((m) => (
+                        <option key={m} value={m}>{m}{t("form.monthSuffix")}</option>
+                      ))}
+                    </select>
+                    <select
+                      className="select"
+                      value={day}
+                      onChange={(e) => setDay(e.target.value)}
+                      style={{ flex: 1 }}
+                      aria-label={t("form.dayAria")}
+                    >
+                      <option value="">{t("form.dayPlaceholder")}</option>
+                      {availableDays.map((d) => (
+                        <option key={d} value={d}>{d}{t("form.daySuffix")}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {isTouch && hasDate && (
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-full"
+                      style={{ marginTop: 16 }}
+                      onClick={() => setDateSheetOpen(false)}
+                    >
+                      {t("form.confirm")}
+                    </button>
+                  )}
+                </BottomSheet>
               </div>
 
               {/* Step 3 */}
@@ -180,27 +212,37 @@ export default function HomePage() {
                     {t("form.skipTime")}
                   </button>
                 </div>
-                <div className="branchGrid">
-                  <button
-                    type="button"
-                    className={`branchPill ${hour === "skip" ? "selected" : ""}`}
-                    onClick={() => setHour("skip")}
-                  >
-                    <span className="branchName">{t("form.unknownTime")}</span>
-                    <span className="branchTime">{t("form.unknownTimeDesc")}</span>
+                {isTouch && (
+                  <button type="button" className="sheetTrigger" onClick={() => setTimeSheetOpen(true)}>
+                    <span className={hour ? "sheetTriggerValue" : ""}>
+                      {hour === "skip" ? t("form.unknownTime") : hour ? t(`branches.${BRANCH_VALUES.indexOf(hour)}.label`) : t("form.step3Label")}
+                    </span>
+                    <span className="sheetTriggerChevron">▼</span>
                   </button>
-                  {BRANCH_VALUES.map((val, idx) => (
+                )}
+                <BottomSheet open={timeSheetOpen} onClose={() => setTimeSheetOpen(false)} title={t("form.step3Label")}>
+                  <div className="branchGrid">
                     <button
-                      key={val}
                       type="button"
-                      className={`branchPill ${hour === val ? "selected" : ""}`}
-                      onClick={() => setHour(val)}
+                      className={`branchPill ${hour === "skip" ? "selected" : ""}`}
+                      onClick={() => { setHour("skip"); if (isTouch) setTimeout(() => setTimeSheetOpen(false), 200); }}
                     >
-                      <span className="branchName">{t(`branches.${idx}.label`)}</span>
-                      <span className="branchTime">{t(`branches.${idx}.time`)}</span>
+                      <span className="branchName">{t("form.unknownTime")}</span>
+                      <span className="branchTime">{t("form.unknownTimeDesc")}</span>
                     </button>
-                  ))}
-                </div>
+                    {BRANCH_VALUES.map((val, idx) => (
+                      <button
+                        key={val}
+                        type="button"
+                        className={`branchPill ${hour === val ? "selected" : ""}`}
+                        onClick={() => { setHour(val); if (isTouch) setTimeout(() => setTimeSheetOpen(false), 200); }}
+                      >
+                        <span className="branchName">{t(`branches.${idx}.label`)}</span>
+                        <span className="branchTime">{t(`branches.${idx}.time`)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </BottomSheet>
               </div>
 
               {/* Step 4 */}
