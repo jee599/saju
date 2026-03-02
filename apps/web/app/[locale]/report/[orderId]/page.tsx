@@ -24,9 +24,86 @@ function highlightFirstSentence(paragraph: string): { lead?: string; rest?: stri
   };
 }
 
+function renderMarkdownBold(text: string) {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+  );
+}
+
+function isNumberedList(paragraphs: string[]): boolean {
+  if (paragraphs.length < 2) return false;
+  let count = 0;
+  for (const p of paragraphs) {
+    if (/^\d+[\.\)]\s/.test(p)) count++;
+  }
+  return count >= 2 && count / paragraphs.length >= 0.5;
+}
+
+function parseNumberedItem(p: string): { num: string; title: string; body: string } | null {
+  const match = p.match(/^(\d+)[\.\)]\s*\*\*(.+?)\*\*[:\s]*(.*)$/s);
+  if (match) return { num: match[1], title: match[2], body: match[3].trim() };
+  const simpleMatch = p.match(/^(\d+)[\.\)]\s*(.+?)[:：]\s*(.+)$/s);
+  if (simpleMatch) return { num: simpleMatch[1], title: simpleMatch[2], body: simpleMatch[3].trim() };
+  return null;
+}
+
 function SectionText({ text }: { text: string }) {
   const paragraphs = splitParagraphs(text);
   if (paragraphs.length === 0) return null;
+
+  const isList = isNumberedList(paragraphs);
+
+  if (isList) {
+    const intro: string[] = [];
+    const items: { num: string; title: string; body: string }[] = [];
+    const outro: string[] = [];
+    let seenItem = false;
+
+    for (const p of paragraphs) {
+      const parsed = parseNumberedItem(p);
+      if (parsed) {
+        seenItem = true;
+        items.push(parsed);
+      } else if (!seenItem) {
+        intro.push(p);
+      } else {
+        outro.push(p);
+      }
+    }
+
+    return (
+      <div className="reportText">
+        {intro.map((p, i) => {
+          if (i === 0) {
+            const { lead, rest } = highlightFirstSentence(p);
+            return (
+              <p key={`intro-${i}`} className="reportParagraph">
+                {lead ? <mark className="reportMark">{lead}</mark> : null}{rest ? ` ${rest}` : null}
+              </p>
+            );
+          }
+          return <p key={`intro-${i}`} className="reportParagraph">{renderMarkdownBold(p)}</p>;
+        })}
+        <ol className="reportTipList">
+          {items.map((item, i) => (
+            <li key={i} className="reportTipItem">
+              <div className="reportTipNum">{item.num}</div>
+              <div className="reportTipContent">
+                <h4 className="reportTipTitle">{item.title}</h4>
+                <p className="reportTipBody">{renderMarkdownBold(item.body)}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        {outro.map((p, i) => (
+          <p key={`outro-${i}`} className="reportParagraph">{renderMarkdownBold(p)}</p>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="reportText">
       {paragraphs.map((p, i) => {
@@ -38,7 +115,7 @@ function SectionText({ text }: { text: string }) {
             </p>
           );
         }
-        return <p key={i} className="reportParagraph">{p}</p>;
+        return <p key={i} className="reportParagraph">{renderMarkdownBold(p)}</p>;
       })}
     </div>
   );

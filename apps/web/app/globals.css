@@ -275,6 +275,7 @@ p, li, label, input, select, button, textarea {
   align-items: center;
   gap: 8px;
   width: 100%;
+  order: 3;
   overflow-x: auto;
   scrollbar-width: none;
   padding-bottom: 2px;
@@ -987,6 +988,59 @@ p, li, label, input, select, button, textarea {
   padding: 0.08em 0.25em;
   border-radius: 0.25em;
   color: #F5F0EB;
+}
+
+/* ── Report Tip List ── */
+.reportTipList {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.reportTipItem {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--glass-border);
+}
+.reportTipNum {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-gold));
+  color: #1A0A2E;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reportTipContent {
+  flex: 1;
+  min-width: 0;
+}
+.reportTipTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--t1);
+  margin: 0;
+  line-height: 1.4;
+}
+.reportTipBody {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: #D4CDE0;
+  white-space: pre-wrap;
+}
+.reportTipBody strong {
+  color: var(--t1);
+  font-weight: 600;
 }
 
 .reportDisclaimer {
@@ -1789,6 +1843,34 @@ p, li, label, input, select, button, textarea {
   color: var(--t2);
   font-variant-numeric: tabular-nums;
   font-weight: 500;
+}
+
+.loadingProgressBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.loadingProgressTrack {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.loadingProgressFill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-gold));
+  transition: width 1s var(--ease-smooth);
+}
+.loadingProgressPct {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-variant-numeric: tabular-nums;
+  min-width: 36px;
+  text-align: right;
 }
 
 .timerDot {
