@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 /* ──────────────────────────────────────────────────
    오행 상수 (비주얼 전용 — hanja, color, emoji)
@@ -204,10 +204,18 @@ function OhangDetailCard({ idx, t }: { idx: number; t: (key: string) => string }
 
 function LoadingContent() {
   const t = useTranslations("loading");
+  const locale = useLocale();
   const router = useRouter();
   const params = useSearchParams();
   const orderId = params.get("orderId");
-  const legacyRedirect = params.get("redirect");
+
+  // Free flow params
+  const freeName = params.get("name");
+  const freeBirthDate = params.get("birthDate");
+  const freeBirthTime = params.get("birthTime");
+  const freeGender = params.get("gender");
+  const freeCalendarType = params.get("calendarType");
+  const isFreeFlow = !orderId && !!freeBirthDate;
 
   const [slideIdx, setSlideIdx] = useState(0);
   const [stepIdx, setStepIdx] = useState(0);
@@ -261,13 +269,54 @@ function LoadingContent() {
     return () => clearInterval(timer);
   }, []);
 
-  // Legacy redirect
-  useEffect(() => {
-    if (legacyRedirect && !orderId) {
-      const timer = setTimeout(() => router.push(legacyRedirect), 3500);
-      return () => clearTimeout(timer);
+  // Free flow: 무료 성격분석 생성
+  const callFreeGenerate = useCallback(async () => {
+    if (!isFreeFlow || confirmCalled.current) return;
+    confirmCalled.current = true;
+    setIsGenerating(true);
+
+    try {
+      const res = await fetch("/api/report/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "free",
+          input: {
+            name: freeName,
+            birthDate: freeBirthDate,
+            birthTime: freeBirthTime,
+            gender: freeGender,
+            calendarType: freeCalendarType,
+          },
+          locale,
+        }),
+      });
+
+      const json = await res.json();
+      if (json.ok && json.data?.section?.text) {
+        const currentKey = `${freeName}_${freeBirthDate}_${freeBirthTime}_${freeGender}_${freeCalendarType}`;
+        sessionStorage.setItem("free_personality", json.data.section.text);
+        sessionStorage.setItem("free_personality_key", currentKey);
+      }
+
+      setDone(true);
+      const q = new URLSearchParams({
+        name: freeName ?? "",
+        birthDate: freeBirthDate ?? "",
+        gender: freeGender ?? "other",
+        calendarType: freeCalendarType ?? "solar",
+        ...(freeBirthTime ? { birthTime: freeBirthTime } : {}),
+      });
+      setTimeout(() => router.push(`/result?${q.toString()}`), 600);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : t("genericError"));
+      setIsGenerating(false);
     }
-  }, [legacyRedirect, orderId, router]);
+  }, [isFreeFlow, freeName, freeBirthDate, freeBirthTime, freeGender, freeCalendarType, locale, router, t]);
+
+  useEffect(() => {
+    if (isFreeFlow) callFreeGenerate();
+  }, [isFreeFlow, callFreeGenerate]);
 
   // checkout/confirm + 유료 리포트 생성
   const callConfirm = useCallback(async () => {
