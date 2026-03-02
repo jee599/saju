@@ -24,25 +24,31 @@ export async function GET(request: Request) {
 
   try {
     // KPI 집계
-    const [totalRequests, totalOrders, confirmedOrders, revenueData, llmCost] = await Promise.all([
+    const [totalRequests, totalOrders, confirmedOrders, revenueData] = await Promise.all([
       prisma.fortuneRequest.count({ where: { createdAt: { gte: since } } }),
       prisma.order.count({ where: { createdAt: { gte: since } } }),
       prisma.order.count({ where: { status: "confirmed", createdAt: { gte: since } } }),
       prisma.order.findMany({
         where: { status: "confirmed", createdAt: { gte: since } },
-        select: { amount: true, currency: true },
-      }),
-      prisma.llmUsage.aggregate({
-        where: { createdAt: { gte: since } },
-        _sum: { estimatedCostUsd: true, totalTokens: true },
+        select: { amountKrw: true, currency: true },
       }),
     ]);
+
+    let llmCost = { _sum: { estimatedCostUsd: 0, totalTokens: 0 } } as { _sum: { estimatedCostUsd: number | null; totalTokens: number | null } };
+    try {
+      llmCost = await prisma.llmUsage.aggregate({
+        where: { createdAt: { gte: since } },
+        _sum: { estimatedCostUsd: true, totalTokens: true },
+      });
+    } catch {
+      // Keep admin dashboard available even if llm_usage table is unavailable.
+    }
 
     // 통화별 매출 합산
     const revenue: Record<string, number> = {};
     for (const o of revenueData) {
       const cur = o.currency ?? "KRW";
-      revenue[cur] = (revenue[cur] ?? 0) + (o.amount ?? 0);
+      revenue[cur] = (revenue[cur] ?? 0) + (o.amountKrw ?? 0);
     }
 
     // 일별 데이터
@@ -55,7 +61,7 @@ export async function GET(request: Request) {
       `SELECT DATE(created_at AT TIME ZONE 'Asia/Seoul') as date,
               COUNT(*) as count,
               COUNT(*) FILTER (WHERE status = 'confirmed') as confirmed,
-              COALESCE(SUM(amount) FILTER (WHERE status = 'confirmed'), 0) as revenue
+              COALESCE(SUM(amount_krw) FILTER (WHERE status = 'confirmed'), 0) as revenue
        FROM "Order" WHERE created_at >= $1 GROUP BY date ORDER BY date`,
       since
     );
