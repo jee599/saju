@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "../../i18n/navigation";
 import { track } from "../../lib/analytics";
-import BottomSheet from "./components/BottomSheet";
 
 function useIsTouchDevice() {
   return useSyncExternalStore(
@@ -45,7 +44,6 @@ export default function HomePage() {
   const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [dateSheetOpen, setDateSheetOpen] = useState(false);
   const isTouch = useIsTouchDevice();
 
   const nameRef = useRef<HTMLInputElement>(null);
@@ -142,21 +140,32 @@ export default function HomePage() {
                     {t("form.lunar")}
                   </button>
                 </div>
-                {isTouch && (
-                  <button type="button" className="sheetTrigger" onClick={() => setDateSheetOpen(true)}>
-                    <span className={hasDate ? "sheetTriggerValue" : ""}>
-                      {hasDate ? `${year}${t("form.yearSuffix")} ${month}${t("form.monthSuffix")} ${day}${t("form.daySuffix")}` : t("form.step2Label")}
-                    </span>
-                    <span className="sheetTriggerChevron">▼</span>
-                  </button>
-                )}
-                <BottomSheet open={dateSheetOpen} onClose={() => setDateSheetOpen(false)} title={t("form.step2Label")}>
+                {isTouch ? (
+                  <input
+                    type="date"
+                    className="input"
+                    value={hasDate ? `${year}-${padTwo(+month)}-${padTwo(+day)}` : ""}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (!v) {
+                        setYear("");
+                        setMonth("");
+                        setDay("");
+                        return;
+                      }
+                      const [y, m, d] = v.split("-");
+                      setYear(y ?? "");
+                      setMonth(m ? String(Number(m)) : "");
+                      setDay(d ? String(Number(d)) : "");
+                    }}
+                    aria-label={t("form.step2Label")}
+                  />
+                ) : (
                   <div className="dateSelectRow">
                     <select
                       className="select"
                       value={year}
                       onChange={(e) => setYear(e.target.value)}
-                      
                       aria-label={t("form.yearAria")}
                     >
                       <option value="">{t("form.yearPlaceholder")}</option>
@@ -168,7 +177,6 @@ export default function HomePage() {
                       className="select"
                       value={month}
                       onChange={(e) => setMonth(e.target.value)}
-                      
                       aria-label={t("form.monthAria")}
                     >
                       <option value="">{t("form.monthPlaceholder")}</option>
@@ -180,7 +188,6 @@ export default function HomePage() {
                       className="select"
                       value={day}
                       onChange={(e) => setDay(e.target.value)}
-                      
                       aria-label={t("form.dayAria")}
                     >
                       <option value="">{t("form.dayPlaceholder")}</option>
@@ -189,17 +196,7 @@ export default function HomePage() {
                       ))}
                     </select>
                   </div>
-                  {isTouch && hasDate && (
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-full"
-                      style={{ marginTop: 16 }}
-                      onClick={() => setDateSheetOpen(false)}
-                    >
-                      {t("form.confirm")}
-                    </button>
-                  )}
-                </BottomSheet>
+                )}
               </div>
 
               {/* Step 3 */}
