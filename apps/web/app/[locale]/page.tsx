@@ -10,7 +10,10 @@ import BottomSheet from "./components/BottomSheet";
 function useIsTouchDevice() {
   return useSyncExternalStore(
     () => () => {},
-    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches,
+    () => {
+      if (typeof window === "undefined") return false;
+      return window.matchMedia("(pointer: coarse), (max-width: 767px)").matches;
+    },
     () => false,
   );
 }
@@ -149,12 +152,12 @@ export default function HomePage() {
                   </button>
                 )}
                 <BottomSheet open={dateSheetOpen} onClose={() => setDateSheetOpen(false)} title={t("form.step2Label")}>
-                  <div style={{ display: "flex", gap: 8 }}>
+                  <div className="dateSelectRow">
                     <select
                       className="select"
                       value={year}
                       onChange={(e) => setYear(e.target.value)}
-                      style={{ flex: 1.2 }}
+                      
                       aria-label={t("form.yearAria")}
                     >
                       <option value="">{t("form.yearPlaceholder")}</option>
@@ -166,7 +169,7 @@ export default function HomePage() {
                       className="select"
                       value={month}
                       onChange={(e) => setMonth(e.target.value)}
-                      style={{ flex: 1 }}
+                      
                       aria-label={t("form.monthAria")}
                     >
                       <option value="">{t("form.monthPlaceholder")}</option>
@@ -178,7 +181,7 @@ export default function HomePage() {
                       className="select"
                       value={day}
                       onChange={(e) => setDay(e.target.value)}
-                      style={{ flex: 1 }}
+                      
                       aria-label={t("form.dayAria")}
                     >
                       <option value="">{t("form.dayPlaceholder")}</option>

@@ -339,7 +339,7 @@ function ResultContent() {
         {/* 오행 시각화 */}
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ textAlign: "center", marginBottom: 8 }}>{t("elementDist")}</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, alignItems: "center" }}>
+          <div className="elementChartsGrid">
             <div>
               <ElementRadar balance={elements.balance} t={t} />
               <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--t2)", marginTop: 4 }}>{t("radarLabel")}</p>

@@ -2780,7 +2780,7 @@ p, li, label, input, select, button, textarea {
 }
 
 @media (min-width: 481px) and (max-width: 639px) {
-  .branchGrid { grid-template-columns: repeat(3, 1fr); }
+  .branchGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pricingGrid { grid-template-columns: 1fr; gap: 12px; }
 }
 
@@ -2792,6 +2792,62 @@ p, li, label, input, select, button, textarea {
   .compatElements { flex-direction: column; gap: 12px; }
   .compatConnector { transform: rotate(90deg); }
   .landingSection { padding: 52px 0; }
+}
+
+/* ── Mobile Layout Safety ───────────────────────── */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 767px) {
+  .container {
+    width: min(100%, calc(100vw - 24px));
+  }
+
+  .input, .select, .textarea, .sheetTrigger, .btn, button {
+    font-size: 16px;
+  }
+
+  .dateSelectRow {
+    grid-template-columns: 1fr;
+  }
+
+  .dateSelectRow .select {
+  min-width: 0;
+  padding-right: 30px;
+}
+
+.elementChartsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .select {
+    min-height: 52px;
+  }
+
+  .branchGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .branchPill {
+    min-height: 56px;
+    padding: 12px 8px;
+  }
+
+  .branchName,
+  .branchTime,
+  .sheetTriggerValue {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
 }
 
 /* ── 로딩 페이지 반응형 ──────────────────────────── */
@@ -3198,8 +3254,21 @@ p, li, label, input, select, button, textarea {
 .sheetTrigger {
   display: none;
 }
+.dateSelectRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
 
-@media (pointer: coarse) {
+.elementChartsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: center;
+}
+
+
+@media (pointer: coarse), (max-width: 767px) {
   .bottomSheetOverlay {
     display: block;
     position: fixed;
@@ -3310,7 +3379,7 @@ p, li, label, input, select, button, textarea {
   }
 }
 
-@media (pointer: coarse) {
+@media (pointer: coarse), (max-width: 767px) {
   .glassCard:hover { transform: none; }
   .btn:hover { transform: none; }
   .btn-primary:hover { background-position: 0 0; }
