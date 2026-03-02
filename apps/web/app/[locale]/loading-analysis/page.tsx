@@ -212,6 +212,7 @@ function LoadingContent() {
   const [slideIdx, setSlideIdx] = useState(0);
   const [stepIdx, setStepIdx] = useState(0);
   const [elapsedSec, setElapsedSec] = useState(0);
+  const [done, setDone] = useState(false);
   const [fadeState, setFadeState] = useState<"in" | "out">("in");
   const [activeOhang, setActiveOhang] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -302,7 +303,9 @@ function LoadingContent() {
         throw new Error(body?.error?.message ?? t("reportFail"));
       }
 
-      router.push(`/report/${orderId}`);
+      setDone(true);
+      setTimeout(() => router.push(`/report/${orderId}`), 600);
+      return;
     } catch (e) {
       setError(e instanceof Error ? e.message : t("genericError"));
       setIsGenerating(false);
@@ -354,12 +357,25 @@ function LoadingContent() {
             <OhangDetailCard idx={activeOhang} t={t} />
           </div>
 
-          {/* ── 타이머 + 스텝 바 ── */}
+          {/* ── 타이머 + 프로그레스 + 스텝 바 ── */}
           <div className="loadingStatusBar">
             <div className="loadingTimer">
               <span className="timerDot" />
               <span>{t("analyzing")} · {formatTime(elapsedSec)}</span>
             </div>
+            {(() => {
+              const EXPECTED_SEC = orderId ? 60 : 3;
+              const rawPct = done ? 100 : Math.min(95, (elapsedSec / EXPECTED_SEC) * 100);
+              const pct = done ? 100 : Math.min(95, Math.round(Math.sqrt(rawPct / 95) * 95));
+              return (
+                <div className="loadingProgressBar">
+                  <div className="loadingProgressTrack">
+                    <div className="loadingProgressFill" style={{ width: `${pct}%` }} />
+                  </div>
+                  <span className="loadingProgressPct">{pct}%</span>
+                </div>
+              );
+            })()}
             <div className="loadingSteps2">
               {[0, 1, 2, 3, 4].map((i) => (
                 <div
