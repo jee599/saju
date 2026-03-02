@@ -51,28 +51,43 @@ export async function GET(request: Request) {
       revenue[cur] = (revenue[cur] ?? 0) + (o.amountKrw ?? 0);
     }
 
-    // 일별 데이터
-    const dailyRequests = await prisma.$queryRawUnsafe<{ date: string; count: bigint }[]>(
-      `SELECT DATE(created_at AT TIME ZONE 'Asia/Seoul') as date, COUNT(*) as count
-       FROM "FortuneRequest" WHERE created_at >= $1 GROUP BY date ORDER BY date`,
-      since
-    );
-    const dailyOrders = await prisma.$queryRawUnsafe<{ date: string; count: bigint; confirmed: bigint; revenue: bigint }[]>(
-      `SELECT DATE(created_at AT TIME ZONE 'Asia/Seoul') as date,
-              COUNT(*) as count,
-              COUNT(*) FILTER (WHERE status = 'confirmed') as confirmed,
-              COALESCE(SUM(amount_krw) FILTER (WHERE status = 'confirmed'), 0) as revenue
-       FROM "Order" WHERE created_at >= $1 GROUP BY date ORDER BY date`,
-      since
-    );
+    // 일별 데이터 (raw SQL 대신 Prisma + JS 집계로 스키마 차이 내성 강화)
+    const [requestRows, orderRows] = await Promise.all([
+      prisma.fortuneRequest.findMany({
+        where: { createdAt: { gte: since } },
+        select: { createdAt: true },
+      }),
+      prisma.order.findMany({
+        where: { createdAt: { gte: since } },
+        select: { createdAt: true, status: true, amountKrw: true },
+      }),
+    ]);
 
-    // 일별 맵 생성
-    const reqMap = new Map(dailyRequests.map(r => [r.date.toString().slice(0, 10), Number(r.count)]));
-    const ordMap = new Map(dailyOrders.map(r => [r.date.toString().slice(0, 10), {
-      orders: Number(r.count),
-      confirmed: Number(r.confirmed),
-      revenue: Number(r.revenue),
-    }]));
+    const toKstDateKey = (d: Date) => {
+      const parts = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(d);
+      const y = parts.find(p => p.type === 'year')?.value ?? '1970';
+      const m = parts.find(p => p.type === 'month')?.value ?? '01';
+      const day = parts.find(p => p.type === 'day')?.value ?? '01';
+      return `${y}-${m}-${day}`;
+    };
+
+    const reqMap = new Map<string, number>();
+    for (const r of requestRows) {
+      const key = toKstDateKey(r.createdAt);
+      reqMap.set(key, (reqMap.get(key) ?? 0) + 1);
+    }
+
+    const ordMap = new Map<string, { orders: number; confirmed: number; revenue: number }>();
+    for (const o of orderRows) {
+      const key = toKstDateKey(o.createdAt);
+      const prev = ordMap.get(key) ?? { orders: 0, confirmed: 0, revenue: 0 };
+      prev.orders += 1;
+      if (o.status === 'confirmed') {
+        prev.confirmed += 1;
+        prev.revenue += o.amountKrw ?? 0;
+      }
+      ordMap.set(key, prev);
+    }
 
     const daily: { date: string; requests: number; orders: number; confirmed: number; revenue: number }[] = [];
     for (let d = new Date(since); d <= new Date(); d.setDate(d.getDate() + 1)) {
