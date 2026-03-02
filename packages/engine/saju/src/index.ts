@@ -315,16 +315,6 @@ function parsePillar(pillarStr: string): Pillar {
 export function calculateFourPillars(input: SajuInput): SajuResult {
   const { year, month, day, hour, minute } = input;
 
-  // Boundary normalization for exact hh:00 inputs:
-  // Many users enter rounded time (e.g. "09:00") while intending the preceding 2-hour slot.
-  // To reduce boundary surprises, treat exact odd-hour boundaries as previous slot.
-  const normalized = (() => {
-    if (minute === 0 && hour % 2 === 1) {
-      if (hour === 23) return { hour: 22, minute: 59 };
-      return { hour: hour - 1, minute: 59 };
-    }
-    return { hour, minute };
-  })();
 
   // Validate input ranges
   if (year < 1900 || year > 2100) throw new RangeError(`year must be 1900-2100, got ${year}`);
@@ -333,7 +323,7 @@ export function calculateFourPillars(input: SajuInput): SajuResult {
   if (hour < 0 || hour > 23) throw new RangeError(`hour must be 0-23, got ${hour}`);
   if (minute < 0 || minute > 59) throw new RangeError(`minute must be 0-59, got ${minute}`);
 
-  const solar = Solar.fromYmdHms(year, month, day, normalized.hour, normalized.minute, 0);
+  const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
   const lunar = solar.getLunar();
   const bazi = lunar.getEightChar();
 
