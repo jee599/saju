@@ -282,6 +282,17 @@ p, li, label, input, select, button, textarea {
 
 .topNav::-webkit-scrollbar { display: none; }
 
+.topNav::after {
+  content: "";
+  position: sticky;
+  right: 0;
+  flex-shrink: 0;
+  width: 24px;
+  background: linear-gradient(to right, transparent, rgba(26, 10, 46, 0.95));
+  pointer-events: none;
+  align-self: stretch;
+}
+
 .topNav a {
   text-decoration: none;
   color: var(--t2);
@@ -1103,8 +1114,8 @@ p, li, label, input, select, button, textarea {
 /* ── Footer ───────────────────────────────────────── */
 
 .siteFooter {
-  border-top: 1px solid rgba(220, 207, 243, 0.06);
-  background: rgba(15, 10, 26, 0.9);
+  border-top: 1px solid rgba(220, 207, 243, 0.15);
+  background: rgba(20, 14, 36, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -1112,13 +1123,14 @@ p, li, label, input, select, button, textarea {
 .footerInner {
   width: var(--container);
   margin-inline: auto;
-  padding: 36px 0 44px;
+  padding: 28px 0 calc(36px + env(safe-area-inset-bottom, 0px));
   display: grid;
   gap: 8px;
 }
 
 .footerTitle {
   font-weight: 650;
+  font-size: 1rem;
   letter-spacing: -0.3px;
   color: var(--t1);
 }
@@ -1132,7 +1144,7 @@ p, li, label, input, select, button, textarea {
 
 .footerLinks a {
   text-decoration: none;
-  color: var(--t3);
+  color: var(--t2);
   font-size: 0.85rem;
   transition: color 0.16s;
   min-height: 44px;
@@ -2239,7 +2251,7 @@ p, li, label, input, select, button, textarea {
   margin-top: 20px;
   display: flex;
   gap: 8px;
-  max-width: 400px;
+  max-width: min(400px, 100%);
   margin-inline: auto;
 }
 
@@ -2311,7 +2323,7 @@ p, li, label, input, select, button, textarea {
 }
 
 .formStepLabel {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--t3);
   margin-bottom: 8px;
@@ -2392,7 +2404,10 @@ p, li, label, input, select, button, textarea {
   color: var(--t3);
   font-size: 13px;
   cursor: pointer;
-  padding: 8px 0;
+  padding: 8px 4px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   transition: color 0.2s;
 }
 
@@ -2800,13 +2815,34 @@ p, li, label, input, select, button, textarea {
 }
 
 @media (max-width: 767px) {
-  .page { padding-top: 36px; padding-bottom: 130px; }
+  .page { padding-top: 28px; padding-bottom: 100px; }
   .buttonRow .btn, .buttonRow .btn-full { flex: 1 1 auto; }
   .card, .glassCard { border-radius: 18px; }
   .statsStrip { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .compatElements { flex-direction: column; gap: 12px; }
   .compatConnector { transform: rotate(90deg); }
   .landingSection { padding: 52px 0; }
+  .headerInner {
+    min-height: 56px;
+    padding: 8px 0;
+    gap: 6px 10px;
+  }
+  .topNav {
+    gap: 6px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .topNav a {
+    padding: 7px 12px;
+    font-size: 0.82rem;
+  }
+  .brandText { font-size: 1.05rem; }
+  .brand { gap: 6px; }
+  .brandLogo { width: 24px; height: 24px; }
+  .siteFooter { padding-bottom: 80px; }
+  .languageSelector { order: 3; }
+  .languageSelectorBtn { padding: 8px 10px; font-size: 0.8rem; }
+  .languageSelectorBtn span:nth-child(2) { display: none; }
 }
 
 /* ── Mobile Layout Safety ───────────────────────── */
@@ -2822,7 +2858,7 @@ img, video, canvas, svg {
 
 @media (max-width: 767px) {
   .container {
-    width: min(100%, calc(100vw - 24px));
+    width: min(100%, calc(100vw - 32px));
   }
 
   .input, .select, .textarea, .sheetTrigger, .btn, button {
@@ -2843,7 +2879,7 @@ img, video, canvas, svg {
     gap: 12px;
   }
 
-  .select {
+  .input, .select, .textarea {
     min-height: 52px;
   }
 
@@ -2943,6 +2979,10 @@ img, video, canvas, svg {
   .pillarBox { width: 48px; }
   .pillarChar { font-size: 1.1rem; padding: 7px 0; }
   .pillarsRow { gap: 6px; }
+
+  .comingSoonCard { padding: 32px 16px; }
+  .heroMain { padding: clamp(24px, 5vw, 32px); }
+  .heroEyebrow { padding: 6px 14px; font-size: 0.7rem; }
 }
 
 /* ── Vote Section ─────────────────────────────────── */
@@ -3435,12 +3475,12 @@ img, video, canvas, svg {
 }
 
 
-.skip-link { position: absolute; left: 12px; top: -40px; background: #111; color: #fff; padding: 8px 12px; border-radius: 6px; z-index: 9999; }
-.skip-link:focus { top: 12px; }
+.skip-link { position: absolute; left: 12px; top: -60px; background: var(--accent); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 9999; font-weight: 600; font-size: 0.85rem; }
+.skip-link:focus { top: 72px; }
 
 
 .mobileDateInputWrap { display: flex; flex-direction: column; gap: 8px; }
-.mobileDateInput { min-height: 54px; font-size: 16px; font-weight: 600; }
+.mobileDateInput { min-height: 52px; font-size: 16px; font-weight: 600; }
 .mobileDatePreview { font-size: 0.85rem; color: var(--t2); text-align: left; padding: 6px 2px 0; }
 
 

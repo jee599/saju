@@ -109,7 +109,7 @@ function PaywallContent() {
           </p>
 
           {/* Email + checkout */}
-          <div className="form" style={{ maxWidth: 400, margin: "20px auto 0" }}>
+          <div className="form" style={{ maxWidth: "min(400px, 100%)", margin: "20px auto 0" }}>
             <div className="formGroup">
               <label htmlFor="paywall-email">{t("emailLabel")}</label>
               <input
