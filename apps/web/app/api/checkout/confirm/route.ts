@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
 import { prisma } from '@saju/api/db';
-import type { FortuneInput, OrderSummary } from '../../../../lib/types';
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error('STRIPE_SECRET_KEY is not set');
+  return new Stripe(key);
+}
 
 /**
- * 주문 확인만 수행. LLM 생성은 /api/report/generate 에서 개별 호출.
+ * 주문 확인: Stripe는 결제 상태를 서버에서 검증 후 confirmed 처리.
+ * 비-Stripe 결제수단은 운영환경에서 수동 확정을 차단한다.
  */
 export async function POST(req: Request) {
   try {
@@ -32,13 +38,40 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, data: { orderId: order.id } });
     }
 
-    // Update order status to "confirmed"
+
+    if (order.paymentProvider === 'stripe') {
+      if (!order.paymentId) {
+        return NextResponse.json(
+          { ok: false, error: { code: 'PAYMENT_PENDING', message: '결제 확인 대기 중입니다.' } },
+          { status: 409 }
+        );
+      }
+
+      const stripe = getStripe();
+      const session = await stripe.checkout.sessions.retrieve(order.paymentId);
+      if (session.payment_status !== 'paid') {
+        return NextResponse.json(
+          { ok: false, error: { code: 'PAYMENT_NOT_PAID', message: '결제가 완료되지 않았습니다.' } },
+          { status: 402 }
+        );
+      }
+    } else {
+      const allowUnverified = process.env.NODE_ENV !== 'production' || process.env.ALLOW_UNVERIFIED_CONFIRM === 'true';
+      if (!allowUnverified) {
+        return NextResponse.json(
+          { ok: false, error: { code: 'PAYMENT_VERIFICATION_REQUIRED', message: '결제 검증이 필요합니다.' } },
+          { status: 403 }
+        );
+      }
+    }
+
     await prisma.order.update({
       where: { id: order.id },
       data: { status: 'confirmed', confirmedAt: new Date() },
     });
 
     return NextResponse.json({ ok: true, data: { orderId: order.id } });
+
   } catch (err) {
     console.error('[checkout/confirm]', err);
     return NextResponse.json(

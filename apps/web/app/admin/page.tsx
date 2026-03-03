@@ -186,7 +186,6 @@ function LoginScreen({ onLogin }: { onLogin: (pw: string) => void }) {
     const res = await adminFetch("/api/admin/stats?range=7d", pw);
     setLoading(false);
     if (res.ok) {
-      sessionStorage.setItem("admin_pw", pw);
       onLogin(pw);
     } else {
       setError("비밀번호가 올바르지 않습니다.");
@@ -496,10 +495,6 @@ export default function AdminPage() {
   const [tab, setTab] = useState<"overview" | "orders" | "logs">("overview");
   const [range, setRange] = useState("30d");
 
-  useEffect(() => {
-    const saved = sessionStorage.getItem("admin_pw");
-    if (saved) setPw(saved);
-  }, []);
 
   if (!pw) return <LoginScreen onLogin={setPw} />;
 
@@ -510,7 +505,7 @@ export default function AdminPage() {
           <h1 style={S.title}>복연구소 관리자</h1>
           <button
             style={{ ...S.tab(false), fontSize: "0.8rem" }}
-            onClick={() => { sessionStorage.removeItem("admin_pw"); setPw(null); }}
+            onClick={() => { setPw(null); }}
           >
             로그아웃
           </button>

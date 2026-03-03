@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       prisma.order.count({ where: { status: "confirmed", createdAt: { gte: since } } }),
       prisma.order.findMany({
         where: { status: "confirmed", createdAt: { gte: since } },
-        select: { amountKrw: true, currency: true },
+        select: { amountKrw: true, amount: true, currency: true },
       }),
     ]);
 
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
     const revenue: Record<string, number> = {};
     for (const o of revenueData) {
       const cur = o.currency ?? "KRW";
-      revenue[cur] = (revenue[cur] ?? 0) + (o.amountKrw ?? 0);
+      revenue[cur] = (revenue[cur] ?? 0) + (cur === "KRW" ? (o.amountKrw ?? 0) : (o.amount ?? 0));
     }
 
     // 일별 데이터 (raw SQL 대신 Prisma + JS 집계로 스키마 차이 내성 강화)
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
       }),
       prisma.order.findMany({
         where: { createdAt: { gte: since } },
-        select: { createdAt: true, status: true, amountKrw: true },
+        select: { createdAt: true, status: true, amountKrw: true, amount: true, currency: true },
       }),
     ]);
 
@@ -84,14 +84,14 @@ export async function GET(request: Request) {
       prev.orders += 1;
       if (o.status === 'confirmed') {
         prev.confirmed += 1;
-        prev.revenue += o.amountKrw ?? 0;
+        prev.revenue += (o.currency === "KRW" ? (o.amountKrw ?? 0) : (o.amount ?? 0));
       }
       ordMap.set(key, prev);
     }
 
     const daily: { date: string; requests: number; orders: number; confirmed: number; revenue: number }[] = [];
     for (let d = new Date(since); d <= new Date(); d.setDate(d.getDate() + 1)) {
-      const key = d.toISOString().slice(0, 10);
+      const key = toKstDateKey(d);
       const ord = ordMap.get(key);
       daily.push({
         date: key,
