@@ -44,7 +44,7 @@
   },
   "ohang": [
     {
-      "ko": "나무",
+      "native": "나무",
       "season": "봄",
       "direction": "동쪽",
       "organ": "간·담",
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "ko": "불",
+      "native": "불",
       "season": "여름",
       "direction": "남쪽",
       "organ": "심장·소장",
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "ko": "흙",
+      "native": "흙",
       "season": "환절기",
       "direction": "중앙",
       "organ": "위·비장",
@@ -83,7 +83,7 @@
       ]
     },
     {
-      "ko": "쇠",
+      "native": "쇠",
       "season": "가을",
       "direction": "서쪽",
       "organ": "폐·대장",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "ko": "물",
+      "native": "물",
       "season": "겨울",
       "direction": "북쪽",
       "organ": "신장·방광",
@@ -226,5 +226,7 @@
         "운의 흐름을 유리하게 바꿀 수 있다고 합니다."
       ]
     }
-  ]
+  ],
+  "ohangSliderAria": "오행 소개 슬라이더",
+  "progressAria": "분석 진행률"
 }

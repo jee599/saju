@@ -1,12 +1,15 @@
 "use client";
 
+// TODO: Code-split heavy SVG/chart components (ElementRadar, ElementCycle,
+// FourPillarsTable) with next/dynamic to reduce initial JS bundle size.
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useMemo, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, ELEMENT_EMOJI } from "@saju/engine-saju";
-import { Lunar } from "lunar-typescript";
 import type { Element, FourPillars } from "@saju/engine-saju";
+import { convertLunarToSolar } from "../../../lib/lunarConvert";
 import { track } from "../../../lib/analytics";
 
 // ── 천간/지지 → 오행 매핑 ──
@@ -258,6 +261,8 @@ function ResultContent() {
   const [visible, setVisible] = useState(false);
   const [personalityText, setPersonalityText] = useState<string | null>(null);
   const [personalityError, setPersonalityError] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<{ pillars: FourPillars; elements: ReturnType<typeof calculateFourPillars>["elements"] } | null>(null);
+  const [lunarError, setLunarError] = useState(false);
 
   useEffect(() => {
     if (!birthDate) {
@@ -277,33 +282,40 @@ function ResultContent() {
     }
   }, [birthDate, birthTime, name, gender, calendarType, router, t]);
 
-  const analysis = useMemo(() => {
-    if (!birthDate) return null;
+  // Compute four pillars analysis; lunar conversion is async (dynamic import)
+  useEffect(() => {
+    if (!birthDate) return;
     const parts = birthDate.split("-").map(Number);
     let y = parts[0] ?? 2000;
     let m = parts[1] ?? 1;
     let d = parts[2] ?? 1;
     if (isNaN(y) || isNaN(m) || isNaN(d) || y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31) {
       const result = calculateFourPillars({ year: 2000, month: 1, day: 1, hour: 12, minute: 0 });
-      return { pillars: result.pillars, elements: result.elements };
+      setAnalysis({ pillars: result.pillars, elements: result.elements });
+      return;
     }
-    // Convert lunar date to solar if calendarType is lunar
-    if (calendarType === "lunar") {
-      try {
-        const solar = Lunar.fromYmd(y, m, d).getSolar();
-        y = solar.getYear();
-        m = solar.getMonth();
-        d = solar.getDay();
-      } catch {
-        // If conversion fails, fall back to treating as solar
-      }
-    }
+
     const hour = birthTime ? parseInt(birthTime.split(":")[0], 10) : 12;
     const minute = birthTime ? parseInt(birthTime.split(":")[1], 10) : 0;
     const safeHour = isNaN(hour) ? 12 : hour;
     const safeMinute = isNaN(minute) ? 0 : minute;
-    const result = calculateFourPillars({ year: y, month: m, day: d, hour: safeHour, minute: safeMinute });
-    return { pillars: result.pillars, elements: result.elements };
+
+    const compute = (sy: number, sm: number, sd: number) => {
+      const result = calculateFourPillars({ year: sy, month: sm, day: sd, hour: safeHour, minute: safeMinute });
+      setAnalysis({ pillars: result.pillars, elements: result.elements });
+    };
+
+    // Convert lunar date to solar if calendarType is lunar (async dynamic import)
+    if (calendarType === "lunar") {
+      convertLunarToSolar(y, m, d)
+        .then((solar) => compute(solar.year, solar.month, solar.day))
+        .catch(() => {
+          setLunarError(true);
+          compute(y, m, d); // fallback to treating as solar
+        });
+    } else {
+      compute(y, m, d);
+    }
   }, [birthDate, birthTime, calendarType]);
 
   const paywallParams = useMemo(() => new URLSearchParams({
@@ -344,7 +356,7 @@ function ResultContent() {
   }, [pillars]);
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         {/* 일간 카드 */}
         <section className={`glassCard dayMasterCard ${dayEl}`}>
@@ -362,6 +374,15 @@ function ResultContent() {
             </p>
           )}
         </section>
+
+        {/* 음력 변환 실패 경고 */}
+        {lunarError && (
+          <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(255,180,0,0.12)", borderRadius: 8, border: "1px solid rgba(255,180,0,0.25)" }}>
+            <p style={{ margin: 0, fontSize: "0.82rem", color: "#ffb400", lineHeight: 1.5 }}>
+              음력 날짜 변환에 실패하여 양력으로 계산되었습니다.
+            </p>
+          </div>
+        )}
 
         {/* 사주팔자 테이블 */}
         <section className="glassCard" style={{ marginTop: 16 }}>
@@ -495,7 +516,7 @@ function ResultContent() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -1,5 +1,8 @@
 "use client";
 
+// TODO: Code-split heavy visual components (OhangCycleVisual, PillarsVisual,
+// OhangDetailCard) with next/dynamic to reduce initial JS bundle size.
+
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -144,7 +147,7 @@ function OhangCycleVisual({ activeIdx, t }: { activeIdx: number; t: (key: string
           >
             <span className="cycleEmoji">{el.emoji}</span>
             <span className="cycleHanja">{el.hanja}</span>
-            <span className="cycleKo">{t(`ohang.${i}.ko`)}</span>
+            <span className="cycleKo">{t(`ohang.${i}.native`)}</span>
           </div>
         );
       })}
@@ -186,7 +189,7 @@ function OhangDetailCard({ idx, t }: { idx: number; t: (key: string) => string }
         <span className="ohangDetailEmoji">{el.emoji}</span>
         <div>
           <h3 className="ohangDetailTitle" style={{ color: el.color }}>
-            {el.hanja} · {t(`ohang.${idx}.ko`)}
+            {el.hanja} · {t(`ohang.${idx}.native`)}
           </h3>
           <p className="ohangDetailSub">{t(`ohang.${idx}.personality`)}</p>
         </div>
@@ -398,7 +401,7 @@ function LoadingContent() {
   };
 
   return (
-    <main className="page loadingAnalysis">
+    <div className="page loadingAnalysis">
       {/* 은은한 빛 파티클 */}
       <div className="loadingParticles" aria-hidden="true">
         {particleStyles.map((ps, i) => (
@@ -429,11 +432,11 @@ function LoadingContent() {
             </div>
             <div className="ohangInfoCol">
               <OhangDetailCard idx={activeOhang} t={t} />
-              <div className="ohangDescSlider" aria-label="오행 소개 슬라이더">
+              <div className="ohangDescSlider" aria-label={t("ohangSliderAria")}>
                 <div className="ohangDescTrack" style={{ transform: `translateX(-${activeOhang * 100}%)` }}>
                   {OHANG_VISUAL.map((el, i) => (
                     <div key={el.hanja} className="ohangDescPane">
-                      <strong style={{ color: el.color }}>{el.emoji} {el.hanja} {t(`ohang.${i}.ko`)}</strong>
+                      <strong style={{ color: el.color }}>{el.emoji} {el.hanja} {t(`ohang.${i}.native`)}</strong>
                       <p>{t(`ohang.${i}.description.0`)}</p>
                     </div>
                   ))}
@@ -458,7 +461,14 @@ function LoadingContent() {
               return (
                 <>
                   <div className="loadingProgressBar">
-                    <div className="loadingProgressTrack">
+                    <div
+                      className="loadingProgressTrack"
+                      role="progressbar"
+                      aria-valuenow={pct}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={t("progressAria")}
+                    >
                       <div className="loadingProgressFill" style={{ width: `${pct}%` }} />
                     </div>
                     <span className="loadingProgressPct">{pct}%</span>
@@ -537,7 +547,7 @@ function LoadingContent() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

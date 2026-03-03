@@ -29,12 +29,21 @@ function checkFreeRateLimit(ip: string): boolean {
   const entry = freeRateLimitMap.get(ip);
   if (!entry || now > entry.resetTime) {
     freeRateLimitMap.set(ip, { count: 1, resetTime: now + FREE_RATE_LIMIT_WINDOW });
-    return true;
-  }
-  if (entry.count >= FREE_RATE_LIMIT_MAX) {
+  } else if (entry.count >= FREE_RATE_LIMIT_MAX) {
     return false;
+  } else {
+    entry.count += 1;
   }
-  entry.count += 1;
+
+  // Prevent unbounded memory growth: purge expired entries when map gets large
+  if (freeRateLimitMap.size > 10_000) {
+    for (const [key, val] of freeRateLimitMap) {
+      if (now > val.resetTime) {
+        freeRateLimitMap.delete(key);
+      }
+    }
+  }
+
   return true;
 }
 
@@ -51,7 +60,7 @@ export async function POST(req: Request) {
         ?? 'unknown';
       if (!checkFreeRateLimit(ip)) {
         return NextResponse.json(
-          { ok: false, error: { code: 'RATE_LIMITED', message: '요청이 너무 많습니다. 1시간 후에 다시 시도해 주세요.' } },
+          { ok: false, error: { code: 'RATE_LIMITED', message: 'Too many requests. Try again in 1 hour.' } },
           { status: 429 }
         );
       }
@@ -60,7 +69,7 @@ export async function POST(req: Request) {
       const locale = (body?.locale as string) ?? 'ko';
       if (!input?.name || !input?.birthDate || !input?.gender || !input?.calendarType) {
         return NextResponse.json(
-          { ok: false, error: { code: 'INVALID_INPUT', message: '사용자 정보가 부족합니다.' } },
+          { ok: false, error: { code: 'INVALID_INPUT', message: 'Insufficient user information.' } },
           { status: 400 }
         );
       }
@@ -84,7 +93,7 @@ export async function POST(req: Request) {
 
       if (!orderId) {
         return NextResponse.json(
-          { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId가 필요합니다.' } },
+          { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId is required.' } },
           { status: 400 }
         );
       }
@@ -97,7 +106,7 @@ export async function POST(req: Request) {
 
       if (!order || order.status !== 'confirmed') {
         return NextResponse.json(
-          { ok: false, error: { code: 'ORDER_NOT_FOUND', message: '확인된 주문을 찾을 수 없습니다.' } },
+          { ok: false, error: { code: 'ORDER_NOT_FOUND', message: 'Confirmed order not found.' } },
           { status: 404 }
         );
       }
@@ -147,21 +156,24 @@ export async function POST(req: Request) {
       };
 
       // 4. 성격 섹션 준비 (캐시 or 재생성)
-      const { generateFreePersonality, generateChunkedReport, getPersonalityDef, getReportTexts } = await import('../../../../lib/llmEngine');
+      const { generateFreePersonality, generateChunkedReport, getPersonalityDef, getReportTexts, convertLunarInputToSolar } = await import('../../../../lib/llmEngine');
       const pDef = getPersonalityDef(locale);
+
+      // Convert lunar dates to solar before passing to LLM
+      const llmInput = convertLunarInputToSolar(input);
 
       let personalitySection: { key: string; title: string; text: string };
       if (personalityText && personalityText.length > 100) {
         personalitySection = { key: pDef.key, title: pDef.title, text: personalityText };
       } else {
-        const freeResult = await generateFreePersonality({ input, locale });
+        const freeResult = await generateFreePersonality({ input: llmInput, locale });
         personalitySection = freeResult.section;
       }
 
       // 5. Haiku 4청크 = 8섹션 생성
       const chunkedReport = await generateChunkedReport({
         orderId: order.id,
-        input,
+        input: llmInput,
         productCode: order.productCode as ReportDetail['productCode'],
         targetModel: 'haiku',
         locale,
@@ -277,13 +289,13 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(
-      { ok: false, error: { code: 'INVALID_TYPE', message: 'type은 "free" 또는 "paid"여야 합니다.' } },
+      { ok: false, error: { code: 'INVALID_TYPE', message: 'type must be "free" or "paid".' } },
       { status: 400 }
     );
   } catch (err) {
     console.error('[report/generate]', err);
     return NextResponse.json(
-      { ok: false, error: { code: 'GENERATION_FAILED', message: '리포트 생성 중 오류가 발생했습니다.' } },
+      { ok: false, error: { code: 'GENERATION_FAILED', message: 'Report generation failed.' } },
       { status: 500 }
     );
   }

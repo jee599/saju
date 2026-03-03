@@ -90,7 +90,7 @@ export default function HomePage() {
   const pillarIcons = ["\u{1F4D0}", "\u{1F4DC}", "\u26A1"];
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         {/* ── Hero ─── */}
         <section className="glassCard" id="hero">
@@ -104,7 +104,7 @@ export default function HomePage() {
             </p>
 
             {/* ── Progressive Form ─── */}
-            <div className="progressiveForm">
+            <form className="progressiveForm" onSubmit={(e) => { e.preventDefault(); handleAnalyze(); }}>
               {/* Step 1 */}
               <div className="formStep visible">
                 <div className="formStepLabel">
@@ -291,14 +291,14 @@ export default function HomePage() {
               {/* CTA */}
               <div className={`formCta ${canAnalyze ? "visible" : ""}`}>
                 <button
+                  type="submit"
                   className="btn btn-primary btn-lg btn-full"
-                  onClick={handleAnalyze}
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? t("form.analyzing") : t("form.startFree")}
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </section>
 
@@ -403,6 +403,6 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

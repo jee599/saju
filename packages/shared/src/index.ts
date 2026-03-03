@@ -278,11 +278,11 @@ export const validateFortuneInput = (input: FortuneInput): ValidationIssue[] => 
   const issues: ValidationIssue[] = [];
 
   if (!input.name || input.name.trim().length < 2) {
-    issues.push({ field: "name", reason: "이름은 2자 이상 입력해 주세요." });
+    issues.push({ field: "name", reason: "Name must be at least 2 characters." });
   }
 
   if (!isDateFormat(input.birthDate)) {
-    issues.push({ field: "birthDate", reason: "생년월일은 YYYY-MM-DD 형식이어야 합니다." });
+    issues.push({ field: "birthDate", reason: "Birth date must be YYYY-MM-DD format." });
   } else {
     // Semantic date validation: check real calendar date via round-trip
     const dateParts = input.birthDate.split("-").map(Number);
@@ -290,35 +290,35 @@ export const validateFortuneInput = (input: FortuneInput): ValidationIssue[] => 
     const m = dateParts[1] ?? 0;
     const d = dateParts[2] ?? 0;
     if (y < 1900 || y > 2100) {
-      issues.push({ field: "birthDate", reason: "연도는 1900~2100 범위여야 합니다." });
+      issues.push({ field: "birthDate", reason: "Year must be between 1900 and 2100." });
     } else if (m < 1 || m > 12 || d < 1 || d > 31) {
-      issues.push({ field: "birthDate", reason: "유효하지 않은 날짜입니다." });
+      issues.push({ field: "birthDate", reason: "Invalid date." });
     } else {
       const dateObj = new Date(y, m - 1, d);
       if (dateObj.getFullYear() !== y || dateObj.getMonth() !== m - 1 || dateObj.getDate() !== d) {
-        issues.push({ field: "birthDate", reason: "존재하지 않는 날짜입니다." });
+        issues.push({ field: "birthDate", reason: "Date does not exist." });
       }
     }
   }
 
   if (input.birthTime && !isTimeFormat(input.birthTime)) {
-    issues.push({ field: "birthTime", reason: "출생시간은 HH:mm 형식이어야 합니다." });
+    issues.push({ field: "birthTime", reason: "Birth time must be HH:mm format." });
   } else if (input.birthTime) {
     // Validate time range
     const timeParts = input.birthTime.split(":").map(Number);
     const hour = timeParts[0] ?? -1;
     const minute = timeParts[1] ?? -1;
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-      issues.push({ field: "birthTime", reason: "시간은 00:00~23:59 범위여야 합니다." });
+      issues.push({ field: "birthTime", reason: "Time must be between 00:00 and 23:59." });
     }
   }
 
   if (!["male", "female", "other"].includes(input.gender)) {
-    issues.push({ field: "gender", reason: "성별 값이 유효하지 않습니다." });
+    issues.push({ field: "gender", reason: "Invalid gender value." });
   }
 
   if (!["solar", "lunar"].includes(input.calendarType)) {
-    issues.push({ field: "calendarType", reason: "달력 유형 값이 유효하지 않습니다." });
+    issues.push({ field: "calendarType", reason: "Invalid calendar type value." });
   }
 
   return issues;

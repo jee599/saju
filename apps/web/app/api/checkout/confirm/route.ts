@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     const body = (await req.json()) as { orderId?: string };
     if (!body?.orderId) {
       return NextResponse.json(
-        { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId가 필요합니다.' } },
+        { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId is required.' } },
         { status: 400 }
       );
     }
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     if (!order) {
       return NextResponse.json(
-        { ok: false, error: { code: 'ORDER_NOT_FOUND', message: '주문 정보를 찾을 수 없습니다.' } },
+        { ok: false, error: { code: 'ORDER_NOT_FOUND', message: 'Order not found.' } },
         { status: 404 }
       );
     }
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     if (order.paymentProvider === 'stripe') {
       if (!order.paymentId) {
         return NextResponse.json(
-          { ok: false, error: { code: 'PAYMENT_PENDING', message: '결제 확인 대기 중입니다.' } },
+          { ok: false, error: { code: 'PAYMENT_PENDING', message: 'Payment confirmation pending.' } },
           { status: 409 }
         );
       }
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       const session = await stripe.checkout.sessions.retrieve(order.paymentId);
       if (session.payment_status !== 'paid') {
         return NextResponse.json(
-          { ok: false, error: { code: 'PAYMENT_NOT_PAID', message: '결제가 완료되지 않았습니다.' } },
+          { ok: false, error: { code: 'PAYMENT_NOT_PAID', message: 'Payment not completed.' } },
           { status: 402 }
         );
       }
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       const allowUnverified = process.env.NODE_ENV !== 'production';
       if (!allowUnverified) {
         return NextResponse.json(
-          { ok: false, error: { code: 'PAYMENT_VERIFICATION_REQUIRED', message: '결제 검증이 필요합니다.' } },
+          { ok: false, error: { code: 'PAYMENT_VERIFICATION_REQUIRED', message: 'Payment verification required.' } },
           { status: 403 }
         );
       }
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error('[checkout/confirm]', err);
     return NextResponse.json(
-      { ok: false, error: { code: 'INTERNAL_ERROR', message: '결제 확인 중 오류가 발생했습니다.' } },
+      { ok: false, error: { code: 'INTERNAL_ERROR', message: 'Checkout confirmation failed.' } },
       { status: 500 }
     );
   }

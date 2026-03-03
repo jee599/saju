@@ -44,7 +44,7 @@
   },
   "ohang": [
     {
-      "ko": "Mộc (木)",
+      "native": "Mộc (木)",
       "season": "Mùa xuân",
       "direction": "Phương Đông",
       "organ": "Gan·Mật",
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "ko": "Hỏa (火)",
+      "native": "Hỏa (火)",
       "season": "Mùa hè",
       "direction": "Phương Nam",
       "organ": "Tim·Ruột non",
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "ko": "Thổ (土)",
+      "native": "Thổ (土)",
       "season": "Giao mùa",
       "direction": "Trung tâm",
       "organ": "Dạ dày·Lá lách",
@@ -83,7 +83,7 @@
       ]
     },
     {
-      "ko": "Kim (金)",
+      "native": "Kim (金)",
       "season": "Mùa thu",
       "direction": "Phương Tây",
       "organ": "Phổi·Ruột già",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "ko": "Thủy (水)",
+      "native": "Thủy (水)",
       "season": "Mùa đông",
       "direction": "Phương Bắc",
       "organ": "Thận·Bàng quang",
@@ -226,5 +226,7 @@
         "được cho là có thể chuyển hóa dòng chảy vận mệnh theo hướng thuận lợi."
       ]
     }
-  ]
+  ],
+  "ohangSliderAria": "Thanh trượt giới thiệu Ngũ Hành",
+  "progressAria": "Tiến độ phân tích"
 }

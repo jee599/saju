@@ -44,7 +44,7 @@
   },
   "ohang": [
     {
-      "ko": "木",
+      "native": "木",
       "season": "春",
       "direction": "東",
       "organ": "肝臓・胆嚢",
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "ko": "火",
+      "native": "火",
       "season": "夏",
       "direction": "南",
       "organ": "心臓・小腸",
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "ko": "土",
+      "native": "土",
       "season": "季節の変わり目",
       "direction": "中央",
       "organ": "胃・脾臓",
@@ -83,7 +83,7 @@
       ]
     },
     {
-      "ko": "金",
+      "native": "金",
       "season": "秋",
       "direction": "西",
       "organ": "肺・大腸",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "ko": "水",
+      "native": "水",
       "season": "冬",
       "direction": "北",
       "organ": "腎臓・膀胱",
@@ -226,5 +226,7 @@
         "運の流れを有利に変えられると言われています。"
       ]
     }
-  ]
+  ],
+  "ohangSliderAria": "五行紹介スライダー",
+  "progressAria": "分析進捗"
 }

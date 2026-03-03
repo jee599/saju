@@ -21,7 +21,7 @@
   },
   "ohang": [
     {
-      "ko": "Wood",
+      "native": "Wood",
       "season": "Spring",
       "direction": "East",
       "organ": "Liver · Gallbladder",
@@ -34,7 +34,7 @@
       ]
     },
     {
-      "ko": "Fire",
+      "native": "Fire",
       "season": "Summer",
       "direction": "South",
       "organ": "Heart · Small Intestine",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "ko": "Earth",
+      "native": "Earth",
       "season": "Between seasons",
       "direction": "Center",
       "organ": "Stomach · Spleen",
@@ -60,7 +60,7 @@
       ]
     },
     {
-      "ko": "Metal",
+      "native": "Metal",
       "season": "Autumn",
       "direction": "West",
       "organ": "Lungs · Large Intestine",
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "ko": "Water",
+      "native": "Water",
       "season": "Winter",
       "direction": "North",
       "organ": "Kidneys · Bladder",
@@ -203,5 +203,7 @@
         "is said to shift the flow of fortune in your favor."
       ]
     }
-  ]
+  ],
+  "ohangSliderAria": "Five Elements introduction slider",
+  "progressAria": "Analysis progress"
 }

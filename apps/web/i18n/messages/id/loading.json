@@ -44,7 +44,7 @@
   },
   "ohang": [
     {
-      "ko": "Kayu (木)",
+      "native": "Kayu (木)",
       "season": "Musim Semi",
       "direction": "Timur",
       "organ": "Hati·Kantung Empedu",
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "ko": "Api (火)",
+      "native": "Api (火)",
       "season": "Musim Panas",
       "direction": "Selatan",
       "organ": "Jantung·Usus Halus",
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "ko": "Tanah (土)",
+      "native": "Tanah (土)",
       "season": "Peralihan musim",
       "direction": "Pusat",
       "organ": "Lambung·Limpa",
@@ -83,7 +83,7 @@
       ]
     },
     {
-      "ko": "Logam (金)",
+      "native": "Logam (金)",
       "season": "Musim Gugur",
       "direction": "Barat",
       "organ": "Paru-paru·Usus Besar",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "ko": "Air (水)",
+      "native": "Air (水)",
       "season": "Musim Dingin",
       "direction": "Utara",
       "organ": "Ginjal·Kandung Kemih",
@@ -226,5 +226,7 @@
         "konon dapat mengubah aliran nasib menjadi lebih menguntungkan."
       ]
     }
-  ]
+  ],
+  "ohangSliderAria": "Slider pengenalan Lima Elemen",
+  "progressAria": "Kemajuan analisis"
 }

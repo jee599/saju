@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     }
 
     // Fire-and-forget rate limit DB logging
-    const ip = req.headers.get("x-client-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? req.headers.get("x-real-ip") ?? "unknown";
     logRateLimit({ ip, endpoint: "/api/fortune/mock" });
 
     return NextResponse.json({ ok: true, data: generateFortune(input) });

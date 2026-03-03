@@ -134,5 +134,5 @@ export const en: Dictionary = {
 export const DICTIONARIES: Record<string, Dictionary> = { ko, en };
 
 export function getDictionary(locale: string): Dictionary {
-  return DICTIONARIES[locale] ?? ko;
+  return DICTIONARIES[locale] ?? DICTIONARIES["en"] ?? ko;
 }

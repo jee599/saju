@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@saju/api/db';
 import type { FortuneInput, GetReportResponse, ReportDetail, OrderSummary } from '../../../../lib/types';
-import { generateViewToken } from '../../../../lib/viewToken';
+import { verifyViewToken } from '../../../../lib/viewToken';
 
 /**
  * 단일 리포트 조회 API.
@@ -20,8 +20,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
   // IDOR protection: verify token derived from orderId + server secret
   const url = new URL(req.url);
   const token = url.searchParams.get('token');
-  const expectedToken = generateViewToken(orderId);
-  if (!token || token !== expectedToken) {
+  if (!token || !verifyViewToken(orderId, token)) {
     return NextResponse.json(
       { ok: false, error: { code: 'FORBIDDEN', message: '리포트 접근 권한이 없습니다.' } },
       { status: 403 }
@@ -88,7 +87,9 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       report: report ?? null,
       input,
     };
-    return NextResponse.json({ ok: true, data });
+    // Paid reports are immutable; cache for 1h, stale-while-revalidate for 24h
+    const headers = { 'Cache-Control': 'private, max-age=3600, stale-while-revalidate=86400' };
+    return NextResponse.json({ ok: true, data }, { headers });
   } catch (err) {
     console.error('[report/get]', err);
     return NextResponse.json(

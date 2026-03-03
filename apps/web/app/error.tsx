@@ -25,6 +25,30 @@ const translations: Record<string, { title: string; fallbackMessage: string; ret
     retry: "重试",
     home: "返回首页",
   },
+  th: {
+    title: "เกิดข้อผิดพลาด",
+    fallbackMessage: "เกิดข้อผิดพลาดชั่วคราว",
+    retry: "ลองอีกครั้ง",
+    home: "กลับหน้าแรก",
+  },
+  vi: {
+    title: "Đã xảy ra lỗi",
+    fallbackMessage: "Lỗi tạm thời đã xảy ra.",
+    retry: "Thử lại",
+    home: "Về trang chủ",
+  },
+  id: {
+    title: "Terjadi kesalahan",
+    fallbackMessage: "Terjadi error sementara.",
+    retry: "Coba lagi",
+    home: "Ke Beranda",
+  },
+  hi: {
+    title: "कुछ गड़बड़ हुई",
+    fallbackMessage: "एक अस्थायी त्रुटि हुई।",
+    retry: "पुनः प्रयास करें",
+    home: "होम पेज पर जाएं",
+  },
 };
 
 function getLocaleFromPath(): string {

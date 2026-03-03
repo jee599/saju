@@ -10,7 +10,10 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 const RATE_LIMITED_PATHS = [
   "/api/report/preview",
+  "/api/report/generate",
   "/api/checkout/create",
+  "/api/checkout/confirm",
+  "/api/checkout/stripe/create",
   "/api/fortune/mock",
 ];
 

@@ -55,7 +55,7 @@ function CompatContent() {
 
   if (!hasParams || !result) {
     return (
-      <main className="page">
+      <div className="page">
         <div className="container">
           <section className="glassCard">
             <h2 style={{ textAlign: "center" }}>{t("title")}</h2>
@@ -97,12 +97,12 @@ function CompatContent() {
             </div>
           </section>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         <section className="glassCard compatResult">
           <h2>{ELEMENT_EMOJI[result.myElement]} {t(`elements.${result.myElement}`)} × {ELEMENT_EMOJI[result.partnerElement]} {t(`elements.${result.partnerElement}`)}</h2>
@@ -135,7 +135,7 @@ function CompatContent() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

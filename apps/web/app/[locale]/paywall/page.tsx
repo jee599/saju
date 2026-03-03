@@ -68,7 +68,7 @@ function PaywallContent() {
   };
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         {/* Price anchoring */}
         <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -120,8 +120,10 @@ function PaywallContent() {
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
                 aria-label={t("emailLabel")}
+                aria-invalid={!!error}
+                aria-describedby={error ? "paywall-email-error" : undefined}
               />
-              {error && <p className="errorText">{error}</p>}
+              {error && <p id="paywall-email-error" className="errorText" role="alert">{error}</p>}
             </div>
             <div className="buttonRow">
               <button
@@ -140,7 +142,7 @@ function PaywallContent() {
           </p>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

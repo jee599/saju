@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
-import { createHash } from "crypto";
+import { createHash, timingSafeEqual } from "crypto";
 
 const ADMIN_COOKIE = "oc_admin";
+
+/** Constant-time string comparison to prevent timing attacks. */
+function safeEqual(a: string, b: string): boolean {
+  // Hash both values so length differences don't leak timing information
+  const ha = createHash("sha256").update(a).digest();
+  const hb = createHash("sha256").update(b).digest();
+  return timingSafeEqual(ha, hb);
+}
 
 function getSessionSecret(): string {
   const secret = process.env.ADMIN_SESSION_SECRET;
@@ -35,10 +43,10 @@ export function checkAdminAuth(request: Request) {
 
   const authHeader = request.headers.get("authorization");
   const bearer = authHeader?.replace("Bearer ", "");
-  if (bearer && bearer === adminPw) return null;
+  if (bearer && safeEqual(bearer, adminPw)) return null;
 
   const cookieToken = getCookie(request, ADMIN_COOKIE);
-  if (cookieToken && cookieToken === sessionToken(adminPw)) return null;
+  if (cookieToken && safeEqual(cookieToken, sessionToken(adminPw))) return null;
 
   return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 }
