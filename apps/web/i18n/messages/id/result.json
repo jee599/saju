@@ -26,7 +26,14 @@
   "dayMaster": {
     "title": "Anda adalah orang dengan elemen {element}",
     "sub": "Day Master (日干) {name} adalah {hanja}",
-    "note": "Day Master adalah esensi bawaan Anda dan mungkin berbeda dari {dominant} yang paling dominan dalam distribusi elemen"
+    "note": "Day Master adalah esensi bawaan Anda dan mungkin berbeda dari {dominant} yang paling dominan dalam distribusi elemen",
+    "traits": {
+      "wood": "Sifat kreatif dan penuh kasih yang selalu mengejar pertumbuhan",
+      "fire": "Sifat penuh semangat, energik, dan karismatik",
+      "earth": "Sifat stabil, dapat dipercaya, dan penuh toleransi",
+      "metal": "Sifat tegas, adil, dan sangat fokus",
+      "water": "Sifat bijaksana, fleksibel, dan intuitif"
+    }
   },
   "fourPillars": "Empat Pilar Bazi (四柱八字)",
   "elementDist": "Distribusi Elemen",

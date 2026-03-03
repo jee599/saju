@@ -1,8 +1,9 @@
 "use client";
 
 import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { trackFunnel, trackScrollDepth, trackServerEvent, createPageTimer, trackPageEvent } from "../../../../lib/analytics";
 import type { GetReportResponse } from "../../../../lib/types";
 import { webApi } from "../../../../lib/api";
 import { ButtonLink, GlassCard, PageContainer, StatusBox } from "../../components/ui";
@@ -128,6 +129,54 @@ export default function ReportPage() {
   const token = searchParams.get("token") ?? undefined;
   const [data, setData] = useState<GetReportResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const pageTimerRef = useRef<ReturnType<typeof createPageTimer> | null>(null);
+  const maxScrollRef = useRef(0);
+  const viewedSectionsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    trackPageEvent("/report");
+    trackFunnel("report_view");
+    pageTimerRef.current = createPageTimer("report");
+    return () => { pageTimerRef.current?.stop(); };
+  }, []);
+
+  // Scroll depth tracking
+  useEffect(() => {
+    const onScroll = () => {
+      const depth = Math.round(
+        ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100,
+      );
+      if (depth > maxScrollRef.current) maxScrollRef.current = depth;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (maxScrollRef.current > 0) trackScrollDepth("report", maxScrollRef.current);
+    };
+  }, []);
+
+  // Section view tracking via IntersectionObserver
+  const sectionObserverRef = useRef<IntersectionObserver | null>(null);
+  const observeSections = useCallback(() => {
+    if (sectionObserverRef.current) sectionObserverRef.current.disconnect();
+    sectionObserverRef.current = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            if (id && !viewedSectionsRef.current.has(id)) {
+              viewedSectionsRef.current.add(id);
+              trackServerEvent("engagement", "section_view", { section: id });
+            }
+          }
+        }
+      },
+      { threshold: 0.3 },
+    );
+    document.querySelectorAll(".reportSection").forEach((el) => {
+      sectionObserverRef.current?.observe(el);
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -140,6 +189,15 @@ export default function ReportPage() {
       }
     })();
   }, [orderId, token, t]);
+
+  // Start observing sections once report data loads
+  useEffect(() => {
+    if (data?.report) {
+      // Small delay to ensure DOM is rendered
+      setTimeout(observeSections, 500);
+    }
+    return () => { sectionObserverRef.current?.disconnect(); };
+  }, [data, observeSections]);
 
   const report = data?.report;
   const sections = useMemo(() =>

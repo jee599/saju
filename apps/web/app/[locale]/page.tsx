@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "../../i18n/navigation";
-import { track } from "../../lib/analytics";
+import { track, trackFunnel, trackFormStep, trackChoice, trackPageEvent, trackClick, createPageTimer } from "../../lib/analytics";
 
 function useIsTouchDevice() {
   return useSyncExternalStore(
@@ -15,6 +15,26 @@ function useIsTouchDevice() {
     },
     () => false,
   );
+}
+
+function useMouseParallax() {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(pointer: coarse), (max-width: 767px)").matches) return;
+    let raf: number;
+    const onMove = (e: MouseEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const cx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const cy = (e.clientY / window.innerHeight - 0.5) * 2;
+        setOffset({ x: cx * 30, y: cy * 30 });
+      });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => { window.removeEventListener("mousemove", onMove); cancelAnimationFrame(raf); };
+  }, []);
+  return offset;
 }
 
 const BRANCH_VALUES = ["23", "1", "3", "5", "7", "9", "11", "13", "15", "17", "19", "21"];
@@ -47,8 +67,33 @@ export default function HomePage() {
   const isTouch = useIsTouchDevice();
 
   const nameRef = useRef<HTMLInputElement>(null);
+  const pageTimerRef = useRef<ReturnType<typeof createPageTimer> | null>(null);
+  const trackedStepsRef = useRef<Set<string>>(new Set());
+  const parallax = useMouseParallax();
+  const [magneticOffset, setMagneticOffset] = useState({ x: 0, y: 0 });
+
+  const handleMagneticMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isTouch) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) * 0.3;
+    const dy = (e.clientY - cy) * 0.3;
+    setMagneticOffset({ x: dx, y: dy });
+  }, [isTouch]);
+
+  const handleMagneticLeave = useCallback(() => {
+    setMagneticOffset({ x: 0, y: 0 });
+  }, []);
 
   const availableDays = getDaysInMonth(year, month);
+
+  useEffect(() => {
+    trackPageEvent("/");
+    trackFunnel("form_start");
+    pageTimerRef.current = createPageTimer("home");
+    return () => { pageTimerRef.current?.stop(); };
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -66,6 +111,35 @@ export default function HomePage() {
   const hasDate = year !== "" && month !== "" && day !== "";
   const hasGender = gender !== "";
 
+  // Track form steps as they become visible
+  useEffect(() => {
+    if (hasName && !trackedStepsRef.current.has("name")) {
+      trackedStepsRef.current.add("name");
+      trackFormStep("form_step_name");
+    }
+  }, [hasName]);
+  useEffect(() => {
+    if (hasDate && !trackedStepsRef.current.has("date")) {
+      trackedStepsRef.current.add("date");
+      trackFunnel("form_step_birthdate");
+      trackChoice("calendar_type", calendarType);
+    }
+  }, [hasDate, calendarType]);
+  useEffect(() => {
+    if (hour !== "" && !trackedStepsRef.current.has("time")) {
+      trackedStepsRef.current.add("time");
+      trackFunnel("form_step_birthtime");
+      trackChoice("birth_time", hour === "skip" ? "skipped" : hour);
+    }
+  }, [hour]);
+  useEffect(() => {
+    if (hasGender && !trackedStepsRef.current.has("gender")) {
+      trackedStepsRef.current.add("gender");
+      trackFunnel("form_step_gender");
+      trackChoice("gender", gender);
+    }
+  }, [hasGender, gender]);
+
   const birthDate = hasDate ? `${year}-${padTwo(+month)}-${padTwo(+day)}` : "";
   const birthTime = hour !== "" && hour !== "skip" ? `${padTwo(+hour)}:00` : "";
 
@@ -75,6 +149,8 @@ export default function HomePage() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     track("input_complete");
+    trackFunnel("form_complete");
+    pageTimerRef.current?.stop();
     const q = new URLSearchParams({
       name,
       birthDate,
@@ -91,12 +167,25 @@ export default function HomePage() {
 
   return (
     <div className="page">
+      {/* ── Aurora Veil Background ─── */}
+      <div className="auroraLayer" aria-hidden="true">
+        <div className="auroraBlob auroraBlob1" style={{ transform: `translate(${parallax.x}px, ${parallax.y}px)` }} />
+        <div className="auroraBlob auroraBlob2" style={{ transform: `translate(${parallax.x * -0.7}px, ${parallax.y * -0.7}px)` }} />
+        <div className="auroraBlob auroraBlob3" style={{ transform: `translate(${parallax.x * 0.5}px, ${parallax.y * 0.5}px)` }} />
+      </div>
+      <svg className="filmGrain" aria-hidden="true">
+        <filter id="grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves={3} stitchTiles="stitch" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain)" opacity="0.04" />
+      </svg>
+
       <div className="container">
         {/* ── Hero ─── */}
-        <section className="glassCard" id="hero">
+        <section id="hero">
           <div className="heroMain">
             <p className="heroEyebrow">{t("hero.eyebrow")}</p>
-            <h1>{t("hero.title")}</h1>
+            <h1 className="gradText">{t("hero.title")}</h1>
             <p className="rotatingText heroSubtitle">
               {copies.map((copy, i) => (
                 <span key={i}>{copy}</span>
@@ -292,8 +381,11 @@ export default function HomePage() {
               <div className={`formCta ${canAnalyze ? "visible" : ""}`}>
                 <button
                   type="submit"
-                  className="btn btn-primary btn-lg btn-full"
+                  className="btn btn-primary btn-lg btn-full magneticBtn"
                   disabled={isSubmitting}
+                  onMouseMove={handleMagneticMove}
+                  onMouseLeave={handleMagneticLeave}
+                  style={{ transform: `translate(${magneticOffset.x}px, ${magneticOffset.y}px)` }}
                 >
                   {isSubmitting ? t("form.analyzing") : t("form.startFree")}
                 </button>
@@ -311,7 +403,7 @@ export default function HomePage() {
 
           <div className="enginePillars">
             {[0, 1, 2].map((i) => (
-              <article key={i} className="enginePillarCard">
+              <article key={i} className="enginePillarCard tiltCard">
                 <h3>{t(`engine.pillars.${i}.title`)}</h3>
                 <p className="enginePillarSub">{t(`engine.pillars.${i}.subtitle`)}</p>
                 <p className="enginePillarDesc">{t(`engine.pillars.${i}.desc`)}</p>

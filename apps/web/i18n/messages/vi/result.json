@@ -26,7 +26,14 @@
   "dayMaster": {
     "title": "Bạn là người của hành {element}",
     "sub": "Nhật can (日干) của {name} là {hanja}",
-    "note": "Nhật can là bản chất bẩm sinh của bạn và có thể khác với {dominant} chiếm nhiều nhất trong phân bố ngũ hành"
+    "note": "Nhật can là bản chất bẩm sinh của bạn và có thể khác với {dominant} chiếm nhiều nhất trong phân bố ngũ hành",
+    "traits": {
+      "wood": "Bản tính sáng tạo, nhân ái, luôn hướng đến sự phát triển",
+      "fire": "Bản tính nhiệt huyết, tràn đầy năng lượng và lôi cuốn",
+      "earth": "Bản tính ổn định, đáng tin cậy và bao dung",
+      "metal": "Bản tính quyết đoán, chính trực và tập trung cao",
+      "water": "Bản tính thông tuệ, linh hoạt và trực giác nhạy bén"
+    }
   },
   "fourPillars": "Tứ Trụ Bát Tự (四柱八字)",
   "elementDist": "Phân bố ngũ hành",
