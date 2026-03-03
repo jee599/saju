@@ -3415,3 +3415,7 @@ img, video, canvas, svg {
     transition: none !important;
   }
 }
+
+
+.skip-link { position: absolute; left: 12px; top: -40px; background: #111; color: #fff; padding: 8px 12px; border-radius: 6px; z-index: 9999; }
+.skip-link:focus { top: 12px; }

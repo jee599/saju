@@ -471,17 +471,17 @@ function LoadingContent() {
           {/* ── 하단 안내 ── */}
           <div className="loadingFooter">
             {error ? (
-              <div className="loadingError">
+              <div className="loadingError" aria-live="assertive">
                 <p>⚠️ {error}</p>
                 <button
                   className="btn btn-primary"
-                  onClick={() => { setError(null); confirmCalled.current = false; callConfirm(); }}
+                  onClick={() => { setError(null); confirmCalled.current = false; if (orderId) callConfirm(); else callFreeGenerate(); }}
                 >
                   {t("retry")}
                 </button>
               </div>
             ) : (
-              <p className="loadingHint">
+              <p className="loadingHint" aria-live="polite">
                 {isGenerating ? t("aiGenerating") : t("preparing")}
               </p>
             )}

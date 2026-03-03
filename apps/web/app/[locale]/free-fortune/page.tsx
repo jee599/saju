@@ -42,7 +42,7 @@ function FreeFortunContent() {
             <div className="form">
               <div className="formGrid">
                 <div className="formGroup">
-                  <label>{t("nameLabel")}</label>
+                  <label htmlFor="ff-name">{t("nameLabel")}</label>
                   <input
                     className="input"
                     placeholder={t("namePlaceholder")}
@@ -51,7 +51,7 @@ function FreeFortunContent() {
                   />
                 </div>
                 <div className="formGroup">
-                  <label>{t("birthDateLabel")}</label>
+                  <label htmlFor="ff-birthDate">{t("birthDateLabel")}</label>
                   <input
                     type="date"
                     className="input"
@@ -76,7 +76,7 @@ function FreeFortunContent() {
             <div className="form">
               <div className="formGrid">
                 <div className="formGroup">
-                  <label>{t("birthTimeLabel")}</label>
+                  <label htmlFor="ff-birthTime">{t("birthTimeLabel")}</label>
                   <input
                     type="time"
                     className="input"
@@ -86,16 +86,16 @@ function FreeFortunContent() {
                   <p className="formHelp">{t("birthTimeHelp")}</p>
                 </div>
                 <div className="formGroup">
-                  <label>{t("genderLabel")}</label>
-                  <select className="select" value={gender} onChange={(e) => setGender(e.target.value as "male" | "female" | "other")} aria-label={t("genderLabel")}>
+                  <label htmlFor="ff-gender">{t("genderLabel")}</label>
+                  <select id="ff-gender" name="gender" className="select" value={gender} onChange={(e) => setGender(e.target.value as "male" | "female" | "other")} aria-label={t("genderLabel")}>
                     <option value="other">{t("genderOther")}</option>
                     <option value="male">{t("genderMale")}</option>
                     <option value="female">{t("genderFemale")}</option>
                   </select>
                 </div>
                 <div className="formGroup">
-                  <label>{t("calendarLabel")}</label>
-                  <select className="select" value={calendarType} onChange={(e) => setCalendarType(e.target.value as "solar" | "lunar")} aria-label={t("calendarLabel")}>
+                  <label htmlFor="ff-calendarType">{t("calendarLabel")}</label>
+                  <select id="ff-calendarType" name="calendarType" className="select" value={calendarType} onChange={(e) => setCalendarType(e.target.value as "solar" | "lunar")} aria-label={t("calendarLabel")}>
                     <option value="solar">{t("calendarSolar")}</option>
                     <option value="lunar">{t("calendarLunar")}</option>
                   </select>

@@ -169,12 +169,12 @@ const S = {
 };
 
 /* ── API helper ── */
-function adminFetch(path: string, pw: string) {
-  return fetch(path, { headers: { Authorization: `Bearer ${pw}` } }).then((r) => r.json());
+function adminFetch(path: string) {
+  return fetch(path, { credentials: "same-origin" }).then((r) => r.json());
 }
 
 /* ── Login Component ── */
-function LoginScreen({ onLogin }: { onLogin: (pw: string) => void }) {
+function LoginScreen({ onLogin }: { onLogin: () => void }) {
   const [pw, setPw] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -183,10 +183,15 @@ function LoginScreen({ onLogin }: { onLogin: (pw: string) => void }) {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const res = await adminFetch("/api/admin/stats?range=7d", pw);
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ password: pw }),
+    }).then((r) => r.json());
     setLoading(false);
     if (res.ok) {
-      onLogin(pw);
+      onLogin();
     } else {
       setError("비밀번호가 올바르지 않습니다.");
     }
@@ -214,21 +219,21 @@ function LoginScreen({ onLogin }: { onLogin: (pw: string) => void }) {
 }
 
 /* ── Overview Tab ── */
-function OverviewTab({ pw, range, setRange }: { pw: string; range: string; setRange: (r: string) => void }) {
+function OverviewTab({ range, setRange }: { range: string; setRange: (r: string) => void }) {
   const [kpi, setKpi] = useState<KPI | null>(null);
   const [daily, setDaily] = useState<DailyRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    adminFetch(`/api/admin/stats?range=${range}`, pw).then((res) => {
+    adminFetch(`/api/admin/stats?range=${range}`).then((res) => {
       if (res.ok) {
         setKpi(res.data.kpi);
         setDaily(res.data.daily);
       }
       setLoading(false);
     });
-  }, [pw, range]);
+  }, [range]);
 
   if (loading) return <p style={{ color: "#a89bb8" }}>로딩 중...</p>;
   if (!kpi) return <p style={{ color: "#ef4444" }}>데이터를 불러올 수 없습니다.</p>;
@@ -296,7 +301,7 @@ function OverviewTab({ pw, range, setRange }: { pw: string; range: string; setRa
 }
 
 /* ── Orders Tab ── */
-function OrdersTab({ pw }: { pw: string }) {
+function OrdersTab() {
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -306,7 +311,7 @@ function OrdersTab({ pw }: { pw: string }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    adminFetch(`/api/admin/orders?status=${status}&page=${page}&limit=20`, pw).then((res) => {
+    adminFetch(`/api/admin/orders?status=${status}&page=${page}&limit=20`).then((res) => {
       if (res.ok) {
         setOrders(res.data.orders);
         setTotal(res.data.total);
@@ -314,7 +319,7 @@ function OrdersTab({ pw }: { pw: string }) {
       }
       setLoading(false);
     });
-  }, [pw, status, page]);
+  }, [status, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -387,7 +392,7 @@ function OrdersTab({ pw }: { pw: string }) {
 }
 
 /* ── Logs Tab ── */
-function LogsTab({ pw }: { pw: string }) {
+function LogsTab() {
   const [logType, setLogType] = useState<"activity" | "llm">("activity");
   const [logs, setLogs] = useState<LogRow[]>([]);
   const [page, setPage] = useState(1);
@@ -396,14 +401,14 @@ function LogsTab({ pw }: { pw: string }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    adminFetch(`/api/admin/logs?type=${logType}&page=${page}&limit=50`, pw).then((res) => {
+    adminFetch(`/api/admin/logs?type=${logType}&page=${page}&limit=50`).then((res) => {
       if (res.ok) {
         setLogs(res.data.logs);
         setTotalPages(res.data.totalPages);
       }
       setLoading(false);
     });
-  }, [pw, logType, page]);
+  }, [logType, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -491,12 +496,18 @@ function LogsTab({ pw }: { pw: string }) {
 
 /* ── Main ── */
 export default function AdminPage() {
-  const [pw, setPw] = useState<string | null>(null);
+  const [authed, setAuthed] = useState(false);
   const [tab, setTab] = useState<"overview" | "orders" | "logs">("overview");
   const [range, setRange] = useState("30d");
 
+  useEffect(() => {
+    adminFetch('/api/admin/stats?range=7d').then((res) => {
+      if (res?.ok) setAuthed(true);
+    }).catch(() => {});
+  }, []);
 
-  if (!pw) return <LoginScreen onLogin={setPw} />;
+
+  if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />;
 
   return (
     <div style={S.page}>
@@ -505,7 +516,7 @@ export default function AdminPage() {
           <h1 style={S.title}>복연구소 관리자</h1>
           <button
             style={{ ...S.tab(false), fontSize: "0.8rem" }}
-            onClick={() => { setPw(null); }}
+            onClick={async () => { await fetch("/api/admin/logout", { method: "POST", credentials: "same-origin" }); setAuthed(false); }}
           >
             로그아웃
           </button>
@@ -517,9 +528,9 @@ export default function AdminPage() {
           <button style={S.tab(tab === "logs")} onClick={() => setTab("logs")}>로그</button>
         </div>
 
-        {tab === "overview" && <OverviewTab pw={pw} range={range} setRange={setRange} />}
-        {tab === "orders" && <OrdersTab pw={pw} />}
-        {tab === "logs" && <LogsTab pw={pw} />}
+        {tab === "overview" && <OverviewTab range={range} setRange={setRange} />}
+        {tab === "orders" && <OrdersTab />}
+        {tab === "logs" && <LogsTab />}
       </div>
     </div>
   );

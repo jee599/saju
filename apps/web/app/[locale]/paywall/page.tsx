@@ -57,7 +57,7 @@ function PaywallContent() {
       const orderId = data.data?.order?.orderId ?? data.order?.orderId;
       if (!orderId) throw new Error(t("noOrderId"));
 
-      track("purchase_complete", { value: country.pricing.saju.premium, currency: country.currency });
+      track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
       router.push(`/loading-analysis?orderId=${orderId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("checkoutError"));

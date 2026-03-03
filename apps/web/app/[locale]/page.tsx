@@ -51,6 +51,8 @@ export default function HomePage() {
   const availableDays = getDaysInMonth(year, month);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(pointer: coarse), (max-width: 767px)').matches) return;
     nameRef.current?.focus();
   }, []);
 
@@ -112,6 +114,8 @@ export default function HomePage() {
                   ref={nameRef}
                   className="input"
                   placeholder={t("form.namePlaceholder")}
+                  name="name"
+                  autoComplete="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="off"
@@ -143,6 +147,8 @@ export default function HomePage() {
                 {isTouch ? (
                   <input
                     type="date"
+                    name="birthDate"
+                    autoComplete="bday"
                     className="input"
                     value={hasDate ? `${year}-${padTwo(+month)}-${padTwo(+day)}` : ""}
                     onChange={(e) => {
@@ -164,6 +170,7 @@ export default function HomePage() {
                   <div className="dateSelectRow">
                     <select
                       className="select"
+                      name="birthYear"
                       value={year}
                       onChange={(e) => setYear(e.target.value)}
                       aria-label={t("form.yearAria")}
@@ -175,6 +182,7 @@ export default function HomePage() {
                     </select>
                     <select
                       className="select"
+                      name="birthMonth"
                       value={month}
                       onChange={(e) => setMonth(e.target.value)}
                       aria-label={t("form.monthAria")}
@@ -186,6 +194,7 @@ export default function HomePage() {
                     </select>
                     <select
                       className="select"
+                      name="birthDay"
                       value={day}
                       onChange={(e) => setDay(e.target.value)}
                       aria-label={t("form.dayAria")}

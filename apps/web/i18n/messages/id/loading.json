@@ -1,10 +1,25 @@
 {
   "steps": [
-    { "emoji": "📅", "label": "Menghitung kalender abadi" },
-    { "emoji": "☯", "label": "Menganalisis lima elemen" },
-    { "emoji": "⭐", "label": "Menempatkan sepuluh dewa" },
-    { "emoji": "📊", "label": "Menafsirkan siklus besar" },
-    { "emoji": "🤖", "label": "AI menghasilkan laporan" }
+    {
+      "emoji": "📅",
+      "label": "Menghitung kalender abadi"
+    },
+    {
+      "emoji": "☯",
+      "label": "Menganalisis lima elemen"
+    },
+    {
+      "emoji": "⭐",
+      "label": "Menempatkan sepuluh dewa"
+    },
+    {
+      "emoji": "📊",
+      "label": "Menafsirkan siklus besar"
+    },
+    {
+      "emoji": "🤖",
+      "label": "AI menghasilkan laporan"
+    }
   ],
   "analyzing": "Menganalisis",
   "preparing": "Mempersiapkan...",
@@ -13,9 +28,17 @@
   "confirmFail": "Konfirmasi pembayaran gagal.",
   "reportFail": "Pembuatan laporan gagal.",
   "genericError": "Terjadi kesalahan.",
-  "timeFormat": { "min": "mnt", "sec": "dtk" },
+  "timeFormat": {
+    "min": "mnt",
+    "sec": "dtk"
+  },
   "pillarsVisual": {
-    "cols": ["Pilar Tahun", "Pilar Bulan", "Pilar Hari", "Pilar Jam"],
+    "cols": [
+      "Pilar Tahun",
+      "Pilar Bulan",
+      "Pilar Hari",
+      "Pilar Jam"
+    ],
     "heaven": "Batang Langit (天干)",
     "earth": "Cabang Bumi (地支)"
   },
@@ -81,7 +104,7 @@
       "description": [
         "水 (Air) melambangkan ketenangan musim dingin — pemikiran mendalam dan kebijaksanaan.",
         "Mengalir fleksibel, beradaptasi dengan wadah apa pun.",
-        "Orang dengan Air kuat cerdas dan sangat perceptif,",
+        "Orang dengan Air kuat cerdas dan sangat peka,",
         "namun jika kurang dapat menjadi penakut atau kurang tekad."
       ]
     }

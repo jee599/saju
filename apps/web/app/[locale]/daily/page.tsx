@@ -125,11 +125,11 @@ function DailyContent() {
             <h3>{t("inputTitle")}</h3>
             <div className="form" style={{ maxWidth: 360, margin: "16px auto 0" }}>
               <div className="formGroup">
-                <label>{t("nameLabel")}</label>
+                <label htmlFor="daily-name">{t("nameLabel")}</label>
                 <input type="text" className="input" placeholder={t("namePlaceholder")} value={inputName} onChange={(e) => setInputName(e.target.value)} />
               </div>
               <div className="formGroup">
-                <label>{t("birthDateLabel")}</label>
+                <label htmlFor="daily-birthDate">{t("birthDateLabel")}</label>
                 <input type="date" className="input" value={inputDate} onChange={(e) => setInputDate(e.target.value)} min="1930-01-01" max="2010-12-31" />
               </div>
               <button className="btn btn-primary btn-lg btn-full" style={{ marginTop: 12 }} onClick={handleSubmit} disabled={!inputDate}>

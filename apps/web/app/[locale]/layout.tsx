@@ -77,6 +77,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       </head>
       <GtagScript />
       <body>
+        <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
         <NextIntlClientProvider messages={messages}>
           <header className="siteHeader">
             <div className="headerInner">

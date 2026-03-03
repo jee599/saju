@@ -1,10 +1,25 @@
 {
   "steps": [
-    { "emoji": "📅", "label": "Tính vạn niên lịch" },
-    { "emoji": "☯", "label": "Phân tích ngũ hành" },
-    { "emoji": "⭐", "label": "Sắp xếp thập thần" },
-    { "emoji": "📊", "label": "Giải đọc đại vận" },
-    { "emoji": "🤖", "label": "AI tạo báo cáo" }
+    {
+      "emoji": "📅",
+      "label": "Tính vạn niên lịch"
+    },
+    {
+      "emoji": "☯",
+      "label": "Phân tích ngũ hành"
+    },
+    {
+      "emoji": "⭐",
+      "label": "Sắp xếp thập thần"
+    },
+    {
+      "emoji": "📊",
+      "label": "Luận giải đại vận"
+    },
+    {
+      "emoji": "🤖",
+      "label": "AI tạo báo cáo"
+    }
   ],
   "analyzing": "Đang phân tích",
   "preparing": "Đang chuẩn bị...",
@@ -13,9 +28,17 @@
   "confirmFail": "Xác nhận thanh toán thất bại.",
   "reportFail": "Tạo báo cáo thất bại.",
   "genericError": "Đã xảy ra lỗi.",
-  "timeFormat": { "min": "phút", "sec": "giây" },
+  "timeFormat": {
+    "min": "phút",
+    "sec": "giây"
+  },
   "pillarsVisual": {
-    "cols": ["Năm trụ", "Tháng trụ", "Ngày trụ", "Giờ trụ"],
+    "cols": [
+      "Năm trụ",
+      "Tháng trụ",
+      "Ngày trụ",
+      "Giờ trụ"
+    ],
     "heaven": "Thiên Can (Trời)",
     "earth": "Địa Chi (Đất)"
   },

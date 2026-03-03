@@ -1,18 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@saju/api/db";
-
-function checkAuth(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  const token = authHeader?.replace("Bearer ", "");
-  const adminPw = process.env.ADMIN_PASSWORD;
-  if (!adminPw || token !== adminPw) {
-    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
-  }
-  return null;
-}
+import { checkAdminAuth } from "../_auth";
 
 export async function GET(request: Request) {
-  const authErr = checkAuth(request);
+  const authErr = checkAdminAuth(request);
   if (authErr) return authErr;
 
   const { searchParams } = new URL(request.url);

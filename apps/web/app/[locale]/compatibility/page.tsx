@@ -64,7 +64,7 @@ function CompatContent() {
             </p>
             <div className="form" style={{ marginTop: 24 }}>
               <div className="formGroup">
-                <label>{t("myBirthDate")}</label>
+                <label htmlFor="comp-myBirthDate">{t("myBirthDate")}</label>
                 <input
                   type="date"
                   className="input"
@@ -74,7 +74,7 @@ function CompatContent() {
                 />
               </div>
               <div className="formGroup">
-                <label>{t("partnerBirthDate")}</label>
+                <label htmlFor="comp-partnerBirthDate">{t("partnerBirthDate")}</label>
                 <input
                   type="date"
                   className="input"
