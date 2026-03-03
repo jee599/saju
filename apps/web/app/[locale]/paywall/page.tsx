@@ -1,9 +1,9 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { track, trackCheckoutStart } from "../../../lib/analytics";
+import { track, trackCheckoutStart, trackFunnel, trackError as trackAnalyticsError, createPageTimer, trackPageEvent } from "../../../lib/analytics";
 import { getCountryByLocale } from "@saju/shared";
 
 function PaywallContent() {
@@ -19,12 +19,17 @@ function PaywallContent() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const pageTimerRef = useRef<ReturnType<typeof createPageTimer> | null>(null);
 
   const country = getCountryByLocale(locale);
   const priceLabel = country.priceLabel;
 
   useEffect(() => {
     track("paywall_view");
+    trackPageEvent("/paywall");
+    trackFunnel("paywall_view");
+    pageTimerRef.current = createPageTimer("paywall");
+    return () => { pageTimerRef.current?.stop(); };
   }, []);
 
   const handleCheckout = async (ctaPosition: "top" | "middle" | "sticky") => {
@@ -36,6 +41,7 @@ function PaywallContent() {
     setLoading(true);
     setError("");
     trackCheckoutStart(ctaPosition);
+    trackFunnel("checkout_attempt", { ctaPosition });
 
     try {
       const input = { name, birthDate, birthTime, gender, calendarType };
@@ -60,15 +66,17 @@ function PaywallContent() {
       track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
       router.push(`/loading-analysis?orderId=${orderId}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("checkoutError"));
+      const errMsg = err instanceof Error ? err.message : t("checkoutError");
+      setError(errMsg);
       track("checkout_fail");
+      trackAnalyticsError("checkout_error", errMsg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         {/* Price anchoring */}
         <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -109,17 +117,21 @@ function PaywallContent() {
           </p>
 
           {/* Email + checkout */}
-          <div className="form" style={{ maxWidth: 400, margin: "20px auto 0" }}>
+          <div className="form" style={{ maxWidth: "min(400px, 100%)", margin: "20px auto 0" }}>
             <div className="formGroup">
-              <label>{t("emailLabel")}</label>
+              <label htmlFor="paywall-email">{t("emailLabel")}</label>
               <input
+                id="paywall-email"
                 type="email"
                 className={`input ${error ? "inputError" : ""}`}
                 placeholder="email@example.com"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                aria-label={t("emailLabel")}
+                aria-invalid={!!error}
+                aria-describedby={error ? "paywall-email-error" : undefined}
               />
-              {error && <p className="errorText">{error}</p>}
+              {error && <p id="paywall-email-error" className="errorText" role="alert">{error}</p>}
             </div>
             <div className="buttonRow">
               <button
@@ -138,7 +150,7 @@ function PaywallContent() {
           </p>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

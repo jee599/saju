@@ -60,7 +60,7 @@ export const ko: Dictionary = {
     dayMasterTitle: (el) => `당신은 ${el}의 사람입니다`,
     elementBalance: "오행 밸런스",
     yinYangBalance: "음양 밸런스",
-    ctaText: "7개 섹션의 상세 분석이 준비되어 있습니다",
+    ctaText: "8개 섹션의 상세 분석이 준비되어 있습니다",
     ctaPrice: (price) => `${price}으로 전체 분석 보기`,
     blurLabel: "프리미엄 분석",
     compatCta: "궁합도 궁금하다면?",
@@ -107,7 +107,7 @@ export const en: Dictionary = {
     dayMasterTitle: (el) => `You are a person of ${el}`,
     elementBalance: "Five Elements Balance",
     yinYangBalance: "Yin-Yang Balance",
-    ctaText: "7 detailed analysis sections are ready",
+    ctaText: "8 detailed analysis sections are ready",
     ctaPrice: (price) => `View full analysis for ${price}`,
     blurLabel: "Premium Analysis",
     compatCta: "Curious about compatibility?",
@@ -134,5 +134,5 @@ export const en: Dictionary = {
 export const DICTIONARIES: Record<string, Dictionary> = { ko, en };
 
 export function getDictionary(locale: string): Dictionary {
-  return DICTIONARIES[locale] ?? ko;
+  return DICTIONARIES[locale] ?? DICTIONARIES["en"] ?? ko;
 }

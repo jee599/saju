@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, useCallback, type ReactNode } from "react";
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 interface BottomSheetProps {
   open: boolean;
@@ -10,6 +13,8 @@ interface BottomSheetProps {
 }
 
 export default function BottomSheet({ open, onClose, title, children }: BottomSheetProps) {
+  const sheetRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -27,6 +32,42 @@ export default function BottomSheet({ open, onClose, title, children }: BottomSh
     return () => window.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
+  // Focus trap: focus first focusable element on open, cycle Tab within dialog
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key !== "Tab" || !sheetRef.current) return;
+
+    const focusable = Array.from(
+      sheetRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0]!;
+    const last = focusable[focusable.length - 1]!;
+
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }, []);
+
+  // Focus first focusable element when sheet opens
+  useEffect(() => {
+    if (!open || !sheetRef.current) return;
+    const focusable = sheetRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+    if (focusable.length > 0) {
+      focusable[0]!.focus();
+    } else {
+      sheetRef.current.focus();
+    }
+  }, [open]);
+
   return (
     <>
       <div
@@ -35,10 +76,13 @@ export default function BottomSheet({ open, onClose, title, children }: BottomSh
         aria-hidden="true"
       />
       <div
+        ref={sheetRef}
         className={`bottomSheet ${open ? "open" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}
+        tabIndex={-1}
+        onKeyDown={handleKeyDown}
       >
         <div className="bottomSheetHandle" aria-hidden="true">
           <span className="bottomSheetHandleBar" />

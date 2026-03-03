@@ -33,7 +33,7 @@
     "寅": "호랑이",
     "卯": "토끼",
     "辰": "용",
-    "巳": "뽀",
+    "巳": "뱀",
     "午": "말",
     "未": "양",
     "申": "원숭이",
@@ -46,9 +46,16 @@
     "yin": "음"
   },
   "dayMaster": {
-    "title": "당신의 일간은 {element}입니다",
+    "title": "당신은 {element}의 사람입니다",
     "sub": "{name}님의 일간(日干)은 {hanja}입니다",
-    "note": "일간은 타고난 본질이며, 오행 분포에서 가장 많은 {dominant}과는 다를 수 있습니다"
+    "note": "일간은 타고난 본질이며, 오행 분포에서 가장 많은 {dominant}과는 다를 수 있습니다",
+    "traits": {
+      "wood": "성장을 추구하며 창의적이고 자비로운 성품",
+      "fire": "열정적이며 활력 넘치고 카리스마 있는 성품",
+      "earth": "안정적이며 신뢰를 주고 포용력 있는 성품",
+      "metal": "결단력 있고 정의로우며 집중력이 뛰어난 성품",
+      "water": "지혜롭고 유연하며 직관력이 뛰어난 성품"
+    }
   },
   "fourPillars": "사주팔자 (四柱八字)",
   "elementDist": "오행 분포",
@@ -57,6 +64,14 @@
   "elementBalance": "오행 밸런스",
   "strongEnergy": "{emoji} {name} 에너지가 강합니다",
   "weakEnergy": "{emoji} {name} 에너지가 부족합니다",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  },
+  "elementsNative": {
+    "wood": "나무", "fire": "불", "earth": "흙", "metal": "쇠", "water": "물"
+  },
+  "elementSources": "오행 출처:",
+  "elementSourceCount": "{count}개",
   "yinYang": "음양 밸런스",
   "yangLabel": "양(陽) {pct}%",
   "yinLabel": "음(陰) {pct}%",

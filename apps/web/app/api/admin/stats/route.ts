@@ -68,19 +68,21 @@ export async function GET(request: Request) {
       reqMap.set(key, (reqMap.get(key) ?? 0) + 1);
     }
 
-    const ordMap = new Map<string, { orders: number; confirmed: number; revenue: number }>();
+    const ordMap = new Map<string, { orders: number; confirmed: number; revenue: Record<string, number> }>();
     for (const o of orderRows) {
       const key = toKstDateKey(o.createdAt);
-      const prev = ordMap.get(key) ?? { orders: 0, confirmed: 0, revenue: 0 };
+      const prev = ordMap.get(key) ?? { orders: 0, confirmed: 0, revenue: {} };
       prev.orders += 1;
       if (o.status === 'confirmed') {
         prev.confirmed += 1;
-        prev.revenue += (o.currency === "KRW" ? (o.amountKrw ?? 0) : (o.amount ?? 0));
+        const cur = o.currency ?? "KRW";
+        const amt = cur === "KRW" ? (o.amountKrw ?? 0) : (o.amount ?? 0);
+        prev.revenue[cur] = (prev.revenue[cur] ?? 0) + amt;
       }
       ordMap.set(key, prev);
     }
 
-    const daily: { date: string; requests: number; orders: number; confirmed: number; revenue: number }[] = [];
+    const daily: { date: string; requests: number; orders: number; confirmed: number; revenue: Record<string, number> }[] = [];
     for (let d = new Date(since); d <= new Date(); d.setDate(d.getDate() + 1)) {
       const key = toKstDateKey(d);
       const ord = ordMap.get(key);
@@ -89,7 +91,7 @@ export async function GET(request: Request) {
         requests: reqMap.get(key) ?? 0,
         orders: ord?.orders ?? 0,
         confirmed: ord?.confirmed ?? 0,
-        revenue: ord?.revenue ?? 0,
+        revenue: ord?.revenue ?? {},
       });
     }
 

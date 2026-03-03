@@ -44,7 +44,7 @@
   },
   "ohang": [
     {
-      "ko": "Kayu (木)",
+      "native": "Kayu (木)",
       "season": "Musim Semi",
       "direction": "Timur",
       "organ": "Hati·Kantung Empedu",
@@ -57,7 +57,7 @@
       ]
     },
     {
-      "ko": "Api (火)",
+      "native": "Api (火)",
       "season": "Musim Panas",
       "direction": "Selatan",
       "organ": "Jantung·Usus Halus",
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "ko": "Tanah (土)",
+      "native": "Tanah (土)",
       "season": "Peralihan musim",
       "direction": "Pusat",
       "organ": "Lambung·Limpa",
@@ -83,7 +83,7 @@
       ]
     },
     {
-      "ko": "Logam (金)",
+      "native": "Logam (金)",
       "season": "Musim Gugur",
       "direction": "Barat",
       "organ": "Paru-paru·Usus Besar",
@@ -96,7 +96,7 @@
       ]
     },
     {
-      "ko": "Air (水)",
+      "native": "Air (水)",
       "season": "Musim Dingin",
       "direction": "Utara",
       "organ": "Ginjal·Kandung Kemih",
@@ -108,6 +108,38 @@
         "namun jika kurang dapat menjadi penakut atau kurang tekad."
       ]
     }
+  ],
+  "stages": [
+    "Mengumpulkan input dan normalisasi format",
+    "Memvalidasi format tanggal dan waktu lahir",
+    "Memeriksa opsi kalender matahari/bulan",
+    "Menyiapkan perhitungan zona waktu (KST)",
+    "Menginisialisasi mesin BaZi",
+    "Menghitung Pilar Tahun",
+    "Menghitung Pilar Bulan",
+    "Menghitung Pilar Hari",
+    "Menghitung Pilar Jam",
+    "Mengonfirmasi empat pilar BaZi",
+    "Memetakan Batang Langit / Cabang Bumi ke elemen",
+    "Menghitung distribusi elemen",
+    "Mengekstrak elemen kuat / lemah",
+    "Menentukan Day Master",
+    "Menghitung rasio Yin-Yang",
+    "Menghitung hubungan Sepuluh Dewa",
+    "Menghitung indikator tambahan Siklus Besar",
+    "Membangun prompt analisis kepribadian",
+    "Menyiapkan panggilan model AI",
+    "AI sedang membuat generasi pertama",
+    "Memvalidasi format output",
+    "Memeriksa frasa terlarang dan keamanan",
+    "Memproses kalimat ringkasan",
+    "Menyusun struktur bagian laporan",
+    "Menyerialisasi data untuk penyimpanan",
+    "Menyimpan ke database",
+    "Memverifikasi status pembayaran",
+    "Menyusun respons akhir",
+    "Menyinkronkan data render",
+    "Mempersiapkan transisi halaman hasil"
   ],
   "slides": [
     {
@@ -194,5 +226,7 @@
         "konon dapat mengubah aliran nasib menjadi lebih menguntungkan."
       ]
     }
-  ]
+  ],
+  "ohangSliderAria": "Slider pengenalan Lima Elemen",
+  "progressAria": "Kemajuan analisis"
 }

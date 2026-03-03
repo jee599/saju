@@ -39,8 +39,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Pretendard", "Pretendard Variable", "sans-serif"],
-        serif: ["Noto Serif KR", "serif"],
+        sans: ["Manrope", "Pretendard", "Pretendard Variable", "sans-serif"],
+        serif: ["Italiana", "Noto Serif KR", "serif"],
+        display: ["Italiana", "serif"],
       },
     },
   },

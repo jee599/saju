@@ -112,7 +112,7 @@ function DailyContent() {
   };
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         <section className="glassCard" style={{ textAlign: "center" }}>
           <p className="heroEyebrow" style={{ color: "var(--accent-gold)" }}>{t("eyebrow")}</p>
@@ -126,11 +126,11 @@ function DailyContent() {
             <div className="form" style={{ maxWidth: 360, margin: "16px auto 0" }}>
               <div className="formGroup">
                 <label htmlFor="daily-name">{t("nameLabel")}</label>
-                <input type="text" className="input" placeholder={t("namePlaceholder")} value={inputName} onChange={(e) => setInputName(e.target.value)} />
+                <input id="daily-name" type="text" className="input" placeholder={t("namePlaceholder")} value={inputName} onChange={(e) => setInputName(e.target.value)} />
               </div>
               <div className="formGroup">
                 <label htmlFor="daily-birthDate">{t("birthDateLabel")}</label>
-                <input type="date" className="input" value={inputDate} onChange={(e) => setInputDate(e.target.value)} min="1930-01-01" max="2010-12-31" />
+                <input id="daily-birthDate" type="date" className="input" value={inputDate} onChange={(e) => setInputDate(e.target.value)} min="1930-01-01" max="2010-12-31" />
               </div>
               <button className="btn btn-primary btn-lg btn-full" style={{ marginTop: 12 }} onClick={handleSubmit} disabled={!inputDate}>
                 {t("viewFortune")}
@@ -196,7 +196,7 @@ function DailyContent() {
           </>
         ) : null}
       </div>
-    </main>
+    </div>
   );
 }
 

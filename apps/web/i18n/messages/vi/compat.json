@@ -13,5 +13,8 @@
   "detailButton": "Xem phân tích chi tiết của tôi",
   "shareText": "Điểm hợp duyên của chúng ta là {score} điểm! Bạn muốn thử không?\n{url}",
   "shareTitle": "FortuneLab Hợp duyên",
-  "loading": "Đang phân tích hợp duyên..."
+  "loading": "Đang phân tích hợp duyên...",
+  "elements": {
+    "wood": "Mộc", "fire": "Hỏa", "earth": "Thổ", "metal": "Kim", "water": "Thủy"
+  }
 }

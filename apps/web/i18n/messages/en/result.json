@@ -26,7 +26,14 @@
   "dayMaster": {
     "title": "You are a person of {element}",
     "sub": "{name}'s Day Master (日干) is {hanja}",
-    "note": "The Day Master is your innate essence and may differ from your dominant element {dominant} in the elemental distribution"
+    "note": "The Day Master is your innate essence and may differ from your dominant element {dominant} in the elemental distribution",
+    "traits": {
+      "wood": "A creative and compassionate nature that seeks growth",
+      "fire": "A passionate, energetic, and charismatic nature",
+      "earth": "A stable, trustworthy, and embracing nature",
+      "metal": "A decisive, just, and highly focused nature",
+      "water": "A wise, adaptable, and intuitive nature"
+    }
   },
   "fourPillars": "Four Pillars (四柱八字)",
   "elementDist": "Element Distribution",
@@ -35,6 +42,14 @@
   "elementBalance": "Element Balance",
   "strongEnergy": "{emoji} {name} energy is strong",
   "weakEnergy": "{emoji} {name} energy is lacking",
+  "elements": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  },
+  "elementsNative": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  },
+  "elementSources": "Element sources:",
+  "elementSourceCount": "{count}",
   "yinYang": "Yin-Yang Balance",
   "yangLabel": "Yang (陽) {pct}%",
   "yinLabel": "Yin (陰) {pct}%",

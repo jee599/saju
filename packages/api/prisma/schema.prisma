@@ -24,19 +24,19 @@ model FortuneRequest {
 
 // ── Order (주문) ────────────────────────────────────────
 model Order {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   requestId       String
   productCode     String
-  amountKrw       Int           // Legacy KRW amount (kept for backward compat)
-  amount          Int?          // Amount in smallest currency unit (cents, yen, won, etc.)
+  amountKrw       Int // Legacy KRW amount (kept for backward compat)
+  amount          Int? // Amount in smallest currency unit (cents, yen, won, etc.)
   currency        String    @default("KRW")
   countryCode     String    @default("kr")
   locale          String    @default("ko")
-  paymentProvider String?       // "toss" | "stripe" | "razorpay"
-  paymentId       String?       // External payment ID (e.g. Stripe session ID)
+  paymentProvider String? // "toss" | "stripe" | "razorpay"
+  paymentId       String? // External payment ID (e.g. Stripe session ID)
   status          String    @default("created")
   email           String?
-  emailSentAt     DateTime?  @map("email_sent_at")
+  emailSentAt     DateTime? @map("email_sent_at")
   createdAt       DateTime  @default(now())
   confirmedAt     DateTime?
 
@@ -46,47 +46,47 @@ model Order {
 
 // ── Report (리포트) ─────────────────────────────────────
 model Report {
-  id          String   @id @default(cuid())
-  orderId     String
-  model       String
-  productCode String
-  tier        String   @default("free")  // "free" | "paid"
-  headline    String
-  summary     String
-  sectionsJson String
+  id                  String    @id @default(cuid())
+  orderId             String    @unique
+  model               String
+  productCode         String
+  tier                String    @default("free") // "free" | "paid"
+  headline            String
+  summary             String
+  sectionsJson        String
   recommendationsJson String
-  disclaimer  String
-  generatedAt DateTime @default(now())
-  expiresAt   DateTime?  // null for paid (permanent), 90 days for free
+  disclaimer          String
+  generatedAt         DateTime  @default(now())
+  expiresAt           DateTime? // null for paid (permanent), 90 days for free
 
   order Order @relation(fields: [orderId], references: [id])
 }
 
 // ── LLM Usage (비용 추적) ───────────────────────────────
 model LlmUsage {
-  id          String   @id @default(cuid())
-  requestId   String?
-  provider    String
-  model       String
-  inputTokens  Int?
-  outputTokens Int?
-  totalTokens  Int?
-  durationMs   Int?
+  id               String   @id @default(cuid())
+  requestId        String?
+  provider         String
+  model            String
+  inputTokens      Int?
+  outputTokens     Int?
+  totalTokens      Int?
+  durationMs       Int?
   estimatedCostUsd Float?
-  createdAt   DateTime @default(now())
+  createdAt        DateTime @default(now())
 
   request FortuneRequest? @relation(fields: [requestId], references: [id])
 }
 
 // ── Prompt Cache (프롬프트 캐시) ────────────────────────
 model PromptCache {
-  id        String   @id @default(cuid())
-  cacheKey  String   @unique
+  id        String    @id @default(cuid())
+  cacheKey  String    @unique
   provider  String
   model     String
   response  String
   usageJson String?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   expiresAt DateTime?
 }
 
@@ -105,7 +105,7 @@ model User {
 model EmailSubscription {
   id        String   @id @default(cuid())
   email     String
-  source    String   // "checkout" | "coming_soon" | "monthly_fortune"
+  source    String // "checkout" | "coming_soon" | "monthly_fortune"
   locale    String   @default("ko")
   optedIn   Boolean  @default(true) @map("opted_in")
   createdAt DateTime @default(now()) @map("created_at")
@@ -119,7 +119,7 @@ model ModelVote {
   id        String   @id @default(cuid())
   orderId   String
   modelKey  String
-  voterId   String   // 브라우저 localStorage UUID
+  voterId   String // 브라우저 localStorage UUID
   createdAt DateTime @default(now()) @map("created_at")
 
   @@unique([orderId, modelKey, voterId])
@@ -139,4 +139,26 @@ model RateLimitLog {
   @@index([ip, createdAt])
   @@index([uuid, createdAt])
   @@map("rate_limit_logs")
+}
+
+// ── Event Log (행동 분석 이벤트) ──────────────────────────
+model EventLog {
+  id         String   @id @default(cuid())
+  sessionId  String   @map("session_id")
+  userId     String?  @map("user_id")
+  eventType  String   @map("event_type")
+  eventName  String   @map("event_name")
+  properties String   @default("{}")
+  page       String?
+  referrer   String?
+  locale     String?
+  device     String?
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId, createdAt])
+  @@index([eventName, createdAt])
+  @@index([eventType, createdAt])
+  @@index([createdAt])
+  @@map("event_logs")
 }

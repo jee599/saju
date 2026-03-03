@@ -7,6 +7,8 @@ import { locales } from "../../i18n/config";
 import { GtagScript } from "./components/GtagScript";
 import LanguageSelector from "./components/LanguageSelector";
 
+const AURORA_FONTS_URL = "https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@400;500;600;700&display=swap";
+
 function getLocaleFonts(locale: string) {
   switch (locale) {
     case "ko":
@@ -14,18 +16,44 @@ function getLocaleFonts(locale: string) {
         <>
           <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
           <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap" rel="stylesheet" />
+          <link href={AURORA_FONTS_URL} rel="stylesheet" />
         </>
       );
     case "ja":
-      return <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />;
+      return (
+        <>
+          <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+          <link href={AURORA_FONTS_URL} rel="stylesheet" />
+        </>
+      );
     case "zh":
-      return <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />;
+      return (
+        <>
+          <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+          <link href={AURORA_FONTS_URL} rel="stylesheet" />
+        </>
+      );
     case "th":
-      return <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />;
+      return (
+        <>
+          <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+          <link href={AURORA_FONTS_URL} rel="stylesheet" />
+        </>
+      );
     case "hi":
-      return <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />;
+      return (
+        <>
+          <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />
+          <link href={AURORA_FONTS_URL} rel="stylesheet" />
+        </>
+      );
     default: // en, vi, id
-      return <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />;
+      return (
+        <>
+          <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+          <link href={AURORA_FONTS_URL} rel="stylesheet" />
+        </>
+      );
   }
 }
 
@@ -73,29 +101,31 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {getLocaleFonts(locale)}
-        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
       </head>
       <GtagScript />
       <body>
-        <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
+        <a href="#main-content" className="skip-link">{t("skipLink")}</a>
         <NextIntlClientProvider messages={messages}>
           <header className="siteHeader">
             <div className="headerInner">
-              <Link href="/" className="brand">
-                <svg className="brandLogo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#C48B9F" />
-                      <stop offset="100%" stopColor="#D4AF37" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="16" cy="16" r="14.5" stroke="url(#logoGrad)" strokeWidth="1.5" opacity="0.6" />
-                  <path d="M16 4 A12 12 0 0 1 16 28 A6 6 0 0 0 16 16 A6 6 0 0 1 16 4Z" fill="url(#logoGrad)" opacity="0.85" />
-                  <circle cx="16" cy="10" r="2" fill="#1A0A2E" />
-                  <circle cx="16" cy="22" r="2" fill="url(#logoGrad)" />
-                </svg>
-                <span className="brandText">{t("brand")}</span>
-              </Link>
+              <div className="headerTopRow">
+                <Link href="/" className="brand">
+                  <svg className="brandLogo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stopColor="#a78bfa" />
+                        <stop offset="100%" stopColor="#f472b6" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="16" cy="16" r="14.5" stroke="url(#logoGrad)" strokeWidth="1.5" opacity="0.6" />
+                    <path d="M16 4 A12 12 0 0 1 16 28 A6 6 0 0 0 16 16 A6 6 0 0 1 16 4Z" fill="url(#logoGrad)" opacity="0.85" />
+                    <circle cx="16" cy="10" r="2" fill="#08060f" />
+                    <circle cx="16" cy="22" r="2" fill="url(#logoGrad)" />
+                  </svg>
+                  <span className="brandText">{t("brand")}</span>
+                </Link>
+                <LanguageSelector />
+              </div>
               <nav className="topNav" aria-label={t("nav.label")}>
                 <Link href="/daily">{t("nav.daily")}</Link>
                 <Link href="/#hero">{t("nav.saju")}</Link>
@@ -105,10 +135,9 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                 <Link href="/dream">{t("nav.dream")}</Link>
                 <Link href="/tarot">{t("nav.tarot")}</Link>
               </nav>
-              <LanguageSelector />
             </div>
           </header>
-          {children}
+          <main id="main-content">{children}</main>
           <footer className="siteFooter">
             <div className="footerInner">
               <p className="footerTitle">{t("footer.title")}</p>

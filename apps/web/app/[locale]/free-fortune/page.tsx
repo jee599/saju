@@ -32,7 +32,7 @@ function FreeFortunContent() {
   };
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         <section className="glassCard">
           <h2>{t("title")}</h2>
@@ -113,7 +113,7 @@ function FreeFortunContent() {
           )}
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -38,7 +38,7 @@ import { buildPaidReportPrompt, FIXED_JASI_NOTICE_KO } from "./reportPrompt";
 const app = Fastify({ logger: true });
 const port = Number(process.env.PORT ?? 3001);
 
-await app.register(cors, { origin: true });
+await app.register(cors, { origin: process.env.ALLOWED_ORIGINS?.split(',') ?? ['http://localhost:3000'] });
 
 const priceTable: Record<"standard" | "deep" | "full", number> = {
   standard: 4900,

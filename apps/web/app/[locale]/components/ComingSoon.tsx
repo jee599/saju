@@ -39,7 +39,7 @@ export default function ComingSoon({ feature }: { feature: string }) {
   };
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         <div className="comingSoonCard">
           <div className="comingSoonEmoji">{emoji}</div>
@@ -76,6 +76,6 @@ export default function ComingSoon({ feature }: { feature: string }) {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

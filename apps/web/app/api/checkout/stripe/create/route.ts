@@ -35,6 +35,18 @@ export async function POST(req: Request) {
     const locale = body.locale ?? 'en';
     const country = getCountryByLocale(locale);
 
+    // Locale-based pricing: the amount is determined by the locale the client sends.
+    // Cross-check with the Cloudflare cf-ipcountry header when available to detect
+    // mismatches (e.g. user in US sending locale "ko" to get KRW pricing).
+    // This is low-risk because Stripe itself validates the payment amount, but we
+    // log a warning for monitoring purposes.
+    const cfCountry = req.headers.get("cf-ipcountry");
+    if (cfCountry && cfCountry.toLowerCase() !== country.code.toLowerCase()) {
+      console.warn(
+        `[stripe/create] locale-country mismatch: locale="${locale}" → country="${country.code}", cf-ipcountry="${cfCountry}", orderId will follow`
+      );
+    }
+
     // Create FortuneRequest
     const fortuneRequest = await prisma.fortuneRequest.create({
       data: {
@@ -72,6 +84,18 @@ export async function POST(req: Request) {
     // For 2-decimal currencies (USD, THB, CNY, INR), amount is already in smallest unit
     const stripeAmount = country.pricing.saju.premium;
 
+    // Localized product names for Stripe checkout
+    const PRODUCT_NAMES: Record<string, string> = {
+      ko: "AI 사주 분석 리포트",
+      ja: "AI 四柱推命分析レポート",
+      zh: "AI 八字分析报告",
+      th: "รายงานวิเคราะห์ดวงชะตา AI",
+      vi: "Báo cáo phân tích Tứ Trụ AI",
+      id: "Laporan Analisis Empat Pilar AI",
+      hi: "AI कुंडली विश्लेषण रिपोर्ट",
+    };
+    const productName = PRODUCT_NAMES[locale] ?? "AI BaZi Analysis Report";
+
     // Create Stripe Checkout Session
     const origin = req.headers.get('origin') ?? process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
     const stripe = getStripe();
@@ -85,7 +109,7 @@ export async function POST(req: Request) {
             currency: country.currency.toLowerCase(),
             unit_amount: stripeAmount,
             product_data: {
-              name: locale === 'ko' ? 'AI 사주 분석 리포트' : 'AI BaZi Analysis Report',
+              name: productName,
               description: country.priceLabel,
             },
           },
