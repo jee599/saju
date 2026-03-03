@@ -7,6 +7,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { trackFunnel, trackTiming, trackError as trackAnalyticsError, createPageTimer, trackPageEvent } from "../../../lib/analytics";
 
 /* ──────────────────────────────────────────────────
    오행 상수 (비주얼 전용 — hanja, color, emoji)
@@ -230,6 +231,12 @@ function LoadingContent() {
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const confirmCalled = useRef(false);
+  const pageTimerRef = useRef<ReturnType<typeof createPageTimer> | null>(null);
+  const trackedRef = useRef(false);
+  const autoSlideRef = useRef<ReturnType<typeof setInterval>>(undefined);
+  const fadeTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
   // Pre-compute particle styles deterministically to avoid Math.random() hydration mismatch
   const particleStyles = useMemo(() =>
@@ -248,21 +255,65 @@ function LoadingContent() {
   const displayedLines = useTypewriter(slideContent, 25, 300);
   const slideMeta = SLIDE_META[slideIdx];
 
-  // 슬라이드 전환 (10초 주기)
+  // Track page view + loading start
   useEffect(() => {
-    let fadeTimeout: ReturnType<typeof setTimeout>;
-    const timer = setInterval(() => {
-      setFadeState("out");
-      fadeTimeout = setTimeout(() => {
-        setSlideIdx((i) => (i + 1) % SLIDE_META.length);
-        setFadeState("in");
-      }, 600);
-    }, 10000);
-    return () => {
-      clearInterval(timer);
-      clearTimeout(fadeTimeout);
-    };
+    if (trackedRef.current) return;
+    trackedRef.current = true;
+    trackPageEvent("/loading-analysis");
+    trackFunnel("loading_start", { flow: orderId ? "paid" : "free" });
+    pageTimerRef.current = createPageTimer("loading");
+    return () => { pageTimerRef.current?.stop(); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 슬라이드 전환
+  const goToSlide = useCallback((direction: 'next' | 'prev') => {
+    if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
+    setFadeState("out");
+    fadeTimeoutRef.current = setTimeout(() => {
+      setSlideIdx((i) => {
+        if (direction === 'next') return (i + 1) % SLIDE_META.length;
+        return (i - 1 + SLIDE_META.length) % SLIDE_META.length;
+      });
+      setFadeState("in");
+    }, 500);
+  }, []);
+
+  // 자동 슬라이드 (10초 주기)
+  useEffect(() => {
+    autoSlideRef.current = setInterval(() => goToSlide('next'), 10000);
+    return () => {
+      if (autoSlideRef.current) clearInterval(autoSlideRef.current);
+      if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
+    };
+  }, [goToSlide]);
+
+  // 터치 스와이프 핸들러
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      goToSlide(dx < 0 ? 'next' : 'prev');
+      if (autoSlideRef.current) clearInterval(autoSlideRef.current);
+      autoSlideRef.current = setInterval(() => goToSlide('next'), 10000);
+    }
+  }, [goToSlide]);
+
+  const handleIndicatorClick = useCallback((targetIdx: number) => {
+    if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
+    setFadeState("out");
+    fadeTimeoutRef.current = setTimeout(() => {
+      setSlideIdx(targetIdx);
+      setFadeState("in");
+    }, 500);
+    if (autoSlideRef.current) clearInterval(autoSlideRef.current);
+    autoSlideRef.current = setInterval(() => goToSlide('next'), 10000);
+  }, [goToSlide]);
 
   // 오행 로테이션 (3초 주기)
   useEffect(() => {
@@ -309,6 +360,8 @@ function LoadingContent() {
       }
 
       setDone(true);
+      trackFunnel("loading_complete", { flow: "free" });
+      pageTimerRef.current?.stop();
       const q = new URLSearchParams({
         name: freeName ?? "",
         birthDate: freeBirthDate ?? "",
@@ -318,7 +371,9 @@ function LoadingContent() {
       });
       setTimeout(() => router.push(`/result?${q.toString()}`), 600);
     } catch (e) {
-      setError(e instanceof Error ? e.message : t("genericError"));
+      const errMsg = e instanceof Error ? e.message : t("genericError");
+      setError(errMsg);
+      trackAnalyticsError("loading_free_error", errMsg);
       setIsGenerating(false);
     }
   }, [isFreeFlow, freeName, freeBirthDate, freeBirthTime, freeGender, freeCalendarType, locale, router, t]);
@@ -380,10 +435,15 @@ function LoadingContent() {
 
       const viewToken = genBody?.data?.viewToken ?? '';
       setDone(true);
+      trackFunnel("loading_complete", { flow: "paid" });
+      trackFunnel("checkout_complete");
+      pageTimerRef.current?.stop();
       setTimeout(() => router.push(`/report/${orderId}?token=${viewToken}`), 600);
       return;
     } catch (e) {
-      setError(e instanceof Error ? e.message : t("genericError"));
+      const errMsg = e instanceof Error ? e.message : t("genericError");
+      setError(errMsg);
+      trackAnalyticsError("loading_paid_error", errMsg);
       setIsGenerating(false);
     }
   }, [orderId, router, t]);
@@ -452,10 +512,12 @@ function LoadingContent() {
               <span>{t("analyzing")} · {formatTime(elapsedSec)}</span>
             </div>
             {(() => {
-              const EXPECTED_SEC = orderId ? 75 : 10;
-              const rawByTime = done ? 100 : Math.min(97, (elapsedSec / EXPECTED_SEC) * 100);
-              const pct = done ? 100 : Math.max(3, Math.min(97, Math.floor(rawByTime / 3) * 3));
-              const stageIdx = done ? 29 : Math.min(29, Math.max(0, Math.floor(pct / 3) - 1));
+              // Asymptotic curve: progress slows realistically near completion
+              const cap = 95;
+              const k = orderId ? 0.015 : 0.08;
+              const rawPct = done ? 100 : cap * (1 - Math.exp(-k * elapsedSec));
+              const pct = done ? 100 : Math.max(3, Math.min(cap, Math.floor(rawPct)));
+              const stageIdx = done ? 29 : Math.min(29, Math.max(0, Math.floor(pct * 30 / 100)));
               const stageText = t(`stages.${stageIdx}`);
 
               return (
@@ -475,22 +537,7 @@ function LoadingContent() {
                   </div>
 
                   <div className="loadingStageNow" aria-live="polite">
-                    <span className="stageBadge">STEP {stageIdx + 1}/30</span>
                     <span className="stageText">{stageText}</span>
-                  </div>
-
-                  <div className="loadingSteps2">
-                    {[0, 1, 2, 3, 4].map((i) => {
-                      const localIdx = Math.min(29, Math.max(0, stageIdx - 2 + i));
-                      const active = localIdx === stageIdx;
-                      const doneState = localIdx < stageIdx;
-                      return (
-                        <div key={`${i}-${localIdx}`} className={`loadingStep2 ${doneState ? "done" : active ? "active" : ""}`}>
-                          <span className="stepIcon">{doneState ? "✓" : `${localIdx + 1}`}</span>
-                          <span className="stepLabel">{t(`stages.${localIdx}`)}</span>
-                        </div>
-                      );
-                    })}
                   </div>
                 </>
               );
@@ -498,7 +545,11 @@ function LoadingContent() {
           </div>
 
           {/* ── 교육 콘텐츠 슬라이드 ── */}
-          <div className={`eduSlide ${fadeState}`}>
+          <div
+            className={`eduSlide ${fadeState}`}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             {slideMeta.visual === "pillars" && <PillarsVisual t={t} />}
             {slideMeta.visual === "ohang-cycle" && (
               <div className="eduOhangMini">
@@ -522,7 +573,13 @@ function LoadingContent() {
             {/* 슬라이드 인디케이터 */}
             <div className="slideIndicators">
               {SLIDE_META.map((_, i) => (
-                <span key={i} className={`slideIndicator ${i === slideIdx ? "active" : ""}`} />
+                <button
+                  key={i}
+                  type="button"
+                  className={`slideIndicator ${i === slideIdx ? "active" : ""}`}
+                  onClick={() => handleIndicatorClick(i)}
+                  aria-label={`Slide ${i + 1}`}
+                />
               ))}
             </div>
           </div>

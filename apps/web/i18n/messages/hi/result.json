@@ -26,7 +26,14 @@
   "dayMaster": {
     "title": "You are a person of {element}",
     "sub": "{name}'s Day Master (日干) is {hanja}",
-    "note": "The Day Master is your innate essence and may differ from your dominant element {dominant} in the elemental distribution"
+    "note": "The Day Master is your innate essence and may differ from your dominant element {dominant} in the elemental distribution",
+    "traits": {
+      "wood": "विकास की चाह, रचनात्मक और करुणामय स्वभाव",
+      "fire": "उत्साही, ऊर्जावान और करिश्माई स्वभाव",
+      "earth": "स्थिर, विश्वसनीय और समावेशी स्वभाव",
+      "metal": "निर्णायक, न्यायप्रिय और गहन एकाग्रता वाला स्वभाव",
+      "water": "बुद्धिमान, लचीला और सहज ज्ञान वाला स्वभाव"
+    }
   },
   "fourPillars": "Four Pillars BaZi (四柱八字)",
   "elementDist": "Element Distribution",

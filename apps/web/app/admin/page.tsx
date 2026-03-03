@@ -494,10 +494,242 @@ function LogsTab() {
   );
 }
 
+/* ── Analytics Types ── */
+interface FunnelRow { step: string; count: number }
+interface TimingRow { name: string; avgMs: number; samples: number }
+interface AnalyticsData {
+  funnel: FunnelRow[];
+  timing: TimingRow[];
+  behavior: {
+    choices: Record<string, Record<string, number>>;
+    hourly: number[];
+    device: Record<string, number>;
+    locale: Record<string, number>;
+  };
+  engagement: {
+    scroll: Record<string, { avg: number; samples: number }>;
+    sections: Record<string, number>;
+  };
+}
+
+const FUNNEL_LABELS: Record<string, string> = {
+  form_start: "폼 시작",
+  form_step_birthdate: "생년월일 입력",
+  form_step_birthtime: "태어난 시 입력",
+  form_step_gender: "성별 선택",
+  form_complete: "폼 완료",
+  loading_start: "분석 시작",
+  loading_complete: "분석 완료",
+  result_view: "결과 열람",
+  paywall_view: "결제 페이지",
+  checkout_attempt: "결제 시도",
+  checkout_complete: "결제 완료",
+  report_view: "리포트 열람",
+};
+
+const TIMING_LABELS: Record<string, string> = {
+  home_duration: "홈 체류시간",
+  loading_duration: "로딩 대기시간",
+  result_duration: "결과 열람시간",
+  paywall_duration: "결제 체류시간",
+  report_duration: "리포트 열람시간",
+};
+
+function formatDuration(ms: number) {
+  if (ms === 0) return "-";
+  const sec = Math.round(ms / 1000);
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m > 0 ? `${m}분 ${s}초` : `${s}초`;
+}
+
+/* ── Analytics Tab ── */
+function AnalyticsTab({ range, setRange }: { range: string; setRange: (r: string) => void }) {
+  const [data, setData] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    adminFetch(`/api/admin/analytics?range=${range}`).then((res) => {
+      if (res.ok) setData(res.data);
+      setLoading(false);
+    });
+  }, [range]);
+
+  if (loading) return <p style={{ color: "#a89bb8" }}>로딩 중...</p>;
+  if (!data) return <p style={{ color: "#ef4444" }}>데이터를 불러올 수 없습니다.</p>;
+
+  const maxFunnel = Math.max(...data.funnel.map((f) => f.count), 1);
+  const maxHourly = Math.max(...data.behavior.hourly, 1);
+
+  return (
+    <>
+      <div style={S.filterRow}>
+        {["7d", "30d", "90d"].map((r) => (
+          <button key={r} style={S.tab(range === r)} onClick={() => setRange(r)}>
+            {r === "7d" ? "7일" : r === "30d" ? "30일" : "90일"}
+          </button>
+        ))}
+      </div>
+
+      {/* ── 전환 퍼널 ── */}
+      <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>전환 퍼널</h3>
+      <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 32 }}>
+        {data.funnel.map((f, i) => {
+          const prevCount = i > 0 ? data.funnel[i - 1].count : f.count;
+          const dropRate = prevCount > 0 && i > 0 ? (((prevCount - f.count) / prevCount) * 100).toFixed(1) : null;
+          return (
+            <div key={f.step} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.82rem" }}>
+              <span style={{ width: 120, color: "#a89bb8", flexShrink: 0, fontSize: "0.78rem" }}>
+                {FUNNEL_LABELS[f.step] ?? f.step}
+              </span>
+              <div style={{ flex: 1, position: "relative", height: 20, display: "flex", alignItems: "center" }}>
+                <div style={{
+                  ...S.chartBar((f.count / maxFunnel) * 100, i >= 9 ? "#10b981" : "#C48B9F"),
+                  height: 16,
+                  borderRadius: 4,
+                }} />
+              </div>
+              <span style={{ width: 40, textAlign: "right", flexShrink: 0 }}>{f.count}</span>
+              {dropRate !== null && (
+                <span style={{ width: 55, textAlign: "right", flexShrink: 0, fontSize: "0.72rem", color: Number(dropRate) > 50 ? "#ef4444" : "#f59e0b" }}>
+                  -{dropRate}%
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── 평균 소요시간 ── */}
+      <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>평균 소요시간</h3>
+      <div style={{ overflowX: "auto", marginBottom: 32 }}>
+        <table style={S.table}>
+          <thead>
+            <tr>
+              <th style={S.th}>페이지</th>
+              <th style={S.th}>평균 시간</th>
+              <th style={S.th}>샘플 수</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.timing.map((t) => (
+              <tr key={t.name}>
+                <td style={S.td}>{TIMING_LABELS[t.name] ?? t.name}</td>
+                <td style={S.td}>{formatDuration(t.avgMs)}</td>
+                <td style={S.td}>{t.samples.toLocaleString()}건</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ── 시간대별 방문 ── */}
+      <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>시간대별 방문 (KST)</h3>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 2, height: 100, marginBottom: 32, padding: "0 4px" }}>
+        {data.behavior.hourly.map((count, hour) => (
+          <div key={hour} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+            <div style={{
+              width: "100%",
+              maxWidth: 24,
+              height: `${Math.max(2, (count / maxHourly) * 80)}px`,
+              background: hour >= 9 && hour <= 23 ? "#C48B9F" : "rgba(196,139,159,0.3)",
+              borderRadius: 2,
+              transition: "height 0.3s",
+            }} />
+            {hour % 3 === 0 && (
+              <span style={{ fontSize: "0.65rem", color: "#a89bb8" }}>{hour}</span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* ── 사용자 행동 분포 ── */}
+      <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>사용자 행동</h3>
+      <div style={{ ...S.kpiGrid, marginBottom: 32 }}>
+        {/* Device */}
+        <div style={S.kpiCard}>
+          <div style={S.kpiLabel}>기기 분포</div>
+          {Object.entries(data.behavior.device).map(([d, c]) => (
+            <div key={d} style={{ fontSize: "0.85rem", display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+              <span>{d === "mobile" ? "모바일" : d === "desktop" ? "데스크톱" : d}</span>
+              <span style={{ fontWeight: 600 }}>{c}</span>
+            </div>
+          ))}
+        </div>
+        {/* Locale */}
+        <div style={S.kpiCard}>
+          <div style={S.kpiLabel}>언어 분포</div>
+          {Object.entries(data.behavior.locale)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 5)
+            .map(([l, c]) => (
+              <div key={l} style={{ fontSize: "0.85rem", display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                <span>{l.toUpperCase()}</span>
+                <span style={{ fontWeight: 600 }}>{c}</span>
+              </div>
+            ))}
+        </div>
+        {/* Choices */}
+        {Object.entries(data.behavior.choices).map(([choice, dist]) => (
+          <div key={choice} style={S.kpiCard}>
+            <div style={S.kpiLabel}>{choice === "gender" ? "성별" : choice === "calendar_type" ? "달력 유형" : choice === "birth_time" ? "태어난 시" : choice}</div>
+            {Object.entries(dist)
+              .sort(([, a], [, b]) => b - a)
+              .slice(0, 5)
+              .map(([val, cnt]) => (
+                <div key={val} style={{ fontSize: "0.85rem", display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                  <span>{val === "male" ? "남성" : val === "female" ? "여성" : val === "skipped" ? "미입력" : val === "solar" ? "양력" : val === "lunar" ? "음력" : val}</span>
+                  <span style={{ fontWeight: 600 }}>{cnt}</span>
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
+
+      {/* ── 참여도 ── */}
+      <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>참여도</h3>
+      <div style={{ ...S.kpiGrid, marginBottom: 32 }}>
+        {/* Scroll depth */}
+        <div style={S.kpiCard}>
+          <div style={S.kpiLabel}>평균 스크롤 깊이</div>
+          {Object.entries(data.engagement.scroll).length === 0 ? (
+            <p style={{ fontSize: "0.85rem", color: "#a89bb8" }}>데이터 없음</p>
+          ) : (
+            Object.entries(data.engagement.scroll).map(([page, info]) => (
+              <div key={page} style={{ fontSize: "0.85rem", display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                <span>{page}</span>
+                <span style={{ fontWeight: 600 }}>{info.avg}% <span style={{ fontSize: "0.72rem", color: "#a89bb8" }}>({info.samples}건)</span></span>
+              </div>
+            ))
+          )}
+        </div>
+        {/* Section views */}
+        <div style={S.kpiCard}>
+          <div style={S.kpiLabel}>리포트 섹션 조회</div>
+          {Object.entries(data.engagement.sections).length === 0 ? (
+            <p style={{ fontSize: "0.85rem", color: "#a89bb8" }}>데이터 없음</p>
+          ) : (
+            Object.entries(data.engagement.sections)
+              .sort(([, a], [, b]) => b - a)
+              .slice(0, 10)
+              .map(([section, cnt]) => (
+                <div key={section} style={{ fontSize: "0.85rem", display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 140 }}>{section}</span>
+                  <span style={{ fontWeight: 600 }}>{cnt}</span>
+                </div>
+              ))
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
 /* ── Main ── */
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<"overview" | "orders" | "logs">("overview");
+  const [tab, setTab] = useState<"overview" | "orders" | "logs" | "analytics">("overview");
   const [range, setRange] = useState("30d");
 
   useEffect(() => {
@@ -526,11 +758,13 @@ export default function AdminPage() {
           <button style={S.tab(tab === "overview")} onClick={() => setTab("overview")}>개요</button>
           <button style={S.tab(tab === "orders")} onClick={() => setTab("orders")}>주문</button>
           <button style={S.tab(tab === "logs")} onClick={() => setTab("logs")}>로그</button>
+          <button style={S.tab(tab === "analytics")} onClick={() => setTab("analytics")}>분석</button>
         </div>
 
         {tab === "overview" && <OverviewTab range={range} setRange={setRange} />}
         {tab === "orders" && <OrdersTab />}
         {tab === "logs" && <LogsTab />}
+        {tab === "analytics" && <AnalyticsTab range={range} setRange={setRange} />}
       </div>
     </div>
   );

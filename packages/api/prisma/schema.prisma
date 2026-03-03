@@ -140,3 +140,25 @@ model RateLimitLog {
   @@index([uuid, createdAt])
   @@map("rate_limit_logs")
 }
+
+// ── Event Log (행동 분석 이벤트) ──────────────────────────
+model EventLog {
+  id         String   @id @default(cuid())
+  sessionId  String   @map("session_id")
+  userId     String?  @map("user_id")
+  eventType  String   @map("event_type")
+  eventName  String   @map("event_name")
+  properties String   @default("{}")
+  page       String?
+  referrer   String?
+  locale     String?
+  device     String?
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId, createdAt])
+  @@index([eventName, createdAt])
+  @@index([eventType, createdAt])
+  @@index([createdAt])
+  @@map("event_logs")
+}

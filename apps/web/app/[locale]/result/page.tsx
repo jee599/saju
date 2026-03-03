@@ -4,13 +4,13 @@
 // FourPillarsTable) with next/dynamic to reduce initial JS bundle size.
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useMemo, useEffect, useState } from "react";
+import { Suspense, useMemo, useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, ELEMENT_EMOJI } from "@saju/engine-saju";
 import type { Element, FourPillars } from "@saju/engine-saju";
 import { convertLunarToSolar } from "../../../lib/lunarConvert";
-import { track } from "../../../lib/analytics";
+import { track, trackFunnel, trackScrollDepth, createPageTimer, trackPageEvent, trackClick } from "../../../lib/analytics";
 
 // ── 천간/지지 → 오행 매핑 ──
 const STEM_TO_ELEMENT: Record<string, Element> = {
@@ -261,6 +261,8 @@ function ResultContent() {
   const [visible, setVisible] = useState(false);
   const [personalityText, setPersonalityText] = useState<string | null>(null);
   const [personalityError, setPersonalityError] = useState<string | null>(null);
+  const pageTimerRef = useRef<ReturnType<typeof createPageTimer> | null>(null);
+  const maxScrollRef = useRef(0);
   const [analysis, setAnalysis] = useState<{ pillars: FourPillars; elements: ReturnType<typeof calculateFourPillars>["elements"] } | null>(null);
   const [lunarError, setLunarError] = useState(false);
 
@@ -270,6 +272,9 @@ function ResultContent() {
       return;
     }
     track("report_view");
+    trackPageEvent("/result");
+    trackFunnel("result_view");
+    pageTimerRef.current = createPageTimer("result");
     setTimeout(() => setVisible(true), 100);
 
     const cached = sessionStorage.getItem("free_personality");
@@ -281,6 +286,22 @@ function ResultContent() {
       setPersonalityError(t("personalityError"));
     }
   }, [birthDate, birthTime, name, gender, calendarType, router, t]);
+
+  // Scroll depth tracking + cleanup
+  useEffect(() => {
+    const onScroll = () => {
+      const depth = Math.round(
+        ((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100,
+      );
+      if (depth > maxScrollRef.current) maxScrollRef.current = depth;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (maxScrollRef.current > 0) trackScrollDepth("result", maxScrollRef.current);
+      pageTimerRef.current?.stop();
+    };
+  }, []);
 
   // Compute four pillars analysis; lunar conversion is async (dynamic import)
   useEffect(() => {
@@ -326,23 +347,17 @@ function ResultContent() {
     calendarType,
   }).toString(), [birthDate, birthTime, name, gender, calendarType]);
 
-  if (!birthDate || !analysis) {
-    return <div className="loadingScreen"><p className="muted">{t("noBirthDate")}</p></div>;
-  }
-
-  const { elements, pillars } = analysis;
-  const dayEl = elements.dayMaster;
-  const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
   const elementSources = useMemo(() => {
     const sources: Record<Element, string[]> = {
       wood: [], fire: [], earth: [], metal: [], water: [],
     };
+    if (!analysis) return sources;
 
     const marks: Array<{ label: string; stem: string; branch: string }> = [
-      { label: "년", stem: pillars.year.stem, branch: pillars.year.branch },
-      { label: "월", stem: pillars.month.stem, branch: pillars.month.branch },
-      { label: "일", stem: pillars.day.stem, branch: pillars.day.branch },
-      { label: "시", stem: pillars.hour.stem, branch: pillars.hour.branch },
+      { label: "년", stem: analysis.pillars.year.stem, branch: analysis.pillars.year.branch },
+      { label: "월", stem: analysis.pillars.month.stem, branch: analysis.pillars.month.branch },
+      { label: "일", stem: analysis.pillars.day.stem, branch: analysis.pillars.day.branch },
+      { label: "시", stem: analysis.pillars.hour.stem, branch: analysis.pillars.hour.branch },
     ];
 
     for (const m of marks) {
@@ -353,26 +368,30 @@ function ResultContent() {
     }
 
     return sources;
-  }, [pillars]);
+  }, [analysis]);
+
+  if (!birthDate || !analysis) {
+    return <div className="loadingScreen"><p className="muted">{t("noBirthDate")}</p></div>;
+  }
+
+  const { elements, pillars } = analysis;
+  const mainEl = elements.dominant;
+  const ELEMENTS: Element[] = ["wood", "fire", "earth", "metal", "water"];
+  const ELEMENT_HANJA: Record<Element, string> = { wood: "木", fire: "火", earth: "土", metal: "金", water: "水" };
 
   return (
     <div className="page">
       <div className="container">
-        {/* 일간 카드 */}
-        <section className={`glassCard dayMasterCard ${dayEl}`}>
-          <div className="dayMasterWatermark">{elements.dayMasterHanja}</div>
-          <div className="dayMasterEmoji">{ELEMENT_EMOJI[dayEl]}</div>
-          <h2 className="dayMasterTitle" style={{ color: `var(--element-${dayEl})` }}>
-            {t("dayMaster.title", { element: t(`elements.${dayEl}`) })}
+        {/* 메인 오행 카드 */}
+        <section className={`glassCard dayMasterCard ${mainEl}`}>
+          <div className="dayMasterWatermark">{ELEMENT_HANJA[mainEl]}</div>
+          <div className="dayMasterEmoji">{ELEMENT_EMOJI[mainEl]}</div>
+          <h2 className="dayMasterTitle" style={{ color: `var(--element-${mainEl})` }}>
+            {t("dayMaster.title", { element: t(`elements.${mainEl}`) })}
           </h2>
           <p className="dayMasterSub">
-            {t("dayMaster.sub", { name, hanja: elements.dayMasterHanja })}
+            {t(`dayMaster.traits.${mainEl}`)}
           </p>
-          {dayEl !== elements.dominant && (
-            <p style={{ marginTop: 8, fontSize: "0.78rem", color: "var(--t2)", lineHeight: 1.5 }}>
-              {t("dayMaster.note", { dominant: `${t(`elements.${elements.dominant}`)}(${ELEMENT_EMOJI[elements.dominant]})` })}
-            </p>
-          )}
         </section>
 
         {/* 음력 변환 실패 경고 */}
@@ -387,7 +406,7 @@ function ResultContent() {
         {/* 사주팔자 테이블 */}
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ textAlign: "center", marginBottom: 12 }}>{t("fourPillars")}</h3>
-          <FourPillarsTable pillars={pillars} dayMaster={dayEl} t={t} />
+          <FourPillarsTable pillars={pillars} dayMaster={mainEl} t={t} />
         </section>
 
         {/* 오행 시각화 */}
@@ -483,7 +502,7 @@ function ResultContent() {
             <span className="badge badge-premium">{t("premiumBadge")}</span>
           </h3>
           {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-            <div key={i} className={`blurSection ${dayEl}`}>
+            <div key={i} className={`blurSection ${mainEl}`}>
               <h4 className="lockedSectionTitle">{t(`lockedSections.${i}`)}</h4>
               <div className="blurContent">{t("blurDummy")}</div>
             </div>

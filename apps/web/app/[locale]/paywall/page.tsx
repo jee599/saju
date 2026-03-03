@@ -1,9 +1,9 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { track, trackCheckoutStart } from "../../../lib/analytics";
+import { track, trackCheckoutStart, trackFunnel, trackError as trackAnalyticsError, createPageTimer, trackPageEvent } from "../../../lib/analytics";
 import { getCountryByLocale } from "@saju/shared";
 
 function PaywallContent() {
@@ -19,12 +19,17 @@ function PaywallContent() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const pageTimerRef = useRef<ReturnType<typeof createPageTimer> | null>(null);
 
   const country = getCountryByLocale(locale);
   const priceLabel = country.priceLabel;
 
   useEffect(() => {
     track("paywall_view");
+    trackPageEvent("/paywall");
+    trackFunnel("paywall_view");
+    pageTimerRef.current = createPageTimer("paywall");
+    return () => { pageTimerRef.current?.stop(); };
   }, []);
 
   const handleCheckout = async (ctaPosition: "top" | "middle" | "sticky") => {
@@ -36,6 +41,7 @@ function PaywallContent() {
     setLoading(true);
     setError("");
     trackCheckoutStart(ctaPosition);
+    trackFunnel("checkout_attempt", { ctaPosition });
 
     try {
       const input = { name, birthDate, birthTime, gender, calendarType };
@@ -60,8 +66,10 @@ function PaywallContent() {
       track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
       router.push(`/loading-analysis?orderId=${orderId}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("checkoutError"));
+      const errMsg = err instanceof Error ? err.message : t("checkoutError");
+      setError(errMsg);
       track("checkout_fail");
+      trackAnalyticsError("checkout_error", errMsg);
     } finally {
       setLoading(false);
     }
