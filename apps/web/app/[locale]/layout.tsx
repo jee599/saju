@@ -25,7 +25,7 @@ function getLocaleFonts(locale: string) {
     case "hi":
       return <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />;
     default: // en, vi, id
-      return <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />;
+      return <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />;
   }
 }
 
@@ -73,11 +73,10 @@ export default async function LocaleLayout({ children, params }: { children: Rea
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {getLocaleFonts(locale)}
-        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
       </head>
       <GtagScript />
       <body>
-        <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
+        <a href="#main-content" className="skip-link">{t("skipLink")}</a>
         <NextIntlClientProvider messages={messages}>
           <header className="siteHeader">
             <div className="headerInner">
@@ -108,7 +107,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
               <LanguageSelector />
             </div>
           </header>
-          {children}
+          <main id="main-content">{children}</main>
           <footer className="siteFooter">
             <div className="footerInner">
               <p className="footerTitle">{t("footer.title")}</p>

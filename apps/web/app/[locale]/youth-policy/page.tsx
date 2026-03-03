@@ -1,6 +1,6 @@
 export default function YouthPolicyPage() {
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         <section className="glassCard">
           <h1>청소년 보호 정책</h1>
@@ -20,6 +20,6 @@ export default function YouthPolicyPage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

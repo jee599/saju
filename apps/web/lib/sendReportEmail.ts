@@ -100,7 +100,7 @@ function buildHtml(params: SendReportEmailParams): string {
 
         <!-- CTA Button -->
         <tr><td style="padding:0 0 24px;text-align:center;">
-          <a href="${reportUrl}" style="display:inline-block;padding:14px 40px;background:${BRAND_COLOR};color:#fff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;">
+          <a href="${escapeHtml(reportUrl)}" style="display:inline-block;padding:14px 40px;background:${BRAND_COLOR};color:#fff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;">
             웹에서 전체 리포트 보기
           </a>
         </td></tr>
@@ -125,7 +125,8 @@ function escapeHtml(str: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 export async function sendReportEmail(params: SendReportEmailParams): Promise<{ success: boolean; error?: string }> {
@@ -149,7 +150,7 @@ export async function sendReportEmail(params: SendReportEmailParams): Promise<{ 
       return { success: false, error: error.message };
     }
 
-    console.log(`[email] Report sent to ${params.to}`);
+    console.log("[email] Report sent successfully");
     return { success: true };
   } catch (err) {
     console.error("[email] Failed:", err);

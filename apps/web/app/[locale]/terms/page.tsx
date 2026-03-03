@@ -1,3 +1,5 @@
+// TODO: i18n – legal text needs professional translation for non-Korean locales.
+// Currently all content is hardcoded in Korean.
 import { GlassCard, PageContainer } from "../components/ui";
 
 export default function TermsPage() {

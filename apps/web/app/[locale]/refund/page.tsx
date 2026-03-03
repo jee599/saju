@@ -1,6 +1,8 @@
+// TODO: i18n – legal text needs professional translation for non-Korean locales.
+// Currently all content is hardcoded in Korean.
 export default function RefundPage() {
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         <section className="glassCard">
           <h1>환불 정책</h1>
@@ -28,6 +30,6 @@ export default function RefundPage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

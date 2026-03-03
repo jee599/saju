@@ -13,5 +13,8 @@
   "detailButton": "View my detailed analysis",
   "shareText": "Our compatibility score is {score} points! Want to try?\n{url}",
   "shareTitle": "FortuneLab Compatibility",
-  "loading": "Analyzing compatibility..."
+  "loading": "Analyzing compatibility...",
+  "elements": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  }
 }

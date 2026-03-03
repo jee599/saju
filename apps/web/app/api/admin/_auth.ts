@@ -1,10 +1,30 @@
 import { NextResponse } from "next/server";
-import { createHash } from "crypto";
+import { createHash, timingSafeEqual } from "crypto";
 
 const ADMIN_COOKIE = "oc_admin";
 
+/** Constant-time string comparison to prevent timing attacks. */
+function safeEqual(a: string, b: string): boolean {
+  // Hash both values so length differences don't leak timing information
+  const ha = createHash("sha256").update(a).digest();
+  const hb = createHash("sha256").update(b).digest();
+  return timingSafeEqual(ha, hb);
+}
+
+function getSessionSecret(): string {
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  if (process.env.NODE_ENV === "production") {
+    if (!secret || secret === "default") {
+      throw new Error("ADMIN_SESSION_SECRET must be set to a non-default value in production");
+    }
+    return secret;
+  }
+  // Development fallback only
+  return secret || "dev-only-fallback-secret";
+}
+
 function sessionToken(adminPw: string) {
-  const salt = process.env.ADMIN_SESSION_SECRET ?? "default";
+  const salt = getSessionSecret();
   return createHash("sha256").update(`${adminPw}:${salt}`).digest("hex");
 }
 
@@ -23,10 +43,10 @@ export function checkAdminAuth(request: Request) {
 
   const authHeader = request.headers.get("authorization");
   const bearer = authHeader?.replace("Bearer ", "");
-  if (bearer && bearer === adminPw) return null;
+  if (bearer && safeEqual(bearer, adminPw)) return null;
 
   const cookieToken = getCookie(request, ADMIN_COOKIE);
-  if (cookieToken && cookieToken === sessionToken(adminPw)) return null;
+  if (cookieToken && safeEqual(cookieToken, sessionToken(adminPw))) return null;
 
   return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
 }

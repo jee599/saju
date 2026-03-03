@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@saju/api/db';
 import type { FortuneInput, GetReportResponse, ReportDetail, OrderSummary } from '../../../../lib/types';
+import { verifyViewToken } from '../../../../lib/viewToken';
 
 /**
  * 단일 리포트 조회 API.
- * GET /api/report/:orderId
+ * GET /api/report/:orderId?token=<viewToken>
  */
 export async function GET(req: Request, ctx: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await ctx.params;
@@ -16,12 +17,22 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
     );
   }
 
+  // IDOR protection: verify token derived from orderId + server secret
+  const url = new URL(req.url);
+  const token = url.searchParams.get('token');
+  if (!token || !verifyViewToken(orderId, token)) {
+    return NextResponse.json(
+      { ok: false, error: { code: 'FORBIDDEN', message: '리포트 접근 권한이 없습니다.' } },
+      { status: 403 }
+    );
+  }
+
   try {
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       include: {
         request: true,
-        reports: { orderBy: { generatedAt: 'desc' }, take: 1 },
+        reports: { orderBy: { generatedAt: 'asc' }, take: 1 },
       },
     });
 
@@ -49,7 +60,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
       calendarType: order.request.calendarType as FortuneInput['calendarType'],
     };
 
-    let report: ReportDetail | undefined;
+    let report: ReportDetail | null = null;
     const dbReport = order.reports[0];
 
     if (dbReport) {
@@ -73,10 +84,12 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
 
     const data: GetReportResponse = {
       order: orderSummary,
-      report: report as any,
+      report: report ?? null,
       input,
     };
-    return NextResponse.json({ ok: true, data });
+    // Paid reports are immutable; cache for 1h, stale-while-revalidate for 24h
+    const headers = { 'Cache-Control': 'private, max-age=3600, stale-while-revalidate=86400' };
+    return NextResponse.json({ ok: true, data }, { headers });
   } catch (err) {
     console.error('[report/get]', err);
     return NextResponse.json(

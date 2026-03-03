@@ -21,7 +21,7 @@
   },
   "ohang": [
     {
-      "ko": "Wood",
+      "native": "Wood",
       "season": "Spring",
       "direction": "East",
       "organ": "Liver · Gallbladder",
@@ -34,7 +34,7 @@
       ]
     },
     {
-      "ko": "Fire",
+      "native": "Fire",
       "season": "Summer",
       "direction": "South",
       "organ": "Heart · Small Intestine",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "ko": "Earth",
+      "native": "Earth",
       "season": "Between seasons",
       "direction": "Center",
       "organ": "Stomach · Spleen",
@@ -60,7 +60,7 @@
       ]
     },
     {
-      "ko": "Metal",
+      "native": "Metal",
       "season": "Autumn",
       "direction": "West",
       "organ": "Lungs · Large Intestine",
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "ko": "Water",
+      "native": "Water",
       "season": "Winter",
       "direction": "North",
       "organ": "Kidneys · Bladder",
@@ -85,6 +85,38 @@
         "but in deficiency may be fearful or lack willpower."
       ]
     }
+  ],
+  "stages": [
+    "Collecting input and normalizing format",
+    "Validating birth date and time format",
+    "Checking solar/lunar calendar option",
+    "Preparing timezone (KST) calculation",
+    "Initializing BaZi engine",
+    "Calculating Year Pillar",
+    "Calculating Month Pillar",
+    "Calculating Day Pillar",
+    "Calculating Hour Pillar",
+    "Confirming four pillars of BaZi chart",
+    "Mapping Heavenly Stems / Earthly Branches to elements",
+    "Tallying element distribution",
+    "Extracting strong / weak elements",
+    "Deriving Day Master",
+    "Calculating Yin-Yang ratio",
+    "Computing Ten Gods relationships",
+    "Computing Grand Cycle auxiliary indicators",
+    "Building free personality prompt",
+    "Preparing AI model call",
+    "AI first-pass generation in progress",
+    "Validating generated output format",
+    "Applying safety and forbidden-phrase checks",
+    "Post-processing summary sentences",
+    "Structuring report sections",
+    "Serializing data for storage",
+    "Saving to database",
+    "Verifying payment status",
+    "Composing final response payload",
+    "Syncing render data for display",
+    "Preparing result page transition"
   ],
   "slides": [
     {
@@ -171,5 +203,7 @@
         "is said to shift the flow of fortune in your favor."
       ]
     }
-  ]
+  ],
+  "ohangSliderAria": "Five Elements introduction slider",
+  "progressAria": "Analysis progress"
 }

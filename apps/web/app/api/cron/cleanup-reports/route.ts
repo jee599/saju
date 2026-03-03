@@ -18,16 +18,35 @@ export async function GET(req: Request) {
   try {
     const now = new Date();
 
-    // Delete reports where expiresAt is in the past (free reports have 90-day expiry)
-    const deleted = await prisma.report.deleteMany({
+    // 1. Delete reports where expiresAt is in the past (free reports have 90-day expiry)
+    const deletedReports = await prisma.report.deleteMany({
       where: {
         expiresAt: { not: null, lt: now },
       },
     });
 
+    // 2. Clean up stale orders stuck in 'created' status for over 24 hours
+    const staleOrderCutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const deletedOrders = await prisma.order.deleteMany({
+      where: {
+        status: "created",
+        createdAt: { lt: staleOrderCutoff },
+      },
+    });
+
+    // 3. Clean up orphaned FortuneRequest entries (no associated orders)
+    const orphanedRequests = await prisma.fortuneRequest.deleteMany({
+      where: {
+        orders: { none: {} },
+        createdAt: { lt: staleOrderCutoff },
+      },
+    });
+
     return NextResponse.json({
       ok: true,
-      deletedCount: deleted.count,
+      deletedReports: deletedReports.count,
+      deletedStaleOrders: deletedOrders.count,
+      deletedOrphanedRequests: orphanedRequests.count,
       timestamp: now.toISOString(),
     });
   } catch (err) {

@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+// TODO: Code-split heavy visual components (OhangCycleVisual, PillarsVisual,
+// OhangDetailCard) with next/dynamic to reduce initial JS bundle size.
+
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { useTranslations, useLocale } from "next-intl";
@@ -39,38 +42,7 @@ const SLIDE_META: SlideMeta[] = [
   { icon: "🔑", color: "var(--accent)" },
 ];
 
-const ANALYSIS_STAGES_KO = [
-  "입력값 수집 및 포맷 정규화",
-  "생년월일·시간 형식 검증",
-  "양력/음력 옵션 점검",
-  "시간대 기준(KST) 계산 준비",
-  "사주 엔진 초기화",
-  "연주(年柱) 계산",
-  "월주(月柱) 계산",
-  "일주(日柱) 계산",
-  "시주(時柱) 계산",
-  "사주 원국 4주 확정",
-  "천간/지지 오행 매핑",
-  "오행 분포 집계",
-  "강/약 오행 추출",
-  "일간(Day Master) 도출",
-  "음양 비율 계산",
-  "십성 관계 계산",
-  "대운/흐름 보조 지표 계산",
-  "무료 성격 파트 프롬프트 구성",
-  "AI 모델 호출 준비",
-  "AI 1차 생성 진행",
-  "생성 결과 포맷 검증",
-  "금칙/안전 문구 정리",
-  "요약 문장 후처리",
-  "리포트 섹션 구조화",
-  "저장용 데이터 직렬화",
-  "DB 저장/업데이트",
-  "결제 상태 확인",
-  "최종 응답 페이로드 구성",
-  "화면 렌더 데이터 동기화",
-  "결과 페이지 전환 준비"
-];
+// Analysis stages are loaded from i18n: loading.stages[0..29]
 
 /* ──────────────────────────────────────────────────
    타이핑 애니메이션 Hook
@@ -175,7 +147,7 @@ function OhangCycleVisual({ activeIdx, t }: { activeIdx: number; t: (key: string
           >
             <span className="cycleEmoji">{el.emoji}</span>
             <span className="cycleHanja">{el.hanja}</span>
-            <span className="cycleKo">{t(`ohang.${i}.ko`)}</span>
+            <span className="cycleKo">{t(`ohang.${i}.native`)}</span>
           </div>
         );
       })}
@@ -217,7 +189,7 @@ function OhangDetailCard({ idx, t }: { idx: number; t: (key: string) => string }
         <span className="ohangDetailEmoji">{el.emoji}</span>
         <div>
           <h3 className="ohangDetailTitle" style={{ color: el.color }}>
-            {el.hanja} · {t(`ohang.${idx}.ko`)}
+            {el.hanja} · {t(`ohang.${idx}.native`)}
           </h3>
           <p className="ohangDetailSub">{t(`ohang.${idx}.personality`)}</p>
         </div>
@@ -259,6 +231,16 @@ function LoadingContent() {
   const [isGenerating, setIsGenerating] = useState(false);
   const confirmCalled = useRef(false);
 
+  // Pre-compute particle styles deterministically to avoid Math.random() hydration mismatch
+  const particleStyles = useMemo(() =>
+    Array.from({ length: 8 }).map((_, i) => ({
+      left: `${10 + ((i * 37 + 13) % 80)}%`,
+      animationDelay: `${(i * 17 + 7) % 30}s`,
+      animationDuration: `${40 + ((i * 23 + 11) % 30)}s`,
+      size: `${3 + ((i * 13 + 5) % 5)}px`,
+      hue: [330, 40, 210, 270, 190][i % 5] as number,
+    })), []);
+
   // 슬라이드 콘텐츠를 번역에서 가져오기
   const slideContentRaw = t.raw(`slides.${slideIdx}.content`) as string[];
   const slideContent = Array.isArray(slideContentRaw) ? slideContentRaw : [];
@@ -268,14 +250,18 @@ function LoadingContent() {
 
   // 슬라이드 전환 (10초 주기)
   useEffect(() => {
+    let fadeTimeout: ReturnType<typeof setTimeout>;
     const timer = setInterval(() => {
       setFadeState("out");
-      setTimeout(() => {
+      fadeTimeout = setTimeout(() => {
         setSlideIdx((i) => (i + 1) % SLIDE_META.length);
         setFadeState("in");
       }, 600);
     }, 10000);
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      clearTimeout(fadeTimeout);
+    };
   }, []);
 
   // 오행 로테이션 (3초 주기)
@@ -348,14 +334,31 @@ function LoadingContent() {
     setIsGenerating(true);
 
     try {
-      const confirmRes = await fetch("/api/checkout/confirm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId }),
-      });
+      // Retry logic for 409 PAYMENT_PENDING (webhook race condition)
+      const MAX_RETRIES = 8;
+      let confirmRes: Response | null = null;
+      for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        confirmRes = await fetch("/api/checkout/confirm", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ orderId }),
+        });
 
-      if (!confirmRes.ok) {
-        const body = await confirmRes.json().catch(() => null);
+        if (confirmRes.status === 409) {
+          const body = await confirmRes.json().catch(() => null);
+          if (body?.error?.code === "PAYMENT_PENDING" && attempt < MAX_RETRIES) {
+            // Exponential backoff: 1s, 2s, 3s, 4s, 5s, 6s, 7s, 8s
+            await new Promise((r) => setTimeout(r, (attempt + 1) * 1000));
+            continue;
+          }
+        }
+        break;
+      }
+
+      if (!confirmRes || !confirmRes.ok) {
+        const body = await confirmRes?.json().catch(() => null);
+        // Reset confirmCalled so retry button works if needed
+        confirmCalled.current = false;
         throw new Error(body?.error?.message ?? t("confirmFail"));
       }
 
@@ -370,13 +373,14 @@ function LoadingContent() {
         body: JSON.stringify({ type: "paid", orderId, personalityText }),
       });
 
+      const genBody = await genRes.json().catch(() => null);
       if (!genRes.ok) {
-        const body = await genRes.json().catch(() => null);
-        throw new Error(body?.error?.message ?? t("reportFail"));
+        throw new Error(genBody?.error?.message ?? t("reportFail"));
       }
 
+      const viewToken = genBody?.data?.viewToken ?? '';
       setDone(true);
-      setTimeout(() => router.push(`/report/${orderId}`), 600);
+      setTimeout(() => router.push(`/report/${orderId}?token=${viewToken}`), 600);
       return;
     } catch (e) {
       setError(e instanceof Error ? e.message : t("genericError"));
@@ -397,19 +401,19 @@ function LoadingContent() {
   };
 
   return (
-    <main className="page loadingAnalysis">
+    <div className="page loadingAnalysis">
       {/* 은은한 빛 파티클 */}
       <div className="loadingParticles" aria-hidden="true">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {particleStyles.map((ps, i) => (
           <span
             key={i}
             className="particle"
             style={{
-              left: `${10 + Math.random() * 80}%`,
-              animationDelay: `${Math.random() * 30}s`,
-              animationDuration: `${40 + Math.random() * 30}s`,
-              "--particle-size": `${3 + Math.random() * 5}px`,
-              "--particle-hue": `${[330, 40, 210, 270, 190][i % 5]}`,
+              left: ps.left,
+              animationDelay: ps.animationDelay,
+              animationDuration: ps.animationDuration,
+              "--particle-size": ps.size,
+              "--particle-hue": `${ps.hue}`,
             } as React.CSSProperties}
           />
         ))}
@@ -428,11 +432,11 @@ function LoadingContent() {
             </div>
             <div className="ohangInfoCol">
               <OhangDetailCard idx={activeOhang} t={t} />
-              <div className="ohangDescSlider" aria-label="오행 소개 슬라이더">
+              <div className="ohangDescSlider" aria-label={t("ohangSliderAria")}>
                 <div className="ohangDescTrack" style={{ transform: `translateX(-${activeOhang * 100}%)` }}>
                   {OHANG_VISUAL.map((el, i) => (
                     <div key={el.hanja} className="ohangDescPane">
-                      <strong style={{ color: el.color }}>{el.emoji} {el.hanja} {t(`ohang.${i}.ko`)}</strong>
+                      <strong style={{ color: el.color }}>{el.emoji} {el.hanja} {t(`ohang.${i}.native`)}</strong>
                       <p>{t(`ohang.${i}.description.0`)}</p>
                     </div>
                   ))}
@@ -452,12 +456,19 @@ function LoadingContent() {
               const rawByTime = done ? 100 : Math.min(97, (elapsedSec / EXPECTED_SEC) * 100);
               const pct = done ? 100 : Math.max(3, Math.min(97, Math.floor(rawByTime / 3) * 3));
               const stageIdx = done ? 29 : Math.min(29, Math.max(0, Math.floor(pct / 3) - 1));
-              const stageText = ANALYSIS_STAGES_KO[stageIdx] ?? ANALYSIS_STAGES_KO[0];
+              const stageText = t(`stages.${stageIdx}`);
 
               return (
                 <>
                   <div className="loadingProgressBar">
-                    <div className="loadingProgressTrack">
+                    <div
+                      className="loadingProgressTrack"
+                      role="progressbar"
+                      aria-valuenow={pct}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={t("progressAria")}
+                    >
                       <div className="loadingProgressFill" style={{ width: `${pct}%` }} />
                     </div>
                     <span className="loadingProgressPct">{pct}%</span>
@@ -476,7 +487,7 @@ function LoadingContent() {
                       return (
                         <div key={`${i}-${localIdx}`} className={`loadingStep2 ${doneState ? "done" : active ? "active" : ""}`}>
                           <span className="stepIcon">{doneState ? "✓" : `${localIdx + 1}`}</span>
-                          <span className="stepLabel">{ANALYSIS_STAGES_KO[localIdx]}</span>
+                          <span className="stepLabel">{t(`stages.${localIdx}`)}</span>
                         </div>
                       );
                     })}
@@ -536,7 +547,7 @@ function LoadingContent() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -49,5 +49,5 @@ export const webApi = {
   reportPreview: (input: FortuneInput) => request<FortuneInput, ReportPreview>("/report/preview", input),
   checkoutCreate: (payload: CheckoutCreateRequest) => request<CheckoutCreateRequest, CheckoutCreateResponse>("/checkout/create", payload),
   checkoutConfirm: (payload: CheckoutConfirmRequest) => request<CheckoutConfirmRequest, CheckoutConfirmResponse>("/checkout/confirm", payload),
-  report: (orderId: string) => request<undefined, GetReportResponse>(`/report/${orderId}`, undefined, "GET")
+  report: (orderId: string, token?: string) => request<undefined, GetReportResponse>(`/report/${orderId}${token ? `?token=${token}` : ''}`, undefined, "GET")
 };

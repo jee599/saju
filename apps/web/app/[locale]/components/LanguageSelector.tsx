@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "../../../i18n/navigation";
 
@@ -20,7 +20,9 @@ export default function LanguageSelector() {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -32,12 +34,53 @@ export default function LanguageSelector() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (open) {
+      const currentIdx = LOCALE_OPTIONS.findIndex((o) => o.code === locale);
+      setFocusedIndex(currentIdx >= 0 ? currentIdx : 0);
+    } else {
+      setFocusedIndex(-1);
+    }
+  }, [open, locale]);
+
+  useEffect(() => {
+    if (open && focusedIndex >= 0 && optionRefs.current[focusedIndex]) {
+      optionRefs.current[focusedIndex]?.focus();
+    }
+  }, [open, focusedIndex]);
+
   const current = LOCALE_OPTIONS.find((o) => o.code === locale) ?? LOCALE_OPTIONS[0];
 
   function handleSelect(code: string) {
     setOpen(false);
     router.replace(pathname, { locale: code });
   }
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!open) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev + 1) % LOCALE_OPTIONS.length);
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev - 1 + LOCALE_OPTIONS.length) % LOCALE_OPTIONS.length);
+        break;
+      case "Escape":
+        e.preventDefault();
+        setOpen(false);
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        if (focusedIndex >= 0 && focusedIndex < LOCALE_OPTIONS.length) {
+          handleSelect(LOCALE_OPTIONS[focusedIndex].code);
+        }
+        break;
+    }
+  }, [open, focusedIndex]);
 
   return (
     <div className="languageSelector" ref={ref}>
@@ -46,6 +89,12 @@ export default function LanguageSelector() {
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="listbox"
+        onKeyDown={(e) => {
+          if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
       >
         <span>{current.flag}</span>
         <span>{current.label}</span>
@@ -54,15 +103,17 @@ export default function LanguageSelector() {
         </svg>
       </button>
       {open && (
-        <div className="languageDropdown" role="listbox">
-          {LOCALE_OPTIONS.map((opt) => (
+        <div className="languageDropdown" role="listbox" onKeyDown={handleKeyDown}>
+          {LOCALE_OPTIONS.map((opt, idx) => (
             <button
               key={opt.code}
-              className="languageOption"
+              ref={(el) => { optionRefs.current[idx] = el; }}
+              className={`languageOption${idx === focusedIndex ? " focused" : ""}`}
               role="option"
               aria-selected={opt.code === locale}
               data-active={opt.code === locale}
               onClick={() => handleSelect(opt.code)}
+              tabIndex={idx === focusedIndex ? 0 : -1}
             >
               <span className="languageOptionFlag">{opt.flag}</span>
               <span>{opt.label}</span>

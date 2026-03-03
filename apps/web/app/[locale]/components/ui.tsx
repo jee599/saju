@@ -32,7 +32,7 @@ export function ButtonLink({ href, variant = "primary", size = "md", full = fals
 }
 
 export function PageContainer({ children }: { children: ReactNode }) {
-  return <main className="page"><div className="container">{children}</div></main>;
+  return <div className="page"><div className="container">{children}</div></div>;
 }
 
 export function GlassCard({ children, className }: { children: ReactNode; className?: string }) {

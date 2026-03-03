@@ -35,6 +35,14 @@
   "elementBalance": "Cân bằng ngũ hành",
   "strongEnergy": "{emoji} Năng lượng {name} mạnh mẽ",
   "weakEnergy": "{emoji} Năng lượng {name} thiếu hụt",
+  "elements": {
+    "wood": "Mộc", "fire": "Hỏa", "earth": "Thổ", "metal": "Kim", "water": "Thủy"
+  },
+  "elementsNative": {
+    "wood": "Mộc", "fire": "Hỏa", "earth": "Thổ", "metal": "Kim", "water": "Thủy"
+  },
+  "elementSources": "Nguồn ngũ hành:",
+  "elementSourceCount": "{count}",
   "yinYang": "Cân bằng âm dương",
   "yangLabel": "Dương (陽) {pct}%",
   "yinLabel": "Âm (陰) {pct}%",

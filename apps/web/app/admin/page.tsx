@@ -82,11 +82,11 @@ const S = {
     fontWeight: active ? 600 : 400,
     fontSize: "0.9rem",
   }) as const,
-  kpiGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 24 } as const,
+  kpiGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 24 } as const,
   kpiCard: { background: "rgba(255,255,255,0.05)", borderRadius: 12, padding: 16, border: "1px solid rgba(255,255,255,0.08)" } as const,
   kpiLabel: { fontSize: "0.78rem", color: "#a89bb8", marginBottom: 4 } as const,
   kpiValue: { fontSize: "1.5rem", fontWeight: 700 } as const,
-  table: { width: "100%", borderCollapse: "collapse" as const, fontSize: "0.85rem" },
+  table: { width: "100%", borderCollapse: "collapse" as const, fontSize: "0.8rem" },
   th: { textAlign: "left" as const, padding: "10px 12px", borderBottom: "1px solid rgba(255,255,255,0.1)", color: "#a89bb8", fontWeight: 500, fontSize: "0.78rem" },
   td: { padding: "10px 12px", borderBottom: "1px solid rgba(255,255,255,0.05)" },
   badge: (color: string) => ({
@@ -99,11 +99,11 @@ const S = {
     color,
   }),
   loginBox: {
-    maxWidth: 360,
+    maxWidth: "min(360px, calc(100vw - 32px))",
     margin: "120px auto",
     background: "rgba(255,255,255,0.05)",
     borderRadius: 16,
-    padding: 32,
+    padding: "clamp(20px, 4vw, 32px)",
     border: "1px solid rgba(255,255,255,0.08)",
   } as const,
   input: {

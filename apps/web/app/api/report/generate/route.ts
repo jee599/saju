@@ -3,6 +3,7 @@ import { prisma } from '@saju/api/db';
 import type { FortuneInput, ReportDetail } from '../../../../lib/types';
 import { countReportChars } from '../../../../lib/reportLength';
 import { sendReportEmail } from '../../../../lib/sendReportEmail';
+import { generateViewToken } from '../../../../lib/viewToken';
 
 /**
  * 리포트 생성 API (free / paid 듀얼)
@@ -18,6 +19,34 @@ import { sendReportEmail } from '../../../../lib/sendReportEmail';
 // Vercel serverless: 최대 5분
 export const maxDuration = 300;
 
+// ── IP-based rate limiter for free reports (in-memory) ──
+const FREE_RATE_LIMIT_MAX = 10;      // max requests
+const FREE_RATE_LIMIT_WINDOW = 3600_000; // 1 hour in ms
+const freeRateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function checkFreeRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = freeRateLimitMap.get(ip);
+  if (!entry || now > entry.resetTime) {
+    freeRateLimitMap.set(ip, { count: 1, resetTime: now + FREE_RATE_LIMIT_WINDOW });
+  } else if (entry.count >= FREE_RATE_LIMIT_MAX) {
+    return false;
+  } else {
+    entry.count += 1;
+  }
+
+  // Prevent unbounded memory growth: purge expired entries when map gets large
+  if (freeRateLimitMap.size > 10_000) {
+    for (const [key, val] of freeRateLimitMap) {
+      if (now > val.resetTime) {
+        freeRateLimitMap.delete(key);
+      }
+    }
+  }
+
+  return true;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -25,11 +54,22 @@ export async function POST(req: Request) {
 
     // ── 무료: 성격만 생성 ──
     if (type === 'free') {
+      // IP-based rate limiting for free reports
+      const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+        ?? req.headers.get('x-real-ip')
+        ?? 'unknown';
+      if (!checkFreeRateLimit(ip)) {
+        return NextResponse.json(
+          { ok: false, error: { code: 'RATE_LIMITED', message: 'Too many requests. Try again in 1 hour.' } },
+          { status: 429 }
+        );
+      }
+
       const input = body?.input as FortuneInput | undefined;
       const locale = (body?.locale as string) ?? 'ko';
       if (!input?.name || !input?.birthDate || !input?.gender || !input?.calendarType) {
         return NextResponse.json(
-          { ok: false, error: { code: 'INVALID_INPUT', message: '사용자 정보가 부족합니다.' } },
+          { ok: false, error: { code: 'INVALID_INPUT', message: 'Insufficient user information.' } },
           { status: 400 }
         );
       }
@@ -53,7 +93,7 @@ export async function POST(req: Request) {
 
       if (!orderId) {
         return NextResponse.json(
-          { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId가 필요합니다.' } },
+          { ok: false, error: { code: 'INVALID_REQUEST', message: 'orderId is required.' } },
           { status: 400 }
         );
       }
@@ -66,7 +106,7 @@ export async function POST(req: Request) {
 
       if (!order || order.status !== 'confirmed') {
         return NextResponse.json(
-          { ok: false, error: { code: 'ORDER_NOT_FOUND', message: '확인된 주문을 찾을 수 없습니다.' } },
+          { ok: false, error: { code: 'ORDER_NOT_FOUND', message: 'Confirmed order not found.' } },
           { status: 404 }
         );
       }
@@ -100,6 +140,7 @@ export async function POST(req: Request) {
               disclaimer: existing.disclaimer,
               charCount: countReportChars(sections.map((s: any) => s.text ?? '').join('\n')),
             },
+            viewToken: generateViewToken(order.id),
             cached: true,
           },
         });
@@ -115,21 +156,24 @@ export async function POST(req: Request) {
       };
 
       // 4. 성격 섹션 준비 (캐시 or 재생성)
-      const { generateFreePersonality, generateChunkedReport, getPersonalityDef, getReportTexts } = await import('../../../../lib/llmEngine');
+      const { generateFreePersonality, generateChunkedReport, getPersonalityDef, getReportTexts, convertLunarInputToSolar } = await import('../../../../lib/llmEngine');
       const pDef = getPersonalityDef(locale);
+
+      // Convert lunar dates to solar before passing to LLM
+      const llmInput = convertLunarInputToSolar(input);
 
       let personalitySection: { key: string; title: string; text: string };
       if (personalityText && personalityText.length > 100) {
         personalitySection = { key: pDef.key, title: pDef.title, text: personalityText };
       } else {
-        const freeResult = await generateFreePersonality({ input, locale });
+        const freeResult = await generateFreePersonality({ input: llmInput, locale });
         personalitySection = freeResult.section;
       }
 
       // 5. Haiku 4청크 = 8섹션 생성
       const chunkedReport = await generateChunkedReport({
         orderId: order.id,
-        input,
+        input: llmInput,
         productCode: order.productCode as ReportDetail['productCode'],
         targetModel: 'haiku',
         locale,
@@ -144,25 +188,63 @@ export async function POST(req: Request) {
       const summary = texts.summary;
       const disclaimer = chunkedReport.disclaimer || texts.disclaimer;
 
-      // 7. DB 저장
-      await prisma.report.create({
-        data: {
-          orderId: order.id,
-          model: 'haiku',
-          productCode: order.productCode,
-          tier: 'paid',
-          headline,
-          summary,
-          sectionsJson: JSON.stringify(allSections),
-          recommendationsJson: JSON.stringify(chunkedReport.recommendations),
-          disclaimer,
-          generatedAt: new Date(),
-        },
-      });
+      // 7. DB 저장 (idempotency guard: handle duplicate orderId)
+      // NOTE: Prisma schema should add @@unique([orderId]) to Report model for full protection.
+      try {
+        await prisma.report.create({
+          data: {
+            orderId: order.id,
+            model: 'haiku',
+            productCode: order.productCode,
+            tier: 'paid',
+            headline,
+            summary,
+            sectionsJson: JSON.stringify(allSections),
+            recommendationsJson: JSON.stringify(chunkedReport.recommendations),
+            disclaimer,
+            generatedAt: new Date(),
+          },
+        });
+      } catch (dbErr: any) {
+        // P2002 = Prisma unique constraint violation (concurrent duplicate request)
+        if (dbErr?.code === 'P2002') {
+          const existingReport = await prisma.report.findFirst({
+            where: { orderId: order.id },
+          });
+          if (existingReport) {
+            let existSections: any[] = [];
+            let existRecommendations: string[] = [];
+            try { existSections = JSON.parse(existingReport.sectionsJson); } catch {}
+            try { existRecommendations = JSON.parse(existingReport.recommendationsJson); } catch {}
+
+            return NextResponse.json({
+              ok: true,
+              data: {
+                type: 'paid',
+                report: {
+                  reportId: existingReport.id,
+                  orderId: order.id,
+                  productCode: existingReport.productCode,
+                  generatedAt: existingReport.generatedAt.toISOString(),
+                  headline: existingReport.headline,
+                  summary: existingReport.summary,
+                  sections: existSections,
+                  recommendations: existRecommendations,
+                  disclaimer: existingReport.disclaimer,
+                  charCount: countReportChars(existSections.map((s: any) => s.text ?? '').join('\n')),
+                },
+                viewToken: generateViewToken(order.id),
+                cached: true,
+              },
+            });
+          }
+        }
+        throw dbErr;
+      }
 
       // 8. 이메일 발송 (첫 리포트)
       if (order.email && !order.emailSentAt) {
-        const reportUrl = `https://fortunelab.store/report/${order.id}`;
+        const reportUrl = `https://fortunelab.store/report/${order.id}?token=${generateViewToken(order.id)}`;
         sendReportEmail({
           to: order.email,
           userName: input.name,
@@ -200,19 +282,20 @@ export async function POST(req: Request) {
             disclaimer,
             charCount,
           },
+          viewToken: generateViewToken(order.id),
           cached: false,
         },
       });
     }
 
     return NextResponse.json(
-      { ok: false, error: { code: 'INVALID_TYPE', message: 'type은 "free" 또는 "paid"여야 합니다.' } },
+      { ok: false, error: { code: 'INVALID_TYPE', message: 'type must be "free" or "paid".' } },
       { status: 400 }
     );
   } catch (err) {
     console.error('[report/generate]', err);
     return NextResponse.json(
-      { ok: false, error: { code: 'GENERATION_FAILED', message: err instanceof Error ? err.message : '리포트 생성 중 오류가 발생했습니다.' } },
+      { ok: false, error: { code: 'GENERATION_FAILED', message: 'Report generation failed.' } },
       { status: 500 }
     );
   }

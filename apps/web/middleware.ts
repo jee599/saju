@@ -10,7 +10,10 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 const RATE_LIMITED_PATHS = [
   "/api/report/preview",
+  "/api/report/generate",
   "/api/checkout/create",
+  "/api/checkout/confirm",
+  "/api/checkout/stripe/create",
   "/api/fortune/mock",
 ];
 
@@ -69,7 +72,6 @@ export function middleware(request: NextRequest) {
     response.headers.set("X-RateLimit-Limit", String(RATE_LIMIT));
     response.headers.set("X-RateLimit-Remaining", String(Math.max(0, RATE_LIMIT - entry.count)));
     response.headers.set("X-RateLimit-Reset", String(Math.ceil(entry.resetAt / 1000)));
-    response.headers.set("X-Client-IP", ip);
     return response;
   }
 

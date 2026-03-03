@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     const body = (await req.json()) as CheckoutCreateRequest & { locale?: string };
     if (!body?.input || body?.productCode !== 'full' || !isValidFortuneInput(body.input)) {
       return NextResponse.json(
-        { ok: false, error: { code: 'INVALID_INPUT', message: '입력값이 유효하지 않습니다.' } },
+        { ok: false, error: { code: 'INVALID_INPUT', message: 'Invalid input.' } },
         { status: 400 }
       );
     }
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error('[checkout/create]', err);
     return NextResponse.json(
-      { ok: false, error: { code: 'INTERNAL_ERROR', message: '결제 생성 중 오류가 발생했습니다.' } },
+      { ok: false, error: { code: 'INTERNAL_ERROR', message: 'Checkout creation failed.' } },
       { status: 500 }
     );
   }

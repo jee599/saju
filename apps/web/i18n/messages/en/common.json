@@ -25,6 +25,7 @@
     "refund": "Refund Policy",
     "legal": "Disclaimer"
   },
+  "skipLink": "Skip to main content",
   "elements": {
     "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
     "native": { "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water" },

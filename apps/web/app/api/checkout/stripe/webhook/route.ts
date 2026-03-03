@@ -9,9 +9,14 @@ function getStripe() {
 }
 
 export async function POST(req: Request) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error('[stripe/webhook] STRIPE_WEBHOOK_SECRET is not configured');
+    return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
+  }
+
   const body = await req.text();
   const sig = req.headers.get('stripe-signature') ?? '';
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? '';
 
   const stripe = getStripe();
   let event: Stripe.Event;
@@ -28,15 +33,21 @@ export async function POST(req: Request) {
 
     if (orderId && session.payment_status === 'paid') {
       try {
-        await prisma.order.update({
-          where: { id: orderId },
-          data: {
-            status: 'confirmed',
-            confirmedAt: new Date(),
-            paymentId: session.id,
-          },
-        });
-        console.log(`[stripe/webhook] Order ${orderId} confirmed via Stripe`);
+        // Skip update if already confirmed (prevent race with /checkout/confirm)
+        const order = await prisma.order.findUnique({ where: { id: orderId } });
+        if (order && order.status === 'confirmed') {
+          console.log(`[stripe/webhook] Order ${orderId} already confirmed, skipping`);
+        } else {
+          await prisma.order.update({
+            where: { id: orderId },
+            data: {
+              status: 'confirmed',
+              confirmedAt: new Date(),
+              paymentId: session.id,
+            },
+          });
+          console.log(`[stripe/webhook] Order ${orderId} confirmed via Stripe`);
+        }
       } catch (err) {
         console.error(`[stripe/webhook] Failed to confirm order ${orderId}:`, err);
       }

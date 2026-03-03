@@ -152,16 +152,24 @@ export function analyzeElements(pillars: FourPillars): ElementAnalysis {
   }
 
   const dayMaster = STEM_ELEMENT[pillars.day.stem]!;
+
+  // Stable tiebreaker: canonical element order (wood=0, fire=1, earth=2, metal=3, water=4)
+  const ELEMENT_ORDER: Record<Element, number> = { wood: 0, fire: 1, earth: 2, metal: 3, water: 4 };
   const entries = Object.entries(counts) as [Element, number][];
-  entries.sort((a, b) => b[1] - a[1]);
+  // Sort descending by count, then ascending by canonical order for ties
+  entries.sort((a, b) => b[1] - a[1] || ELEMENT_ORDER[a[0]] - ELEMENT_ORDER[b[0]]);
+
+  // Yin-yang: derive yin from yang to guarantee sum of 100
+  const yangPct = Math.round((yangCount / 4) * 100);
+  const yinPct = 100 - yangPct;
 
   return {
     balance,
     dayMaster,
     dayMasterHanja: ELEMENT_KR[dayMaster],
     yinYang: {
-      yang: Math.round((yangCount / 4) * 100),
-      yin: Math.round((yinCount / 4) * 100),
+      yang: yangPct,
+      yin: yinPct,
     },
     dominant: entries[0]![0],
     weakest: entries[entries.length - 1]![0],

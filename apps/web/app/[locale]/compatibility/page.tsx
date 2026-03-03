@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/navigation";
-import { calculateFourPillars, calculateCompatibility, ELEMENT_KR, ELEMENT_EMOJI } from "@saju/engine-saju";
+import { calculateFourPillars, calculateCompatibility, ELEMENT_EMOJI } from "@saju/engine-saju";
 import { track } from "../../../lib/analytics";
 
 function CompatContent() {
@@ -55,7 +55,7 @@ function CompatContent() {
 
   if (!hasParams || !result) {
     return (
-      <main className="page">
+      <div className="page">
         <div className="container">
           <section className="glassCard">
             <h2 style={{ textAlign: "center" }}>{t("title")}</h2>
@@ -66,6 +66,7 @@ function CompatContent() {
               <div className="formGroup">
                 <label htmlFor="comp-myBirthDate">{t("myBirthDate")}</label>
                 <input
+                  id="comp-myBirthDate"
                   type="date"
                   className="input"
                   value={myInput}
@@ -76,6 +77,7 @@ function CompatContent() {
               <div className="formGroup">
                 <label htmlFor="comp-partnerBirthDate">{t("partnerBirthDate")}</label>
                 <input
+                  id="comp-partnerBirthDate"
                   type="date"
                   className="input"
                   value={partnerInput}
@@ -95,27 +97,27 @@ function CompatContent() {
             </div>
           </section>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="container">
         <section className="glassCard compatResult">
-          <h2>{ELEMENT_EMOJI[result.myElement]} {ELEMENT_KR[result.myElement]} × {ELEMENT_EMOJI[result.partnerElement]} {ELEMENT_KR[result.partnerElement]}</h2>
+          <h2>{ELEMENT_EMOJI[result.myElement]} {t(`elements.${result.myElement}`)} × {ELEMENT_EMOJI[result.partnerElement]} {t(`elements.${result.partnerElement}`)}</h2>
 
           <div className="compatElements">
             <div className="compatPerson">
               <span className="compatEmoji">{ELEMENT_EMOJI[result.myElement]}</span>
               <span className="compatLabel">{t("me")}</span>
-              <span className="compatElement">{ELEMENT_KR[result.myElement]}</span>
+              <span className="compatElement">{t(`elements.${result.myElement}`)}</span>
             </div>
             <span className="compatConnector">←→</span>
             <div className="compatPerson">
               <span className="compatEmoji">{ELEMENT_EMOJI[result.partnerElement]}</span>
               <span className="compatLabel">{t("partner")}</span>
-              <span className="compatElement">{ELEMENT_KR[result.partnerElement]}</span>
+              <span className="compatElement">{t(`elements.${result.partnerElement}`)}</span>
             </div>
           </div>
 
@@ -133,7 +135,7 @@ function CompatContent() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
 

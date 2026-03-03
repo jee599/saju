@@ -13,5 +13,8 @@
   "detailButton": "查看我的详细分析",
   "shareText": "我们的合婚得分{score}分！你也来试试吧？\n{url}",
   "shareTitle": "FortuneLab 合婚",
-  "loading": "合婚分析中..."
+  "loading": "合婚分析中...",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  }
 }
