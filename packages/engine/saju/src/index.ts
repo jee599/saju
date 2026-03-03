@@ -13,7 +13,6 @@
  */
 
 import { Solar } from "lunar-typescript";
-import { calculateSaju as calculateSajuKasi } from "@fullstackfamily/manseryeok";
 
 // ── Types ──────────────────────────────────────────────
 
@@ -332,50 +331,18 @@ export function calculateFourPillars(input: SajuInput): SajuResult {
   if (hour < 0 || hour > 23) throw new RangeError(`hour must be 0-23, got ${hour}`);
   if (minute < 0 || minute > 59) throw new RangeError(`minute must be 0-59, got ${minute}`);
 
-  // Prefer KASI-based 만세력 calculation with true-solar-time correction for Korean users.
-  // Fallback to lunar-typescript outside manseryeok supported range.
-  let pillars: FourPillars;
+  // Use lunar-typescript for exact 입춘/절기 boundary handling.
+  // Standard time (no 진태양시 correction), exact solar term times.
+  const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
+  const lunar = solar.getLunar();
+  const bazi = lunar.getEightChar();
 
-  if (year >= 1900 && year <= 2050) {
-    const saju = calculateSajuKasi(year, month, day, hour, minute, {
-      applyTimeCorrection: true,
-      longitude: 127, // Seoul baseline
-    });
-
-    const hourPillar = saju.hourPillarHanja;
-    if (!hourPillar) {
-      const solarFallback = Solar.fromYmdHms(year, month, day, hour, minute, 0);
-      const baziFallback = solarFallback.getLunar().getEightChar();
-      pillars = {
-        year: parsePillar(saju.yearPillarHanja),
-        month: parsePillar(saju.monthPillarHanja),
-        day: parsePillar(saju.dayPillarHanja),
-        hour: parsePillar(baziFallback.getTime()),
-      };
-    } else {
-      pillars = {
-        year: parsePillar(saju.yearPillarHanja),
-        month: parsePillar(saju.monthPillarHanja),
-        day: parsePillar(saju.dayPillarHanja),
-        hour: parsePillar(hourPillar),
-      };
-    }
-  } else {
-    const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
-    const lunar = solar.getLunar();
-    const bazi = lunar.getEightChar();
-
-    pillars = {
-      year: parsePillar(bazi.getYear()),
-      month: parsePillar(bazi.getMonth()),
-      day: parsePillar(bazi.getDay()),
-      hour: parsePillar(bazi.getTime()),
-    };
-  }
-
-  return {
-    input,
-    pillars,
-    elements: analyzeElements(pillars),
+  const pillars: FourPillars = {
+    year: parsePillar(bazi.getYear()),
+    month: parsePillar(bazi.getMonth()),
+    day: parsePillar(bazi.getDay()),
+    hour: parsePillar(bazi.getTime()),
   };
+
+  return { input, pillars, elements: analyzeElements(pillars) };
 }
