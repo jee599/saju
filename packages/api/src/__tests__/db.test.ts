@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { prisma } from "../db";
 
-describe("Prisma client", () => {
+const hasDB = !!process.env.DATABASE_URL;
+
+describe.skipIf(!hasDB)("Prisma client", () => {
   it("connects and queries LlmUsage table (empty)", async () => {
     const count = await prisma.llmUsage.count();
     expect(count).toBeGreaterThanOrEqual(0);

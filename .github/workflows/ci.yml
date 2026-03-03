@@ -31,7 +31,6 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-        continue-on-error: true
 
       - name: Build
         run: pnpm -C apps/web build
