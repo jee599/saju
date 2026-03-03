@@ -118,7 +118,6 @@ export default function HomePage() {
                   autoComplete="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  autoComplete="off"
                   aria-label={t("form.nameAria")}
                 />
               </div>
