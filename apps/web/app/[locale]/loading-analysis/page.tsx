@@ -39,6 +39,39 @@ const SLIDE_META: SlideMeta[] = [
   { icon: "🔑", color: "var(--accent)" },
 ];
 
+const ANALYSIS_STAGES_KO = [
+  "입력값 수집 및 포맷 정규화",
+  "생년월일·시간 형식 검증",
+  "양력/음력 옵션 점검",
+  "시간대 기준(KST) 계산 준비",
+  "사주 엔진 초기화",
+  "연주(年柱) 계산",
+  "월주(月柱) 계산",
+  "일주(日柱) 계산",
+  "시주(時柱) 계산",
+  "사주 원국 4주 확정",
+  "천간/지지 오행 매핑",
+  "오행 분포 집계",
+  "강/약 오행 추출",
+  "일간(Day Master) 도출",
+  "음양 비율 계산",
+  "십성 관계 계산",
+  "대운/흐름 보조 지표 계산",
+  "무료 성격 파트 프롬프트 구성",
+  "AI 모델 호출 준비",
+  "AI 1차 생성 진행",
+  "생성 결과 포맷 검증",
+  "금칙/안전 문구 정리",
+  "요약 문장 후처리",
+  "리포트 섹션 구조화",
+  "저장용 데이터 직렬화",
+  "DB 저장/업데이트",
+  "결제 상태 확인",
+  "최종 응답 페이로드 구성",
+  "화면 렌더 데이터 동기화",
+  "결과 페이지 전환 준비"
+];
+
 /* ──────────────────────────────────────────────────
    타이핑 애니메이션 Hook
    ────────────────────────────────────────────────── */
@@ -218,7 +251,6 @@ function LoadingContent() {
   const isFreeFlow = !orderId && !!freeBirthDate;
 
   const [slideIdx, setSlideIdx] = useState(0);
-  const [stepIdx, setStepIdx] = useState(0);
   const [elapsedSec, setElapsedSec] = useState(0);
   const [done, setDone] = useState(false);
   const [fadeState, setFadeState] = useState<"in" | "out">("in");
@@ -251,15 +283,6 @@ function LoadingContent() {
     const timer = setInterval(() => {
       setActiveOhang((i) => (i + 1) % OHANG_VISUAL.length);
     }, 3000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // 스텝 진행
-  useEffect(() => {
-    const stepsCount = 5;
-    const timer = setInterval(() => {
-      setStepIdx((s) => (s < stepsCount - 1 ? s + 1 : s));
-    }, 12000);
     return () => clearInterval(timer);
   }, []);
 
@@ -403,7 +426,19 @@ function LoadingContent() {
               <div className="ohangGlowRing" />
               <OhangCycleVisual activeIdx={activeOhang} t={t} />
             </div>
-            <OhangDetailCard idx={activeOhang} t={t} />
+            <div className="ohangInfoCol">
+              <OhangDetailCard idx={activeOhang} t={t} />
+              <div className="ohangDescSlider" aria-label="오행 소개 슬라이더">
+                <div className="ohangDescTrack" style={{ transform: `translateX(-${activeOhang * 100}%)` }}>
+                  {OHANG_VISUAL.map((el, i) => (
+                    <div key={el.hanja} className="ohangDescPane">
+                      <strong style={{ color: el.color }}>{el.emoji} {el.hanja} {t(`ohang.${i}.ko`)}</strong>
+                      <p>{t(`ohang.${i}.description.0`)}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* ── 타이머 + 프로그레스 + 스텝 바 ── */}
@@ -413,29 +448,42 @@ function LoadingContent() {
               <span>{t("analyzing")} · {formatTime(elapsedSec)}</span>
             </div>
             {(() => {
-              const EXPECTED_SEC = orderId ? 60 : 3;
-              const rawPct = done ? 100 : Math.min(95, (elapsedSec / EXPECTED_SEC) * 100);
-              const pct = done ? 100 : Math.min(95, Math.round(Math.sqrt(rawPct / 95) * 95));
+              const EXPECTED_SEC = orderId ? 75 : 10;
+              const rawByTime = done ? 100 : Math.min(97, (elapsedSec / EXPECTED_SEC) * 100);
+              const pct = done ? 100 : Math.max(3, Math.min(97, Math.floor(rawByTime / 3) * 3));
+              const stageIdx = done ? 29 : Math.min(29, Math.max(0, Math.floor(pct / 3) - 1));
+              const stageText = ANALYSIS_STAGES_KO[stageIdx] ?? ANALYSIS_STAGES_KO[0];
+
               return (
-                <div className="loadingProgressBar">
-                  <div className="loadingProgressTrack">
-                    <div className="loadingProgressFill" style={{ width: `${pct}%` }} />
+                <>
+                  <div className="loadingProgressBar">
+                    <div className="loadingProgressTrack">
+                      <div className="loadingProgressFill" style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="loadingProgressPct">{pct}%</span>
                   </div>
-                  <span className="loadingProgressPct">{pct}%</span>
-                </div>
+
+                  <div className="loadingStageNow" aria-live="polite">
+                    <span className="stageBadge">STEP {stageIdx + 1}/30</span>
+                    <span className="stageText">{stageText}</span>
+                  </div>
+
+                  <div className="loadingSteps2">
+                    {[0, 1, 2, 3, 4].map((i) => {
+                      const localIdx = Math.min(29, Math.max(0, stageIdx - 2 + i));
+                      const active = localIdx === stageIdx;
+                      const doneState = localIdx < stageIdx;
+                      return (
+                        <div key={`${i}-${localIdx}`} className={`loadingStep2 ${doneState ? "done" : active ? "active" : ""}`}>
+                          <span className="stepIcon">{doneState ? "✓" : `${localIdx + 1}`}</span>
+                          <span className="stepLabel">{ANALYSIS_STAGES_KO[localIdx]}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               );
             })()}
-            <div className="loadingSteps2">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className={`loadingStep2 ${i < stepIdx ? "done" : i === stepIdx ? "active" : ""}`}
-                >
-                  <span className="stepIcon">{i < stepIdx ? "✓" : t(`steps.${i}.emoji`)}</span>
-                  <span className="stepLabel">{t(`steps.${i}.label`)}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* ── 교육 콘텐츠 슬라이드 ── */}

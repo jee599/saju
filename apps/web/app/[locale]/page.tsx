@@ -144,27 +144,36 @@ export default function HomePage() {
                   </button>
                 </div>
                 {isTouch ? (
-                  <input
-                    type="date"
-                    name="birthDate"
-                    autoComplete="bday"
-                    className="input"
-                    value={hasDate ? `${year}-${padTwo(+month)}-${padTwo(+day)}` : ""}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      if (!v) {
-                        setYear("");
-                        setMonth("");
-                        setDay("");
-                        return;
-                      }
-                      const [y, m, d] = v.split("-");
-                      setYear(y ?? "");
-                      setMonth(m ? String(Number(m)) : "");
-                      setDay(d ? String(Number(d)) : "");
-                    }}
-                    aria-label={t("form.step2Label")}
-                  />
+                  <div className="mobileDateInputWrap">
+                    <input
+                      type="date"
+                      name="birthDate"
+                      autoComplete="bday"
+                      className="input mobileDateInput"
+                      min="1930-01-01"
+                      max="2010-12-31"
+                      value={hasDate ? `${year}-${padTwo(+month)}-${padTwo(+day)}` : ""}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (!v) {
+                          setYear("");
+                          setMonth("");
+                          setDay("");
+                          return;
+                        }
+                        const [y, m, d] = v.split("-");
+                        setYear(y ?? "");
+                        setMonth(m ? String(Number(m)) : "");
+                        setDay(d ? String(Number(d)) : "");
+                      }}
+                      aria-label={t("form.step2Label")}
+                    />
+                    <div className="mobileDatePreview" aria-live="polite">
+                      {hasDate
+                        ? `${year}${t("form.yearSuffix")} ${month}${t("form.monthSuffix")} ${day}${t("form.daySuffix")}`
+                        : t("form.step2Label")}
+                    </div>
+                  </div>
                 ) : (
                   <div className="dateSelectRow">
                     <select

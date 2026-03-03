@@ -3419,3 +3419,22 @@ img, video, canvas, svg {
 
 .skip-link { position: absolute; left: 12px; top: -40px; background: #111; color: #fff; padding: 8px 12px; border-radius: 6px; z-index: 9999; }
 .skip-link:focus { top: 12px; }
+
+
+.mobileDateInputWrap { display: flex; flex-direction: column; gap: 8px; }
+.mobileDateInput { min-height: 54px; font-size: 16px; font-weight: 600; }
+.mobileDatePreview { font-size: 0.85rem; color: var(--t2); text-align: left; padding: 6px 2px 0; }
+
+
+.loadingStageNow { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 2px; text-align: left; }
+.stageBadge { font-size: 0.68rem; font-weight: 700; color: var(--accent-gold); background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.35); border-radius: 999px; padding: 3px 8px; flex-shrink: 0; }
+.stageText { font-size: 0.82rem; color: var(--t2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.ohangInfoCol { display: flex; flex-direction: column; gap: 10px; width: min(100%, 340px); }
+.ohangDescSlider { overflow: hidden; width: 100%; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(30, 21, 51, 0.35); }
+.ohangDescTrack { display: flex; width: 500%; transition: transform 0.6s var(--ease-smooth); }
+.ohangDescPane { width: 100%; flex: 0 0 100%; padding: 10px 12px; text-align: left; }
+.ohangDescPane strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
+.ohangDescPane p { margin: 0; font-size: 0.76rem; color: var(--t3); line-height: 1.5; }
+
+.loadingStep2 .stepLabel { max-width: 190px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
