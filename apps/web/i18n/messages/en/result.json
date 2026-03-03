@@ -35,6 +35,14 @@
   "elementBalance": "Element Balance",
   "strongEnergy": "{emoji} {name} energy is strong",
   "weakEnergy": "{emoji} {name} energy is lacking",
+  "elements": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  },
+  "elementsNative": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  },
+  "elementSources": "Element sources:",
+  "elementSourceCount": "{count}",
   "yinYang": "Yin-Yang Balance",
   "yangLabel": "Yang (陽) {pct}%",
   "yinLabel": "Yin (陰) {pct}%",

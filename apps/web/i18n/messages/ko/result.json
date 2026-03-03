@@ -33,7 +33,7 @@
     "寅": "호랑이",
     "卯": "토끼",
     "辰": "용",
-    "巳": "뽀",
+    "巳": "뱀",
     "午": "말",
     "未": "양",
     "申": "원숭이",
@@ -57,6 +57,14 @@
   "elementBalance": "오행 밸런스",
   "strongEnergy": "{emoji} {name} 에너지가 강합니다",
   "weakEnergy": "{emoji} {name} 에너지가 부족합니다",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  },
+  "elementsNative": {
+    "wood": "나무", "fire": "불", "earth": "흙", "metal": "쇠", "water": "물"
+  },
+  "elementSources": "오행 출처:",
+  "elementSourceCount": "{count}개",
   "yinYang": "음양 밸런스",
   "yangLabel": "양(陽) {pct}%",
   "yinLabel": "음(陰) {pct}%",

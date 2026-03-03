@@ -86,6 +86,38 @@
       ]
     }
   ],
+  "stages": [
+    "Collecting input and normalizing format",
+    "Validating birth date and time format",
+    "Checking solar/lunar calendar option",
+    "Preparing timezone (KST) calculation",
+    "Initializing BaZi engine",
+    "Calculating Year Pillar",
+    "Calculating Month Pillar",
+    "Calculating Day Pillar",
+    "Calculating Hour Pillar",
+    "Confirming four pillars of BaZi chart",
+    "Mapping Heavenly Stems / Earthly Branches to elements",
+    "Tallying element distribution",
+    "Extracting strong / weak elements",
+    "Deriving Day Master",
+    "Calculating Yin-Yang ratio",
+    "Computing Ten Gods relationships",
+    "Computing Grand Cycle auxiliary indicators",
+    "Building free personality prompt",
+    "Preparing AI model call",
+    "AI first-pass generation in progress",
+    "Validating generated output format",
+    "Applying safety and forbidden-phrase checks",
+    "Post-processing summary sentences",
+    "Structuring report sections",
+    "Serializing data for storage",
+    "Saving to database",
+    "Verifying payment status",
+    "Composing final response payload",
+    "Syncing render data for display",
+    "Preparing result page transition"
+  ],
   "slides": [
     {
       "title": "What is BaZi (Four Pillars)?",

@@ -13,5 +13,8 @@
   "detailButton": "自分の四柱推命を詳しく見る",
   "shareText": "私たちの相性は{score}点！あなたも試してみない？\n{url}",
   "shareTitle": "FortuneLab 相性",
-  "loading": "相性分析中..."
+  "loading": "相性分析中...",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  }
 }

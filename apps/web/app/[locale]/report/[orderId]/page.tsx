@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { GetReportResponse } from "../../../../lib/types";
@@ -124,6 +124,8 @@ function SectionText({ text }: { text: string }) {
 export default function ReportPage() {
   const t = useTranslations("report");
   const { orderId } = useParams<{ orderId: string }>();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token") ?? undefined;
   const [data, setData] = useState<GetReportResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -131,13 +133,13 @@ export default function ReportPage() {
     (async () => {
       try {
         if (!orderId) return;
-        const res = await webApi.report(orderId);
+        const res = await webApi.report(orderId, token);
         setData(res);
       } catch (e) {
         setError(e instanceof Error ? e.message : t("fetchFail"));
       }
     })();
-  }, [orderId, t]);
+  }, [orderId, token, t]);
 
   const report = data?.report;
   const sections = useMemo(() =>

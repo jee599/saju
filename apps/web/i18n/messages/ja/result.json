@@ -35,6 +35,14 @@
   "elementBalance": "五行バランス",
   "strongEnergy": "{emoji} {name}のエネルギーが強いです",
   "weakEnergy": "{emoji} {name}のエネルギーが不足しています",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  },
+  "elementsNative": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  },
+  "elementSources": "五行の出典:",
+  "elementSourceCount": "{count}個",
   "yinYang": "陰陽バランス",
   "yangLabel": "陽 {pct}%",
   "yinLabel": "陰 {pct}%",

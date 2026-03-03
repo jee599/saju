@@ -13,5 +13,8 @@
   "detailButton": "내 사주 상세 보기",
   "shareText": "우리 궁합 {score}점! 너도 해볼래?\n{url}",
   "shareTitle": "복연구소 궁합",
-  "loading": "궁합 분석 중..."
+  "loading": "궁합 분석 중...",
+  "elements": {
+    "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
+  }
 }

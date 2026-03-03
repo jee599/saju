@@ -160,7 +160,7 @@ export interface CheckoutConfirmResponse {
 
 export interface GetReportResponse {
   order: OrderSummary;
-  report: ReportDetail;
+  report: ReportDetail | null;
   input?: FortuneInput;
 }
 
@@ -283,10 +283,34 @@ export const validateFortuneInput = (input: FortuneInput): ValidationIssue[] => 
 
   if (!isDateFormat(input.birthDate)) {
     issues.push({ field: "birthDate", reason: "생년월일은 YYYY-MM-DD 형식이어야 합니다." });
+  } else {
+    // Semantic date validation: check real calendar date via round-trip
+    const dateParts = input.birthDate.split("-").map(Number);
+    const y = dateParts[0] ?? 0;
+    const m = dateParts[1] ?? 0;
+    const d = dateParts[2] ?? 0;
+    if (y < 1900 || y > 2100) {
+      issues.push({ field: "birthDate", reason: "연도는 1900~2100 범위여야 합니다." });
+    } else if (m < 1 || m > 12 || d < 1 || d > 31) {
+      issues.push({ field: "birthDate", reason: "유효하지 않은 날짜입니다." });
+    } else {
+      const dateObj = new Date(y, m - 1, d);
+      if (dateObj.getFullYear() !== y || dateObj.getMonth() !== m - 1 || dateObj.getDate() !== d) {
+        issues.push({ field: "birthDate", reason: "존재하지 않는 날짜입니다." });
+      }
+    }
   }
 
   if (input.birthTime && !isTimeFormat(input.birthTime)) {
     issues.push({ field: "birthTime", reason: "출생시간은 HH:mm 형식이어야 합니다." });
+  } else if (input.birthTime) {
+    // Validate time range
+    const timeParts = input.birthTime.split(":").map(Number);
+    const hour = timeParts[0] ?? -1;
+    const minute = timeParts[1] ?? -1;
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+      issues.push({ field: "birthTime", reason: "시간은 00:00~23:59 범위여야 합니다." });
+    }
   }
 
   if (!["male", "female", "other"].includes(input.gender)) {

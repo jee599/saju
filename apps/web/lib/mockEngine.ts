@@ -1,5 +1,10 @@
 /**
- * Deterministic report-generation helpers.
+ * Deterministic / fallback report-generation engine.
+ *
+ * NOTE: Despite the filename "mockEngine", this module is NOT test-only.
+ * It serves as the deterministic fallback engine used in production when
+ * the LLM is unavailable or for generating seed-based preview content.
+ * Renaming was deferred to avoid cascading import changes across the codebase.
  *
  * All in-memory storage (Maps) has been removed.
  * Persistence is now handled by Prisma in the API routes.

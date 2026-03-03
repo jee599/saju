@@ -149,7 +149,7 @@ export async function sendReportEmail(params: SendReportEmailParams): Promise<{ 
       return { success: false, error: error.message };
     }
 
-    console.log(`[email] Report sent to ${params.to}`);
+    console.log("[email] Report sent successfully");
     return { success: true };
   } catch (err) {
     console.error("[email] Failed:", err);

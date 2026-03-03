@@ -1,3 +1,5 @@
+// TODO: i18n – legal text needs professional translation for non-Korean locales.
+// Currently all content is hardcoded in Korean.
 export default function RefundPage() {
   return (
     <main className="page">

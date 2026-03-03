@@ -270,7 +270,7 @@ export default function App() {
             <Pressable style={styles.button} onPress={() => void loadReport()}>
               <Text style={styles.buttonText}>리포트 불러오기</Text>
             </Pressable>
-            {report ? (
+            {report?.report ? (
               <>
                 <Text style={styles.headline}>{report.report.headline}</Text>
                 <Text>{report.report.summary}</Text>

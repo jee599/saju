@@ -111,13 +111,15 @@ function PaywallContent() {
           {/* Email + checkout */}
           <div className="form" style={{ maxWidth: 400, margin: "20px auto 0" }}>
             <div className="formGroup">
-              <label>{t("emailLabel")}</label>
+              <label htmlFor="paywall-email">{t("emailLabel")}</label>
               <input
+                id="paywall-email"
                 type="email"
                 className={`input ${error ? "inputError" : ""}`}
                 placeholder="email@example.com"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                aria-label={t("emailLabel")}
               />
               {error && <p className="errorText">{error}</p>}
             </div>

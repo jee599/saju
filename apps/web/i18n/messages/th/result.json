@@ -35,6 +35,14 @@
   "elementBalance": "สมดุลธาตุ",
   "strongEnergy": "{emoji} พลังงาน{name}แข็งแกร่ง",
   "weakEnergy": "{emoji} พลังงาน{name}ขาดแคลน",
+  "elements": {
+    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+  },
+  "elementsNative": {
+    "wood": "ไม้", "fire": "ไฟ", "earth": "ดิน", "metal": "ทอง", "water": "น้ำ"
+  },
+  "elementSources": "แหล่งที่มาธาตุ:",
+  "elementSourceCount": "{count}",
   "yinYang": "สมดุลหยิน-หยาง",
   "yangLabel": "หยาง (陽) {pct}%",
   "yinLabel": "หยิน (陰) {pct}%",

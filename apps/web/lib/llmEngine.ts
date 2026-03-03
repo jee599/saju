@@ -1,6 +1,33 @@
+/**
+ * TODO: This file (~48KB) is a monolith and should be split into smaller modules:
+ *   - llm-clients.ts       — LLM provider wrappers (Anthropic, OpenAI)
+ *   - json-parser.ts       — safeJsonParse and response extraction helpers
+ *   - prompts/             — prompt templates per report section/locale
+ *   - report-builder.ts    — report assembly, length enforcement, section mapping
+ */
 import type { FortuneInput, ModelReportDetail, ProductCode, ReportModel, ReportDetail } from "./types";
 import { buildLengthInfo, countReportChars } from "./reportLength";
 import { getCountryByLocale } from "@saju/shared";
+
+/**
+ * Sanitize user name for safe embedding in LLM prompts.
+ * Strips all characters except Korean (Hangul), CJK, Latin, Japanese
+ * (Hiragana/Katakana), Thai, spaces, hyphens, and dots. Limits to 50 chars.
+ */
+const sanitizeName = (name: string): string => {
+  // Allow: Hangul, CJK Unified, Latin, Hiragana, Katakana, Thai, spaces, hyphens, dots
+  const cleaned = name.replace(
+    /[^\p{Script=Hangul}\p{Script=Han}\p{Script=Latin}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Thai}\s.\-]/gu,
+    ''
+  );
+  return cleaned.trim().slice(0, 50);
+};
+
+/** Create a sanitized copy of FortuneInput for use in prompts */
+const sanitizeInputForPrompt = (input: FortuneInput): FortuneInput => ({
+  ...input,
+  name: sanitizeName(input.name),
+});
 
 export const FIXED_JASI_NOTICE_KO =
   "※ 자시(23:00~01:00) 해석은 lunar-javascript 기본 규칙(초자시 기준)을 따릅니다. 전통/학파에 따라 초·후자시 기준이 다를 수 있으며, 본 리포트는 참고용입니다.";
@@ -190,10 +217,10 @@ const callLlmOnce = async (params: {
     const modelId = geminiModel ?? process.env.GEMINI_MODEL ?? "gemini-3.1-pro-preview";
     const startMs = Date.now();
     const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
         body: JSON.stringify({
           contents: [{ role: "user", parts: [{ text: user }] }],
           systemInstruction: { parts: [{ text: system }] },
@@ -264,7 +291,8 @@ const callLlm = async (params: Parameters<typeof callLlmOnce>[0]): Promise<LlmRe
 };
 
 const buildPaidReportPrompt = (params: { input: FortuneInput; productCode: ProductCode; charTarget?: number }) => {
-  const { input, productCode } = params;
+  const { productCode } = params;
+  const input = sanitizeInputForPrompt(params.input);
   const charTarget = params.charTarget ?? 20000;
 
   const lengthGuide =
@@ -622,7 +650,8 @@ export const generateFreePersonality = async (params: {
   input: FortuneInput;
   locale?: string;
 }): Promise<{ section: { key: string; title: string; text: string }; usage?: LlmUsage }> => {
-  const { input, locale = "ko" } = params;
+  const { locale = "ko" } = params;
+  const input = sanitizeInputForPrompt(params.input);
   const pDef = getPersonalityDef(locale);
 
   let system: string;
@@ -703,7 +732,8 @@ export const generateChunkedReport = async (params: {
   targetModel: string; // "opus" | "gemini-flash" | "haiku" | "gpt-mini"
   locale?: string;
 }): Promise<ModelReportDetail & { totalCostUsd: number }> => {
-  const { orderId, input, productCode, targetModel } = params;
+  const { orderId, productCode, targetModel } = params;
+  const input = sanitizeInputForPrompt(params.input);
   const locale = params.locale ?? "ko";
   // 2섹션 묶음당 목표: 각 섹션 2000자 × 2 = 4000자
   const charPerChunk = 4000;

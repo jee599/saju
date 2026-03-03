@@ -56,7 +56,9 @@ export async function POST(req: Request) {
         );
       }
     } else {
-      const allowUnverified = process.env.NODE_ENV !== 'production' || process.env.ALLOW_UNVERIFIED_CONFIRM === 'true';
+      // Only allow unverified confirm in non-production environments. The env-var override is
+      // intentionally removed to prevent payment bypass in production.
+      const allowUnverified = process.env.NODE_ENV !== 'production';
       if (!allowUnverified) {
         return NextResponse.json(
           { ok: false, error: { code: 'PAYMENT_VERIFICATION_REQUIRED', message: '결제 검증이 필요합니다.' } },

@@ -905,7 +905,7 @@ p, li, label, input, select, button, textarea {
   justify-content: space-between;
   gap: 6px;
   font-size: 0.72rem;
-  color: #e57373;
+  color: var(--error);
 }
 
 @media (max-width: 480px) {

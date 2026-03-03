@@ -3,6 +3,7 @@ import { prisma } from '@saju/api/db';
 import type { FortuneInput, ReportDetail } from '../../../../lib/types';
 import { countReportChars } from '../../../../lib/reportLength';
 import { sendReportEmail } from '../../../../lib/sendReportEmail';
+import { generateViewToken } from '../../../../lib/viewToken';
 
 /**
  * 리포트 생성 API (free / paid 듀얼)
@@ -18,6 +19,25 @@ import { sendReportEmail } from '../../../../lib/sendReportEmail';
 // Vercel serverless: 최대 5분
 export const maxDuration = 300;
 
+// ── IP-based rate limiter for free reports (in-memory) ──
+const FREE_RATE_LIMIT_MAX = 10;      // max requests
+const FREE_RATE_LIMIT_WINDOW = 3600_000; // 1 hour in ms
+const freeRateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function checkFreeRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = freeRateLimitMap.get(ip);
+  if (!entry || now > entry.resetTime) {
+    freeRateLimitMap.set(ip, { count: 1, resetTime: now + FREE_RATE_LIMIT_WINDOW });
+    return true;
+  }
+  if (entry.count >= FREE_RATE_LIMIT_MAX) {
+    return false;
+  }
+  entry.count += 1;
+  return true;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -25,6 +45,17 @@ export async function POST(req: Request) {
 
     // ── 무료: 성격만 생성 ──
     if (type === 'free') {
+      // IP-based rate limiting for free reports
+      const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+        ?? req.headers.get('x-real-ip')
+        ?? 'unknown';
+      if (!checkFreeRateLimit(ip)) {
+        return NextResponse.json(
+          { ok: false, error: { code: 'RATE_LIMITED', message: '요청이 너무 많습니다. 1시간 후에 다시 시도해 주세요.' } },
+          { status: 429 }
+        );
+      }
+
       const input = body?.input as FortuneInput | undefined;
       const locale = (body?.locale as string) ?? 'ko';
       if (!input?.name || !input?.birthDate || !input?.gender || !input?.calendarType) {
@@ -100,6 +131,7 @@ export async function POST(req: Request) {
               disclaimer: existing.disclaimer,
               charCount: countReportChars(sections.map((s: any) => s.text ?? '').join('\n')),
             },
+            viewToken: generateViewToken(order.id),
             cached: true,
           },
         });
@@ -144,25 +176,63 @@ export async function POST(req: Request) {
       const summary = texts.summary;
       const disclaimer = chunkedReport.disclaimer || texts.disclaimer;
 
-      // 7. DB 저장
-      await prisma.report.create({
-        data: {
-          orderId: order.id,
-          model: 'haiku',
-          productCode: order.productCode,
-          tier: 'paid',
-          headline,
-          summary,
-          sectionsJson: JSON.stringify(allSections),
-          recommendationsJson: JSON.stringify(chunkedReport.recommendations),
-          disclaimer,
-          generatedAt: new Date(),
-        },
-      });
+      // 7. DB 저장 (idempotency guard: handle duplicate orderId)
+      // NOTE: Prisma schema should add @@unique([orderId]) to Report model for full protection.
+      try {
+        await prisma.report.create({
+          data: {
+            orderId: order.id,
+            model: 'haiku',
+            productCode: order.productCode,
+            tier: 'paid',
+            headline,
+            summary,
+            sectionsJson: JSON.stringify(allSections),
+            recommendationsJson: JSON.stringify(chunkedReport.recommendations),
+            disclaimer,
+            generatedAt: new Date(),
+          },
+        });
+      } catch (dbErr: any) {
+        // P2002 = Prisma unique constraint violation (concurrent duplicate request)
+        if (dbErr?.code === 'P2002') {
+          const existingReport = await prisma.report.findFirst({
+            where: { orderId: order.id },
+          });
+          if (existingReport) {
+            let existSections: any[] = [];
+            let existRecommendations: string[] = [];
+            try { existSections = JSON.parse(existingReport.sectionsJson); } catch {}
+            try { existRecommendations = JSON.parse(existingReport.recommendationsJson); } catch {}
+
+            return NextResponse.json({
+              ok: true,
+              data: {
+                type: 'paid',
+                report: {
+                  reportId: existingReport.id,
+                  orderId: order.id,
+                  productCode: existingReport.productCode,
+                  generatedAt: existingReport.generatedAt.toISOString(),
+                  headline: existingReport.headline,
+                  summary: existingReport.summary,
+                  sections: existSections,
+                  recommendations: existRecommendations,
+                  disclaimer: existingReport.disclaimer,
+                  charCount: countReportChars(existSections.map((s: any) => s.text ?? '').join('\n')),
+                },
+                viewToken: generateViewToken(order.id),
+                cached: true,
+              },
+            });
+          }
+        }
+        throw dbErr;
+      }
 
       // 8. 이메일 발송 (첫 리포트)
       if (order.email && !order.emailSentAt) {
-        const reportUrl = `https://fortunelab.store/report/${order.id}`;
+        const reportUrl = `https://fortunelab.store/report/${order.id}?token=${generateViewToken(order.id)}`;
         sendReportEmail({
           to: order.email,
           userName: input.name,
@@ -200,6 +270,7 @@ export async function POST(req: Request) {
             disclaimer,
             charCount,
           },
+          viewToken: generateViewToken(order.id),
           cached: false,
         },
       });
@@ -212,7 +283,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error('[report/generate]', err);
     return NextResponse.json(
-      { ok: false, error: { code: 'GENERATION_FAILED', message: err instanceof Error ? err.message : '리포트 생성 중 오류가 발생했습니다.' } },
+      { ok: false, error: { code: 'GENERATION_FAILED', message: '리포트 생성 중 오류가 발생했습니다.' } },
       { status: 500 }
     );
   }

@@ -373,13 +373,20 @@ export default function HomePage() {
                   className="faqQuestion"
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   aria-expanded={openFaq === i}
+                  aria-controls={`faq-answer-${i}`}
                 >
                   {t(`faq.items.${i}.q`)}
                   <span className="faqToggle" aria-hidden="true">{openFaq === i ? "\u2212" : "+"}</span>
                 </button>
-                {openFaq === i && (
-                  <p className="faqAnswer">{t(`faq.items.${i}.a`)}</p>
-                )}
+                <div
+                  id={`faq-answer-${i}`}
+                  role="region"
+                  hidden={openFaq !== i}
+                >
+                  {openFaq === i && (
+                    <p className="faqAnswer">{t(`faq.items.${i}.a`)}</p>
+                  )}
+                </div>
               </div>
             ))}
           </div>

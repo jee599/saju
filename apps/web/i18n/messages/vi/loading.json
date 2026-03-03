@@ -109,6 +109,38 @@
       ]
     }
   ],
+  "stages": [
+    "Thu thập dữ liệu và chuẩn hóa định dạng",
+    "Xác minh định dạng ngày giờ sinh",
+    "Kiểm tra tùy chọn dương lịch/âm lịch",
+    "Chuẩn bị tính toán múi giờ (KST)",
+    "Khởi tạo công cụ Tứ Trụ",
+    "Tính Năm Trụ",
+    "Tính Tháng Trụ",
+    "Tính Ngày Trụ",
+    "Tính Giờ Trụ",
+    "Xác nhận bốn trụ của lá số",
+    "Ánh xạ Thiên Can/Địa Chi sang ngũ hành",
+    "Tổng hợp phân bố ngũ hành",
+    "Trích xuất hành mạnh/yếu",
+    "Xác định Nhật Chủ",
+    "Tính tỷ lệ âm dương",
+    "Tính quan hệ thập thần",
+    "Tính chỉ số phụ trợ đại vận",
+    "Xây dựng prompt phân tích tính cách",
+    "Chuẩn bị gọi mô hình AI",
+    "AI đang tạo lần đầu",
+    "Xác minh định dạng kết quả",
+    "Kiểm tra cụm từ cấm và an toàn",
+    "Xử lý hậu kỳ câu tóm tắt",
+    "Cấu trúc hóa phần báo cáo",
+    "Tuần tự hóa dữ liệu lưu trữ",
+    "Lưu vào cơ sở dữ liệu",
+    "Xác minh trạng thái thanh toán",
+    "Tổng hợp phản hồi cuối cùng",
+    "Đồng bộ dữ liệu hiển thị",
+    "Chuẩn bị chuyển trang kết quả"
+  ],
   "slides": [
     {
       "title": "Tứ Trụ là gì?",

@@ -35,6 +35,14 @@
   "elementBalance": "Keseimbangan Elemen",
   "strongEnergy": "{emoji} Energi {name} kuat",
   "weakEnergy": "{emoji} Energi {name} kurang",
+  "elements": {
+    "wood": "Kayu", "fire": "Api", "earth": "Tanah", "metal": "Logam", "water": "Air"
+  },
+  "elementsNative": {
+    "wood": "Kayu", "fire": "Api", "earth": "Tanah", "metal": "Logam", "water": "Air"
+  },
+  "elementSources": "Sumber elemen:",
+  "elementSourceCount": "{count}",
   "yinYang": "Keseimbangan Yin-Yang",
   "yangLabel": "Yang (陽) {pct}%",
   "yinLabel": "Yin (陰) {pct}%",

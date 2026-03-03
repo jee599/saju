@@ -3,8 +3,20 @@ import { createHash } from "crypto";
 
 const ADMIN_COOKIE = "oc_admin";
 
+function getSessionSecret(): string {
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  if (process.env.NODE_ENV === "production") {
+    if (!secret || secret === "default") {
+      throw new Error("ADMIN_SESSION_SECRET must be set to a non-default value in production");
+    }
+    return secret;
+  }
+  // Development fallback only
+  return secret || "dev-only-fallback-secret";
+}
+
 function sessionToken(adminPw: string) {
-  const salt = process.env.ADMIN_SESSION_SECRET ?? "default";
+  const salt = getSessionSecret();
   return createHash("sha256").update(`${adminPw}:${salt}`).digest("hex");
 }
 
