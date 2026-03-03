@@ -4,7 +4,7 @@
     "title": "Your Birth Chart. Decoded by AI.",
     "copies": [
       "MBTI has 16 types. Four Pillars has 518,400.",
-      "A fortune teller charges $100/hr. AI charges $0. Same ancient wisdom.",
+      "A fortune teller may charge a lot. AI starts at $0 — grounded in the same classical framework.",
       "Add your birth time and unlock a whole new reading.",
       "Every reading feels different? That's your luck cycle at work."
     ]
@@ -26,7 +26,7 @@
     "dayPlaceholder": "Day",
     "daySuffix": "",
     "step3Label": "Birth Time",
-    "skipTime": "I don't know \u2192",
+    "skipTime": "I don't know →",
     "unknownTime": "Unknown",
     "unknownTimeDesc": "When birth time is unknown",
     "step4Label": "Gender",
@@ -37,37 +37,73 @@
     "startFree": "Start Free Analysis"
   },
   "branches": [
-    { "label": "Zi Hour (\u5b50)", "time": "23:00~01:00" },
-    { "label": "Chou Hour (\u4e11)", "time": "01:00~03:00" },
-    { "label": "Yin Hour (\u5bc5)", "time": "03:00~05:00" },
-    { "label": "Mao Hour (\u536f)", "time": "05:00~07:00" },
-    { "label": "Chen Hour (\u8fb0)", "time": "07:00~09:00" },
-    { "label": "Si Hour (\u5df3)", "time": "09:00~11:00" },
-    { "label": "Wu Hour (\u5348)", "time": "11:00~13:00" },
-    { "label": "Wei Hour (\u672a)", "time": "13:00~15:00" },
-    { "label": "Shen Hour (\u7533)", "time": "15:00~17:00" },
-    { "label": "You Hour (\u9149)", "time": "17:00~19:00" },
-    { "label": "Xu Hour (\u620c)", "time": "19:00~21:00" },
-    { "label": "Hai Hour (\u4ea5)", "time": "21:00~23:00" }
+    {
+      "label": "Zi Hour (子)",
+      "time": "23:00~01:00"
+    },
+    {
+      "label": "Chou Hour (丑)",
+      "time": "01:00~03:00"
+    },
+    {
+      "label": "Yin Hour (寅)",
+      "time": "03:00~05:00"
+    },
+    {
+      "label": "Mao Hour (卯)",
+      "time": "05:00~07:00"
+    },
+    {
+      "label": "Chen Hour (辰)",
+      "time": "07:00~09:00"
+    },
+    {
+      "label": "Si Hour (巳)",
+      "time": "09:00~11:00"
+    },
+    {
+      "label": "Wu Hour (午)",
+      "time": "11:00~13:00"
+    },
+    {
+      "label": "Wei Hour (未)",
+      "time": "13:00~15:00"
+    },
+    {
+      "label": "Shen Hour (申)",
+      "time": "15:00~17:00"
+    },
+    {
+      "label": "You Hour (酉)",
+      "time": "17:00~19:00"
+    },
+    {
+      "label": "Xu Hour (戌)",
+      "time": "19:00~21:00"
+    },
+    {
+      "label": "Hai Hour (亥)",
+      "time": "21:00~23:00"
+    }
   ],
   "engine": {
     "heading": "Ancient Asian Astrology Meets Modern AI",
     "subheading": "The depth of a master astrologer. The accessibility of an app. With FortuneLab, you don't have to choose.",
     "pillars": [
       {
-        "icon": "\ud83d\udcd0",
+        "icon": "📐",
         "title": "Precision",
         "subtitle": "Traditional calendar engine, precisely computed",
         "desc": "Passed 139 golden-standard test cases for births from 1930 to 2010. Automatic solar term (Jieqi) boundary correction eliminates year and month pillar errors at the source."
       },
       {
-        "icon": "\ud83d\udcdc",
+        "icon": "📜",
         "title": "Authenticity",
         "subtitle": "5 classical texts as the foundation",
         "desc": "Di Tian Sui, Zi Ping Zhen Quan, Qiong Tong Bao Jian, Yuan Hai Zi Ping, San Ming Tong Hui. Centuries of verified BaZi theory, systematically interpreted by modern AI."
       },
       {
-        "icon": "\u26a1",
+        "icon": "⚡",
         "title": "Instant Access",
         "subtitle": "AI analysis in under 1 second",
         "desc": "From complex Four Pillars calculation to Five Elements analysis and Day Master profiling — all completed by AI in under a second. No appointment needed, anytime you want."
@@ -95,7 +131,7 @@
       "price": "$4.99",
       "features": [
         "Everything in the free reading",
-        "~20,000-character AI deep-dive report",
+        "Up to ~20,000-character AI long-form analysis",
         "9 sections (personality, career, love, wealth, health & more)",
         "Major luck cycle timeline (10-year periods)"
       ],
