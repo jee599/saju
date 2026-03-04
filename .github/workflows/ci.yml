@@ -24,9 +24,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: pnpm -C packages/api exec prisma generate
+        run: pnpm -C packages/api exec prisma generate --schema=prisma/schema.prisma
 
-      - name: Type check
+      - name: Verify API package typecheck first
+        run: pnpm -C packages/api typecheck
+
+      - name: Type check (monorepo)
         run: pnpm typecheck
 
       - name: Run tests
