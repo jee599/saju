@@ -3940,34 +3940,6 @@ body:has(.constellationPage) {
   display: none;
 }
 
-/* ── Constellation page header overlay ── */
-body:has(.constellationPage) .siteHeader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: transparent;
-}
-
-body:has(.constellationPage) .headerInner {
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 8px;
-  padding: 12px 24px;
-  width: 100%;
-  max-width: none;
-}
-
-body:has(.constellationPage) .headerTopRow {
-  display: contents;
-}
-
-body:has(.constellationPage) .brand {
-  order: 0;
-  margin-right: auto;
-}
-
 /* 모든 페이지에서 topNav 숨김 — hover 시 표시 */
 .topNav {
   opacity: 0;
@@ -3987,22 +3959,6 @@ body:has(.loadingAnalysis) .siteHeader:hover .topNav {
   pointer-events: none !important;
 }
 
-body:has(.constellationPage) .topNav {
-  order: 1;
-  overflow: visible;
-  padding-bottom: 0;
-}
-
-body:has(.constellationPage) .topNav a {
-  background: rgba(255, 255, 255, 0.03);
-  border-color: rgba(255, 255, 255, 0.06);
-  font-size: 0.78rem;
-  padding: 6px 12px;
-}
-
-body:has(.constellationPage) .languageSelector {
-  order: 2;
-}
 
 /* ── Constellation mobile ── */
 @media (max-width: 767px) {
@@ -4014,7 +3970,7 @@ body:has(.constellationPage) .languageSelector {
     min-height: 100dvh;
     height: auto;
     padding-bottom: 24px;
-    padding-top: 80px;
+    padding-top: 16px;
     align-items: flex-start;
   }
   .constellationHeroMain {
@@ -4053,10 +4009,6 @@ body:has(.constellationPage) .languageSelector {
     flex: none;
     padding: 7px 20px;
   }
-  body:has(.constellationPage) .headerInner {
-    padding: 8px 16px;
-  }
-  body:has(.constellationPage) .topNav a { font-size: 0.72rem; padding: 5px 8px; }
 }
 
 

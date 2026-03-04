@@ -505,12 +505,8 @@ function LoadingContent() {
             </div>
           </div>
 
-          {/* ── 타이머 + 프로그레스 + 스텝 바 ── */}
+          {/* ── 타이머 + 프로그레스 + 스테이지 ── */}
           <div className="loadingStatusBar">
-            <div className="loadingTimer">
-              <span className="timerDot" />
-              <span>{t("analyzing")} · {formatTime(elapsedSec)}</span>
-            </div>
             {(() => {
               // Asymptotic curve: progress slows realistically near completion
               const cap = 95;
@@ -520,8 +516,21 @@ function LoadingContent() {
               const stageIdx = done ? 29 : Math.min(29, Math.max(0, Math.floor(pct * 30 / 100)));
               const stageText = t(`stages.${stageIdx}`);
 
+              // Estimated remaining time
+              const estimatedTotal = orderId ? 120 : 30;
+              const remaining = done ? 0 : Math.max(0, estimatedTotal - elapsedSec);
+
               return (
                 <>
+                  <div className="loadingTimer">
+                    <span className="timerDot" />
+                    <span>
+                      {t("analyzing")} · {remaining > 0
+                        ? `${t("estimatedTime")} ${remaining}${t("timeFormat.sec")}`
+                        : t("almostDone")}
+                    </span>
+                  </div>
+
                   <div className="loadingProgressBar">
                     <div
                       className="loadingProgressTrack"
@@ -533,7 +542,6 @@ function LoadingContent() {
                     >
                       <div className="loadingProgressFill" style={{ width: `${pct}%` }} />
                     </div>
-                    <span className="loadingProgressPct">{pct}%</span>
                   </div>
 
                   <div className="loadingStageNow" aria-live="polite">
