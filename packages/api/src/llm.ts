@@ -37,7 +37,7 @@ export const callLlm = async (params: {
         Authorization: `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
+        model: process.env.OPENAI_MODEL ?? "gpt-5-mini",
         temperature,
         max_completion_tokens: maxTokens,
         messages: [
@@ -71,7 +71,7 @@ export const callLlm = async (params: {
 
   if (model === "claude") {
     const apiKey = requireEnv("ANTHROPIC_API_KEY");
-    const anthropicModel = process.env.ANTHROPIC_MODEL ?? "claude-3-5-sonnet-20241022";
+    const anthropicModel = process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5";
 
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",

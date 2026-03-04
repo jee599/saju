@@ -10,7 +10,7 @@ import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, ELEMENT_EMOJI } from "@saju/engine-saju";
 import type { Element, FourPillars } from "@saju/engine-saju";
 import { convertLunarToSolar } from "../../../lib/lunarConvert";
-import { track, trackFunnel, trackScrollDepth, createPageTimer, trackPageEvent, trackClick } from "../../../lib/analytics";
+import { track, trackFunnel, trackScrollDepth, createPageTimer, trackPageEvent, trackClick, trackLanding } from "../../../lib/analytics";
 
 // ── 천간/지지 → 오행 매핑 ──
 const STEM_TO_ELEMENT: Record<string, Element> = {
@@ -271,6 +271,7 @@ function ResultContent() {
       router.replace("/");
       return;
     }
+    trackLanding();
     track("report_view");
     trackPageEvent("/result");
     trackFunnel("result_view");

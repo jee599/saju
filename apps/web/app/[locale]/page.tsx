@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "../../i18n/navigation";
-import { track, trackFunnel, trackFormStep, trackChoice, trackPageEvent, createPageTimer } from "../../lib/analytics";
+import { track, trackFunnel, trackFormStep, trackChoice, trackPageEvent, createPageTimer, trackLanding } from "../../lib/analytics";
 
 /* ─── helpers ─── */
 
@@ -425,6 +425,7 @@ export default function HomePage() {
   const availableDays = getDaysInMonth(year, month);
 
   useEffect(() => {
+    trackLanding(); // UTM capture + session start (once per session)
     trackPageEvent("/");
     trackFunnel("form_start");
     pageTimerRef.current = createPageTimer("home");

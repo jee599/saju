@@ -3,7 +3,7 @@
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { trackFunnel, trackScrollDepth, trackServerEvent, createPageTimer, trackPageEvent } from "../../../../lib/analytics";
+import { trackFunnel, trackScrollDepth, trackServerEvent, createPageTimer, trackPageEvent, trackLanding } from "../../../../lib/analytics";
 import type { GetReportResponse } from "../../../../lib/types";
 import { webApi } from "../../../../lib/api";
 import { ButtonLink, GlassCard, PageContainer, StatusBox } from "../../components/ui";
@@ -134,6 +134,7 @@ export default function ReportPage() {
   const viewedSectionsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
+    trackLanding();
     trackPageEvent("/report");
     trackFunnel("report_view");
     pageTimerRef.current = createPageTimer("report");

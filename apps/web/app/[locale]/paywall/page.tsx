@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { track, trackCheckoutStart, trackFunnel, trackError as trackAnalyticsError, createPageTimer, trackPageEvent } from "../../../lib/analytics";
+import { track, trackCheckoutStart, trackFunnel, trackError as trackAnalyticsError, createPageTimer, trackPageEvent, trackLanding } from "../../../lib/analytics";
 import { getCountryByLocale } from "@saju/shared";
 
 function PaywallContent() {
@@ -27,6 +27,7 @@ function PaywallContent() {
   const priceLabel = country.priceLabel;
 
   useEffect(() => {
+    trackLanding();
     track("paywall_view");
     trackPageEvent("/paywall");
     trackFunnel("paywall_view");

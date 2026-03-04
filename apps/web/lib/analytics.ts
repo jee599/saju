@@ -69,6 +69,81 @@ interface ServerEvent {
 let queue: ServerEvent[] = [];
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 
+/* ── UTM & Landing tracking ── */
+
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
+
+/** Capture UTM params from URL and persist in sessionStorage */
+export function captureUtmParams(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const utm: Record<string, string> = {};
+    for (const key of UTM_KEYS) {
+      const val = params.get(key);
+      if (val) utm[key] = val;
+    }
+    if (Object.keys(utm).length > 0) {
+      sessionStorage.setItem("saju_utm", JSON.stringify(utm));
+    }
+  } catch { /* ignore */ }
+}
+
+/** Get stored UTM params for the current session */
+export function getUtmParams(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = sessionStorage.getItem("saju_utm");
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+/** Check if this is a new user (first visit ever) */
+export function isNewUser(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    return !localStorage.getItem("saju_first_visit");
+  } catch {
+    return true;
+  }
+}
+
+/** Mark first visit timestamp */
+function markFirstVisit(): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (!localStorage.getItem("saju_first_visit")) {
+      localStorage.setItem("saju_first_visit", new Date().toISOString());
+    }
+  } catch { /* ignore */ }
+}
+
+/** Track landing page (call once per session on first page load) */
+export function trackLanding(): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (sessionStorage.getItem("saju_landed")) return; // already tracked
+    sessionStorage.setItem("saju_landed", "1");
+
+    captureUtmParams();
+    markFirstVisit();
+
+    const utm = getUtmParams();
+    const newUser = isNewUser();
+
+    trackServerEvent("session", "session_start", {
+      landingPage: window.location.pathname,
+      fullUrl: window.location.href,
+      referrer: document.referrer || "(direct)",
+      referrerDomain: document.referrer ? (() => { try { return new URL(document.referrer).hostname.replace(/^www\./, ""); } catch { return document.referrer; } })() : "(direct)",
+      isNewUser: newUser,
+      ...utm,
+    });
+  } catch { /* ignore */ }
+}
+
 function getOrCreateId(key: string, storage: Storage): string {
   try {
     let id = storage.getItem(key);
@@ -121,8 +196,15 @@ function scheduleFlush() {
 
 function enqueue(event: ServerEvent) {
   if (typeof window === "undefined") return;
+  // Auto-attach UTM params to all events for attribution
+  const utm = getUtmParams();
+  const props = event.properties ?? {};
+  if (utm.utm_source && !props.utm_source) {
+    Object.assign(props, utm);
+  }
   queue.push({
     ...event,
+    properties: props,
     page: event.page ?? window.location.pathname,
     referrer: event.referrer ?? document.referrer,
   });

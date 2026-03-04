@@ -205,7 +205,7 @@ const callLlmOnce = async (params: {
   // ── OpenAI (GPT) ──
   if (model === "gpt") {
     const apiKey = requireEnv("OPENAI_API_KEY");
-    const modelId = openaiModel ?? process.env.OPENAI_MODEL ?? "gpt-5.2";
+    const modelId = openaiModel ?? process.env.OPENAI_MODEL ?? "gpt-5-mini";
     // gpt-5-mini는 temperature 1만 지원
     const useTemp = modelId.includes("mini") ? undefined : temperature;
     const startMs = Date.now();
@@ -305,7 +305,7 @@ const callLlmOnce = async (params: {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: anthropicModel ?? process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6",
+        model: anthropicModel ?? process.env.ANTHROPIC_MODEL ?? "claude-haiku-4-5",
         max_tokens: maxTokens,
         temperature,
         system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
@@ -454,13 +454,12 @@ export const estimateCostUsd = (provider: string, model: string, usage: LlmUsage
       // Opus 4.6 pricing: $15/M input, $75/M output
       return (input * 15 + output * 75) / 1_000_000;
     }
-    if (model.includes("haiku")) {
-      // Haiku 4.5 pricing: $1/M input, $5/M output
-      return (input * 1 + output * 5) / 1_000_000;
+    if (model.includes("opus")) {
+      // Opus 4.6 pricing: $15/M input, $75/M output
+      return (input * 15 + output * 75) / 1_000_000;
     }
-    // Sonnet 4.6 pricing: $3/M input, $15/M output, cache write $3.75/M, cache read $0.30/M
-    const regularInput = Math.max(0, input - cacheWrite - cacheRead);
-    return (regularInput * 3 + cacheWrite * 3.75 + cacheRead * 0.3 + output * 15) / 1_000_000;
+    // Haiku 4.5 pricing: $1/M input, $5/M output
+    return (input * 1 + output * 5) / 1_000_000;
   }
   if (provider === "google") {
     if (model.includes("flash")) {
@@ -470,12 +469,8 @@ export const estimateCostUsd = (provider: string, model: string, usage: LlmUsage
     // Gemini 3.1 Pro pricing: $2/M input, $12/M output
     return (input * 2 + output * 12) / 1_000_000;
   }
-  if (model.includes("5-mini") || model.includes("5.2-mini")) {
-    // GPT-5-mini pricing: $0.30/M input, $1.25/M output
-    return (input * 0.3 + output * 1.25) / 1_000_000;
-  }
-  // GPT-5.2 pricing: $1.75/M input, $14/M output
-  return (input * 1.75 + output * 14) / 1_000_000;
+  // GPT-5-mini pricing: $0.30/M input, $1.25/M output
+  return (input * 0.3 + output * 1.25) / 1_000_000;
 };
 
 /** Log LLM usage to database (fire-and-forget) */
@@ -790,7 +785,7 @@ export const generateChunkedReport = async (params: {
   const charPerChunk = 4000;
   // Claude 토크나이저는 한국어 1자당 ~1.5-2.5 토큰 소비 → 6000으로는 부족
   // GPT/Gemini는 한국어 토크나이제이션이 더 효율적
-  const isClaudeModel = ["sonnet", "haiku", "opus"].includes(targetModel);
+  const isClaudeModel = ["haiku", "opus"].includes(targetModel);
   const maxTokensPerChunk = isClaudeModel
     ? Math.max(12000, Math.round(charPerChunk * 3.0))  // Claude: 12000 토큰
     : Math.max(8000, Math.round(charPerChunk * 2.0));   // GPT/Gemini: 8000 토큰
@@ -806,9 +801,6 @@ export const generateChunkedReport = async (params: {
   } else if (targetModel === "gemini-flash") {
     llmModel = "gemini";
     geminiModelId = "gemini-3-flash-preview";
-  } else if (targetModel === "gpt") {
-    llmModel = "gpt";
-    openaiModelId = process.env.OPENAI_MODEL ?? "gpt-5.2";
   } else if (targetModel === "gpt-mini") {
     llmModel = "gpt";
     openaiModelId = "gpt-5-mini";
@@ -819,8 +811,9 @@ export const generateChunkedReport = async (params: {
     llmModel = "claude";
     anthropicModelId = "claude-opus-4-6";
   } else {
+    // default: haiku
     llmModel = "claude";
-    anthropicModelId = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
+    anthropicModelId = "claude-haiku-4-5";
   }
 
   const system = locale === "ko"
