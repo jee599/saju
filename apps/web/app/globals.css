@@ -1749,6 +1749,12 @@ p, li, label, input, select, button, textarea {
   width: 220px;
   height: 220px;
   flex-shrink: 0;
+  animation: constellationSpin 50s linear infinite;
+}
+
+@keyframes constellationSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .cycleNode {
@@ -1783,6 +1789,17 @@ p, li, label, input, select, button, textarea {
     0 0 18px color-mix(in srgb, var(--node-color) 35%, transparent),
     0 0 36px color-mix(in srgb, var(--node-color) 12%, transparent),
     inset 0 0 12px color-mix(in srgb, var(--node-color) 8%, transparent);
+}
+
+.cycleEmoji,
+.cycleHanja,
+.cycleKo {
+  animation: constellationCounterSpin 50s linear infinite;
+}
+
+@keyframes constellationCounterSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
 }
 
 .cycleEmoji {
@@ -1840,6 +1857,13 @@ p, li, label, input, select, button, textarea {
   width: 160px;
   height: 160px;
   margin: 0 auto 12px;
+  animation: none;
+}
+
+.eduOhangMini .cycleEmoji,
+.eduOhangMini .cycleHanja,
+.eduOhangMini .cycleKo {
+  animation: none;
 }
 
 .eduOhangMini .cycleNode {
