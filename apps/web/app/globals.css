@@ -4034,3 +4034,15 @@ body:has(.constellationPage) .languageSelector {
   }
   body:has(.constellationPage) .topNav a { font-size: 0.72rem; padding: 5px 8px; }
 }
+
+
+/* Native dropdown readability fix */
+.select option,
+select option {
+  color: #111;
+  background: #fff;
+}
+
+.mobileDateInput {
+  color-scheme: light;
+}
