@@ -48,8 +48,33 @@ function PaywallContent() {
 
     try {
       const input = { name, birthDate, birthTime, gender, calendarType };
+      const provider = country.paymentProvider;
 
-      // 결제 수단 미등록 시: 주문 생성 → 바로 로딩/리포트 생성으로 이동
+      if (provider === "stripe" || provider === "razorpay") {
+        // Stripe flow (razorpay routes through Stripe temporarily)
+        const res = await fetch("/api/checkout/stripe/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            productCode: "full",
+            input,
+            email: email || undefined,
+            locale,
+          }),
+        });
+
+        if (!res.ok) throw new Error(t("createFail"));
+        const data = await res.json();
+        const checkoutUrl = data.data?.checkoutUrl;
+        if (!checkoutUrl) throw new Error(t("noCheckoutUrl"));
+
+        track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
+        // External redirect to Stripe hosted checkout (not router.push — cross-origin URL)
+        window.location.href = checkoutUrl;
+        return; // Keep button in loading state to prevent double-clicks during redirect
+      }
+
+      // Toss flow (Korean locale) — existing behavior
       const res = await fetch("/api/checkout/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

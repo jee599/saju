@@ -27,6 +27,7 @@
   "refundLinkText": "这里",
   "createFail": "订单创建失败",
   "noOrderId": "未收到订单ID。",
+  "noCheckoutUrl": "创建支付会话失败。",
   "checkoutError": "支付过程中发生错误。",
   "loading": "支付页面加载中..."
 }

@@ -27,6 +27,7 @@
   "refundLinkText": "tại đây",
   "createFail": "Tạo đơn hàng thất bại",
   "noOrderId": "Không nhận được mã đơn hàng.",
+  "noCheckoutUrl": "Không thể tạo phiên thanh toán.",
   "checkoutError": "Đã xảy ra lỗi trong quá trình thanh toán.",
   "loading": "Đang tải trang thanh toán..."
 }

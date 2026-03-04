@@ -27,6 +27,7 @@
   "refundLinkText": "di sini",
   "createFail": "Gagal membuat pesanan",
   "noOrderId": "ID pesanan tidak diterima.",
+  "noCheckoutUrl": "Gagal membuat sesi pembayaran.",
   "checkoutError": "Terjadi kesalahan saat pembayaran.",
   "loading": "Memuat halaman pembayaran..."
 }

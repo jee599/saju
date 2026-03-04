@@ -27,6 +27,7 @@
   "refundLinkText": "here",
   "createFail": "Failed to create order",
   "noOrderId": "No order ID received.",
+  "noCheckoutUrl": "Failed to create payment session.",
   "checkoutError": "An error occurred during checkout.",
   "loading": "Loading payment page..."
 }
