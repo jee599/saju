@@ -7,7 +7,9 @@
       "Astrologers charge thousands. AI reads your chart for free.",
       "Add your birth time for a Kundli that is truly yours.",
       "Every reading feels different? That's your Dasha cycle shifting."
-    ]
+    ],
+    "landingTitle": "भाग्य बिग डेटा है",
+    "landingSub": "518,400 भाग्य का विस्तृत विश्लेषण"
   },
   "form": {
     "step1Label": "Name",
@@ -27,7 +29,10 @@
     "daySuffix": "",
     "step3Label": "Birth Time",
     "skipTime": "Don't know \u2192",
+    "selectTime": "समय चुनें",
     "unknownTime": "Unknown",
+    "cityLabel": "जन्म शहर",
+    "cityPlaceholder": "अपना शहर दर्ज करें",
     "unknownTimeDesc": "When birth time is unavailable",
     "step4Label": "Gender",
     "male": "Male",

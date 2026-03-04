@@ -7,7 +7,9 @@
       "命理师收费数百元，AI分析零元。精准度一样。",
       "输入出生时辰，命盘即刻呈现。",
       "每次算命结果不同？大运流年在变。"
-    ]
+    ],
+    "landingTitle": "命理是大数据",
+    "landingSub": "518,400种命运，为您详细解析"
   },
   "form": {
     "step1Label": "姓名",
@@ -27,7 +29,10 @@
     "daySuffix": "日",
     "step3Label": "出生时辰",
     "skipTime": "不知道 →",
+    "selectTime": "选择时辰",
     "unknownTime": "不详",
+    "cityLabel": "出生城市",
+    "cityPlaceholder": "请输入城市",
     "unknownTimeDesc": "不清楚出生时间时",
     "step4Label": "性别",
     "male": "男",

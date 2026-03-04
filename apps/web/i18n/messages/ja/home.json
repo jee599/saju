@@ -7,7 +7,9 @@
       "占い師は数万円、AIは¥0。万年暦は同じ。",
       "生まれた時刻まで入力すると、変わる。",
       "四柱推命を見るたびに違う？大運の流れがある。"
-    ]
+    ],
+    "landingTitle": "四柱推命はビッグデータです",
+    "landingSub": "518,400通りの運命を詳細に解き明かします"
   },
   "form": {
     "step1Label": "お名前",
@@ -27,7 +29,10 @@
     "daySuffix": "日",
     "step3Label": "生まれた時刻",
     "skipTime": "わからない →",
+    "selectTime": "時刻を選択",
     "unknownTime": "不明",
+    "cityLabel": "出生都市",
+    "cityPlaceholder": "都市を入力してください",
     "unknownTimeDesc": "時刻が不明な場合",
     "step4Label": "性別",
     "male": "男性",
