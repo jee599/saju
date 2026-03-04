@@ -7,7 +7,9 @@
       "Thầy tử vi tính phí cao, AI miễn phí — cùng một kết quả.",
       "Thêm giờ sinh, lá số sẽ chính xác hơn nhiều.",
       "Xem tử vi lúc nào cũng khác? Vì vận hạn luôn thay đổi."
-    ]
+    ],
+    "landingTitle": "Tử vi là dữ liệu lớn",
+    "landingSub": "Giải mã chi tiết 518.400 vận mệnh"
   },
   "form": {
     "step1Label": "Họ tên",
@@ -27,7 +29,10 @@
     "daySuffix": "",
     "step3Label": "Giờ sinh",
     "skipTime": "Không biết \u2192",
+    "selectTime": "Chọn giờ",
     "unknownTime": "Không biết",
+    "cityLabel": "Thành phố sinh",
+    "cityPlaceholder": "Nhập thành phố của bạn",
     "unknownTimeDesc": "Khi không rõ giờ sinh",
     "step4Label": "Giới tính",
     "male": "Nam",

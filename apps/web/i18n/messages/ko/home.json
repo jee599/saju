@@ -7,7 +7,9 @@
       "역술가 5만원, AI 0원. 만세력은 같다.",
       "태어난 시간까지 넣으면 달라진다.",
       "사주 볼 때마다 달랐지? 만세력 때문이다."
-    ]
+    ],
+    "landingTitle": "사주는 빅데이터입니다",
+    "landingSub": "518,400가지 운명을 상세하게 풀어드립니다"
   },
   "form": {
     "step1Label": "이름",
@@ -27,7 +29,10 @@
     "daySuffix": "일",
     "step3Label": "태어난 시간",
     "skipTime": "잘 모르겠어요 →",
+    "selectTime": "시간 선택",
     "unknownTime": "모름",
+    "cityLabel": "출생 도시",
+    "cityPlaceholder": "도시를 입력하세요",
     "unknownTimeDesc": "시간을 모를 때",
     "step4Label": "성별",
     "male": "남성",

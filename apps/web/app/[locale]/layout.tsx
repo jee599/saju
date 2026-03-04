@@ -7,7 +7,7 @@ import { locales } from "../../i18n/config";
 import { GtagScript } from "./components/GtagScript";
 import LanguageSelector from "./components/LanguageSelector";
 
-const AURORA_FONTS_URL = "https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@400;500;600;700&display=swap";
+const AURORA_FONTS_URL = "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap";
 
 function getLocaleFonts(locale: string) {
   switch (locale) {
@@ -124,17 +124,17 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                   </svg>
                   <span className="brandText">{t("brand")}</span>
                 </Link>
+                <nav className="topNav" aria-label={t("nav.label")}>
+                  <Link href="/daily">{t("nav.daily")}</Link>
+                  <Link href="/#hero">{t("nav.saju")}</Link>
+                  <Link href="/palm">{t("nav.palm")}</Link>
+                  <Link href="/name">{t("nav.naming")}</Link>
+                  <Link href="/face">{t("nav.face")}</Link>
+                  <Link href="/dream">{t("nav.dream")}</Link>
+                  <Link href="/tarot">{t("nav.tarot")}</Link>
+                </nav>
                 <LanguageSelector />
               </div>
-              <nav className="topNav" aria-label={t("nav.label")}>
-                <Link href="/daily">{t("nav.daily")}</Link>
-                <Link href="/#hero">{t("nav.saju")}</Link>
-                <Link href="/palm">{t("nav.palm")}</Link>
-                <Link href="/name">{t("nav.naming")}</Link>
-                <Link href="/face">{t("nav.face")}</Link>
-                <Link href="/dream">{t("nav.dream")}</Link>
-                <Link href="/tarot">{t("nav.tarot")}</Link>
-              </nav>
             </div>
           </header>
           <main id="main-content">{children}</main>

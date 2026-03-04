@@ -7,7 +7,9 @@
       "A fortune teller may charge a lot. AI starts at $0 — grounded in the same classical framework.",
       "Add your birth time and unlock a whole new reading.",
       "Every reading feels different? That's your luck cycle at work."
-    ]
+    ],
+    "landingTitle": "Fortune Is Big Data",
+    "landingSub": "518,400 destinies decoded in detail"
   },
   "form": {
     "step1Label": "Name",
@@ -27,7 +29,10 @@
     "daySuffix": "",
     "step3Label": "Birth Time",
     "skipTime": "I don't know →",
+    "selectTime": "Select time",
     "unknownTime": "Unknown",
+    "cityLabel": "Birth city",
+    "cityPlaceholder": "Enter your city",
     "unknownTimeDesc": "When birth time is unknown",
     "step4Label": "Gender",
     "male": "Male",
