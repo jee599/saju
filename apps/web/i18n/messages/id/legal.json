@@ -1,0 +1,85 @@
+{
+  "terms": {
+    "title": "Ketentuan Layanan",
+    "eyebrow": "Terms",
+    "effectiveDate": "Tanggal Berlaku: 22 Februari 2026",
+    "s1": {
+      "title": "1. Sifat Layanan",
+      "body": "Layanan ini menyediakan laporan referensi yang menyusun ulang interpretasi peruntungan ke dalam pernyataan berbasis probabilitas. Layanan ini tidak memberikan ramalan mutlak atau jaminan hasil."
+    },
+    "s2": {
+      "title": "2. Kewajiban Pengguna",
+      "body": "Penyalahgunaan otomatisasi yang mengganggu stabilitas layanan, penggunaan untuk tujuan ilegal, dan pelanggaran hak pihak lain dilarang."
+    },
+    "s3": {
+      "title": "3. Batasan Tanggung Jawab",
+      "body": "Keputusan berisiko tinggi yang melibatkan medis, hukum, investasi, utang, atau hal kritis lainnya harus dilakukan dengan berkonsultasi kepada profesional yang berkualifikasi. Layanan ini tidak boleh dijadikan satu-satunya dasar pengambilan keputusan tersebut."
+    }
+  },
+  "privacy": {
+    "title": "Kebijakan Privasi",
+    "eyebrow": "Privacy",
+    "effectiveDate": "Tanggal Berlaku: 22 Februari 2026",
+    "s1": {
+      "title": "1. Data yang Dikumpulkan",
+      "body": "Kami memproses nama, tanggal lahir, waktu lahir (opsional), jenis kelamin, dan jenis kalender dalam lingkup tujuan pembuatan laporan."
+    },
+    "s2": {
+      "title": "2. Tujuan Penggunaan",
+      "body": "Data yang dikumpulkan digunakan untuk pembuatan laporan yang dipersonalisasi, simulasi alur pembayaran, analisis kesalahan, dan peningkatan kualitas."
+    },
+    "s3": {
+      "title": "3. Penyimpanan dan Pemusnahan",
+      "body": "Data pesanan dan laporan disimpan di server dan akan dimusnahkan secara aman setelah periode penyimpanan yang diwajibkan secara hukum berakhir."
+    }
+  },
+  "refund": {
+    "title": "Kebijakan Pengembalian Dana",
+    "eyebrow": "Refund",
+    "s1": {
+      "title": "1. Prinsip Pengembalian Dana",
+      "body": "Laporan analisis peruntungan berbayar dari FortuneLab merupakan konten digital. Analisis AI dilakukan dan laporan dibuat segera setelah pembayaran."
+    },
+    "s2": {
+      "title": "2. Kondisi yang Memenuhi Syarat Pengembalian Dana",
+      "items": [
+        "Laporan tidak berhasil dibuat setelah pembayaran",
+        "Terjadi pembayaran ganda karena kesalahan sistem",
+        "Laporan belum dibuka dalam waktu 24 jam setelah pembayaran"
+      ]
+    },
+    "s3": {
+      "title": "3. Kondisi yang Tidak Memenuhi Syarat Pengembalian Dana",
+      "items": [
+        "Ketidakpuasan terhadap isi laporan setelah dibaca (karena sifat konten digital)",
+        "Perubahan pikiran tanpa alasan khusus",
+        "Lebih dari 24 jam sejak pembayaran dan laporan sudah dibuka"
+      ]
+    },
+    "s4": {
+      "title": "4. Prosedur Pengembalian Dana",
+      "body": "Untuk mengajukan pengembalian dana, silakan kirim email ke contact@fortunelab.store menggunakan alamat email yang digunakan saat pembayaran. Pengembalian dana akan diproses dalam 3 hari kerja."
+    },
+    "s5": {
+      "title": "5. Tanggal Berlaku",
+      "body": "Kebijakan pengembalian dana ini berlaku sejak 1 Maret 2026."
+    }
+  },
+  "disclaimer": {
+    "title": "Penyangkalan",
+    "eyebrow": "Disclaimer",
+    "effectiveDate": "Tanggal Berlaku: 22 Februari 2026",
+    "s1": {
+      "title": "Prinsip Interpretasi",
+      "body": "Layanan ini menggunakan bahasa yang berfokus pada kemungkinan dan kecenderungan, serta menghindari pernyataan prediksi yang bersifat mutlak."
+    },
+    "s2": {
+      "title": "Pemberitahuan Penting",
+      "body": "Keputusan berisiko tinggi yang melibatkan medis, hukum, investasi, utang, atau hal kritis lainnya harus selalu disertai konsultasi dengan profesional yang berkualifikasi."
+    },
+    "s3": {
+      "title": "Tanggung Jawab Pengguna",
+      "body": "Keputusan akhir dan tanggung jawab pelaksanaan ada pada pengguna. Layanan ini beroperasi dalam lingkup penyediaan informasi referensi."
+    }
+  }
+}

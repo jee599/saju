@@ -30,7 +30,6 @@ export function track(event: FunnelEvent | string, props?: AnalyticsProps): void
     }
     return;
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const gtag = (window as any).gtag;
   if (typeof gtag === "function") {
     gtag("event", event, props);

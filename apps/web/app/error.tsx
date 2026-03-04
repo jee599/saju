@@ -79,6 +79,7 @@ export default function GlobalError({
             <button className="btn btn-primary btn-lg" onClick={reset}>
               {t.retry}
             </button>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a href="/" className="btn btn-ghost btn-lg">
               {t.home}
             </a>

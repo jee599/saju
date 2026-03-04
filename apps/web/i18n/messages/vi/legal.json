@@ -1,0 +1,85 @@
+{
+  "terms": {
+    "title": "Điều khoản Dịch vụ",
+    "eyebrow": "Terms",
+    "effectiveDate": "Ngày hiệu lực: 22/02/2026",
+    "s1": {
+      "title": "1. Tính chất Dịch vụ",
+      "body": "Dịch vụ này cung cấp báo cáo tham khảo, tái cấu trúc các diễn giải mệnh lý thành các phát biểu dựa trên xác suất. Dịch vụ không đưa ra lời tiên tri tuyệt đối hay đảm bảo kết quả."
+    },
+    "s2": {
+      "title": "2. Nghĩa vụ của Người dùng",
+      "body": "Nghiêm cấm các hành vi lạm dụng tự động hóa gây ảnh hưởng đến sự ổn định của dịch vụ, sử dụng cho mục đích bất hợp pháp và xâm phạm quyền lợi của người khác."
+    },
+    "s3": {
+      "title": "3. Giới hạn Trách nhiệm",
+      "body": "Các quyết định có rủi ro cao liên quan đến y tế, pháp lý, đầu tư, nợ nần phải được thực hiện kết hợp với tư vấn của chuyên gia có trình độ. Không được sử dụng dịch vụ này làm căn cứ duy nhất cho những quyết định đó."
+    }
+  },
+  "privacy": {
+    "title": "Chính sách Bảo mật",
+    "eyebrow": "Privacy",
+    "effectiveDate": "Ngày hiệu lực: 22/02/2026",
+    "s1": {
+      "title": "1. Thông tin Thu thập",
+      "body": "Chúng tôi xử lý họ tên, ngày sinh, giờ sinh (tùy chọn), giới tính và loại lịch trong phạm vi mục đích tạo báo cáo."
+    },
+    "s2": {
+      "title": "2. Mục đích Sử dụng",
+      "body": "Thông tin thu thập được sử dụng để tạo báo cáo cá nhân hóa, mô phỏng quy trình thanh toán, phân tích lỗi và cải thiện chất lượng."
+    },
+    "s3": {
+      "title": "3. Lưu trữ và Hủy bỏ",
+      "body": "Dữ liệu đơn hàng và báo cáo được lưu trữ trên máy chủ và sẽ được hủy bỏ an toàn sau khi hết thời hạn lưu trữ theo quy định pháp luật."
+    }
+  },
+  "refund": {
+    "title": "Chính sách Hoàn tiền",
+    "eyebrow": "Refund",
+    "s1": {
+      "title": "1. Nguyên tắc Hoàn tiền",
+      "body": "Báo cáo phân tích tử vi trả phí của FortuneLab là nội dung số. Hệ thống AI sẽ phân tích và tạo báo cáo ngay lập tức sau khi thanh toán."
+    },
+    "s2": {
+      "title": "2. Trường hợp Được hoàn tiền",
+      "items": [
+        "Báo cáo không được tạo thành công sau khi thanh toán",
+        "Bị tính phí trùng lặp do lỗi hệ thống",
+        "Chưa xem báo cáo trong vòng 24 giờ sau khi thanh toán"
+      ]
+    },
+    "s3": {
+      "title": "3. Trường hợp Không được hoàn tiền",
+      "items": [
+        "Không hài lòng với nội dung sau khi đã xem báo cáo (do đặc thù nội dung số)",
+        "Đơn giản thay đổi ý định",
+        "Đã quá 24 giờ kể từ khi thanh toán và đã xem báo cáo"
+      ]
+    },
+    "s4": {
+      "title": "4. Quy trình Hoàn tiền",
+      "body": "Để yêu cầu hoàn tiền, vui lòng gửi email đến contact@fortunelab.store bằng địa chỉ email đã sử dụng khi thanh toán. Hoàn tiền sẽ được xử lý trong vòng 3 ngày làm việc."
+    },
+    "s5": {
+      "title": "5. Ngày Hiệu lực",
+      "body": "Chính sách hoàn tiền này có hiệu lực từ ngày 1 tháng 3 năm 2026."
+    }
+  },
+  "disclaimer": {
+    "title": "Tuyên bố Miễn trừ Trách nhiệm",
+    "eyebrow": "Disclaimer",
+    "effectiveDate": "Ngày hiệu lực: 22/02/2026",
+    "s1": {
+      "title": "Nguyên tắc Diễn giải",
+      "body": "Dịch vụ này sử dụng ngôn ngữ tập trung vào khả năng và xu hướng, tránh các phát biểu mang tính tiên đoán tuyệt đối."
+    },
+    "s2": {
+      "title": "Thông báo Quan trọng",
+      "body": "Các quyết định có rủi ro cao liên quan đến y tế, pháp lý, đầu tư, nợ nần phải luôn được thực hiện kết hợp với tư vấn của chuyên gia có trình độ."
+    },
+    "s3": {
+      "title": "Trách nhiệm của Người dùng",
+      "body": "Quyết định cuối cùng và trách nhiệm thực hiện thuộc về người dùng. Dịch vụ này hoạt động trong phạm vi cung cấp thông tin tham khảo."
+    }
+  }
+}

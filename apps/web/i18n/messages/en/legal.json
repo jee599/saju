@@ -1,0 +1,85 @@
+{
+  "terms": {
+    "title": "Terms of Service",
+    "eyebrow": "Terms",
+    "effectiveDate": "Effective: Feb 22, 2026",
+    "s1": {
+      "title": "1. Nature of Service",
+      "body": "This service provides reference reports that reinterpret traditional fortune analysis into probability-based statements. It does not offer absolute predictions or guaranteed outcomes."
+    },
+    "s2": {
+      "title": "2. User Obligations",
+      "body": "Automated abuse that undermines service stability, use for illegal purposes, and infringement of the rights of others are prohibited."
+    },
+    "s3": {
+      "title": "3. Limitation of Liability",
+      "body": "High-risk decisions involving medical, legal, investment, debt, or other critical matters must be made in consultation with qualified professionals. Reliance on this service as the sole basis for such decisions is not permitted."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "eyebrow": "Privacy",
+    "effectiveDate": "Effective: Feb 22, 2026",
+    "s1": {
+      "title": "1. Information Collected",
+      "body": "We process name, date of birth, time of birth (optional), gender, and calendar type solely for the purpose of generating reports."
+    },
+    "s2": {
+      "title": "2. Purpose of Use",
+      "body": "The collected information is used for personalized report generation, payment flow simulation, error analysis, and quality improvement."
+    },
+    "s3": {
+      "title": "3. Retention and Disposal",
+      "body": "Order and report data are stored on our servers and securely disposed of after the legally required retention period."
+    }
+  },
+  "refund": {
+    "title": "Refund Policy",
+    "eyebrow": "Refund",
+    "s1": {
+      "title": "1. Refund Principles",
+      "body": "FortuneLab's paid Saju analysis reports are digital content. AI analysis is performed and the report is generated immediately upon payment."
+    },
+    "s2": {
+      "title": "2. Eligible for Refund",
+      "items": [
+        "The report was not successfully generated after payment",
+        "Duplicate charges occurred due to a system error",
+        "The report has not been viewed within 24 hours of payment"
+      ]
+    },
+    "s3": {
+      "title": "3. Not Eligible for Refund",
+      "items": [
+        "Dissatisfaction with report content after viewing (due to the nature of digital content)",
+        "Simple change of mind",
+        "More than 24 hours have passed since payment and the report has been viewed"
+      ]
+    },
+    "s4": {
+      "title": "4. Refund Procedure",
+      "body": "To request a refund, please contact us at contact@fortunelab.store using the email address provided at the time of payment. Refunds are processed within 3 business days."
+    },
+    "s5": {
+      "title": "5. Effective Date",
+      "body": "This refund policy is effective as of March 1, 2026."
+    }
+  },
+  "disclaimer": {
+    "title": "Disclaimer",
+    "eyebrow": "Disclaimer",
+    "effectiveDate": "Effective: Feb 22, 2026",
+    "s1": {
+      "title": "Interpretation Principles",
+      "body": "This service uses language centered on possibilities and tendencies, and avoids definitive predictive statements."
+    },
+    "s2": {
+      "title": "Important Notice",
+      "body": "High-risk decisions involving medical, legal, investment, debt, or other critical matters must be accompanied by consultation with qualified professionals."
+    },
+    "s3": {
+      "title": "User Responsibility",
+      "body": "Final judgment and responsibility for actions rest with the user. This service operates within the scope of providing reference information."
+    }
+  }
+}

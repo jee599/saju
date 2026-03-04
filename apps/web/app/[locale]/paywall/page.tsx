@@ -152,7 +152,7 @@ function PaywallContent() {
 
           <p className="muted" style={{ marginTop: 16, fontSize: "0.8rem", textAlign: "center" }}>
             {t("afterPurchase")}
-            <br />{t("refundLink", { link: "" })}<a href="/refund" style={{ color: "var(--accent)" }}>{t("refundLinkText")}</a>
+            <br />{t("refundLink", { link: "" })}<Link href="/refund" style={{ color: "var(--accent)" }}>{t("refundLinkText")}</Link>
           </p>
         </section>
       </div>

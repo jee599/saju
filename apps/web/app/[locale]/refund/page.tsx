@@ -1,35 +1,44 @@
-// TODO: i18n – legal text needs professional translation for non-Korean locales.
-// Currently all content is hardcoded in Korean.
+import { useTranslations } from "next-intl";
+import { GlassCard, PageContainer } from "../components/ui";
+
 export default function RefundPage() {
+  const t = useTranslations("legal.refund");
+
   return (
-    <div className="page">
-      <div className="container">
-        <section className="glassCard">
-          <h1>환불 정책</h1>
-          <div className="legal">
-            <div className="legalSection">
-              <h3>1. 환불 원칙</h3>
-              <p>복연구소의 유료 사주 분석 리포트는 디지털 콘텐츠로, 결제 즉시 AI 분석이 실행되어 리포트가 생성됩니다.</p>
-            </div>
-            <div className="legalSection">
-              <h3>2. 환불 가능한 경우</h3>
-              <p>- 결제 후 리포트가 정상적으로 생성되지 않은 경우{"\n"}- 시스템 오류로 중복 결제된 경우{"\n"}- 결제 후 24시간 이내 리포트 미열람 시</p>
-            </div>
-            <div className="legalSection">
-              <h3>3. 환불 불가한 경우</h3>
-              <p>- 리포트 열람 후 내용 불만족 (디지털 콘텐츠 특성상){"\n"}- 단순 변심{"\n"}- 결제 후 24시간 경과 및 리포트 열람 완료</p>
-            </div>
-            <div className="legalSection">
-              <h3>4. 환불 절차</h3>
-              <p>환불 요청은 결제 시 입력한 이메일로 contact@fortunelab.store에 문의해주세요. 영업일 기준 3일 이내 처리됩니다.</p>
-            </div>
-            <div className="legalSection">
-              <h3>5. 시행일</h3>
-              <p>이 환불 정책은 2026년 3월 1일부터 시행됩니다.</p>
-            </div>
-          </div>
+    <PageContainer>
+      <GlassCard className="legal">
+        <p className="heroEyebrow">{t("eyebrow")}</p>
+        <h1>{t("title")}</h1>
+
+        <section className="legalSection">
+          <h2>{t("s1.title")}</h2>
+          <p>{t("s1.body")}</p>
         </section>
-      </div>
-    </div>
+        <section className="legalSection">
+          <h2>{t("s2.title")}</h2>
+          <ul>
+            {(["0", "1", "2"] as const).map((i) => (
+              <li key={i}>{t(`s2.items.${i}`)}</li>
+            ))}
+          </ul>
+        </section>
+        <section className="legalSection">
+          <h2>{t("s3.title")}</h2>
+          <ul>
+            {(["0", "1", "2"] as const).map((i) => (
+              <li key={i}>{t(`s3.items.${i}`)}</li>
+            ))}
+          </ul>
+        </section>
+        <section className="legalSection">
+          <h2>{t("s4.title")}</h2>
+          <p>{t("s4.body")}</p>
+        </section>
+        <section className="legalSection">
+          <h2>{t("s5.title")}</h2>
+          <p>{t("s5.body")}</p>
+        </section>
+      </GlassCard>
+    </PageContainer>
   );
 }
