@@ -1,5 +1,5 @@
 {
-  "title": "Compatibility Analysis",
+  "title": "अनुकूलता विश्लेषण",
   "desc": "Enter both dates of birth to analyse your Five Elements compatibility.",
   "myBirthDate": "My Date of Birth",
   "partnerBirthDate": "Partner's Date of Birth",
@@ -15,6 +15,10 @@
   "shareTitle": "FortuneLab Compatibility",
   "loading": "Analysing compatibility...",
   "elements": {
-    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+    "wood": "Wood",
+    "fire": "Fire",
+    "earth": "Earth",
+    "metal": "Metal",
+    "water": "Water"
   }
 }

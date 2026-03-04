@@ -12,17 +12,39 @@
   },
   "pillarsTable": {
     "aria": "Four Pillars (BaZi) Table",
-    "cols": ["Hour Pillar", "Day Pillar", "Month Pillar", "Year Pillar"],
-    "colsSub": ["時柱", "日柱", "月柱", "年柱"],
+    "cols": [
+      "Hour Pillar",
+      "Day Pillar",
+      "Month Pillar",
+      "Year Pillar"
+    ],
+    "colsSub": [
+      "時柱",
+      "日柱",
+      "月柱",
+      "年柱"
+    ],
     "stemRow": "Heavenly Stem",
     "branchRow": "Earthly Branch"
   },
   "zodiac": {
-    "子": "Rat", "丑": "Ox", "寅": "Tiger", "卯": "Rabbit",
-    "辰": "Dragon", "巳": "Snake", "午": "Horse", "未": "Goat",
-    "申": "Monkey", "酉": "Rooster", "戌": "Dog", "亥": "Pig"
+    "子": "Rat",
+    "丑": "Ox",
+    "寅": "Tiger",
+    "卯": "Rabbit",
+    "辰": "Dragon",
+    "巳": "Snake",
+    "午": "Horse",
+    "未": "Goat",
+    "申": "Monkey",
+    "酉": "Rooster",
+    "戌": "Dog",
+    "亥": "Pig"
   },
-  "polarity": { "yang": "Yang", "yin": "Yin" },
+  "polarity": {
+    "yang": "Yang",
+    "yin": "Yin"
+  },
   "dayMaster": {
     "title": "You are a person of {element}",
     "sub": "{name}'s Day Master (日干) is {hanja}",
@@ -43,10 +65,18 @@
   "strongEnergy": "{emoji} {name} energy is strong",
   "weakEnergy": "{emoji} {name} energy is lacking",
   "elements": {
-    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+    "wood": "Wood",
+    "fire": "Fire",
+    "earth": "Earth",
+    "metal": "Metal",
+    "water": "Water"
   },
   "elementsNative": {
-    "wood": "काष्ठ", "fire": "अग्नि", "earth": "पृथ्वी", "metal": "धातु", "water": "जल"
+    "wood": "काष्ठ",
+    "fire": "अग्नि",
+    "earth": "पृथ्वी",
+    "metal": "धातु",
+    "water": "जल"
   },
   "elementSources": "Element sources:",
   "elementSourceCount": "{count}",
@@ -54,11 +84,20 @@
   "yangLabel": "Yang (陽) {pct}%",
   "yinLabel": "Yin (陰) {pct}%",
   "personality": "Personality Analysis",
-  "personalityError": "Failed to generate personality analysis.",
+  "personalityError": "व्यक्तित्व विश्लेषण तैयार नहीं हो सका।",
   "networkError": "A network error has occurred.",
   "elapsedSec": "{sec}s elapsed",
   "premiumBadge": "Premium Analysis",
-  "lockedSections": ["Career", "Love · Family · Partner", "Wealth", "Health", "Past", "Present", "Future", "Major Luck Timeline"],
+  "lockedSections": [
+    "Career",
+    "Love · Family · Partner",
+    "Wealth",
+    "Health",
+    "Past",
+    "Present",
+    "Future",
+    "Major Luck Timeline"
+  ],
   "blurDummy": "This section contains a detailed analysis based on your Four Pillars BaZi. Through expert interpretation considering the flow of elements and the harmony of your innate energy, we comprehensively examine patterns from the past, current energy, and future possibilities.",
   "unlockAll": "Unlock Full Analysis — ₹199",
   "unlockDesc": "View detailed analysis for the remaining 8 sections",

@@ -4046,3 +4046,18 @@ select option {
 .mobileDateInput {
   color-scheme: light;
 }
+
+
+@media (pointer: coarse), (max-width: 767px) {
+  .cLegalLinks { opacity: 1; }
+  .topNav { opacity: 1 !important; pointer-events: auto !important; }
+  .topNav a:not(:first-child) { display: inline-flex; }
+  .fourPillarsTableWrap { overflow-x: auto; }
+  .fourPillarsTable { min-width: 320px; }
+  .cMiniPill, .cCta, .topNav a, .languageSelectorBtn { min-height: 44px; }
+}
+
+.cSelect:focus-visible, .cInput:focus-visible, .cMiniPill:focus-visible, .cCta:focus-visible {
+  outline: 2px solid rgba(212,175,55,0.9);
+  outline-offset: 2px;
+}

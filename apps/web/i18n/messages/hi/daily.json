@@ -1,8 +1,8 @@
 {
-  "eyebrow": "Free Daily",
+  "eyebrow": "दैनिक मुफ्त राशिफल",
   "title": "Today's Horoscope",
   "subtitle": "{date} · Your destiny reading for today",
-  "inputTitle": "Enter your date of birth",
+  "inputTitle": "अपनी जन्मतिथि दर्ज करें",
   "nameLabel": "Name",
   "namePlaceholder": "Rahul Sharma",
   "birthDateLabel": "Date of Birth",
@@ -20,15 +20,35 @@
   "loading": "Loading...",
   "defaultUser": "User",
   "elements": {
-    "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
+    "wood": "Wood",
+    "fire": "Fire",
+    "earth": "Earth",
+    "metal": "Metal",
+    "water": "Water"
   },
   "colors": {
-    "wood": "Green", "fire": "Red", "earth": "Yellow", "metal": "White/Silver", "water": "Blue/Black"
+    "wood": "Green",
+    "fire": "Red",
+    "earth": "Yellow",
+    "metal": "White/Silver",
+    "water": "Blue/Black"
   },
   "directions": {
-    "wood": "East", "fire": "South", "earth": "Centre", "metal": "West", "water": "North"
+    "wood": "East",
+    "fire": "South",
+    "earth": "Centre",
+    "metal": "West",
+    "water": "North"
   },
-  "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "weekdays": [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ],
   "dayMessages": [
     "Sunday — take rest and recharge your energy.",
     "Monday — a fresh start awaits you this week.",

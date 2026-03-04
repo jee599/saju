@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
@@ -32,7 +34,7 @@ function PaywallContent() {
     return () => { pageTimerRef.current?.stop(); };
   }, []);
 
-  const handleCheckout = async (ctaPosition: "top" | "middle" | "sticky") => {
+  const handleCheckout = async (ctaPosition: "top" | "middle" | "sticky" = "top") => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       setError(t("emailError"));
@@ -123,6 +125,10 @@ function PaywallContent() {
               <input
                 id="paywall-email"
                 type="email"
+                name="email"
+                autoComplete="email"
+                inputMode="email"
+                spellCheck={false}
                 className={`input ${error ? "inputError" : ""}`}
                 placeholder="email@example.com"
                 value={email}

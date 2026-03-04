@@ -8,7 +8,7 @@
   "brand": "FortuneLab",
   "nav": {
     "label": "Menu chính",
-    "daily": "Vận hạn hôm nay",
+    "daily": "Vận trình hôm nay",
     "saju": "Tử Vi",
     "palm": "Xem tay",
     "naming": "Đặt tên",
@@ -27,8 +27,26 @@
     "legal": "Miễn trừ trách nhiệm"
   },
   "elements": {
-    "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
-    "native": { "wood": "Mộc", "fire": "Hỏa", "earth": "Thổ", "metal": "Kim", "water": "Thủy" },
-    "emoji": { "wood": "🌿", "fire": "🔥", "earth": "⛰️", "metal": "⚙️", "water": "🌊" }
+    "hanja": {
+      "wood": "木",
+      "fire": "火",
+      "earth": "土",
+      "metal": "金",
+      "water": "水"
+    },
+    "native": {
+      "wood": "Mộc",
+      "fire": "Hỏa",
+      "earth": "Thổ",
+      "metal": "Kim",
+      "water": "Thủy"
+    },
+    "emoji": {
+      "wood": "🌿",
+      "fire": "🔥",
+      "earth": "⛰️",
+      "metal": "⚙️",
+      "water": "🌊"
+    }
   }
 }

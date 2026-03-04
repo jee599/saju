@@ -532,17 +532,17 @@ export default function HomePage() {
           >
             {/* ① 생년월일 — 항상 표시 */}
             <div className="cRow">
-              <label className="cLabel">{t("form.step2Label")}</label>
+              <label className="cLabel" htmlFor="birthYear">{t("form.step2Label")}</label>
               <div className="cDateRow">
-                <select className="cSelect cSelectYear" value={year} onChange={(e) => setYear(e.target.value)}>
+                <select id="birthYear" name="birthYear" className="cSelect cSelectYear" value={year} onChange={(e) => setYear(e.target.value)}>
                   <option value="">{t("form.yearPlaceholder")}</option>
                   {YEARS.map((y) => <option key={y} value={y}>{y}{t("form.yearSuffix")}</option>)}
                 </select>
-                <select className="cSelect" value={month} onChange={(e) => setMonth(e.target.value)}>
+                <select id="birthMonth" name="birthMonth" className="cSelect" value={month} onChange={(e) => setMonth(e.target.value)}>
                   <option value="">{t("form.monthPlaceholder")}</option>
                   {MONTHS.map((m) => <option key={m} value={m}>{m}{t("form.monthSuffix")}</option>)}
                 </select>
-                <select className="cSelect" value={day} onChange={(e) => setDay(e.target.value)}>
+                <select id="birthDay" name="birthDay" className="cSelect" value={day} onChange={(e) => setDay(e.target.value)}>
                   <option value="">{t("form.dayPlaceholder")}</option>
                   {availableDays.map((d) => <option key={d} value={d}>{d}{t("form.daySuffix")}</option>)}
                 </select>
@@ -551,8 +551,8 @@ export default function HomePage() {
 
             {/* ② 태어난 시간 — 날짜 입력 후 */}
             <div className={`cRow cReveal ${hasDate ? "cVisible" : ""}`}>
-              <label className="cLabel">{t("form.step3Label")}</label>
-              <select className="cSelect cSelectFull" value={hour} onChange={(e) => setHour(e.target.value)}>
+              <label className="cLabel" htmlFor="birthTime">{t("form.step3Label")}</label>
+              <select id="birthTime" name="birthTime" className="cSelect cSelectFull" value={hour} onChange={(e) => setHour(e.target.value)}>
                 <option value="">{t("form.selectTime")}</option>
                 <option value="skip">{t("form.unknownTime")}</option>
                 {BRANCH_VALUES.map((val, idx) => (
@@ -561,8 +561,10 @@ export default function HomePage() {
               </select>
               {!isKorean && (
                 <>
-                  <label className="cLabel">{t("form.cityLabel")}</label>
+                  <label className="cLabel" htmlFor="city">{t("form.cityLabel")}</label>
                   <input
+                    id="city"
+                    name="city"
                     className="cInput"
                     placeholder={t("form.cityPlaceholder")}
                     value={city}
@@ -589,9 +591,10 @@ export default function HomePage() {
 
             {/* ④ 이름 + CTA — 성별 선택 후 */}
             <div className={`cRow cReveal ${hasGender ? "cVisible" : ""}`}>
-              <label className="cLabel">{t("form.step1Label")}</label>
+              <label className="cLabel" htmlFor="name">{t("form.step1Label")}</label>
               <input
                 ref={nameRef}
+                id="name"
                 className="cInput"
                 placeholder={t("form.namePlaceholder")}
                 name="name"
