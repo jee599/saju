@@ -49,10 +49,10 @@
   --warn: #D4A840;
   --error: #E06B75;
 
-  /* 폰트 — Aurora Veil (Italiana + Manrope) */
-  --font-sans: "Manrope", "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-serif: "Italiana", "Noto Serif KR", Georgia, serif;
-  --font-display: "Italiana", Georgia, serif;
+  /* 폰트 — Outfit + Sora */
+  --font-sans: "Outfit", "Pretendard Variable", "Pretendard", "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "Sora", "Noto Serif KR", Georgia, serif;
+  --font-display: "Sora", Georgia, serif;
 
   /* 배경 미드 */
   --bg-gradient-mid: #0d0b14;
@@ -305,6 +305,80 @@ p, li, label, input, select, button, textarea {
   border-color: rgba(167, 139, 250, 0.3);
   background: rgba(167, 139, 250, 0.1);
   outline: none;
+}
+
+/* ── NavDropdown ── */
+.navDropdown {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.navDropdownBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  min-height: 40px;
+  background: var(--bg-card-glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--t2);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+  white-space: nowrap;
+}
+
+.navDropdownBtn:hover {
+  color: var(--t1);
+  border-color: var(--accent);
+}
+
+.navDropdownChevron {
+  transition: transform 0.2s var(--ease-smooth);
+}
+
+.navDropdownBtn[aria-expanded="true"] .navDropdownChevron {
+  transform: rotate(180deg);
+}
+
+.navDropdownMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 0;
+  z-index: 100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  animation: dropdownIn 0.15s var(--ease-smooth);
+  display: flex;
+  flex-direction: column;
+}
+
+.navDropdownItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 16px;
+  min-height: 40px;
+  background: none;
+  border: none;
+  color: var(--t2);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.navDropdownItem:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--accent);
 }
 
 /* ── Cards ────────────────────────────────────────── */
@@ -1312,10 +1386,16 @@ p, li, label, input, select, button, textarea {
 }
 
 @media (max-width: 480px) {
-  .pillarChar { font-size: 1rem; }
+  .fourPillarsTable { min-width: 0; }
+  .fourPillarsTableWrap { overflow-x: hidden; }
+  .pillarChar { font-size: 1.1rem; }
   .fourPillarsTable th,
-  .fourPillarsTable td { padding: 6px 4px; }
-  .pillarRowLabel { padding-left: 8px !important; padding-right: 6px !important; font-size: 0.65rem; }
+  .fourPillarsTable td { padding: 6px 3px; }
+  .fourPillarsTable thead th { font-size: 0.72rem; padding: 6px 3px; }
+  .pillarSubLabel { font-size: 0.58rem; }
+  .pillarRowLabel { padding-left: 6px !important; padding-right: 4px !important; font-size: 0.6rem; width: 32px; }
+  .pillarPolTag { font-size: 0.5rem; margin-left: 1px; }
+  .pillarKrName { font-size: 0.62rem; }
 }
 
 /* ── Day Master Card (Premium) ────────────────────── */
@@ -2833,6 +2913,9 @@ p, li, label, input, select, button, textarea {
     padding: 7px 12px;
     font-size: 0.82rem;
   }
+  .topNav a:not(:first-child) {
+    display: none;
+  }
   .brandText { font-size: 1.05rem; }
   .brand { gap: 6px; }
   .brandLogo { width: 24px; height: 24px; }
@@ -3530,3 +3613,424 @@ img, video, canvas, svg {
 .ohangDescPane p { margin: 0; font-size: 0.76rem; color: var(--t3); line-height: 1.5; }
 
 .loadingStep2 .stepLabel { max-width: 190px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+
+/* ══════════════════════════════════════════════════
+   Constellation Landing Page
+   ══════════════════════════════════════════════════ */
+
+/* ── Constellation Landing ── */
+body:has(.constellationPage) {
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.constellationPage {
+  background: radial-gradient(ellipse at 50% 30%, #1A1535 0%, #0D0D20 50%, #09091A 100%);
+  height: 100vh;
+  height: 100dvh;
+  position: relative;
+  overflow: hidden;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.constellationCanvas {
+  position: fixed;
+  inset: -20px;            /* 여유분 — 패럴랙스 시 가장자리 안 보이게 */
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+}
+
+.constellationCanvas canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.constellationHero {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 20px;
+  padding-bottom: 2vh;
+}
+
+.constellationHeroMain {
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  background: rgba(13, 13, 32, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  padding: clamp(16px, 2.5vw, 22px);
+}
+
+/* Override heroMain glass card from aurora-veil */
+.constellationPage .heroMain {
+  background: none;
+  border: none;
+  padding: 0;
+}
+.constellationPage .heroMain::before {
+  display: none;
+}
+
+.constellationTitle {
+  color: #F0EEF4;
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin: 0 0 2px;
+  line-height: 1.3;
+}
+
+.constellationCount {
+  font-weight: 700;
+  background: linear-gradient(135deg, #A78BDA, #D4A5C0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-right: 3px;
+  font-size: 1.1em;
+}
+
+.constellationSub {
+  color: #9E9AAE;
+  font-size: clamp(0.6rem, 0.8vw, 0.68rem);
+  margin: 0 0 10px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.cLegalLinks {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-smooth);
+}
+.cLegalLinks:hover {
+  opacity: 1;
+}
+.constellationPage:hover .cLegalLinks {
+  opacity: 0.5;
+}
+.constellationPage:hover .cLegalLinks:hover {
+  opacity: 1;
+}
+.cLegalLinks a {
+  color: var(--t3);
+  font-size: 0.6rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.cLegalLinks a:hover {
+  color: var(--t2);
+}
+
+/* ── Compact Form ── */
+.cForm {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 순차 노출 */
+.cReveal {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.35s ease;
+  margin: 0;
+}
+
+.cReveal.cVisible {
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 0;
+}
+
+.cRowInline {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.cInlineGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cInlineGrow {
+  flex: 1;
+  min-width: 0;
+}
+
+.cLabel {
+  font-size: 0.65rem;
+  color: var(--t2);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.cDateRow {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.cSelect {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  font-size: 0.73rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: var(--t1);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b6680' fill='none' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 22px;
+}
+
+.cSelect:focus {
+  outline: none;
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+.cSelectYear {
+  flex: 1.4;
+}
+
+.cSelectFull {
+  width: 100%;
+}
+
+.cCalendarPills {
+  display: flex;
+  gap: 4px;
+}
+
+.cMiniPill {
+  padding: 5px 9px;
+  font-size: 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--t2);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.cMiniPill.active {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: rgba(167, 139, 250, 0.4);
+  color: var(--t1);
+}
+
+.cGenderPills {
+  display: flex;
+  gap: 4px;
+}
+
+.cGenderPill {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+}
+
+.cInput {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 0.73rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: var(--t1);
+}
+
+.cInput::placeholder {
+  color: var(--t3);
+}
+
+.cInput:focus {
+  outline: none;
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+.cCta {
+  margin-top: 4px;
+  width: 100%;
+  padding: 9px 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.12s;
+  will-change: transform;
+}
+
+.cCta:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cCta:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+/* Hide aurora background on constellation page */
+.constellationPage .auroraLayer,
+.constellationPage .filmGrain,
+.constellationPage .starField {
+  display: none;
+}
+
+/* ── Constellation page header overlay ── */
+body:has(.constellationPage) .siteHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+}
+
+body:has(.constellationPage) .headerInner {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  padding: 12px 24px;
+  width: 100%;
+  max-width: none;
+}
+
+body:has(.constellationPage) .headerTopRow {
+  display: contents;
+}
+
+body:has(.constellationPage) .brand {
+  order: 0;
+  margin-right: auto;
+}
+
+/* 모든 페이지에서 topNav 숨김 — hover 시 표시 */
+.topNav {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-smooth);
+}
+
+.siteHeader:hover .topNav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 로딩 페이지에서는 hover해도 숨김 */
+body:has(.loadingAnalysis) .topNav,
+body:has(.loadingAnalysis) .siteHeader:hover .topNav {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+body:has(.constellationPage) .topNav {
+  order: 1;
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+body:has(.constellationPage) .topNav a {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+  font-size: 0.78rem;
+  padding: 6px 12px;
+}
+
+body:has(.constellationPage) .languageSelector {
+  order: 2;
+}
+
+/* ── Constellation mobile ── */
+@media (max-width: 767px) {
+  .constellationPage {
+    overflow-y: auto;
+  }
+  .constellationHero {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+    padding-bottom: 24px;
+    padding-top: 80px;
+    align-items: flex-start;
+  }
+  .constellationHeroMain {
+    max-width: 256px;
+    padding: clamp(10px, 2.5vw, 12px);
+  }
+  .constellationTitle {
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  }
+  .constellationSub {
+    font-size: clamp(0.52rem, 0.7vw, 0.6rem);
+  }
+  .cLabel {
+    font-size: 0.58rem;
+  }
+  .cSelect, .cInput {
+    font-size: 0.65rem;
+    padding: 8px 10px;
+  }
+  .cCta {
+    font-size: 0.7rem;
+    padding: 10px;
+  }
+  .cGenderPill {
+    font-size: 0.62rem;
+    padding: 6px 14px;
+  }
+  .cRowInline {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .cGenderPills {
+    flex-direction: row;
+  }
+  .cGenderPill {
+    flex: none;
+    padding: 7px 20px;
+  }
+  body:has(.constellationPage) .headerInner {
+    padding: 8px 16px;
+  }
+  body:has(.constellationPage) .topNav a { font-size: 0.72rem; padding: 5px 8px; }
+}

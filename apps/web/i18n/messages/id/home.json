@@ -7,7 +7,9 @@
       "Paranormal mahal, AI gratis — hasilnya sama tepatnya.",
       "Tambahkan jam lahir untuk ramalan yang jauh lebih akurat.",
       "Ramalan selalu berbeda tiap kali dicek? Karena siklus nasib terus berubah."
-    ]
+    ],
+    "landingTitle": "Ramalan Adalah Big Data",
+    "landingSub": "518.400 takdir dianalisis secara detail"
   },
   "form": {
     "step1Label": "Nama",
@@ -27,7 +29,10 @@
     "daySuffix": "",
     "step3Label": "Jam Lahir",
     "skipTime": "Tidak tahu \u2192",
+    "selectTime": "Pilih waktu",
     "unknownTime": "Tidak tahu",
+    "cityLabel": "Kota kelahiran",
+    "cityPlaceholder": "Masukkan kota Anda",
     "unknownTimeDesc": "Jika jam lahir tidak diketahui",
     "step4Label": "Jenis Kelamin",
     "male": "Pria",
