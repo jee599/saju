@@ -3636,7 +3636,7 @@ body:has(.constellationPage) {
 }
 
 .constellationPage {
-  background: radial-gradient(ellipse at 50% 30%, #1A1535 0%, #0D0D20 50%, #09091A 100%);
+  background: transparent;
   height: 100vh;
   height: 100dvh;
   position: relative;
