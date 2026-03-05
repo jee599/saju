@@ -2979,7 +2979,7 @@ html, body {
   overflow-x: hidden;
 }
 
-img, video, canvas, svg {
+img, video, svg {
   max-width: 100%;
   height: auto;
 }
