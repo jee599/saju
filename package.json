@@ -19,7 +19,7 @@
     "gate:status": "pnpm --filter @saju/api exec tsx ../../scripts/qa_gate.ts --status",
     "gate:check": "pnpm --filter @saju/api exec -- tsx ../../scripts/qa_gate.ts",
     "gate:next": "pnpm --filter @saju/api exec tsx ../../scripts/qa_gate.ts --next",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "vitest": "^4.0.18"
