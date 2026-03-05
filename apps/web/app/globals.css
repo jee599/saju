@@ -92,6 +92,12 @@ body {
 
 /* CSS aurora/star backgrounds removed — replaced by Three.js CosmicBackground */
 
+#main-content,
+.siteFooter {
+  position: relative;
+  z-index: 2;
+}
+
 /* ── Shimmer animation (CTA) ─────────────────────── */
 @keyframes shimmer {
   0% { background-position: -200% center; }

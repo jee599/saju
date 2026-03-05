@@ -261,7 +261,7 @@ export default function CosmicBackground() {
           left: 0,
           width: "100%",
           height: "100%",
-          zIndex: -2,
+          zIndex: 0,
           pointerEvents: "none",
         }}
       />
@@ -272,7 +272,7 @@ export default function CosmicBackground() {
           left: 0,
           width: "100%",
           height: "100%",
-          zIndex: -1,
+          zIndex: 1,
           pointerEvents: "none",
           background:
             "radial-gradient(ellipse at 50% 50%, rgba(200,190,255,0.15) 0%, rgba(150,140,200,0.1) 30%, rgba(100,90,160,0.06) 55%, rgba(60,50,120,0.02) 70%, transparent 80%), radial-gradient(ellipse at 50% 50%, transparent 0%, transparent 40%, rgba(2,2,8,0.3) 60%, rgba(2,2,8,0.85) 80%, rgba(2,2,8,1) 100%), radial-gradient(ellipse at 30% 40%, rgba(108,92,231,0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(253,121,168,0.05) 0%, transparent 40%)",

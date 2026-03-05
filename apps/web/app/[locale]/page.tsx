@@ -608,9 +608,6 @@ export default function HomePage() {
                 type="submit"
                 className="cCta"
                 disabled={!canAnalyze || isSubmitting}
-                onMouseMove={handleMagneticMove}
-                onMouseLeave={handleMagneticLeave}
-                style={{ transform: `translate(${magneticOffset.x}px, ${magneticOffset.y}px)` }}
               >
                 {isSubmitting ? t("form.analyzing") : t("form.startFree")}
               </button>
