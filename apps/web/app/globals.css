@@ -9,8 +9,8 @@
   /* 배경 — deep navy */
   --bg-gradient-top: #08060f;
   --bg-gradient-bottom: #08060f;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-card-glass: rgba(255, 255, 255, 0.04);
+  --bg-card: rgba(13, 11, 20, 0.65);
+  --bg-card-glass: rgba(13, 11, 20, 0.7);
 
   /* 액센트 — aurora palette */
   --accent: #a78bfa;
@@ -374,8 +374,8 @@ p, li, label, input, select, button, textarea {
 .card + .card { margin-top: 24px; }
 
 .glassCard {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(13, 11, 20, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   padding: clamp(28px, 5vw, 44px);
   backdrop-filter: blur(24px) saturate(150%);
