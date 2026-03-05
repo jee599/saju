@@ -1929,12 +1929,19 @@ p, li, label, input, select, button, textarea {
 
 .loadingTimer {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-size: 0.88rem;
   color: var(--t2);
   font-variant-numeric: tabular-nums;
   font-weight: 500;
+}
+
+.loadingTimerTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .loadingProgressBar {
@@ -2033,12 +2040,52 @@ p, li, label, input, select, button, textarea {
 
 .eduSlide.in {
   opacity: 1;
-  transform: translateY(-6vh);
+  transform: translateY(0);
 }
 
 .eduSlide.out {
   opacity: 0;
   transform: translateY(12px);
+}
+
+.eduSlideWrap {
+  position: relative;
+  max-width: 460px;
+  width: 100%;
+}
+
+.eduSlideArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(13, 11, 20, 0.6);
+  backdrop-filter: blur(8px);
+  color: var(--t2);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 5;
+}
+
+.eduSlideArrow:hover {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: rgba(167, 139, 250, 0.3);
+  color: #fff;
+}
+
+.eduSlideArrow.prev { left: -48px; }
+.eduSlideArrow.next { right: -48px; }
+
+@media (max-width: 580px) {
+  .eduSlideArrow { display: none; }
+  .eduSlideWrap { max-width: 100%; }
 }
 
 .eduHeader {
@@ -3595,9 +3642,10 @@ img, video, svg {
 .mobileDatePreview { font-size: 0.85rem; color: var(--t2); text-align: left; padding: 6px 2px 0; }
 
 
-.loadingStageNow { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 2px; text-align: left; }
+.loadingStageNow { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 6px 2px; text-align: center; }
 .stageBadge { font-size: 0.68rem; font-weight: 700; color: var(--accent-gold); background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.35); border-radius: 999px; padding: 3px 8px; flex-shrink: 0; }
 .stageText { font-size: 0.82rem; color: var(--t2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stageTextCenter { font-size: 0.8rem; color: var(--t3); text-align: center; }
 
 .ohangInfoCol { display: flex; flex-direction: column; gap: 10px; width: min(100%, 340px); }
 .ohangDescSlider { overflow: hidden; width: 100%; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(13, 11, 20, 0.35); }

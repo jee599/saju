@@ -329,6 +329,18 @@ function LoadingContent() {
     return () => clearInterval(timer);
   }, []);
 
+  // 평균 응답 시간 (localStorage에서 읽기)
+  const avgResponseTime = useMemo(() => {
+    try {
+      const stored = localStorage.getItem("avg_llm_response_sec");
+      if (stored) {
+        const val = parseInt(stored, 10);
+        if (!isNaN(val) && val > 0) return val;
+      }
+    } catch {}
+    return orderId ? 120 : 6;
+  }, [orderId]);
+
   // Free flow: 무료 성격분석 생성
   const callFreeGenerate = useCallback(async () => {
     if (!isFreeFlow || confirmCalled.current) return;
@@ -362,6 +374,13 @@ function LoadingContent() {
       setDone(true);
       trackFunnel("loading_complete", { flow: "free" });
       pageTimerRef.current?.stop();
+      // 평균 응답 시간 저장
+      try {
+        const prev = localStorage.getItem("avg_llm_response_sec");
+        const prevVal = prev ? parseInt(prev, 10) : 0;
+        const avg = prevVal > 0 ? Math.round((prevVal + elapsedSec) / 2) : elapsedSec;
+        localStorage.setItem("avg_llm_response_sec", String(avg));
+      } catch {}
       const q = new URLSearchParams({
         name: freeName ?? "",
         birthDate: freeBirthDate ?? "",
@@ -438,6 +457,13 @@ function LoadingContent() {
       trackFunnel("loading_complete", { flow: "paid" });
       trackFunnel("checkout_complete");
       pageTimerRef.current?.stop();
+      // 평균 응답 시간 저장
+      try {
+        const prev = localStorage.getItem("avg_llm_response_sec");
+        const prevVal = prev ? parseInt(prev, 10) : 0;
+        const avg = prevVal > 0 ? Math.round((prevVal + elapsedSec) / 2) : elapsedSec;
+        localStorage.setItem("avg_llm_response_sec", String(avg));
+      } catch {}
       setTimeout(() => router.push(`/report/${orderId}?token=${viewToken}`), 600);
       return;
     } catch (e) {
@@ -516,19 +542,21 @@ function LoadingContent() {
               const stageIdx = done ? 29 : Math.min(29, Math.max(0, Math.floor(pct * 30 / 100)));
               const stageText = t(`stages.${stageIdx}`);
 
-              // Estimated remaining time
-              const estimatedTotal = orderId ? 120 : 30;
-              const remaining = done ? 0 : Math.max(0, estimatedTotal - elapsedSec);
+              // Estimated remaining time (from stored average)
+              const remaining = done ? 0 : Math.max(0, avgResponseTime - elapsedSec);
 
               return (
                 <>
                   <div className="loadingTimer">
-                    <span className="timerDot" />
-                    <span>
-                      {t("analyzing")} · {remaining > 0
-                        ? `${t("estimatedTime")} ${remaining}${t("timeFormat.sec")}`
-                        : t("almostDone")}
-                    </span>
+                    <div className="loadingTimerTop">
+                      <span className="timerDot" />
+                      <span>
+                        {t("analyzing")} · {remaining > 0
+                          ? `${t("estimatedTime")} ${remaining}${t("timeFormat.sec")}`
+                          : t("almostDone")}
+                      </span>
+                    </div>
+                    <span className="stageTextCenter">{stageText}</span>
                   </div>
 
                   <div className="loadingProgressBar">
@@ -544,51 +572,74 @@ function LoadingContent() {
                     </div>
                   </div>
 
-                  <div className="loadingStageNow" aria-live="polite">
-                    <span className="stageText">{stageText}</span>
-                  </div>
                 </>
               );
             })()}
           </div>
 
           {/* ── 교육 콘텐츠 슬라이드 ── */}
-          <div
-            className={`eduSlide ${fadeState}`}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            {slideMeta.visual === "pillars" && <PillarsVisual t={t} />}
-            {slideMeta.visual === "ohang-cycle" && (
-              <div className="eduOhangMini">
-                <OhangCycleVisual activeIdx={activeOhang} t={t} />
+          <div className="eduSlideWrap">
+            <button
+              type="button"
+              className="eduSlideArrow prev"
+              onClick={() => {
+                goToSlide('prev');
+                if (autoSlideRef.current) clearInterval(autoSlideRef.current);
+                autoSlideRef.current = setInterval(() => goToSlide('next'), 10000);
+              }}
+              aria-label="Previous slide"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="eduSlideArrow next"
+              onClick={() => {
+                goToSlide('next');
+                if (autoSlideRef.current) clearInterval(autoSlideRef.current);
+                autoSlideRef.current = setInterval(() => goToSlide('next'), 10000);
+              }}
+              aria-label="Next slide"
+            >
+              ›
+            </button>
+            <div
+              className={`eduSlide ${fadeState}`}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              {slideMeta.visual === "pillars" && <PillarsVisual t={t} />}
+              {slideMeta.visual === "ohang-cycle" && (
+                <div className="eduOhangMini">
+                  <OhangCycleVisual activeIdx={activeOhang} t={t} />
+                </div>
+              )}
+
+              <div className="eduHeader">
+                <span className="eduIcon" style={{ color: slideMeta.color }}>{slideMeta.icon}</span>
+                <h2 className="eduTitle" style={{ color: slideMeta.color }}>{t(`slides.${slideIdx}.title`)}</h2>
               </div>
-            )}
+              <div className="eduBody">
+                {displayedLines.map((line, i) => (
+                  <p key={i} className="eduLine">
+                    {line}
+                    {i === displayedLines.length - 1 && <span className="cursor">|</span>}
+                  </p>
+                ))}
+              </div>
 
-            <div className="eduHeader">
-              <span className="eduIcon" style={{ color: slideMeta.color }}>{slideMeta.icon}</span>
-              <h2 className="eduTitle" style={{ color: slideMeta.color }}>{t(`slides.${slideIdx}.title`)}</h2>
-            </div>
-            <div className="eduBody">
-              {displayedLines.map((line, i) => (
-                <p key={i} className="eduLine">
-                  {line}
-                  {i === displayedLines.length - 1 && <span className="cursor">|</span>}
-                </p>
-              ))}
-            </div>
-
-            {/* 슬라이드 인디케이터 */}
-            <div className="slideIndicators">
-              {SLIDE_META.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`slideIndicator ${i === slideIdx ? "active" : ""}`}
-                  onClick={() => handleIndicatorClick(i)}
-                  aria-label={`Slide ${i + 1}`}
-                />
-              ))}
+              {/* 슬라이드 인디케이터 */}
+              <div className="slideIndicators">
+                {SLIDE_META.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={`slideIndicator ${i === slideIdx ? "active" : ""}`}
+                    onClick={() => handleIndicatorClick(i)}
+                    aria-label={`Slide ${i + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
