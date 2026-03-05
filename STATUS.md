@@ -31,6 +31,8 @@ middleware.ts → Rate Limit (5회/일, IP 기반, Supabase 백엔드)
 - i18n 전체 카피 폴리시 (BaZi 점/물결 제거, 구두점 통일)
 - 모바일 UI 오버플로 수정 (nav/footer 소형 화면)
 - 별자리 배경 constellation 선 추가 (three.js)
+- CSS aurora/star 배경 → Three.js CosmicBackground 전환 (z-index 버그 4개 해결, 51줄 삭제)
+- husky pre-push 타임아웃 60s → 180/240s 증가
 
 
 ## 진행중
@@ -63,7 +65,7 @@ middleware.ts → Rate Limit (5회/일, IP 기반, Supabase 백엔드)
 - **결제 3중 구조**: Toss(한국) + Stripe(글로벌) + Paddle(글로벌 대안). 런타임 환경변수로 전환. 기존 코드 삭제 없이 추가.
 - **Rate limit 백엔드**: Supabase Postgres 선택 (이미 사용 중, 추가 비용 없음, 감사 로그 내장).
 - **E2E 위치**: `e2e_temp/` — CI 통합 전 임시 로컬 실행용.
-- **husky pre-push timeout**: `gtimeout 60` — Claude CLI 행 방지. 실패 시 push는 계속.
+- **husky pre-push timeout**: `gtimeout 180` (pre-push) / `240` (fallback) — Claude CLI 빌드 로그 생성 시간 필요. 실패 시 push는 계속.
 - **빌드 로그 자동화**: Claude CLI `-p` 플래그로 비대화형 실행. 타임아웃 초과 시 스킵.
 
 
