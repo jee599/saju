@@ -1227,6 +1227,16 @@ p, li, label, input, select, button, textarea {
   border-radius: 4px;
 }
 
+
+/* Prevent footer text overflow on narrow screens */
+.footerInner, .footerTitle, .siteFooter p, .footerLinks {
+  min-width: 0;
+}
+.siteFooter p, .footerLinks a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 /* ── Sticky CTA ───────────────────────────────────── */
 
 .stickyCta {
@@ -4025,8 +4035,17 @@ select option {
 
 
 @media (pointer: coarse), (max-width: 767px) {
+  html, body { overflow-x: hidden; }
   .cLegalLinks { opacity: 1; }
-  .topNav { opacity: 1 !important; pointer-events: auto !important; }
+  .topNav {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
   .topNav a:not(:first-child) { display: inline-flex; }
   .fourPillarsTableWrap { overflow-x: auto; }
   .fourPillarsTable { min-width: 320px; }
