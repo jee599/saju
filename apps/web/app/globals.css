@@ -1304,22 +1304,24 @@ p, li, label, input, select, button, textarea {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
   overflow: hidden;
   min-width: 320px;
+  background: rgba(13, 11, 20, 0.6);
 }
 .fourPillarsTable th,
 .fourPillarsTable td {
   text-align: center;
-  padding: 8px 6px;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 .fourPillarsTable thead th {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--t2);
-  background: rgba(255, 255, 255, 0.03);
-  padding: 8px 6px;
+  color: var(--t1);
+  background: rgba(167, 139, 250, 0.08);
+  padding: 10px 8px;
 }
 .pillarSubLabel {
   display: block;
@@ -1329,10 +1331,10 @@ p, li, label, input, select, button, textarea {
   margin-top: 1px;
 }
 .pillarHighlightCol {
-  background: rgba(167, 139, 250, 0.06);
+  background: rgba(167, 139, 250, 0.1);
 }
 .fourPillarsTable thead th.pillarHighlightCol {
-  background: rgba(167, 139, 250, 0.1);
+  background: rgba(167, 139, 250, 0.18);
   color: var(--accent);
 }
 .pillarRowLabel {
@@ -1351,13 +1353,15 @@ p, li, label, input, select, button, textarea {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.05em;
+  text-shadow: 0 0 12px currentColor;
 }
 .pillarPolTag {
   display: inline-block;
-  font-size: 0.6rem;
-  color: var(--t3);
+  font-size: 0.62rem;
+  color: var(--t2);
   margin-left: 3px;
   vertical-align: super;
+  opacity: 0.8;
 }
 .pillarRowBranch td {
   padding-top: 4px;
@@ -1369,8 +1373,8 @@ p, li, label, input, select, button, textarea {
   border-bottom: none;
 }
 .pillarKrName {
-  font-size: 0.72rem;
-  color: var(--t3);
+  font-size: 0.75rem;
+  color: var(--t2);
   font-weight: 500;
 }
 
