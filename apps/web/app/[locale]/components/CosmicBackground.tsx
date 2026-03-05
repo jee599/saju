@@ -142,41 +142,6 @@ export default function CosmicBackground() {
     const dust = new THREE.Points(dustGeo, dustMat);
     scene.add(dust);
 
-    // Constellation lines
-    const constellationGroup = new THREE.Group();
-    const constellations: number[][][] = [
-      [[-300, 200, -500], [-200, 250, -520], [-80, 230, -480], [20, 280, -510],
-       [20, 280, -510], [120, 250, -490], [140, 160, -470]],
-      [[400, 100, -600], [380, 0, -580], [360, -100, -620],
-       [300, -50, -590], [440, -50, -610]],
-      [[-500, -200, -400], [-420, -150, -420], [-460, -280, -410], [-500, -200, -400]],
-    ];
-
-    constellations.forEach(points => {
-      for (let i = 0; i < points.length - 1; i++) {
-        const lineGeo = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(points[i]![0]!, points[i]![1]!, points[i]![2]!),
-          new THREE.Vector3(points[i + 1]![0]!, points[i + 1]![1]!, points[i + 1]![2]!),
-        ]);
-        const lineMat = new THREE.LineBasicMaterial({
-          color: 0x6c5ce7,
-          transparent: true,
-          opacity: 0.12,
-        });
-        constellationGroup.add(new THREE.Line(lineGeo, lineMat));
-      }
-      points.forEach(p => {
-        const dotGeo = new THREE.SphereGeometry(2.5, 8, 8);
-        const dotMat = new THREE.MeshBasicMaterial({
-          color: 0xaaaaff, transparent: true, opacity: 0.5,
-        });
-        const dot = new THREE.Mesh(dotGeo, dotMat);
-        dot.position.set(p[0]!, p[1]!, p[2]!);
-        constellationGroup.add(dot);
-      });
-    });
-    scene.add(constellationGroup);
-
     const clock = new THREE.Clock();
     const driftSpeed = 16;
     let frame = 0;
@@ -218,7 +183,6 @@ export default function CosmicBackground() {
       dustGeo.attributes.position.needsUpdate = true;
 
       nebula.rotation.y = elapsed * 0.006;
-      constellationGroup.rotation.y = elapsed * 0.003;
       renderer.render(scene, camera);
     };
 
