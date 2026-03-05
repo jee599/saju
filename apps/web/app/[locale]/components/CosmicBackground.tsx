@@ -51,11 +51,9 @@ export default function CosmicBackground() {
     }
 
     const starTex = createCircleTexture(64, 0.1);
-    const glowTex = createCircleTexture(128, 0.05);
 
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const starCount = isMobile ? 3000 : 8000;
-    const nebulaCount = isMobile ? 500 : 1000;
     const dustCount = isMobile ? 250 : 500;
 
     const starGeo = new THREE.BufferGeometry();
@@ -80,47 +78,6 @@ export default function CosmicBackground() {
     const stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
 
-    const nebulaGeo = new THREE.BufferGeometry();
-    const nebulaPos = new Float32Array(nebulaCount * 3);
-    const nebulaColors = new Float32Array(nebulaCount * 3);
-    const palette = [
-      new THREE.Color(0x6c5ce7),
-      new THREE.Color(0x4a3aaa),
-      new THREE.Color(0x2d1b69),
-      new THREE.Color(0x00b4d8),
-      new THREE.Color(0xfd79a8),
-      new THREE.Color(0x1a1a5e),
-    ];
-
-    for (let i = 0; i < nebulaCount; i++) {
-      const r = 800 + Math.random() * 1500;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = (Math.random() - 0.5) * Math.PI * 0.6;
-      nebulaPos[i * 3] = r * Math.cos(phi) * Math.cos(theta);
-      nebulaPos[i * 3 + 1] = r * Math.cos(phi) * Math.sin(theta) * 0.4;
-      nebulaPos[i * 3 + 2] = r * Math.sin(phi) - 400;
-      const col = palette[Math.floor(Math.random() * palette.length)]!;
-      nebulaColors[i * 3] = col.r;
-      nebulaColors[i * 3 + 1] = col.g;
-      nebulaColors[i * 3 + 2] = col.b;
-    }
-
-    nebulaGeo.setAttribute("position", new THREE.BufferAttribute(nebulaPos, 3));
-    nebulaGeo.setAttribute("color", new THREE.BufferAttribute(nebulaColors, 3));
-
-    const nebulaMat = new THREE.PointsMaterial({
-      size: 35,
-      map: glowTex,
-      transparent: true,
-      opacity: 0.2,
-      vertexColors: true,
-      sizeAttenuation: true,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const nebula = new THREE.Points(nebulaGeo, nebulaMat);
-    scene.add(nebula);
-
     const dustGeo = new THREE.BufferGeometry();
     const dustPos = new Float32Array(dustCount * 3);
     for (let i = 0; i < dustCount; i++) {
@@ -142,7 +99,6 @@ export default function CosmicBackground() {
     const dust = new THREE.Points(dustGeo, dustMat);
     scene.add(dust);
 
-    const clock = new THREE.Clock();
     const driftSpeed = 16;
     let frame = 0;
     let lastTime = performance.now();
@@ -152,7 +108,6 @@ export default function CosmicBackground() {
       const now = performance.now();
       const delta = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
-      const elapsed = clock.getElapsedTime();
 
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
@@ -182,7 +137,6 @@ export default function CosmicBackground() {
       }
       dustGeo.attributes.position.needsUpdate = true;
 
-      nebula.rotation.y = elapsed * 0.006;
       renderer.render(scene, camera);
     };
 
@@ -205,12 +159,9 @@ export default function CosmicBackground() {
       }
       starGeo.dispose();
       starMat.dispose();
-      nebulaGeo.dispose();
-      nebulaMat.dispose();
       dustGeo.dispose();
       dustMat.dispose();
       starTex.dispose();
-      glowTex.dispose();
       renderer.dispose();
     };
   }, []);
