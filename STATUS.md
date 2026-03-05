@@ -34,6 +34,7 @@ middleware.ts → Rate Limit (5회/일, IP 기반, Supabase 백엔드)
 - CSS aurora/star 배경 → Three.js CosmicBackground 전환 (z-index 버그 4개 해결, 51줄 삭제)
 - husky pre-push 타임아웃 60s → 180/240s 증가
 - loading-analysis UI 개선: Three.js 배경 투과, 슬라이드 화살표, localStorage 스마트 예상 시간
+- CosmicBackground 가독성 4연타 픽스: 별자리 선 제거, 카드 불투명도 강화, 사주 테이블 대비, 파비콘 추가
 
 
 ## 진행중
