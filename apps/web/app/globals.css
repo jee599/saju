@@ -87,51 +87,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ── Aurora glow orbs (deep navy + violet/pink/cyan) ── */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(167, 139, 250, 0.15) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 60% at 75% 15%, rgba(244, 114, 182, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 45% 45% at 50% 75%, rgba(34, 211, 238, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 55% 40% at 85% 70%, rgba(167, 139, 250, 0.1) 0%, transparent 70%);
-  animation: auroraShift 20s ease-in-out infinite alternate;
-}
-
-/* ── Star field (cool-toned twinkle) ──────────── */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    radial-gradient(1px 1px at 10% 15%, rgba(167, 139, 250, 0.5) 50%, transparent 100%),
-    radial-gradient(1px 1px at 25% 45%, rgba(255, 255, 255, 0.35) 50%, transparent 100%),
-    radial-gradient(1.2px 1.2px at 45% 8%, rgba(244, 114, 182, 0.4) 50%, transparent 100%),
-    radial-gradient(1px 1px at 60% 65%, rgba(255, 255, 255, 0.25) 50%, transparent 100%),
-    radial-gradient(1.2px 1.2px at 75% 25%, rgba(34, 211, 238, 0.35) 50%, transparent 100%),
-    radial-gradient(1px 1px at 88% 78%, rgba(255, 255, 255, 0.2) 50%, transparent 100%),
-    radial-gradient(1px 1px at 35% 88%, rgba(167, 139, 250, 0.3) 50%, transparent 100%),
-    radial-gradient(1px 1px at 52% 42%, rgba(244, 114, 182, 0.2) 50%, transparent 100%),
-    radial-gradient(1.2px 1.2px at 92% 12%, rgba(34, 211, 238, 0.25) 50%, transparent 100%),
-    radial-gradient(1px 1px at 5% 55%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-  animation: starTwinkle 50s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes auroraShift {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.85; transform: scale(1.02); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes starTwinkle {
-  0% { opacity: 0.6; }
-  100% { opacity: 0.9; }
-}
+/* CSS aurora/star backgrounds removed — replaced by Three.js CosmicBackground */
 
 /* ── Shimmer animation (CTA) ─────────────────────── */
 @keyframes shimmer {
@@ -224,7 +180,7 @@ p, li, label, input, select, button, textarea {
   position: sticky;
   top: 0;
   z-index: 70;
-  background: #0a0b2a !important;
+  background: transparent !important;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -1704,11 +1660,6 @@ p, li, label, input, select, button, textarea {
   animation: auroraShift 20s ease-in-out infinite alternate;
 }
 
-@keyframes auroraShift {
-  0% { filter: hue-rotate(0deg); opacity: 1; }
-  50% { filter: hue-rotate(15deg); opacity: 0.8; }
-  100% { filter: hue-rotate(-10deg); opacity: 1; }
-}
 
 /* ── 메인 레이아웃 ───────────────────────────────── */
 
