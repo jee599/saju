@@ -51,10 +51,10 @@ export default function LanguageSelector() {
 
   const current = LOCALE_OPTIONS.find((o) => o.code === locale) ?? LOCALE_OPTIONS[0];
 
-  function handleSelect(code: string) {
+  const handleSelect = useCallback((code: string) => {
     setOpen(false);
     router.replace(pathname, { locale: code });
-  }
+  }, [router, pathname]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (!open) return;
@@ -80,7 +80,7 @@ export default function LanguageSelector() {
         }
         break;
     }
-  }, [open, focusedIndex]);
+  }, [open, focusedIndex, handleSelect]);
 
   return (
     <div className="languageSelector" ref={ref}>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
@@ -92,7 +93,7 @@ function PaywallContent() {
       if (!orderId) throw new Error(t("noOrderId"));
 
       track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
-      router.push(`/loading-analysis?orderId=${orderId}`);
+      router.push(`/${locale}/loading-analysis?orderId=${orderId}`);
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : t("checkoutError");
       setError(errMsg);
@@ -178,7 +179,7 @@ function PaywallContent() {
 
           <p className="muted" style={{ marginTop: 16, fontSize: "0.8rem", textAlign: "center" }}>
             {t("afterPurchase")}
-            <br />{t("refundLink", { link: "" })}<Link href="/refund" style={{ color: "var(--accent)" }}>{t("refundLinkText")}</Link>
+            <br />{t("refundLink", { link: "" })}<Link href={`/${locale}/refund`} style={{ color: "var(--accent)" }}>{t("refundLinkText")}</Link>
           </p>
         </section>
       </div>

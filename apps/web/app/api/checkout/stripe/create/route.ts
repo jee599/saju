@@ -34,6 +34,7 @@ export async function POST(req: Request) {
 
     const locale = body.locale ?? 'en';
     const country = getCountryByLocale(locale);
+    const localePath = `/${locale}`;
 
     // Locale-based pricing: the amount is determined by the locale the client sends.
     // Cross-check with the Cloudflare cf-ipcountry header when available to detect
@@ -122,8 +123,8 @@ export async function POST(req: Request) {
         locale,
         countryCode: country.code,
       },
-      success_url: `${origin}/loading-analysis?orderId=${order.id}`,
-      cancel_url: `${origin}/paywall?name=${encodeURIComponent(body.input.name)}&birthDate=${body.input.birthDate}&birthTime=${body.input.birthTime ?? ''}&gender=${body.input.gender}&calendarType=${body.input.calendarType}`,
+      success_url: `${origin}${localePath}/loading-analysis?orderId=${order.id}`,
+      cancel_url: `${origin}${localePath}/paywall?name=${encodeURIComponent(body.input.name)}&birthDate=${body.input.birthDate}&birthTime=${body.input.birthTime ?? ''}&gender=${body.input.gender}&calendarType=${body.input.calendarType}`,
     });
 
     // Store Stripe session ID
