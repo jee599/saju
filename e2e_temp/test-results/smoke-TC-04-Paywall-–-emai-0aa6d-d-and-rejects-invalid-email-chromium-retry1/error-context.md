@@ -1,0 +1,80 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "본문으로 건너뛰기" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e5]:
+      - link "복연구소" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e12]: 복연구소
+      - navigation "주요 메뉴":
+        - link "오늘의 운세":
+          - /url: /daily
+        - link "사주":
+          - /url: /#hero
+        - link "손금":
+          - /url: /palm
+        - link "작명":
+          - /url: /name
+        - link "관상":
+          - /url: /face
+        - link "꿈해몽":
+          - /url: /dream
+        - link "타로":
+          - /url: /tarot
+      - button "🇰🇷 한국어" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 🇰🇷
+        - generic [ref=e16]: 한국어
+        - img [ref=e17]
+  - main [ref=e19]:
+    - generic [ref=e21]:
+      - paragraph [ref=e23]: 역술가 상담 1회 50,000원~ → AI 분석 ₩5,900
+      - generic [ref=e24]:
+        - heading "님의 전체 사주 분석" [level=2] [ref=e25]
+        - paragraph [ref=e26]: 9개 섹션 상세 AI 분석
+        - list [ref=e28]:
+          - listitem [ref=e29]: 성격 — 타고난 기질과 대인관계
+          - listitem [ref=e30]: 직업 — 커리어와 적성
+          - listitem [ref=e31]: 연애·가족·배우자 — 인연과 관계
+          - listitem [ref=e32]: 금전 — 재물의 흐름
+          - listitem [ref=e33]: 건강 — 주의할 건강 포인트
+          - listitem [ref=e34]: 과거 — 지나온 시간 분석
+          - listitem [ref=e35]: 현재 — 올해의 운세
+          - listitem [ref=e36]: 미래 — 앞으로 3~5년 전망
+          - listitem [ref=e37]: 대운 타임라인 — 10년 주기 분석
+        - generic [ref=e38]:
+          - generic [ref=e39]: 🔒 안전한 결제
+          - generic [ref=e40]: ↩️ 24시간 환불 보장
+          - generic [ref=e41]: 📧 이메일 리포트 전송
+        - paragraph [ref=e42]: 이미 분석을 완료한 사용자들이 있습니다
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]: 이메일 (리포트를 이메일로도 보내드려요)
+            - textbox "이메일 (리포트를 이메일로도 보내드려요)" [active] [ref=e46]:
+              - /placeholder: email@example.com
+              - text: invalid-not-an-email
+          - button "₩5,900 결제하기" [ref=e48] [cursor=pointer]
+        - paragraph [ref=e49]:
+          - text: 결제 후 즉시 전체 리포트를 확인할 수 있습니다.
+          - text: 환불 정책은 에서 확인하세요.
+          - link "여기" [ref=e50] [cursor=pointer]:
+            - /url: /ko/refund
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]:
+      - paragraph [ref=e53]: 복연구소
+      - paragraph [ref=e54]: 전통 사주명리학을 AI로 재해석한 운세 분석 서비스입니다.
+      - paragraph [ref=e55]: 의료·법률·투자 판단의 근거로 사용하지 마세요.
+      - generic [ref=e56]:
+        - link "이용약관" [ref=e57] [cursor=pointer]:
+          - /url: /terms
+        - link "개인정보처리방침" [ref=e58] [cursor=pointer]:
+          - /url: /privacy
+        - link "환불정책" [ref=e59] [cursor=pointer]:
+          - /url: /refund
+        - link "면책조항" [ref=e60] [cursor=pointer]:
+          - /url: /disclaimer
+  - alert [ref=e61]
+```

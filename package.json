@@ -18,7 +18,8 @@
     "compare:llm": "pnpm --filter @saju/api exec tsx ../../scripts/llm_compare.ts",
     "gate:status": "pnpm --filter @saju/api exec tsx ../../scripts/qa_gate.ts --status",
     "gate:check": "pnpm --filter @saju/api exec -- tsx ../../scripts/qa_gate.ts",
-    "gate:next": "pnpm --filter @saju/api exec tsx ../../scripts/qa_gate.ts --next"
+    "gate:next": "pnpm --filter @saju/api exec tsx ../../scripts/qa_gate.ts --next",
+    "prepare": "husky"
   },
   "devDependencies": {
     "vitest": "^4.0.18"

@@ -1,0 +1,76 @@
+name: Post Push Pipeline
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['.github/**']
+
+jobs:
+  sync-build-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync to portfolio
+        env:
+          TOKEN: ${{ secrets.PORTFOLIO_SYNC_TOKEN }}
+        run: |
+          if [ ! -d "build-logs" ] || [ -z "$(ls build-logs/ 2>/dev/null)" ]; then
+            echo "No build logs to sync"; exit 0
+          fi
+          git clone https://x-access-token:${TOKEN}@github.com/jee599/portfolio-site.git /tmp/portfolio
+          mkdir -p /tmp/portfolio/src/content/build-logs
+          cp build-logs/* /tmp/portfolio/src/content/build-logs/
+          cd /tmp/portfolio
+          git config user.name "Build Log Bot"
+          git config user.email "bot@jidonglab.com"
+          git add src/content/build-logs/
+          git diff --cached --quiet || git commit -m "auto: sync from ${{ github.event.repository.name }}"
+          git push
+
+  sync-blog-drafts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync drafts to dev_blog
+        env:
+          TOKEN: ${{ secrets.PORTFOLIO_SYNC_TOKEN }}
+          GH_TOKEN: ${{ secrets.PORTFOLIO_SYNC_TOKEN }}
+        run: |
+          if [ ! -d "blog-drafts" ] || [ -z "$(ls blog-drafts/ 2>/dev/null)" ]; then
+            echo "No blog drafts to sync"; exit 0
+          fi
+          git clone https://x-access-token:${TOKEN}@github.com/jee599/dev_blog.git /tmp/dev_blog
+          cp blog-drafts/* /tmp/dev_blog/posts/
+          cd /tmp/dev_blog
+          BRANCH="draft/$(date +%Y%m%d)-${{ github.event.repository.name }}"
+          git config user.name "Blog Bot"
+          git config user.email "bot@jidonglab.com"
+          git checkout -b "$BRANCH"
+          git add posts/
+          git commit -m "draft: ${{ github.event.repository.name }} 작업기" || exit 0
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "📝 블로그 초안: ${{ github.event.repository.name }}" \
+            --body "로컬 Claude Code로 생성된 초안. blog-writing 스킬로 다듬은 뒤 merge." \
+            --base main --head "$BRANCH"
+
+  send-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+      - name: Send
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_APP_PASSWORD }}
+          subject: "[${{ github.event.repository.name }}] ${{ github.event.head_commit.message }}"
+          body: |
+            ${{ github.event.repository.name }} 작업 요약
+            커밋: ${{ github.event.head_commit.message }}
+            시간: ${{ github.event.head_commit.timestamp }}
+            상세: ${{ github.event.compare }}
+          to: ${{ secrets.EMAIL_TO }}
+          from: Build Bot <bot@jidonglab.com>

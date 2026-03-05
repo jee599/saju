@@ -1,11 +1,21 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { Paddle, Environment } from '@paddle/paddle-node-sdk';
 import { prisma } from '@saju/api/db';
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error('STRIPE_SECRET_KEY is not set');
   return new Stripe(key);
 }
+
+
+function getPaddle() {
+  const key = process.env.PADDLE_API_KEY;
+  if (!key) throw new Error('PADDLE_API_KEY is not set');
+  const isProd = process.env.PADDLE_ENVIRONMENT === 'production';
+  return new Paddle(key, { environment: isProd ? Environment.production : Environment.sandbox });
+}
+
 
 /**
  * 주문 확인: Stripe는 결제 상태를 서버에서 검증 후 confirmed 처리.
@@ -50,6 +60,22 @@ export async function POST(req: Request) {
       const stripe = getStripe();
       const session = await stripe.checkout.sessions.retrieve(order.paymentId);
       if (session.payment_status !== 'paid') {
+        return NextResponse.json(
+          { ok: false, error: { code: 'PAYMENT_NOT_PAID', message: 'Payment not completed.' } },
+          { status: 402 }
+        );
+      }
+    } else if (order.paymentProvider === 'paddle') {
+      if (!order.paymentId) {
+        return NextResponse.json(
+          { ok: false, error: { code: 'PAYMENT_PENDING', message: 'Payment confirmation pending.' } },
+          { status: 409 }
+        );
+      }
+
+      const paddle = getPaddle();
+      const transaction = await paddle.transactions.get(order.paymentId);
+      if (!['paid', 'completed'].includes(transaction.status)) {
         return NextResponse.json(
           { ok: false, error: { code: 'PAYMENT_NOT_PAID', message: 'Payment not completed.' } },
           { status: 402 }

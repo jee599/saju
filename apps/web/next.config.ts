@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       "'self'",
       "'unsafe-inline'",
       "https://js.stripe.com",
+      "https://cdn.paddle.com",
       "https://www.googletagmanager.com",
       ...(isDev ? ["'unsafe-eval'"] : []),
     ].join(" ");
@@ -20,6 +21,8 @@ const nextConfig: NextConfig = {
     const connectSrc = [
       "'self'",
       "https://api.stripe.com",
+      "https://api.paddle.com",
+      "https://checkout.paddle.com",
       "https://*.googleapis.com",
       "https://www.google-analytics.com",
       "https://*.google-analytics.com",
@@ -41,7 +44,7 @@ const nextConfig: NextConfig = {
           "img-src 'self' data: https:",
           "font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com",
           `connect-src ${connectSrc}`,
-          "frame-src 'self' https://js.stripe.com",
+          "frame-src 'self' https://js.stripe.com https://buy.paddle.com https://checkout.paddle.com",
         ].join("; "),
       },
     ];

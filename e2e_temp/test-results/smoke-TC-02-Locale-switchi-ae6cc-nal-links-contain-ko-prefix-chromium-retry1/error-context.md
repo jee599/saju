@@ -1,0 +1,222 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "본문으로 건너뛰기" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e5]:
+      - link "복연구소" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e12]: 복연구소
+      - navigation "주요 메뉴":
+        - link "오늘의 운세":
+          - /url: /daily
+        - link "사주":
+          - /url: /#hero
+        - link "손금":
+          - /url: /palm
+        - link "작명":
+          - /url: /name
+        - link "관상":
+          - /url: /face
+        - link "꿈해몽":
+          - /url: /dream
+        - link "타로":
+          - /url: /tarot
+      - button "🇰🇷 한국어" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 🇰🇷
+        - generic [ref=e16]: 한국어
+        - img [ref=e17]
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e22]:
+        - heading "사주는 빅데이터입니다" [level=1] [ref=e23]
+        - paragraph [ref=e24]: 518,400가지 운명을 상세하게 풀어드립니다
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]: 생년월일
+            - generic [ref=e28]:
+              - combobox "생년월일" [ref=e29]:
+                - option "년도" [selected]
+                - option "2010년"
+                - option "2009년"
+                - option "2008년"
+                - option "2007년"
+                - option "2006년"
+                - option "2005년"
+                - option "2004년"
+                - option "2003년"
+                - option "2002년"
+                - option "2001년"
+                - option "2000년"
+                - option "1999년"
+                - option "1998년"
+                - option "1997년"
+                - option "1996년"
+                - option "1995년"
+                - option "1994년"
+                - option "1993년"
+                - option "1992년"
+                - option "1991년"
+                - option "1990년"
+                - option "1989년"
+                - option "1988년"
+                - option "1987년"
+                - option "1986년"
+                - option "1985년"
+                - option "1984년"
+                - option "1983년"
+                - option "1982년"
+                - option "1981년"
+                - option "1980년"
+                - option "1979년"
+                - option "1978년"
+                - option "1977년"
+                - option "1976년"
+                - option "1975년"
+                - option "1974년"
+                - option "1973년"
+                - option "1972년"
+                - option "1971년"
+                - option "1970년"
+                - option "1969년"
+                - option "1968년"
+                - option "1967년"
+                - option "1966년"
+                - option "1965년"
+                - option "1964년"
+                - option "1963년"
+                - option "1962년"
+                - option "1961년"
+                - option "1960년"
+                - option "1959년"
+                - option "1958년"
+                - option "1957년"
+                - option "1956년"
+                - option "1955년"
+                - option "1954년"
+                - option "1953년"
+                - option "1952년"
+                - option "1951년"
+                - option "1950년"
+                - option "1949년"
+                - option "1948년"
+                - option "1947년"
+                - option "1946년"
+                - option "1945년"
+                - option "1944년"
+                - option "1943년"
+                - option "1942년"
+                - option "1941년"
+                - option "1940년"
+                - option "1939년"
+                - option "1938년"
+                - option "1937년"
+                - option "1936년"
+                - option "1935년"
+                - option "1934년"
+                - option "1933년"
+                - option "1932년"
+                - option "1931년"
+                - option "1930년"
+              - combobox [ref=e30]:
+                - option "월" [selected]
+                - option "1월"
+                - option "2월"
+                - option "3월"
+                - option "4월"
+                - option "5월"
+                - option "6월"
+                - option "7월"
+                - option "8월"
+                - option "9월"
+                - option "10월"
+                - option "11월"
+                - option "12월"
+              - combobox [ref=e31]:
+                - option "일" [selected]
+                - option "1일"
+                - option "2일"
+                - option "3일"
+                - option "4일"
+                - option "5일"
+                - option "6일"
+                - option "7일"
+                - option "8일"
+                - option "9일"
+                - option "10일"
+                - option "11일"
+                - option "12일"
+                - option "13일"
+                - option "14일"
+                - option "15일"
+                - option "16일"
+                - option "17일"
+                - option "18일"
+                - option "19일"
+                - option "20일"
+                - option "21일"
+                - option "22일"
+                - option "23일"
+                - option "24일"
+                - option "25일"
+                - option "26일"
+                - option "27일"
+                - option "28일"
+                - option "29일"
+                - option "30일"
+                - option "31일"
+          - generic:
+            - generic [ref=e32]: 태어난 시간
+            - combobox "태어난 시간" [ref=e33]:
+              - option "시간 선택" [selected]
+              - option "모름"
+              - option "자시 (子) · 23:00~01:00"
+              - option "축시 (丑) · 01:00~03:00"
+              - option "인시 (寅) · 03:00~05:00"
+              - option "묘시 (卯) · 05:00~07:00"
+              - option "진시 (辰) · 07:00~09:00"
+              - option "사시 (巳) · 09:00~11:00"
+              - option "오시 (午) · 11:00~13:00"
+              - option "미시 (未) · 13:00~15:00"
+              - option "신시 (申) · 15:00~17:00"
+              - option "유시 (酉) · 17:00~19:00"
+              - option "술시 (戌) · 19:00~21:00"
+              - option "해시 (亥) · 21:00~23:00"
+          - generic:
+            - generic [ref=e34]: 성별
+            - generic [ref=e35]:
+              - button "남성" [ref=e36] [cursor=pointer]
+              - button "여성" [ref=e37] [cursor=pointer]
+          - generic:
+            - generic [ref=e38]: 이름
+            - textbox "이름" [active] [ref=e39]:
+              - /placeholder: 이름을 입력하세요
+            - button "무료 분석 시작" [disabled] [ref=e40]
+      - navigation [ref=e41]:
+        - link "이용약관" [ref=e42] [cursor=pointer]:
+          - /url: /terms
+        - link "개인정보처리방침" [ref=e43] [cursor=pointer]:
+          - /url: /privacy
+        - link "환불정책" [ref=e44] [cursor=pointer]:
+          - /url: /refund
+        - link "면책조항" [ref=e45] [cursor=pointer]:
+          - /url: /disclaimer
+  - contentinfo [ref=e46]:
+    - generic [ref=e47]:
+      - paragraph [ref=e48]: 복연구소
+      - paragraph [ref=e49]: 전통 사주명리학을 AI로 재해석한 운세 분석 서비스입니다.
+      - paragraph [ref=e50]: 의료·법률·투자 판단의 근거로 사용하지 마세요.
+      - generic [ref=e51]:
+        - link "이용약관" [ref=e52] [cursor=pointer]:
+          - /url: /terms
+        - link "개인정보처리방침" [ref=e53] [cursor=pointer]:
+          - /url: /privacy
+        - link "환불정책" [ref=e54] [cursor=pointer]:
+          - /url: /refund
+        - link "면책조항" [ref=e55] [cursor=pointer]:
+          - /url: /disclaimer
+  - alert [ref=e56]
+```

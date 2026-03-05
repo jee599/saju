@@ -1,0 +1,80 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e5]:
+      - link "FortuneLab" [ref=e6] [cursor=pointer]:
+        - /url: /en
+        - img [ref=e7]
+        - generic [ref=e12]: FortuneLab
+      - navigation "Main Menu":
+        - link "Daily Fortune":
+          - /url: /en/daily
+        - link "Birth Chart":
+          - /url: /en#hero
+        - link "Palm Reading":
+          - /url: /en/palm
+        - link "Name Analysis":
+          - /url: /en/name
+        - link "Face Reading":
+          - /url: /en/face
+        - link "Dream Guide":
+          - /url: /en/dream
+        - link "Tarot":
+          - /url: /en/tarot
+      - button "🇺🇸 English" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 🇺🇸
+        - generic [ref=e16]: English
+        - img [ref=e17]
+  - main [ref=e19]:
+    - generic [ref=e21]:
+      - paragraph [ref=e23]: Fortune teller $100+/hr → AI analysis $4.99
+      - generic [ref=e24]:
+        - heading "Your Complete Four Pillars Analysis," [level=2] [ref=e25]
+        - paragraph [ref=e26]: Detailed AI Analysis in 9 Sections
+        - list [ref=e28]:
+          - listitem [ref=e29]: Personality — Innate traits & interpersonal style
+          - listitem [ref=e30]: Career — Vocation & professional strengths
+          - listitem [ref=e31]: Love / Family / Partner — Connections & relationships
+          - listitem [ref=e32]: Wealth — Flow of money & finances
+          - listitem [ref=e33]: Health — Key health areas to watch
+          - listitem [ref=e34]: Past — Analysis of your previous life phases
+          - listitem [ref=e35]: Present — This year's outlook
+          - listitem [ref=e36]: Future — Outlook for the next 3–5 years
+          - listitem [ref=e37]: 10-Year Luck Cycle Timeline — Year-by-year trend analysis
+        - generic [ref=e38]:
+          - generic [ref=e39]: 🔒 Secure payment
+          - generic [ref=e40]: ↩️ 24-hour refund guarantee
+          - generic [ref=e41]: 📧 Report delivered by email
+        - paragraph [ref=e42]: Used by customers worldwide
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]: Email (we'll also send your report here)
+            - textbox "Email (we'll also send your report here)" [active] [ref=e46]:
+              - /placeholder: email@example.com
+              - text: invalid-not-an-email
+          - button "Pay $4.99" [ref=e48] [cursor=pointer]
+        - paragraph [ref=e49]:
+          - text: Your full report will be available immediately after purchase.
+          - text: See our refund policy
+          - link "details" [ref=e50] [cursor=pointer]:
+            - /url: /en/refund
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]:
+      - paragraph [ref=e53]: FortuneLab
+      - paragraph [ref=e54]: Traditional Four Pillars astrology reimagined with AI.
+      - paragraph [ref=e55]: Not intended as medical, legal, or financial advice.
+      - generic [ref=e56]:
+        - link "Terms of Service" [ref=e57] [cursor=pointer]:
+          - /url: /en/terms
+        - link "Privacy Policy" [ref=e58] [cursor=pointer]:
+          - /url: /en/privacy
+        - link "Refund Policy" [ref=e59] [cursor=pointer]:
+          - /url: /en/refund
+        - link "Disclaimer" [ref=e60] [cursor=pointer]:
+          - /url: /en/disclaimer
+  - alert [ref=e61]
+```

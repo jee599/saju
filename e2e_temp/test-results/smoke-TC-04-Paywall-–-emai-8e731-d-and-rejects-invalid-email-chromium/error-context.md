@@ -1,0 +1,80 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "メインコンテンツへスキップ" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e5]:
+      - link "運命研究所" [ref=e6] [cursor=pointer]:
+        - /url: /ja
+        - img [ref=e7]
+        - generic [ref=e12]: 運命研究所
+      - navigation "メインメニュー":
+        - link "今日の運勢":
+          - /url: /ja/daily
+        - link "四柱推命":
+          - /url: /ja#hero
+        - link "手相":
+          - /url: /ja/palm
+        - link "姓名判断":
+          - /url: /ja/name
+        - link "人相":
+          - /url: /ja/face
+        - link "夢占い":
+          - /url: /ja/dream
+        - link "タロット":
+          - /url: /ja/tarot
+      - button "🇯🇵 日本語" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 🇯🇵
+        - generic [ref=e16]: 日本語
+        - img [ref=e17]
+  - main [ref=e19]:
+    - generic [ref=e21]:
+      - paragraph [ref=e23]: 占い師：1回 10,000円～ → AI分析 ¥690
+      - generic [ref=e24]:
+        - heading "さんの四柱推命 完全分析" [level=2] [ref=e25]
+        - paragraph [ref=e26]: 9セクションの詳細AI分析
+        - list [ref=e28]:
+          - listitem [ref=e29]: 性格 — 生まれながらの気質と対人関係
+          - listitem [ref=e30]: 職業 — キャリアと適性
+          - listitem [ref=e31]: 恋愛・家族・パートナー — 縁と関係性
+          - listitem [ref=e32]: 金運 — お金の流れと財運
+          - listitem [ref=e33]: 健康 — 注意すべき健康ポイント
+          - listitem [ref=e34]: 過去 — これまでの時期の分析
+          - listitem [ref=e35]: 現在 — 今年の運勢傾向
+          - listitem [ref=e36]: 未来 — 今後3～5年の展望
+          - listitem [ref=e37]: 大運の流れ（10年）— 10年周期の分析
+        - generic [ref=e38]:
+          - generic [ref=e39]: 🔒 安全な決済
+          - generic [ref=e40]: ↩️ 24時間返金保証
+          - generic [ref=e41]: 📧 レポートをメールでお届け
+        - paragraph [ref=e42]: 世界中のユーザーにご利用いただいています
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]: メールアドレス（レポートをメールでもお届けします）
+            - textbox "メールアドレス（レポートをメールでもお届けします）" [active] [ref=e46]:
+              - /placeholder: email@example.com
+              - text: invalid-not-an-email
+          - button "¥690 で購入する" [ref=e48] [cursor=pointer]
+        - paragraph [ref=e49]:
+          - text: 購入後すぐに完全なレポートをご確認いただけます。
+          - text: 返金ポリシーはでご確認ください。
+          - link "詳細" [ref=e50] [cursor=pointer]:
+            - /url: /ja/refund
+  - contentinfo [ref=e51]:
+    - generic [ref=e52]:
+      - paragraph [ref=e53]: 運命研究所
+      - paragraph [ref=e54]: 伝統的な四柱推命をAIで再解釈した運勢分析サービスです。
+      - paragraph [ref=e55]: 医療・法律・投資判断の根拠としてご利用しないでください。
+      - generic [ref=e56]:
+        - link "利用規約" [ref=e57] [cursor=pointer]:
+          - /url: /ja/terms
+        - link "プライバシーポリシー" [ref=e58] [cursor=pointer]:
+          - /url: /ja/privacy
+        - link "返金ポリシー" [ref=e59] [cursor=pointer]:
+          - /url: /ja/refund
+        - link "免責事項" [ref=e60] [cursor=pointer]:
+          - /url: /ja/disclaimer
+  - alert [ref=e61]
+```

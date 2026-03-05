@@ -12,7 +12,7 @@ export interface CountryConfig {
   };
   /** Formatted price string for display (e.g. "₩5,900", "$4.99") */
   priceLabel: string;
-  paymentProvider: "toss" | "stripe" | "razorpay";
+  paymentProvider: "toss" | "stripe" | "razorpay" | "paddle";
   shareChannels: Array<"kakao" | "whatsapp" | "line" | "zalo" | "instagram" | "twitter" | "copy">;
   enabledServices: Array<"saju" | "compatibility" | "name" | "palm" | "face">;
   comingSoonServices: Array<"name" | "palm" | "face">;

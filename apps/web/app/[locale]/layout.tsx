@@ -6,6 +6,7 @@ import { Link } from "../../i18n/navigation";
 import { locales } from "../../i18n/config";
 import { GtagScript } from "./components/GtagScript";
 import LanguageSelector from "./components/LanguageSelector";
+import CosmicBackground from "./components/CosmicBackground";
 
 const AURORA_FONTS_URL = "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap";
 
@@ -106,6 +107,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       <body>
         <a href="#main-content" className="skip-link">{t("skipLink")}</a>
         <NextIntlClientProvider messages={messages}>
+          <CosmicBackground />
           <header className="siteHeader">
             <div className="headerInner">
               <div className="headerTopRow">
