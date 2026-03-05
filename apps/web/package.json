@@ -12,6 +12,7 @@
     "deploy:prod": "pnpm dlx vercel --prod --yes"
   },
   "dependencies": {
+    "@paddle/paddle-node-sdk": "^3.6.0",
     "@saju/api": "workspace:*",
     "@saju/engine-saju": "workspace:*",
     "@saju/shared": "workspace:*",
@@ -24,7 +25,8 @@
     "react-dom": "19.0.0",
     "resend": "^6.9.3",
     "stripe": "^20.4.0",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.1",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.4",
@@ -32,6 +34,7 @@
     "@types/node": "^22.10.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@types/three": "^0.183.1",
     "eslint": "^9.39.3",
     "eslint-config-next": "^15.5.12",
     "prisma": "^6",
