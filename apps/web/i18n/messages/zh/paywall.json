@@ -12,22 +12,22 @@
     "过去 — 过往阶段分析",
     "现在 — 今年运势趋势",
     "未来 — 未来3–5年展望",
-    "大运时间轴 — 十年周期分析"
+    "大运时间线 — 10年周期趋势分析"
   ],
   "trustSecure": "🔒 安全支付",
   "trustRefund": "↩️ 24小时退款保障",
   "trustEmail": "📧 报告发送至邮箱",
-  "socialProof": "已有众多用户完成了分析",
+  "socialProof": "已被全球用户使用",
   "emailLabel": "邮箱（报告也将发送至此邮箱）",
   "emailError": "请输入正确的邮箱地址。",
-  "checkoutLoading": "订单创建中...",
+  "checkoutLoading": "正在创建订单...",
   "checkoutBtn": "支付 {price}",
   "afterPurchase": "支付完成后可立即查看完整报告。",
   "refundLink": "退款政策请查看{link}。",
-  "refundLinkText": "这里",
+  "refundLinkText": "详情",
   "createFail": "订单创建失败",
   "noOrderId": "未收到订单ID。",
   "noCheckoutUrl": "创建支付会话失败。",
   "checkoutError": "支付过程中发生错误。",
-  "loading": "支付页面加载中..."
+  "loading": "正在跳转到安全支付页面..."
 }

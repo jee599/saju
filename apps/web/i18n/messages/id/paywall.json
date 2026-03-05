@@ -12,15 +12,15 @@
     "Masa Lalu — Analisis periode yang telah dilalui",
     "Saat Ini — Prospek tahun ini",
     "Masa Depan — Prospek 3–5 tahun ke depan",
-    "Linimasa Siklus 10 Tahun — Analisis siklus dekade"
+    "Linimasa Siklus 10 Tahun — Analisis tren per tahun"
   ],
   "trustSecure": "🔒 Pembayaran aman",
   "trustRefund": "↩️ Jaminan pengembalian dana 24 jam",
   "trustEmail": "📧 Laporan dikirim lewat email",
-  "socialProof": "Sudah banyak pengguna yang menyelesaikan analisis mereka",
+  "socialProof": "Dipakai oleh pengguna dari berbagai negara",
   "emailLabel": "Email (kami juga akan mengirim laporan ke sini)",
   "emailError": "Harap masukkan alamat email yang valid.",
-  "checkoutLoading": "Membuat pesanan...",
+  "checkoutLoading": "Sedang membuat pesanan Anda...",
   "checkoutBtn": "Bayar {price}",
   "afterPurchase": "Laporan lengkap dapat Anda lihat segera setelah pembayaran.",
   "refundLink": "Lihat kebijakan pengembalian dana {link}.",
@@ -29,5 +29,5 @@
   "noOrderId": "ID pesanan tidak diterima.",
   "noCheckoutUrl": "Gagal membuat sesi pembayaran.",
   "checkoutError": "Terjadi kesalahan saat pembayaran.",
-  "loading": "Memuat halaman pembayaran..."
+  "loading": "Mengalihkan ke halaman pembayaran aman..."
 }

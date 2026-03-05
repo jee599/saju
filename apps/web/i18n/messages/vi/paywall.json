@@ -12,15 +12,15 @@
     "Quá khứ — Phân tích giai đoạn đã qua",
     "Hiện tại — Vận trình năm nay",
     "Tương lai — Triển vọng 3–5 năm tới",
-    "Dòng thời gian Đại Vận — Phân tích chu kỳ 10 năm"
+    "Dòng thời gian Đại Vận — Phân tích xu hướng 10 năm"
   ],
   "trustSecure": "🔒 Thanh toán an toàn",
   "trustRefund": "↩️ Bảo đảm hoàn tiền trong 24 giờ",
   "trustEmail": "📧 Gửi báo cáo qua email",
-  "socialProof": "Đã có nhiều người dùng hoàn thành phân tích",
+  "socialProof": "Được người dùng tại nhiều quốc gia tin dùng",
   "emailLabel": "Email (chúng tôi cũng sẽ gửi báo cáo đến đây)",
   "emailError": "Vui lòng nhập địa chỉ email hợp lệ.",
-  "checkoutLoading": "Đang tạo đơn hàng...",
+  "checkoutLoading": "Đang tạo đơn hàng của bạn...",
   "checkoutBtn": "Thanh toán {price}",
   "afterPurchase": "Bạn có thể xem toàn bộ báo cáo ngay sau khi thanh toán.",
   "refundLink": "Xem chính sách hoàn tiền {link}.",
@@ -29,5 +29,5 @@
   "noOrderId": "Không nhận được mã đơn hàng.",
   "noCheckoutUrl": "Không thể tạo phiên thanh toán.",
   "checkoutError": "Đã xảy ra lỗi trong quá trình thanh toán.",
-  "loading": "Đang tải trang thanh toán..."
+  "loading": "Đang chuyển đến trang thanh toán an toàn..."
 }

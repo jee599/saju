@@ -12,22 +12,22 @@
     "Past — Analysis of your previous life phases",
     "Present — This year's outlook",
     "Future — Outlook for the next 3–5 years",
-    "10-Year Luck Cycle Timeline — Decade-by-decade analysis"
+    "10-Year Luck Cycle Timeline — Year-by-year trend analysis"
   ],
   "trustSecure": "🔒 Secure payment",
   "trustRefund": "↩️ 24-hour refund guarantee",
   "trustEmail": "📧 Report delivered by email",
-  "socialProof": "Trusted by users who have already received their analysis",
+  "socialProof": "Used by customers worldwide",
   "emailLabel": "Email (we'll also send your report here)",
   "emailError": "Please enter a valid email address.",
-  "checkoutLoading": "Creating order...",
+  "checkoutLoading": "Creating your order...",
   "checkoutBtn": "Pay {price}",
   "afterPurchase": "Your full report will be available immediately after purchase.",
-  "refundLink": "See our refund policy {link}.",
-  "refundLinkText": "here",
+  "refundLink": "See our refund policy {link}",
+  "refundLinkText": "details",
   "createFail": "Failed to create order",
   "noOrderId": "No order ID received.",
   "noCheckoutUrl": "Failed to create payment session.",
   "checkoutError": "An error occurred during checkout.",
-  "loading": "Loading payment page..."
+  "loading": "Redirecting to secure checkout..."
 }
