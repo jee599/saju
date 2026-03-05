@@ -17,7 +17,7 @@ fi
 
 mkdir -p build-logs
 
-gtimeout 60 /Users/jidong/.local/bin/claude -p \
+gtimeout 180 /Users/jidong/.local/bin/claude -p \
   "최근 커밋을 분석하고 .claude/commands/build-log.md 형식대로 \
    build-logs/ 에 한국어/영어 빌드 로그를 생성해줘. STATUS.md도 갱신해줘." \
   || echo "⚠️ 빌드 로그 생성 스킵"
@@ -29,7 +29,7 @@ if [ "$COMMIT_COUNT" -ge 5 ]; then
   echo "📝 커밋 ${COMMIT_COUNT}개 감지. 블로그 초안 생성 중..."
   mkdir -p blog-drafts
 
-  gtimeout 120 /Users/jidong/.local/bin/claude -p \
+  gtimeout 240 /Users/jidong/.local/bin/claude -p \
     "build-logs/ 의 최근 한국어 빌드 로그들과 git log를 바탕으로 \
      블로그 초안을 작성해줘. \
      문체: ~다 체. 첫 문장은 숫자/핵심 팩트. 6000자 이상. 불릿 금지. \
