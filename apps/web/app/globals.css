@@ -1619,20 +1619,13 @@ p, li, label, input, select, button, textarea {
 .loadingAnalysis {
   overflow: hidden;
   position: relative;
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(123, 196, 160, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 30%, rgba(224, 107, 117, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(91, 142, 196, 0.06) 0%, transparent 50%);
+  background: transparent;
 }
 
 /* ── 파티클 배경 (느린 빛 점) ─────────────────────── */
 
 .loadingParticles {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
+  display: none;
 }
 
 .particle {
@@ -1658,15 +1651,7 @@ p, li, label, input, select, button, textarea {
 /* ── 배경 오로라 글로우 ──────────────────────────── */
 
 .loadingAurora {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 600px 400px at 30% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 500px 350px at 70% 70%, rgba(91, 142, 196, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 400px 300px at 50% 45%, rgba(34, 211, 238, 0.04) 0%, transparent 70%);
-  animation: auroraShift 20s ease-in-out infinite alternate;
+  display: none;
 }
 
 
