@@ -519,14 +519,12 @@ function LoadingContent() {
             <div className="ohangInfoCol">
               <OhangDetailCard idx={activeOhang} t={t} />
               <div className="ohangDescSlider" aria-label={t("ohangSliderAria")}>
-                <div className="ohangDescTrack" style={{ transform: `translateX(-${activeOhang * 100}%)` }}>
-                  {OHANG_VISUAL.map((el, i) => (
-                    <div key={el.hanja} className="ohangDescPane">
-                      <strong style={{ color: el.color }}>{el.emoji} {el.hanja} {t(`ohang.${i}.native`)}</strong>
-                      <p>{t(`ohang.${i}.description.0`)}</p>
-                    </div>
-                  ))}
-                </div>
+                {OHANG_VISUAL.map((el, i) => (
+                  <div key={el.hanja} className={`ohangDescPane ${i === activeOhang ? "active" : ""}`}>
+                    <strong style={{ color: el.color }}>{el.emoji} {el.hanja} {t(`ohang.${i}.native`)}</strong>
+                    <p>{t(`ohang.${i}.description.0`)}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

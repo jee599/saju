@@ -3074,30 +3074,32 @@ img, video, svg {
 
 /* 모바일: 좁은 화면 */
 @media (max-width: 480px) {
-  .loadingScreen2 { gap: 20px; padding: 12px 0 32px; }
+  .loadingScreen2 { gap: 14px; padding: 8px 0 24px; }
 
-  .loadingTopSection { gap: 14px; }
+  .loadingTopSection { gap: 10px; }
 
-  .ohangCycleVisual { width: 180px; height: 180px; }
-  .ohangGlowRing { width: 210px; height: 210px; }
-  .cycleNode { width: 44px; height: 44px; margin-left: -22px; margin-top: -22px; }
-  .cycleEmoji { font-size: 1rem; }
-  .cycleHanja { font-size: 0.7rem; }
-  .cycleKo { font-size: 0.45rem; }
-  .cycleTaeguk { font-size: 1.8rem; }
+  .ohangCycleVisual { width: 160px; height: 160px; }
+  .ohangGlowRing { width: 190px; height: 190px; }
+  .cycleNode { width: 40px; height: 40px; margin-left: -20px; margin-top: -20px; }
+  .cycleEmoji { font-size: 0.9rem; }
+  .cycleHanja { font-size: 0.65rem; }
+  .cycleKo { font-size: 0.42rem; }
+  .cycleTaeguk { font-size: 1.6rem; }
 
-  .ohangDetailCard { max-width: 100%; padding: 16px 18px; }
-  .ohangDetailEmoji { font-size: 2rem; }
-  .ohangDetailTitle { font-size: 1rem; }
-  .ohangDetailMeta { gap: 10px; font-size: 0.72rem; }
+  .ohangDetailCard { max-width: 100%; padding: 12px 14px; }
+  .ohangDetailEmoji { font-size: 1.8rem; }
+  .ohangDetailTitle { font-size: 0.95rem; }
+  .ohangDetailMeta { gap: 8px; font-size: 0.68rem; }
 
-  .eduSlide { padding: 20px 18px; }
-  .eduTitle { font-size: 1rem; }
-  .eduBody { min-height: 110px; }
-  .eduLine { font-size: 0.82rem; line-height: 1.7; }
+  .ohangInfoCol { gap: 8px; }
 
-  .loadingStatusBar { padding: 12px 14px; }
-  .loadingTimer { font-size: 0.82rem; }
+  .eduSlide { padding: 16px 14px; }
+  .eduTitle { font-size: 0.95rem; }
+  .eduBody { min-height: 90px; }
+  .eduLine { font-size: 0.8rem; line-height: 1.6; }
+
+  .loadingStatusBar { padding: 10px 12px; }
+  .loadingTimer { font-size: 0.78rem; }
   .loadingStep2 { font-size: 0.68rem; padding: 4px 7px; }
 
   .pillarBox { width: 48px; }
@@ -3652,11 +3654,12 @@ img, video, svg {
 .stageTextCenter { font-size: 0.8rem; color: var(--t3); text-align: center; }
 
 .ohangInfoCol { display: flex; flex-direction: column; gap: 10px; width: min(100%, 340px); }
-.ohangDescSlider { overflow: hidden; width: 100%; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(13, 11, 20, 0.35); }
-.ohangDescTrack { display: flex; width: 500%; transition: transform 0.6s var(--ease-smooth); }
-.ohangDescPane { width: 100%; flex: 0 0 100%; padding: 10px 12px; text-align: left; }
+.ohangDescSlider { position: relative; overflow: hidden; width: 100%; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(13, 11, 20, 0.35); }
+.ohangDescPane { padding: 10px 12px; text-align: left; display: none; animation: fadeInDesc 0.4s ease-out; }
+.ohangDescPane.active { display: block; }
 .ohangDescPane strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
 .ohangDescPane p { margin: 0; font-size: 0.76rem; color: var(--t3); line-height: 1.5; }
+@keyframes fadeInDesc { from { opacity: 0; } to { opacity: 1; } }
 
 .loadingStep2 .stepLabel { max-width: 190px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
