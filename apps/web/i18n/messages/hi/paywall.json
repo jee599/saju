@@ -1,7 +1,7 @@
 {
-  "priceAnchor": "Astrologer ₹2,000+",
-  "priceAnchorTo": "AI analysis {price}",
-  "heading": "{name} का संपूर्ण BaZi विश्लेषण",
+  "priceAnchor": "ज्योतिषी ₹2,000+",
+  "priceAnchorTo": "AI विश्लेषण {price}",
+  "heading": "{name} का संपूर्ण Four Pillars विश्लेषण",
   "subheading": "9 खंडों में विस्तृत AI विश्लेषण",
   "sections": [
     "व्यक्तित्व — जन्मजात स्वभाव और पारस्परिक शैली",
@@ -15,8 +15,8 @@
     "महादशा समयरेखा — 10-वर्षीय चक्र विश्लेषण"
   ],
   "trustSecure": "🔒 सुरक्षित भुगतान",
-  "trustRefund": "↩️ 24 घंटे वापसी की गारंटी",
-  "trustEmail": "📧 ईमेल पर रिपोर्ट",
+  "trustRefund": "↩️ 24 घंटे की रिफंड गारंटी",
+  "trustEmail": "📧 रिपोर्ट ईमेल पर भेजी जाएगी",
   "socialProof": "कई उपयोगकर्ता पहले ही अपना विश्लेषण प्राप्त कर चुके हैं",
   "emailLabel": "ईमेल (रिपोर्ट इस पर भी भेजी जाएगी)",
   "emailError": "कृपया एक वैध ईमेल पता दर्ज करें।",

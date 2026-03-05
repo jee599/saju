@@ -1,23 +1,46 @@
 {
   "steps": [
-    { "emoji": "📅", "label": "Calculating pillars" },
-    { "emoji": "☯", "label": "Analyzing five elements" },
-    { "emoji": "⭐", "label": "Placing ten gods" },
-    { "emoji": "📊", "label": "Reading grand cycles" },
-    { "emoji": "🤖", "label": "AI generation" }
+    {
+      "emoji": "📅",
+      "label": "Calculating pillars"
+    },
+    {
+      "emoji": "☯",
+      "label": "Analyzing five elements"
+    },
+    {
+      "emoji": "⭐",
+      "label": "Placing ten gods"
+    },
+    {
+      "emoji": "📊",
+      "label": "Reading grand cycles"
+    },
+    {
+      "emoji": "🤖",
+      "label": "AI generation"
+    }
   ],
   "analyzing": "Analyzing",
-  "estimatedTime": "Est.",
+  "estimatedTime": "Estimated",
   "almostDone": "Almost done",
   "preparing": "Preparing...",
-  "aiGenerating": "AI is precisely analyzing your unique BaZi chart ✨",
+  "aiGenerating": "AI is precisely analyzing your unique Four Pillars chart ✨",
   "retry": "Try again",
   "confirmFail": "Payment confirmation failed.",
   "reportFail": "Report generation failed.",
   "genericError": "An error occurred.",
-  "timeFormat": { "min": "min", "sec": "sec" },
+  "timeFormat": {
+    "min": "min",
+    "sec": "sec"
+  },
   "pillarsVisual": {
-    "cols": ["Year", "Month", "Day", "Hour"],
+    "cols": [
+      "Year",
+      "Month",
+      "Day",
+      "Hour"
+    ],
     "heaven": "Heavenly Stem",
     "earth": "Earthly Branch"
   },
@@ -102,7 +125,7 @@
     "Mapping elements to your chart",
     "Analyzing element distribution",
     "Extracting strong and weak elements",
-    "Determining your Day Master",
+    "Determining your Day Master (Day Stem)",
     "Calculating Yin-Yang balance",
     "Analyzing Ten Gods relationships",
     "Computing life cycle indicators",

@@ -1,18 +1,18 @@
 {
-  "priceAnchor": "Praktisi Rp200.000〜",
-  "priceAnchorTo": "AI analisis {price}",
-  "heading": "Analisis BaZi Lengkap untuk {name}",
+  "priceAnchor": "Praktisi mulai dari Rp200.000",
+  "priceAnchorTo": "Analisis AI {price}",
+  "heading": "Analisis Four Pillars Lengkap untuk {name}",
   "subheading": "Analisis AI Mendalam 9 Bagian",
   "sections": [
     "Kepribadian — Watak bawaan & gaya hubungan",
-    "Karier — Jalur karier & kekuatan profesional",
-    "Asmara·Keluarga·Pasangan — Jodoh & hubungan",
+    "Karier — Jalur karier & keunggulan profesional",
+    "Asmara, Keluarga, Pasangan — Jodoh & hubungan",
     "Keuangan — Arus uang & keberuntungan finansial",
     "Kesehatan — Poin kesehatan yang perlu diperhatikan",
     "Masa Lalu — Analisis periode yang telah dilalui",
-    "Saat Ini — Nasib tahun ini",
+    "Saat Ini — Prospek tahun ini",
     "Masa Depan — Prospek 3–5 tahun ke depan",
-    "Timeline Siklus Besar — Analisis siklus 10 tahun"
+    "Linimasa Siklus 10 Tahun — Analisis siklus dekade"
   ],
   "trustSecure": "🔒 Pembayaran aman",
   "trustRefund": "↩️ Jaminan pengembalian dana 24 jam",

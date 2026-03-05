@@ -1,16 +1,16 @@
 {
-  "priceAnchor": "Thầy bói 500.000₫〜",
-  "priceAnchorTo": "AI phân tích {price}",
+  "priceAnchor": "Thầy bói từ 500.000₫",
+  "priceAnchorTo": "Phân tích AI {price}",
   "heading": "Phân tích Tứ Trụ toàn diện cho {name}",
   "subheading": "Phân tích AI chuyên sâu 9 chủ đề",
   "sections": [
     "Tính cách — Bản chất bẩm sinh và phong cách quan hệ",
     "Sự nghiệp — Định hướng nghề nghiệp và thế mạnh",
-    "Tình duyên·Gia đình·Bạn đời — Nhân duyên và các mối quan hệ",
+    "Tình duyên, Gia đình, Bạn đời — Nhân duyên và các mối quan hệ",
     "Tài lộc — Dòng chảy tiền bạc và vận tài",
     "Sức khỏe — Những điểm sức khỏe cần chú ý",
     "Quá khứ — Phân tích giai đoạn đã qua",
-    "Hiện tại — Vận thế năm nay",
+    "Hiện tại — Vận trình năm nay",
     "Tương lai — Triển vọng 3–5 năm tới",
     "Dòng thời gian Đại Vận — Phân tích chu kỳ 10 năm"
   ],
