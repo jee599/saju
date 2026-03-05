@@ -182,7 +182,7 @@ export default function CosmicBackground() {
       }
       dustGeo.attributes.position.needsUpdate = true;
 
-      nebula.rotation.y = elapsed * 0.006;
+      // nebula rotation removed — was causing visible orbiting effect
       renderer.render(scene, camera);
     };
 
