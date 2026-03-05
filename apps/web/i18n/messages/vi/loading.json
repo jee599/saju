@@ -49,7 +49,7 @@
       "native": "Mộc (木)",
       "season": "Mùa xuân",
       "direction": "Phương Đông",
-      "organ": "Gan·Mật",
+      "organ": "Gan / Mật",
       "personality": "Tăng trưởng, sáng tạo, xông pha",
       "description": [
         "木 (Mộc) tượng trưng cho khí xuân — sức sống vươn lên của vạn vật.",
@@ -62,7 +62,7 @@
       "native": "Hỏa (火)",
       "season": "Mùa hè",
       "direction": "Phương Nam",
-      "organ": "Tim·Ruột non",
+      "organ": "Tim / Ruột non",
       "personality": "Đam mê, biểu đạt, lan tỏa",
       "description": [
         "火 (Hỏa) tượng trưng cho năng lượng nóng bức của mùa hè — ánh sáng và nhiệt huyết.",
@@ -75,7 +75,7 @@
       "native": "Thổ (土)",
       "season": "Giao mùa",
       "direction": "Trung tâm",
-      "organ": "Dạ dày·Lá lách",
+      "organ": "Dạ dày / Lá lách",
       "personality": "Ổn định, tin cậy, bao dung",
       "description": [
         "土 (Thổ) tượng trưng cho giao mùa — năng lượng ổn định giữ vững trung tâm.",
@@ -88,7 +88,7 @@
       "native": "Kim (金)",
       "season": "Mùa thu",
       "direction": "Phương Tây",
-      "organ": "Phổi·Ruột già",
+      "organ": "Phổi / Ruột già",
       "personality": "Quyết đoán, chính trực, thu liễm",
       "description": [
         "金 (Kim) tượng trưng cho khí thu — năng lượng thu hoạch và sắp xếp.",
@@ -101,7 +101,7 @@
       "native": "Thủy (水)",
       "season": "Mùa đông",
       "direction": "Phương Bắc",
-      "organ": "Thận·Bàng quang",
+      "organ": "Thận / Bàng quang",
       "personality": "Trí tuệ, linh hoạt, sâu sắc",
       "description": [
         "水 (Thủy) tượng trưng cho sự tĩnh lặng của mùa đông — tư duy sâu sắc và trí tuệ.",
@@ -156,7 +156,7 @@
     {
       "title": "Ngũ Hành — Năm năng lượng của vũ trụ",
       "content": [
-        "Vạn vật trong vũ trụ được cấu thành từ năm nguyên tố: Mộc·Hỏa·Thổ·Kim·Thủy.",
+        "Vạn vật trong vũ trụ được cấu thành từ năm nguyên tố: Mộc / Hỏa / Thổ / Kim / Thủy.",
         "Mỗi hành gắn liền với mùa, hướng, màu sắc và cảm xúc.",
         "Sự cân bằng của các hành trong lá số Tứ Trụ xác định bản chất bẩm sinh,",
         "sự thiếu hụt hay vượng thái tạo nên nhịp điệu của vận mệnh."
@@ -185,29 +185,29 @@
     {
       "title": "Thiên Can — Mười khí của trời",
       "content": [
-        "Giáp·Ất → Mộc | Bính·Đinh → Hỏa",
-        "Mậu·Kỷ → Thổ | Canh·Tân → Kim",
-        "Nhâm·Quý → Thủy",
+        "Giáp / Ất → Mộc | Bính / Đinh → Hỏa",
+        "Mậu / Kỷ → Thổ | Canh / Tân → Kim",
+        "Nhâm / Quý → Thủy",
         "Can Dương (陽) chủ động, tích cực; Can Âm (陰) ôn hòa, tinh tế."
       ]
     },
     {
       "title": "Địa Chi — Mười hai con giáp",
       "content": [
-        "Tý(Chuột)·Sửu(Trâu)·Dần(Hổ)·Mão(Thỏ)",
-        "Thìn(Rồng)·Tỵ(Rắn)·Ngọ(Ngựa)·Mùi(Dê)",
-        "Thân(Khỉ)·Dậu(Gà)·Tuất(Chó)·Hợi(Lợn)",
+        "Tý(Chuột) / Sửu(Trâu) / Dần(Hổ) / Mão(Thỏ)",
+        "Thìn(Rồng) / Tỵ(Rắn) / Ngọ(Ngựa) / Mùi(Dê)",
+        "Thân(Khỉ) / Dậu(Gà) / Tuất(Chó) / Hợi(Lợn)",
         "12 Địa Chi đồng thời biểu thị con giáp, giờ, hướng và mùa."
       ]
     },
     {
       "title": "Thập Thần — Quan hệ giữa bản thân và thế giới",
       "content": [
-        "Tỷ Kiên·Kiếp Tài: đồng nghiệp, đối thủ (hành giống nhật chủ)",
-        "Thực Thần·Thương Quan: tài năng, biểu đạt (hành nhật chủ sinh)",
-        "Thiên Tài·Chính Tài: tiền của, cha (hành nhật chủ khắc)",
-        "Thiên Quan·Chính Quan: sự nghiệp, danh tiếng (hành khắc nhật chủ)",
-        "Thiên Ấn·Chính Ấn: học vấn, mẹ (hành sinh nhật chủ)"
+        "Tỷ Kiên / Kiếp Tài: đồng nghiệp, đối thủ (hành giống nhật chủ)",
+        "Thực Thần / Thương Quan: tài năng, biểu đạt (hành nhật chủ sinh)",
+        "Thiên Tài / Chính Tài: tiền của, cha (hành nhật chủ khắc)",
+        "Thiên Quan / Chính Quan: sự nghiệp, danh tiếng (hành khắc nhật chủ)",
+        "Thiên Ấn / Chính Ấn: học vấn, mẹ (hành sinh nhật chủ)"
       ]
     },
     {

@@ -105,7 +105,7 @@
         "icon": "📜",
         "title": "Authenticity",
         "subtitle": "5 classical texts as the foundation",
-        "desc": "Di Tian Sui, Zi Ping Zhen Quan, Qiong Tong Bao Jian, Yuan Hai Zi Ping, San Ming Tong Hui. Centuries of verified BaZi theory, systematically interpreted by modern AI."
+        "desc": "Di Tian Sui, Zi Ping Zhen Quan, Qiong Tong Bao Jian, Yuan Hai Zi Ping, San Ming Tong Hui. Centuries of verified Four Pillars theory, systematically interpreted by modern AI."
       },
       {
         "icon": "⚡",
@@ -147,8 +147,8 @@
     "heading": "Frequently Asked Questions",
     "items": [
       {
-        "q": "What is Four Pillars of Destiny (BaZi)?",
-        "a": "Four Pillars of Destiny, also known as BaZi, is a traditional East Asian astrological system that builds four pillars (year, month, day, and hour) from your exact birth date and time to analyze the flow of your destiny. Our engine references five classical texts including Di Tian Sui and Zi Ping Zhen Quan."
+        "q": "What is Four Pillars of Destiny (Four Pillars)?",
+        "a": "Four Pillars of Destiny, also known as Four Pillars, is a traditional East Asian astrological system that builds four pillars (year, month, day, and hour) from your exact birth date and time to analyze the flow of your destiny. Our engine references five classical texts including Di Tian Sui and Zi Ping Zhen Quan."
       },
       {
         "q": "What's the difference between Free and Premium?",
@@ -156,7 +156,7 @@
       },
       {
         "q": "How does AI analyze my birth chart?",
-        "a": "Our traditional calendar engine precisely calculates your Jieqi boundaries and Four Pillars, then state-of-the-art AI models (Claude/GPT) apply the interpretive frameworks from five classical BaZi texts to generate a fully personalized report."
+        "a": "Our traditional calendar engine precisely calculates your Jieqi boundaries and Four Pillars, then state-of-the-art AI models (Claude/GPT) apply the interpretive frameworks from five classical Four Pillars texts to generate a fully personalized report."
       },
       {
         "q": "What if I don't know my birth time?",
@@ -168,7 +168,7 @@
       },
       {
         "q": "Is my birth chart \"good\" or \"bad\"?",
-        "a": "No chart is inherently good or bad. BaZi reflects the unique pattern of your innate strengths and the natural rhythm of your luck cycles over time. FortuneLab provides probabilistic interpretations — not a basis for medical, legal, or financial decisions."
+        "a": "No chart is inherently good or bad. Four Pillars reflects the unique pattern of your innate strengths and the natural rhythm of your luck cycles over time. FortuneLab provides probabilistic interpretations — not a basis for medical, legal, or financial decisions."
       }
     ]
   },

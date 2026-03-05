@@ -1,7 +1,7 @@
 {
   "eyebrow": "毎日無料",
   "title": "今日の運勢",
-  "subtitle": "{date} · あなたの四柱推命で見る今日",
+  "subtitle": "{date} ・ あなたの四柱推命で見る今日",
   "inputTitle": "生年月日を入力してください",
   "nameLabel": "名前",
   "namePlaceholder": "山田太郎",

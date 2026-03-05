@@ -49,7 +49,7 @@
       "native": "Kayu (木)",
       "season": "Musim Semi",
       "direction": "Timur",
-      "organ": "Hati·Kantung Empedu",
+      "organ": "Hati / Kantung Empedu",
       "personality": "Pertumbuhan, kreativitas, inisiatif",
       "description": [
         "木 (Kayu) melambangkan energi musim semi — daya hidup yang merekah.",
@@ -62,7 +62,7 @@
       "native": "Api (火)",
       "season": "Musim Panas",
       "direction": "Selatan",
-      "organ": "Jantung·Usus Halus",
+      "organ": "Jantung / Usus Halus",
       "personality": "Semangat, ekspresi, ekspansi",
       "description": [
         "火 (Api) melambangkan energi panas musim panas — cahaya dan antusiasme.",
@@ -75,7 +75,7 @@
       "native": "Tanah (土)",
       "season": "Peralihan musim",
       "direction": "Pusat",
-      "organ": "Lambung·Limpa",
+      "organ": "Lambung / Limpa",
       "personality": "Stabilitas, kepercayaan, toleransi",
       "description": [
         "土 (Tanah) melambangkan peralihan musim — energi penstabil yang menjaga pusat.",
@@ -88,7 +88,7 @@
       "native": "Logam (金)",
       "season": "Musim Gugur",
       "direction": "Barat",
-      "organ": "Paru-paru·Usus Besar",
+      "organ": "Paru-paru / Usus Besar",
       "personality": "Ketegasan, keadilan, presisi",
       "description": [
         "金 (Logam) melambangkan energi musim gugur — panen dan pengaturan.",
@@ -101,7 +101,7 @@
       "native": "Air (水)",
       "season": "Musim Dingin",
       "direction": "Utara",
-      "organ": "Ginjal·Kandung Kemih",
+      "organ": "Ginjal / Kandung Kemih",
       "personality": "Kebijaksanaan, fleksibilitas, kedalaman",
       "description": [
         "水 (Air) melambangkan ketenangan musim dingin — pemikiran mendalam dan kebijaksanaan.",
@@ -116,7 +116,7 @@
     "Sedang memverifikasi tanggal dan waktu lahir",
     "Sedang memeriksa opsi kalender",
     "Sedang menyiapkan perhitungan zona waktu",
-    "Sedang menginisialisasi mesin BaZi",
+    "Sedang menginisialisasi mesin Four Pillars",
     "Sedang menghitung Pilar Tahun",
     "Sedang menghitung Pilar Bulan",
     "Sedang menghitung Pilar Hari",
@@ -145,9 +145,9 @@
   ],
   "slides": [
     {
-      "title": "Apa itu BaZi (Empat Pilar)?",
+      "title": "Apa itu Four Pillars (Empat Pilar)?",
       "content": [
-        "BaZi (四柱) berarti empat pilar tahun, bulan, hari, dan jam kelahiran.",
+        "Four Pillars (四柱) berarti empat pilar tahun, bulan, hari, dan jam kelahiran.",
         "Setiap pilar terdiri dari dua karakter — Batang Langit (天干) dan Cabang Bumi (地支),",
         "totalnya delapan karakter — Delapan Karakter (八字).",
         "Delapan karakter ini menyimpan cetak biru kepribadian, bakat, dan nasib Anda."
@@ -156,9 +156,9 @@
     {
       "title": "Lima Elemen — Lima Kekuatan Alam Semesta",
       "content": [
-        "Semua hal di alam semesta terdiri dari lima energi elemental: Kayu·Api·Tanah·Logam·Air.",
+        "Semua hal di alam semesta terdiri dari lima energi elemental: Kayu / Api / Tanah / Logam / Air.",
         "Setiap elemen terhubung dengan musim, arah, warna, dan emosi.",
-        "Keseimbangan elemen-elemen ini dalam diagram BaZi menentukan watak bawaan Anda,",
+        "Keseimbangan elemen-elemen ini dalam diagram Four Pillars menentukan watak bawaan Anda,",
         "kekurangan atau kelebihan membentuk ritme nasib baik dan buruk."
       ]
     },
@@ -185,29 +185,29 @@
     {
       "title": "Batang Langit — Sepuluh Energi Langit",
       "content": [
-        "Jiǎ·Yǐ → Kayu | Bǐng·Dīng → Api",
-        "Wù·Jǐ → Tanah | Gēng·Xīn → Logam",
-        "Rén·Guǐ → Air",
+        "Jiǎ / Yǐ → Kayu | Bǐng / Dīng → Api",
+        "Wù / Jǐ → Tanah | Gēng / Xīn → Logam",
+        "Rén / Guǐ → Air",
         "Batang Yang (陽) bersifat aktif dan tegas; Batang Yin (陰) halus dan reseptif."
       ]
     },
     {
       "title": "Cabang Bumi — Dua Belas Energi Zodiak",
       "content": [
-        "Zǐ(Tikus)·Chǒu(Kerbau)·Yín(Macan)·Mǎo(Kelinci)",
-        "Chén(Naga)·Sì(Ular)·Wǔ(Kuda)·Wèi(Kambing)",
-        "Shēn(Monyet)·Yǒu(Ayam)·Xū(Anjing)·Hài(Babi)",
+        "Zǐ(Tikus) / Chǒu(Kerbau) / Yín(Macan) / Mǎo(Kelinci)",
+        "Chén(Naga) / Sì(Ular) / Wǔ(Kuda) / Wèi(Kambing)",
+        "Shēn(Monyet) / Yǒu(Ayam) / Xū(Anjing) / Hài(Babi)",
         "12 Cabang mewakili hewan, waktu, arah, dan musim sekaligus."
       ]
     },
     {
       "title": "Sepuluh Dewa — Hubungan Diri dengan Dunia",
       "content": [
-        "Bi Jian·Jie Cai: rekan, pesaing (elemen sama dengan diri sendiri)",
-        "Shi Shen·Shang Guan: bakat, ekspresi (elemen yang dihasilkan diri sendiri)",
-        "Pian Cai·Zheng Cai: harta, ayah (elemen yang dikendalikan diri sendiri)",
-        "Pian Guan·Zheng Guan: karier, status (elemen yang mengendalikan diri sendiri)",
-        "Pian Yin·Zheng Yin: studi, ibu (elemen yang menghasilkan diri sendiri)"
+        "Bi Jian / Jie Cai: rekan, pesaing (elemen sama dengan diri sendiri)",
+        "Shi Shen / Shang Guan: bakat, ekspresi (elemen yang dihasilkan diri sendiri)",
+        "Pian Cai / Zheng Cai: harta, ayah (elemen yang dikendalikan diri sendiri)",
+        "Pian Guan / Zheng Guan: karier, status (elemen yang mengendalikan diri sendiri)",
+        "Pian Yin / Zheng Yin: studi, ibu (elemen yang menghasilkan diri sendiri)"
       ]
     },
     {
@@ -220,9 +220,9 @@
       ]
     },
     {
-      "title": "Yong Shen — Kunci BaZi Anda",
+      "title": "Yong Shen — Kunci Four Pillars Anda",
       "content": [
-        "Yong Shen (用神) adalah elemen terpenting untuk menyeimbangkan diagram BaZi Anda.",
+        "Yong Shen (用神) adalah elemen terpenting untuk menyeimbangkan diagram Four Pillars Anda.",
         "Seperti melengkapi nutrisi yang kurang untuk kesehatan yang baik,",
         "memanfaatkan warna, arah, dan karier yang sesuai dengan Yong Shen Anda",
         "konon dapat mengubah aliran nasib menjadi lebih menguntungkan."

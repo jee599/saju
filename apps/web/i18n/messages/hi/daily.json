@@ -1,7 +1,7 @@
 {
   "eyebrow": "दैनिक मुफ्त राशिफल",
   "title": "Today's Horoscope",
-  "subtitle": "{date} · Your destiny reading for today",
+  "subtitle": "{date} / Your destiny reading for today",
   "inputTitle": "अपनी जन्मतिथि दर्ज करें",
   "nameLabel": "Name",
   "namePlaceholder": "Rahul Sharma",

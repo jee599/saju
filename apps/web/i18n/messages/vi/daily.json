@@ -1,7 +1,7 @@
 {
   "eyebrow": "Miễn phí hàng ngày",
   "title": "Vận mệnh hôm nay",
-  "subtitle": "{date} · Xem vận mệnh hôm nay qua Tứ Trụ của bạn",
+  "subtitle": "{date} / Xem vận mệnh hôm nay qua Tứ Trụ của bạn",
   "inputTitle": "Nhập ngày sinh của bạn",
   "nameLabel": "Họ tên",
   "namePlaceholder": "Nguyễn Văn A",

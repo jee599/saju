@@ -1,7 +1,7 @@
 {
   "eyebrow": "Free Daily",
   "title": "Today's Fortune",
-  "subtitle": "{date} · Your Four Pillars Reading for Today",
+  "subtitle": "{date} / Your Four Pillars Reading for Today",
   "inputTitle": "Enter your date of birth",
   "nameLabel": "Name",
   "namePlaceholder": "John Doe",

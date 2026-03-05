@@ -1,7 +1,7 @@
 {
   "eyebrow": "Gratis Setiap Hari",
   "title": "Ramalan Hari Ini",
-  "subtitle": "{date} · Ramalan hari ini berdasarkan Empat Pilar Anda",
+  "subtitle": "{date} / Ramalan hari ini berdasarkan Empat Pilar Anda",
   "inputTitle": "Masukkan tanggal lahir Anda",
   "nameLabel": "Nama",
   "namePlaceholder": "Budi Santoso",

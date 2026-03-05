@@ -58,7 +58,7 @@
   "networkError": "A network error has occurred.",
   "elapsedSec": "{sec}s elapsed",
   "premiumBadge": "Premium Analysis",
-  "lockedSections": ["Career", "Love · Family · Partner", "Wealth", "Health", "Past", "Present", "Future", "Major Luck Timeline"],
+  "lockedSections": ["Career", "Love / Family / Partner", "Wealth", "Health", "Past", "Present", "Future", "Major Luck Timeline"],
   "blurDummy": "This section contains a detailed analysis based on your Four Pillars. Through expert interpretation considering the flow of elements and the harmony of your innate energy, we comprehensively examine patterns from the past, current energy, and future possibilities.",
   "unlockAll": "Unlock Full Analysis — $4.99",
   "unlockDesc": "View detailed analysis for the remaining 8 sections",

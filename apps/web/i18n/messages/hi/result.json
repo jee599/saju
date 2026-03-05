@@ -11,7 +11,7 @@
     "center": "Cycle"
   },
   "pillarsTable": {
-    "aria": "Four Pillars (BaZi) Table",
+    "aria": "Four Pillars (Four Pillars) Table",
     "cols": [
       "Hour Pillar",
       "Day Pillar",
@@ -57,7 +57,7 @@
       "water": "बुद्धिमान, लचीला और सहज ज्ञान वाला स्वभाव"
     }
   },
-  "fourPillars": "Four Pillars BaZi (四柱八字)",
+  "fourPillars": "Four Pillars Four Pillars (四柱八字)",
   "elementDist": "Element Distribution",
   "radarLabel": "Element Radar",
   "cycleLabel": "Generative Cycle",
@@ -90,7 +90,7 @@
   "premiumBadge": "Premium Analysis",
   "lockedSections": [
     "Career",
-    "Love · Family · Partner",
+    "Love / Family / Partner",
     "Wealth",
     "Health",
     "Past",
@@ -98,7 +98,7 @@
     "Future",
     "Major Luck Timeline"
   ],
-  "blurDummy": "This section contains a detailed analysis based on your Four Pillars BaZi. Through expert interpretation considering the flow of elements and the harmony of your innate energy, we comprehensively examine patterns from the past, current energy, and future possibilities.",
+  "blurDummy": "This section contains a detailed analysis based on your Four Pillars Four Pillars. Through expert interpretation considering the flow of elements and the harmony of your innate energy, we comprehensively examine patterns from the past, current energy, and future possibilities.",
   "unlockAll": "Unlock Full Analysis — ₹199",
   "unlockDesc": "View detailed analysis for the remaining 8 sections",
   "compatTitle": "Curious about compatibility?",
@@ -112,7 +112,7 @@
     "Converting birth date and time to the Chinese almanac",
     "Assigning the 10 Heavenly Stems (天干)",
     "Assigning the 12 Earthly Branches (地支)",
-    "Constructing the four pillars of the BaZi chart",
+    "Constructing the four pillars of the Four Pillars chart",
     "Identifying the Day Master (日干) to determine innate nature",
     "Calculating the Five Elements (Wood Fire Earth Metal Water) distribution",
     "Analyzing Yin-Yang balance",

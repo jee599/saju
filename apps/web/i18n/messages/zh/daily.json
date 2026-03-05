@@ -1,7 +1,7 @@
 {
   "eyebrow": "每日免费",
   "title": "今日运势",
-  "subtitle": "{date} · 根据你的八字看今天",
+  "subtitle": "{date} 、 根据你的八字看今天",
   "inputTitle": "请输入出生日期",
   "nameLabel": "姓名",
   "namePlaceholder": "张三",
