@@ -54,7 +54,6 @@ export default function CosmicBackground() {
 
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
     const starCount = isMobile ? 3000 : 8000;
-    const dustCount = isMobile ? 250 : 500;
 
     const starGeo = new THREE.BufferGeometry();
     const starPos = new Float32Array(starCount * 3);
@@ -77,27 +76,6 @@ export default function CosmicBackground() {
     });
     const stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
-
-    const dustGeo = new THREE.BufferGeometry();
-    const dustPos = new Float32Array(dustCount * 3);
-    for (let i = 0; i < dustCount; i++) {
-      dustPos[i * 3] = (Math.random() - 0.5) * 2000;
-      dustPos[i * 3 + 1] = (Math.random() - 0.5) * 2000;
-      dustPos[i * 3 + 2] = (Math.random() - 0.5) * 2000;
-    }
-    dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
-
-    const dustMat = new THREE.PointsMaterial({
-      color: 0xaaaaff,
-      size: 3,
-      map: starTex,
-      transparent: true,
-      opacity: 0.5,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-    const dust = new THREE.Points(dustGeo, dustMat);
-    scene.add(dust);
 
     const driftSpeed = 16;
     let frame = 0;
@@ -126,17 +104,6 @@ export default function CosmicBackground() {
       }
       starGeo.attributes.position.needsUpdate = true;
 
-      const dustPositions = dustGeo.attributes.position.array as Float32Array;
-      for (let i = 0; i < dustCount; i++) {
-        dustPositions[i * 3 + 2] += driftSpeed * 1.5 * delta;
-        if (dustPositions[i * 3 + 2] > 1000) {
-          dustPositions[i * 3 + 2] = -1000;
-          dustPositions[i * 3] = (Math.random() - 0.5) * 2000;
-          dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 2000;
-        }
-      }
-      dustGeo.attributes.position.needsUpdate = true;
-
       renderer.render(scene, camera);
     };
 
@@ -159,40 +126,23 @@ export default function CosmicBackground() {
       }
       starGeo.dispose();
       starMat.dispose();
-      dustGeo.dispose();
-      dustMat.dispose();
       starTex.dispose();
       renderer.dispose();
     };
   }, []);
 
   return (
-    <>
-      <div
-        ref={mountRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 1,
-          pointerEvents: "none",
-          background:
-            "radial-gradient(ellipse at 50% 50%, rgba(200,190,255,0.15) 0%, rgba(150,140,200,0.1) 30%, rgba(100,90,160,0.06) 55%, rgba(60,50,120,0.02) 70%, transparent 80%), radial-gradient(ellipse at 50% 50%, transparent 0%, transparent 40%, rgba(2,2,8,0.3) 60%, rgba(2,2,8,0.85) 80%, rgba(2,2,8,1) 100%), radial-gradient(ellipse at 30% 40%, rgba(108,92,231,0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(253,121,168,0.05) 0%, transparent 40%)",
-        }}
-      />
-    </>
+    <div
+      ref={mountRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 0,
+        pointerEvents: "none",
+      }}
+    />
   );
 }
