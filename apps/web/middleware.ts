@@ -15,7 +15,6 @@ const RATE_LIMITED_PATHS = [
   "/api/report/generate",
   "/api/checkout/create",
   "/api/checkout/confirm",
-  "/api/checkout/stripe/create",
   "/api/checkout/paddle/create",
   "/api/fortune/mock",
   "/api/events",

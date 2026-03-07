@@ -898,7 +898,7 @@ function AnalyticsTab({ range, setRange }: { range: string; setRange: (r: string
                   .map(([provider, cnt]) => (
                     <BarRow
                       key={provider}
-                      label={provider === "toss" ? "토스페이" : provider === "stripe" ? "Stripe" : provider === "razorpay" ? "Razorpay" : provider}
+                      label={provider === "toss" ? "토스페이" : provider === "paddle" ? "Paddle" : provider}
                       value={cnt}
                       max={maxPay}
                       color="#D4AF37"

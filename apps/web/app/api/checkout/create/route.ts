@@ -5,7 +5,7 @@ import type { CheckoutCreateRequest, OrderSummary } from '../../../../lib/types'
 
 /**
  * Generic checkout/create — used for Korean Toss (test mode) and fallback.
- * For Stripe countries, the frontend uses /api/checkout/stripe/create instead.
+ * For global countries, the frontend uses /api/checkout/paddle/create instead.
  */
 export async function POST(req: Request) {
   try {

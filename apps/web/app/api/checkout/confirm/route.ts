@@ -1,13 +1,6 @@
 import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
 import { Paddle, Environment } from '@paddle/paddle-node-sdk';
 import { prisma } from '@saju/api/db';
-function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error('STRIPE_SECRET_KEY is not set');
-  return new Stripe(key);
-}
-
 
 function getPaddle() {
   const key = process.env.PADDLE_API_KEY;
@@ -18,8 +11,8 @@ function getPaddle() {
 
 
 /**
- * 주문 확인: Stripe는 결제 상태를 서버에서 검증 후 confirmed 처리.
- * 비-Stripe 결제수단은 운영환경에서 수동 확정을 차단한다.
+ * 주문 확인: Paddle은 결제 상태를 서버에서 검증 후 confirmed 처리.
+ * 비-Paddle 결제수단은 운영환경에서 수동 확정을 차단한다.
  */
 export async function POST(req: Request) {
   try {
@@ -48,24 +41,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, data: { orderId: order.id } });
     }
 
-
-    if (order.paymentProvider === 'stripe') {
-      if (!order.paymentId) {
-        return NextResponse.json(
-          { ok: false, error: { code: 'PAYMENT_PENDING', message: 'Payment confirmation pending.' } },
-          { status: 409 }
-        );
-      }
-
-      const stripe = getStripe();
-      const session = await stripe.checkout.sessions.retrieve(order.paymentId);
-      if (session.payment_status !== 'paid') {
-        return NextResponse.json(
-          { ok: false, error: { code: 'PAYMENT_NOT_PAID', message: 'Payment not completed.' } },
-          { status: 402 }
-        );
-      }
-    } else if (order.paymentProvider === 'paddle') {
+    if (order.paymentProvider === 'paddle') {
       if (!order.paymentId) {
         return NextResponse.json(
           { ok: false, error: { code: 'PAYMENT_PENDING', message: 'Payment confirmation pending.' } },
@@ -82,8 +58,7 @@ export async function POST(req: Request) {
         );
       }
     } else {
-      // Only allow unverified confirm in non-production environments. The env-var override is
-      // intentionally removed to prevent payment bypass in production.
+      // Only allow unverified confirm in non-production environments.
       const allowUnverified = process.env.NODE_ENV !== 'production';
       if (!allowUnverified) {
         return NextResponse.json(

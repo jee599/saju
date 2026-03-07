@@ -12,7 +12,7 @@ export interface CountryConfig {
   };
   /** Formatted price string for display (e.g. "₩5,900", "$4.99") */
   priceLabel: string;
-  paymentProvider: "toss" | "stripe" | "razorpay" | "paddle";
+  paymentProvider: "toss" | "paddle";
   shareChannels: Array<"kakao" | "whatsapp" | "line" | "zalo" | "instagram" | "twitter" | "copy">;
   enabledServices: Array<"saju" | "compatibility" | "name" | "palm" | "face">;
   comingSoonServices: Array<"name" | "palm" | "face">;
@@ -75,7 +75,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
       compatibility: { premium: 299 },
     },
     priceLabel: "$4.99",
-    paymentProvider: "stripe",
+    paymentProvider: "paddle",
     shareChannels: ["copy", "twitter", "instagram"],
     enabledServices: ["saju", "compatibility"],
     comingSoonServices: ["name", "palm", "face"],
@@ -105,7 +105,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
       compatibility: { premium: 490 },
     },
     priceLabel: "¥690",
-    paymentProvider: "stripe",
+    paymentProvider: "paddle",
     shareChannels: ["line", "copy", "twitter"],
     enabledServices: ["saju", "compatibility"],
     comingSoonServices: ["name", "palm", "face"],
@@ -135,7 +135,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
       compatibility: { premium: 1990 },
     },
     priceLabel: "¥29.9",
-    paymentProvider: "stripe",
+    paymentProvider: "paddle",
     shareChannels: ["copy", "twitter"],
     enabledServices: ["saju", "compatibility"],
     comingSoonServices: ["name", "palm", "face"],
@@ -165,7 +165,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
       compatibility: { premium: 9900 },
     },
     priceLabel: "฿149",
-    paymentProvider: "stripe",
+    paymentProvider: "paddle",
     shareChannels: ["line", "copy", "twitter"],
     enabledServices: ["saju", "compatibility"],
     comingSoonServices: ["name", "palm", "face"],
@@ -195,7 +195,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
       compatibility: { premium: 59000 },
     },
     priceLabel: "89.000₫",
-    paymentProvider: "stripe",
+    paymentProvider: "paddle",
     shareChannels: ["zalo", "copy", "twitter"],
     enabledServices: ["saju", "compatibility"],
     comingSoonServices: ["name", "palm", "face"],
@@ -225,7 +225,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
       compatibility: { premium: 29000 },
     },
     priceLabel: "Rp49.000",
-    paymentProvider: "stripe",
+    paymentProvider: "paddle",
     shareChannels: ["whatsapp", "copy", "twitter"],
     enabledServices: ["saju", "compatibility"],
     comingSoonServices: ["name", "palm", "face"],
@@ -255,7 +255,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
       compatibility: { premium: 14900 },
     },
     priceLabel: "₹199",
-    paymentProvider: "razorpay",
+    paymentProvider: "paddle",
     shareChannels: ["whatsapp", "copy", "twitter"],
     enabledServices: ["saju", "compatibility"],
     comingSoonServices: ["name", "palm", "face"],

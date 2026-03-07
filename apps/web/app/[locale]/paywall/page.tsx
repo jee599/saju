@@ -53,16 +53,8 @@ function PaywallContent() {
       const input = { name, birthDate, birthTime, gender, calendarType };
       const provider = country.paymentProvider;
 
-      // NEXT_PUBLIC_PAYMENT_PROVIDER=paddle overrides the per-country provider at runtime.
-      // Stripe/Razorpay countries continue to use Stripe unless the flag is set.
-      const globalProvider = process.env.NEXT_PUBLIC_PAYMENT_PROVIDER;
-      const effectiveProvider =
-        globalProvider === "paddle" ? (country.code === 'kr' ? provider : "paddle")
-        : globalProvider === "stripe" ? "stripe"
-        : provider;
-
-      if (effectiveProvider === "paddle") {
-        // Paddle hosted checkout flow
+      if (provider === "paddle") {
+        // Paddle hosted checkout flow (all non-KR countries)
         const res = await fetch("/api/checkout/paddle/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -80,36 +72,11 @@ function PaywallContent() {
         if (!checkoutUrl) throw new Error(t("noCheckoutUrl"));
 
         track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
-        // External redirect to Paddle hosted checkout (cross-origin URL)
         window.location.href = checkoutUrl;
-        return; // Keep button in loading state to prevent double-clicks during redirect
+        return;
       }
 
-      if (effectiveProvider === "stripe" || effectiveProvider === "razorpay") {
-        // Stripe flow (razorpay routes through Stripe temporarily)
-        const res = await fetch("/api/checkout/stripe/create", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            productCode: "full",
-            input,
-            email: email || undefined,
-            locale,
-          }),
-        });
-
-        if (!res.ok) throw new Error(t("createFail"));
-        const data = await res.json();
-        const checkoutUrl = data.data?.checkoutUrl;
-        if (!checkoutUrl) throw new Error(t("noCheckoutUrl"));
-
-        track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
-        // External redirect to Stripe hosted checkout (not router.push — cross-origin URL)
-        window.location.href = checkoutUrl;
-        return; // Keep button in loading state to prevent double-clicks during redirect
-      }
-
-      // Toss flow (Korean locale) — existing behavior
+      // Toss flow (Korean locale)
       const res = await fetch("/api/checkout/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
