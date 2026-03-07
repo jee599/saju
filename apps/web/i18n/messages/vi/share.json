@@ -1,7 +1,7 @@
 {
   "title": "Chia sẻ kết quả",
   "desc": "Chia sẻ kết quả phân tích ngũ hành với bạn bè",
-  "text": "Ngũ hành của {name} là {element}! Còn bạn?",
+  "text": "Ngũ hành của {name} là {element}!\nKhám phá vận mệnh miễn phí bằng AI, thử ngay!",
   "copied": "Đã sao chép liên kết",
   "copyFailed": "Sao chép thất bại. Vui lòng sao chép URL thủ công.",
   "copiedForApp": "Đã sao chép liên kết. Dán vào {app} nhé!",

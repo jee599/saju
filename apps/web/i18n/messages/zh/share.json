@@ -1,7 +1,7 @@
 {
   "title": "分享结果",
   "desc": "把你的四柱分析分享给朋友吧",
-  "text": "{name}的五行是{element}！你的呢？",
+  "text": "{name}的五行是{element}！\nAI命理分析，免费测你的命运",
   "copied": "链接已复制",
   "copyFailed": "复制失败，请手动复制链接。",
   "copiedForApp": "链接已复制，快去{app}粘贴吧！",

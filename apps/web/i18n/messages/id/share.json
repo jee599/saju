@@ -1,7 +1,7 @@
 {
   "title": "Bagikan Hasil",
   "desc": "Bagikan analisis elemen kamu kepada teman",
-  "text": "Elemen {name} adalah {element}! Bagaimana dengan kamu?",
+  "text": "Elemen {name} adalah {element}!\nCek takdirmu gratis dengan analisis AI, yuk coba!",
   "copied": "Tautan disalin",
   "copyFailed": "Gagal menyalin. Silakan salin URL secara manual.",
   "copiedForApp": "Tautan disalin. Tempelkan di {app}!",
