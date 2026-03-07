@@ -1,7 +1,7 @@
 {
   "title": "Share Your Result",
   "desc": "Share your element reading with friends",
-  "text": "{name}'s element is {element}!\nDiscover your destiny with a free AI-powered reading",
+  "text": "{name}'s element is {element}!\n{traits}\nDiscover your destiny with a free AI-powered reading",
   "copied": "Link copied!",
   "copyFailed": "Copy failed. Please copy the URL manually.",
   "copiedForApp": "Link copied! Paste it in {app}.",

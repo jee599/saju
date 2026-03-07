@@ -78,6 +78,7 @@ interface ShareButtonsProps {
   element: string;
   elementKey: string;
   name: string;
+  traits: string;
 }
 
 /** Download the story-format OG image for Instagram/TikTok */
@@ -129,7 +130,7 @@ async function shareKakao(shareUrl: string, title: string, description: string, 
   }
 }
 
-export default function ShareButtons({ element, elementKey, name }: ShareButtonsProps) {
+export default function ShareButtons({ element, elementKey, name, traits }: ShareButtonsProps) {
   const locale = useLocale();
   const t = useTranslations("share");
   const [toastMsg, setToastMsg] = useState<string | null>(null);
@@ -159,7 +160,7 @@ export default function ShareButtons({ element, elementKey, name }: ShareButtons
 
   const channels = getShareChannels(locale);
   const safeName = name || "?";
-  const shareText = t("text", { element, name: safeName });
+  const shareText = t("text", { element, name: safeName, traits });
 
   function showToast(msg: string) {
     if (!mountedRef.current) return;

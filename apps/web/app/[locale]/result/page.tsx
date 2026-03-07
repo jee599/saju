@@ -326,6 +326,7 @@ function ResultContent() {
           element={t(`elements.${mainEl}`)}
           elementKey={mainEl}
           name={name}
+          traits={t(`dayMaster.traits.${mainEl}`)}
         />
 
         {/* 스티키 CTA */}
