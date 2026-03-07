@@ -1,4 +1,5 @@
 {
+  "pillarLabel": { "year": "年", "month": "月", "day": "日", "hour": "时" },
   "radar": {
     "aria": "五行雷达图",
     "desc": "显示木、火、土、金、水五行分布的雷达图"

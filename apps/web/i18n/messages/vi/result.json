@@ -1,4 +1,5 @@
 {
+  "pillarLabel": { "year": "Năm", "month": "Tháng", "day": "Ngày", "hour": "Giờ" },
   "radar": {
     "aria": "Biểu đồ radar ngũ hành",
     "desc": "Biểu đồ radar thể hiện phân bố của các hành Mộc, Hỏa, Thổ, Kim và Thủy"

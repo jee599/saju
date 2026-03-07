@@ -18,6 +18,8 @@ const RATE_LIMITED_PATHS = [
   "/api/checkout/paddle/create",
   "/api/fortune/mock",
   "/api/events",
+  "/api/report/",
+  "/api/email/subscribe",
 ];
 
 function getClientIp(request: NextRequest): string {
@@ -69,7 +71,7 @@ export function middleware(request: NextRequest) {
       const origin = request.nextUrl.origin;
       fetch(`${origin}/api/internal/log-rate-limit`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-internal-caller": "middleware" },
         body: JSON.stringify({ ip, endpoint: pathname }),
       }).catch(() => {});
 

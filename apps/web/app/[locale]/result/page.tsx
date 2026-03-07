@@ -153,10 +153,10 @@ function ResultContent() {
     if (!analysis) return sources;
 
     const marks: Array<{ label: string; stem: string; branch: string }> = [
-      { label: "년", stem: analysis.pillars.year.stem, branch: analysis.pillars.year.branch },
-      { label: "월", stem: analysis.pillars.month.stem, branch: analysis.pillars.month.branch },
-      { label: "일", stem: analysis.pillars.day.stem, branch: analysis.pillars.day.branch },
-      { label: "시", stem: analysis.pillars.hour.stem, branch: analysis.pillars.hour.branch },
+      { label: t("pillarLabel.year"), stem: analysis.pillars.year.stem, branch: analysis.pillars.year.branch },
+      { label: t("pillarLabel.month"), stem: analysis.pillars.month.stem, branch: analysis.pillars.month.branch },
+      { label: t("pillarLabel.day"), stem: analysis.pillars.day.stem, branch: analysis.pillars.day.branch },
+      { label: t("pillarLabel.hour"), stem: analysis.pillars.hour.stem, branch: analysis.pillars.hour.branch },
     ];
 
     for (const m of marks) {

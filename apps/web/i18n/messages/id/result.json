@@ -1,4 +1,5 @@
 {
+  "pillarLabel": { "year": "Tahun", "month": "Bulan", "day": "Hari", "hour": "Jam" },
   "radar": {
     "aria": "Diagram Radar Lima Elemen",
     "desc": "Diagram radar yang menampilkan distribusi elemen Kayu, Api, Tanah, Logam, dan Air"
