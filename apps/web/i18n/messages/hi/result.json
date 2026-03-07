@@ -139,5 +139,11 @@
     "Reading family and interpersonal relationship fortune",
     "Summarizing the 3–5 year outlook",
     "Finalizing the complete report"
-  ]
+  ],
+  "lunarConversionError": "चंद्र तिथि रूपांतरण विफल रहा। विश्लेषण सौर कैलेंडर से गणना किया गया।",
+  "shareTitle": "परिणाम साझा करें",
+  "shareDesc": "अपने चार स्तंभ विश्लेषण को दोस्तों के साथ साझा करें",
+  "shareText": "मेरा प्रमुख तत्व {element} है! आपका क्या है?",
+  "shareCta": "साझा करें",
+  "shareCopied": "लिंक कॉपी हो गया"
 }

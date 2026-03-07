@@ -1,6 +1,8 @@
 import { useTranslations } from "next-intl";
 import { GlassCard, PageContainer } from "../components/ui";
 
+export const revalidate = 3600;
+
 export default function DisclaimerPage() {
   const t = useTranslations("legal.disclaimer");
 

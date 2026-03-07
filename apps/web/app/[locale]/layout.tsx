@@ -6,7 +6,7 @@ import { Link } from "../../i18n/navigation";
 import { locales } from "../../i18n/config";
 import { GtagScript } from "./components/GtagScript";
 import LanguageSelector from "./components/LanguageSelector";
-import CosmicBackground from "./components/CosmicBackground";
+import CosmicBackgroundLoader from "./components/CosmicBackgroundLoader";
 
 const AURORA_FONTS_URL = "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap";
 
@@ -95,6 +95,27 @@ export default async function LocaleLayout({ children, params }: { children: Rea
 
   const messages = await getMessages();
   const t = await getTranslations({ locale, namespace: "common" });
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://fortunelab.store";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: t("brand"),
+    description: t("metadata.description"),
+    url: locale === "ko" ? baseUrl : `${baseUrl}/${locale}`,
+    applicationCategory: "LifestyleApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "4.99",
+      priceCurrency: "USD",
+    },
+    creator: {
+      "@type": "Organization",
+      name: "FortuneLab",
+      url: baseUrl,
+    },
+  };
 
   return (
     <html lang={locale} data-locale={locale}>
@@ -105,9 +126,13 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       </head>
       <GtagScript />
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <a href="#main-content" className="skip-link">{t("skipLink")}</a>
         <NextIntlClientProvider messages={messages}>
-          <CosmicBackground />
+          <CosmicBackgroundLoader />
           <header className="siteHeader">
             <div className="headerInner">
               <div className="headerTopRow">

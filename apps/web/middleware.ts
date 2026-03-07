@@ -7,6 +7,8 @@ import { locales, defaultLocale } from "./i18n/config";
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 5;
 const DAY_MS = 24 * 60 * 60 * 1000;
+let lastCleanup = Date.now();
+const CLEANUP_INTERVAL = 60 * 60 * 1000; // 1 hour
 
 const RATE_LIMITED_PATHS = [
   "/api/report/preview",
@@ -46,6 +48,14 @@ export function middleware(request: NextRequest) {
     const ip = getClientIp(request);
     const key = `${ip}:${pathname}`;
     const now = Date.now();
+
+    // Periodic cleanup of expired entries to prevent memory leak
+    if (now - lastCleanup > CLEANUP_INTERVAL) {
+      lastCleanup = now;
+      for (const [k, v] of rateLimitMap) {
+        if (now > v.resetAt) rateLimitMap.delete(k);
+      }
+    }
 
     let entry = rateLimitMap.get(key);
     if (!entry || now > entry.resetAt) {

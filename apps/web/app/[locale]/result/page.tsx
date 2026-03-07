@@ -399,7 +399,7 @@ function ResultContent() {
         {lunarError && (
           <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(255,180,0,0.12)", borderRadius: 8, border: "1px solid rgba(255,180,0,0.25)" }}>
             <p style={{ margin: 0, fontSize: "0.82rem", color: "#ffb400", lineHeight: 1.5 }}>
-              음력 날짜 변환에 실패하여 양력으로 계산되었습니다.
+              {t("lunarConversionError")}
             </p>
           </div>
         )}
@@ -524,6 +524,30 @@ function ResultContent() {
             <Link href={`/compatibility?birthDate=${birthDate}`} className="btn btn-secondary btn-lg">
               {t("compatCta")}
             </Link>
+          </div>
+        </section>
+
+        {/* 공유 */}
+        <section className="glassCard" style={{ marginTop: 16, textAlign: "center" }}>
+          <h3>{t("shareTitle")}</h3>
+          <p className="muted" style={{ marginTop: 4, marginBottom: 12, fontSize: "0.85rem" }}>{t("shareDesc")}</p>
+          <div className="buttonRow" style={{ justifyContent: "center", gap: 10 }}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                const url = window.location.href;
+                const text = t("shareText", { element: t(`elements.${mainEl}`) });
+                if (navigator.share) {
+                  navigator.share({ title: text, url }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(url);
+                  alert(t("shareCopied"));
+                }
+                track("share_click", { channel: "native", content_type: "result" });
+              }}
+            >
+              {t("shareCta")}
+            </button>
           </div>
         </section>
 

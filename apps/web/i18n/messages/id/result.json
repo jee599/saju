@@ -100,5 +100,11 @@
     "Membaca keberuntungan keluarga dan hubungan interpersonal",
     "Merangkum prospek 3–5 tahun ke depan",
     "Menyelesaikan laporan akhir"
-  ]
+  ],
+  "lunarConversionError": "Konversi tanggal lunar gagal. Analisis dihitung menggunakan kalender matahari.",
+  "shareTitle": "Bagikan Hasil",
+  "shareDesc": "Bagikan analisis Empat Pilar dengan teman",
+  "shareText": "Elemen dominan saya adalah {element}! Apa milikmu?",
+  "shareCta": "Bagikan",
+  "shareCopied": "Tautan disalin"
 }

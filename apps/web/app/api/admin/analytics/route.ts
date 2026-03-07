@@ -303,6 +303,27 @@ export async function GET(req: NextRequest) {
     conversionBySource[src]!.conversions += 1;
   }
 
+  // ── Conversion Rate ──
+  const funnelMap = Object.fromEntries(funnelCounts.map((f) => [f.step, f.count]));
+  const paywallViews = funnelMap["paywall_view"] ?? 0;
+  const confirmedOrders = funnelMap["checkout_complete"] ?? 0;
+  const conversionRate = paywallViews > 0 ? Math.round((confirmedOrders / paywallViews) * 10000) / 100 : 0;
+
+  // Funnel step-to-step conversion rates
+  const funnelConversionSteps = ["form_start", "form_complete", "paywall_view", "checkout_complete"] as const;
+  const funnelConversion = funnelConversionSteps.slice(1).map((step, i) => {
+    const prev = funnelConversionSteps[i]!;
+    const prevCount = funnelMap[prev] ?? 0;
+    const currCount = funnelMap[step] ?? 0;
+    return {
+      from: prev,
+      to: step,
+      rate: prevCount > 0 ? Math.round((currCount / prevCount) * 10000) / 100 : 0,
+      fromCount: prevCount,
+      toCount: currCount,
+    };
+  });
+
   // ── Error summary ──
   const errorEvents = await prisma.eventLog.findMany({
     where: { eventType: "error", createdAt: { gte: since } },
@@ -334,6 +355,8 @@ export async function GET(req: NextRequest) {
         returningUsers,
         conversionBySource,
       },
+      conversionRate,
+      funnelConversion,
       errors: errorDist,
     },
   });

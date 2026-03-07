@@ -139,5 +139,11 @@
     "Đang đọc vận gia đình và các mối quan hệ",
     "Đang tổng hợp triển vọng 3-5 năm tới",
     "Đang hoàn thiện báo cáo cuối cùng"
-  ]
+  ],
+  "lunarConversionError": "Chuyển đổi ngày âm lịch thất bại. Phân tích được tính theo dương lịch.",
+  "shareTitle": "Chia sẻ kết quả",
+  "shareDesc": "Chia sẻ phân tích Tứ Trụ với bạn bè",
+  "shareText": "Ngũ hành chủ đạo của tôi là {element}! Còn bạn?",
+  "shareCta": "Chia sẻ",
+  "shareCopied": "Đã sao chép liên kết"
 }

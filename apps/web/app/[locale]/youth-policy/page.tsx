@@ -1,3 +1,5 @@
+export const revalidate = 3600;
+
 export default function YouthPolicyPage() {
   return (
     <div className="page">

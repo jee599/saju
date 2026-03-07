@@ -173,7 +173,7 @@ function PaywallContent() {
             <span style={{ fontSize: "0.78rem", color: "var(--t2)" }}>{t("trustEmail")}</span>
           </div>
 
-          <p style={{ textAlign: "center", fontSize: "0.8rem", color: "var(--t2)", marginTop: 12 }}>
+          <p style={{ textAlign: "center", fontSize: "0.82rem", color: "var(--accent-gold)", marginTop: 12, fontWeight: 500 }}>
             {t("socialProof")}
           </p>
 

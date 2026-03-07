@@ -100,5 +100,11 @@
     "Reading family and interpersonal relationship fortune",
     "Summarizing the 3–5 year outlook",
     "Finalizing the complete report"
-  ]
+  ],
+  "lunarConversionError": "Lunar date conversion failed. The analysis was calculated using the solar calendar.",
+  "shareTitle": "Share Your Results",
+  "shareDesc": "Share your Four Pillars analysis with friends",
+  "shareText": "My dominant element is {element}! What's yours?",
+  "shareCta": "Share",
+  "shareCopied": "Link copied!"
 }
