@@ -3872,7 +3872,7 @@ body:has(.constellationPage) {
 
 .cSelect {
   flex: 1;
-  min-width: 0;
+  min-width: 60px;
   padding: 6px 8px;
   font-size: 0.73rem;
   background: rgba(255, 255, 255, 0.04);
@@ -4090,8 +4090,9 @@ select option {
 }
 
 .cSelect:focus-visible, .cInput:focus-visible, .cMiniPill:focus-visible, .cCta:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
 }
 
 
