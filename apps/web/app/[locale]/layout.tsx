@@ -82,6 +82,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       type: "website",
       locale,
       siteName: t("brand"),
+      images: [
+        {
+          url: `${baseUrl}/api/og?type=result`,
+          width: 1200,
+          height: 630,
+          alt: t("metadata.ogTitle"),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("metadata.ogTitle"),
+      description: t("metadata.ogDescription"),
+      images: [`${baseUrl}/api/og?type=result`],
     },
   };
 }

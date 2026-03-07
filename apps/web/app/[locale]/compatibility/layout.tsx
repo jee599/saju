@@ -15,6 +15,9 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("desc"),
+    openGraph: {
+      images: [{ url: `${baseUrl}/api/og?type=compat`, width: 1200, height: 630 }],
+    },
     alternates: {
       canonical:
         locale === "ko" ? `${baseUrl}${path}` : `${baseUrl}/${locale}${path}`,
