@@ -4,7 +4,8 @@
 // OhangDetailCard) with next/dynamic to reduce initial JS bundle size.
 
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "../../../i18n/navigation";
 import { Suspense } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { trackFunnel, trackTiming, trackError as trackAnalyticsError, createPageTimer, trackPageEvent } from "../../../lib/analytics";

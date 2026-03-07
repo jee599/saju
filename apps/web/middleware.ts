@@ -66,6 +66,14 @@ export function middleware(request: NextRequest) {
     entry.count++;
 
     if (entry.count > RATE_LIMIT) {
+      // Fire-and-forget: log blocked request to DB for monitoring
+      const origin = request.nextUrl.origin;
+      fetch(`${origin}/api/internal/log-rate-limit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ip, endpoint: pathname }),
+      }).catch(() => {});
+
       return NextResponse.json(
         { ok: false, error: { code: "RATE_LIMITED", message: "Rate limit exceeded. Please try again tomorrow." } },
         {

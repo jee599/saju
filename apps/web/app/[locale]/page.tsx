@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "../../i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "../../i18n/navigation";
 import { track, trackFunnel, trackFormStep, trackChoice, trackPageEvent, createPageTimer, trackLanding } from "../../lib/analytics";

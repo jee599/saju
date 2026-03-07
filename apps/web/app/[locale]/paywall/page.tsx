@@ -1,6 +1,7 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "../../../i18n/navigation";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "../../../i18n/navigation";
@@ -126,7 +127,7 @@ function PaywallContent() {
       if (!orderId) throw new Error(t("noOrderId"));
 
       track("checkout_start", { value: country.pricing.saju.premium, currency: country.currency });
-      router.push(`/${locale}/loading-analysis?orderId=${orderId}`);
+      router.push(`/loading-analysis?orderId=${orderId}`);
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : t("checkoutError");
       setError(errMsg);

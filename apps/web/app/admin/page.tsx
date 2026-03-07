@@ -1186,10 +1186,142 @@ function AnalyticsTab({ range, setRange }: { range: string; setRange: (r: string
   );
 }
 
+/* ── Rate Limit Tab ── */
+interface RateLimitData {
+  totalBlocked: number;
+  topIps: { ip: string; count: number }[];
+  topEndpoints: { endpoint: string; count: number }[];
+  recentLogs: { id: string; ip: string; endpoint: string; createdAt: string }[];
+}
+
+function RateLimitTab() {
+  const [data, setData] = useState<RateLimitData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState("7d");
+
+  useEffect(() => {
+    setLoading(true);
+    adminFetch(`/api/admin/rate-limits?range=${range}`).then((res) => {
+      if (res.ok) setData(res.data);
+      setLoading(false);
+    });
+  }, [range]);
+
+  if (loading) return <p style={{ color: "#a89bb8" }}>로딩 중...</p>;
+  if (!data) return <p style={{ color: "#ef4444" }}>데이터를 불러올 수 없습니다.</p>;
+
+  return (
+    <>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        {["1d", "7d", "30d"].map((r) => (
+          <button key={r} style={S.tab(range === r)} onClick={() => setRange(r)}>
+            {r === "1d" ? "오늘" : r === "7d" ? "7일" : "30일"}
+          </button>
+        ))}
+      </div>
+
+      <div style={S.kpiGrid}>
+        <div style={S.kpiCard}>
+          <div style={S.kpiLabel}>차단 요청</div>
+          <div style={{ ...S.kpiValue, color: data.totalBlocked > 0 ? "#ef4444" : "#10b981" }}>
+            {data.totalBlocked.toLocaleString()}
+          </div>
+        </div>
+        <div style={S.kpiCard}>
+          <div style={S.kpiLabel}>차단 IP 수</div>
+          <div style={S.kpiValue}>{data.topIps.length}</div>
+        </div>
+        <div style={S.kpiCard}>
+          <div style={S.kpiLabel}>차단 엔드포인트</div>
+          <div style={S.kpiValue}>{data.topEndpoints.length}</div>
+        </div>
+      </div>
+
+      {data.topIps.length > 0 && (
+        <>
+          <h3 style={{ fontSize: "1rem", marginBottom: 12 }}>Top 차단 IP</h3>
+          <table style={S.table}>
+            <thead>
+              <tr>
+                <th style={S.th}>IP</th>
+                <th style={S.th}>차단 횟수</th>
+                <th style={S.th}>비율</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.topIps.map((row) => (
+                <tr key={row.ip}>
+                  <td style={S.td}><code>{row.ip}</code></td>
+                  <td style={S.td}>{row.count}</td>
+                  <td style={S.td}>
+                    <div style={S.chartBar(data.totalBlocked > 0 ? (row.count / data.totalBlocked) * 100 : 0, "#ef4444")} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      {data.topEndpoints.length > 0 && (
+        <>
+          <h3 style={{ fontSize: "1rem", margin: "24px 0 12px" }}>엔드포인트별 차단</h3>
+          <table style={S.table}>
+            <thead>
+              <tr>
+                <th style={S.th}>엔드포인트</th>
+                <th style={S.th}>횟수</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.topEndpoints.map((row) => (
+                <tr key={row.endpoint}>
+                  <td style={S.td}><code>{row.endpoint}</code></td>
+                  <td style={S.td}>{row.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      {data.recentLogs.length > 0 && (
+        <>
+          <h3 style={{ fontSize: "1rem", margin: "24px 0 12px" }}>최근 차단 로그</h3>
+          <table style={S.table}>
+            <thead>
+              <tr>
+                <th style={S.th}>시간</th>
+                <th style={S.th}>IP</th>
+                <th style={S.th}>엔드포인트</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.recentLogs.map((log) => (
+                <tr key={log.id}>
+                  <td style={S.td}>{formatDate(log.createdAt)}</td>
+                  <td style={S.td}><code>{log.ip}</code></td>
+                  <td style={S.td}><code>{log.endpoint}</code></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      {data.totalBlocked === 0 && (
+        <p style={{ color: "#10b981", textAlign: "center", marginTop: 32 }}>
+          차단된 요청이 없습니다.
+        </p>
+      )}
+    </>
+  );
+}
+
 /* ── Main ── */
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<"overview" | "orders" | "logs" | "analytics">("overview");
+  const [tab, setTab] = useState<"overview" | "orders" | "logs" | "analytics" | "ratelimit">("overview");
   const [range, setRange] = useState("30d");
 
   useEffect(() => {
@@ -1219,12 +1351,14 @@ export default function AdminPage() {
           <button style={S.tab(tab === "orders")} onClick={() => setTab("orders")}>주문</button>
           <button style={S.tab(tab === "logs")} onClick={() => setTab("logs")}>로그</button>
           <button style={S.tab(tab === "analytics")} onClick={() => setTab("analytics")}>분석</button>
+          <button style={S.tab(tab === "ratelimit")} onClick={() => setTab("ratelimit")}>Rate Limit</button>
         </div>
 
         {tab === "overview" && <OverviewTab range={range} setRange={setRange} />}
         {tab === "orders" && <OrdersTab />}
         {tab === "logs" && <LogsTab />}
         {tab === "analytics" && <AnalyticsTab range={range} setRange={setRange} />}
+        {tab === "ratelimit" && <RateLimitTab />}
       </div>
     </div>
   );

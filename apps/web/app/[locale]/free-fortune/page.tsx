@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "../../../i18n/navigation";
 import { useTranslations } from "next-intl";
 import { track } from "../../../lib/analytics";
 
