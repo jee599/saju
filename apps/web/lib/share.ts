@@ -94,17 +94,17 @@ export function getShareChannels(locale: string): ShareChannel[] {
 }
 
 /** Channel display metadata */
-export function getChannelMeta(channel: ShareChannel): { icon: string; labelKey: string } {
-  const meta: Record<ShareChannel, { icon: string; labelKey: string }> = {
-    kakao: { icon: "💛", labelKey: "kakao" },
-    line: { icon: "💚", labelKey: "line" },
-    whatsapp: { icon: "📱", labelKey: "whatsapp" },
-    zalo: { icon: "💙", labelKey: "zalo" },
-    twitter: { icon: "𝕏", labelKey: "twitter" },
-    sms: { icon: "✉️", labelKey: "sms" },
-    instagram: { icon: "📸", labelKey: "instagram" },
-    tiktok: { icon: "🎵", labelKey: "tiktok" },
-    copy: { icon: "🔗", labelKey: "copy" },
+export function getChannelMeta(channel: ShareChannel): { labelKey: string; color: string } {
+  const meta: Record<ShareChannel, { labelKey: string; color: string }> = {
+    kakao: { labelKey: "kakao", color: "#FEE500" },
+    line: { labelKey: "line", color: "#06C755" },
+    whatsapp: { labelKey: "whatsapp", color: "#25D366" },
+    zalo: { labelKey: "zalo", color: "#0068FF" },
+    twitter: { labelKey: "twitter", color: "#ffffff" },
+    sms: { labelKey: "sms", color: "#34C759" },
+    instagram: { labelKey: "instagram", color: "#E4405F" },
+    tiktok: { labelKey: "tiktok", color: "#ffffff" },
+    copy: { labelKey: "copy", color: "#a78bfa" },
   };
   return meta[channel];
 }
