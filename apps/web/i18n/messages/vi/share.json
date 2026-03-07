@@ -1,0 +1,25 @@
+{
+  "title": "Chia sẻ kết quả",
+  "desc": "Chia sẻ kết quả phân tích ngũ hành với bạn bè",
+  "text": "Ngũ hành của {name} là {element}!\n{traits}\nKhám phá vận mệnh miễn phí bằng AI, thử ngay!",
+  "copied": "Đã sao chép liên kết",
+  "copyFailed": "Sao chép thất bại. Vui lòng sao chép URL thủ công.",
+  "copiedForApp": "Đã sao chép liên kết. Dán vào {app} nhé!",
+  "landing": {
+    "heading": "{name} mang mệnh {element}!",
+    "sub": "Khám phá mệnh của bạn miễn phí",
+    "cta": "Xem miễn phí",
+    "meta": "Ngũ hành của {name} là {element}! Còn bạn?"
+  },
+  "channels": {
+    "kakao": "KakaoTalk",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "SMS",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "copy": "Sao chép liên kết"
+  }
+}

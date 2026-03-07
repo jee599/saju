@@ -1,0 +1,25 @@
+{
+  "title": "परिणाम साझा करें",
+  "desc": "अपने तत्व विश्लेषण को दोस्तों के साथ साझा करें",
+  "text": "{name} का तत्व {element} है!\n{traits}\nAI से अपनी किस्मत जानें, मुफ़्त में आज़माएं",
+  "copied": "लिंक कॉपी हो गया",
+  "copyFailed": "कॉपी विफल। कृपया URL मैन्युअल रूप से कॉपी करें।",
+  "copiedForApp": "लिंक कॉपी हो गया। {app} में पेस्ट करें!",
+  "landing": {
+    "heading": "{name} {element} तत्व के हैं!",
+    "sub": "अपना तत्व मुफ़्त में जानें",
+    "cta": "मुफ़्त विश्लेषण शुरू करें",
+    "meta": "{name} का तत्व {element} है! आपका क्या है?"
+  },
+  "channels": {
+    "kakao": "KakaoTalk",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "SMS",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "copy": "लिंक कॉपी करें"
+  }
+}

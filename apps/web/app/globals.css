@@ -4145,3 +4145,97 @@ body:has(.constellationPage) #main-content {
   from { opacity: 0; transform: translateX(-50%) translateY(10px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+
+/* ═══════════ Share Buttons ═══════════ */
+
+.shareButtonsWrap {
+  margin-top: 16px;
+  padding: 20px 16px;
+  background: var(--bg-card-glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  text-align: center;
+}
+
+.shareTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--t1);
+  margin: 0 0 4px;
+}
+
+.shareDesc {
+  font-size: 0.82rem;
+  color: var(--t2);
+  margin: 0 0 16px;
+}
+
+.shareButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.shareBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  min-width: 56px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s;
+  color: var(--t1);
+}
+
+.shareBtn:hover {
+  transform: translateY(-2px);
+}
+
+.shareBtn:active {
+  transform: scale(0.93);
+}
+
+.shareBtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.shareBtn:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.shareBtn:disabled:hover {
+  transform: none;
+}
+
+.shareBtnIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.shareBtn:hover .shareBtnIcon {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.shareBtnLabel {
+  font-size: 0.7rem;
+  color: var(--t2);
+  white-space: nowrap;
+}

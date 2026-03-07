@@ -1,0 +1,25 @@
+{
+  "title": "分享结果",
+  "desc": "把你的四柱分析分享给朋友吧",
+  "text": "{name}的五行是{element}！\n{traits}\nAI命理分析，免费测你的命运",
+  "copied": "链接已复制",
+  "copyFailed": "复制失败，请手动复制链接。",
+  "copiedForApp": "链接已复制，快去{app}粘贴吧！",
+  "landing": {
+    "heading": "{name}是{element}之人！",
+    "sub": "免费查看你的五行",
+    "cta": "免费开始分析",
+    "meta": "{name}的五行是{element}！你的呢？"
+  },
+  "channels": {
+    "kakao": "KakaoTalk",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "短信",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "copy": "复制链接"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "title": "แชร์ผลลัพธ์",
+  "desc": "แชร์ผลวิเคราะห์ธาตุของคุณให้เพื่อนดู",
+  "text": "ธาตุของ{name}คือ{element}!\n{traits}\nวิเคราะห์ดวงชะตาด้วย AI ฟรี ลองดูสิ!",
+  "copied": "คัดลอกลิงก์แล้ว",
+  "copyFailed": "คัดลอกไม่สำเร็จ กรุณาคัดลอก URL ด้วยตนเอง",
+  "copiedForApp": "คัดลอกลิงก์แล้ว วางใน{app}ได้เลย!",
+  "landing": {
+    "heading": "{name} คือคนธาตุ{element}!",
+    "sub": "ค้นพบธาตุของคุณฟรี",
+    "cta": "เริ่มดูดวงฟรี",
+    "meta": "ธาตุของ {name} คือ {element}! แล้วคุณล่ะ?"
+  },
+  "channels": {
+    "kakao": "KakaoTalk",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "SMS",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "copy": "คัดลอกลิงก์"
+  }
+}
