@@ -2,7 +2,7 @@ name: Post Push Pipeline
 on:
   push:
     branches: [main]
-    paths-ignore: ['.github/**']
+    paths-ignore: [".github/**"]
 
 jobs:
   sync-build-logs:
@@ -18,7 +18,24 @@ jobs:
           fi
           git clone https://x-access-token:${TOKEN}@github.com/jee599/portfolio-site.git /tmp/portfolio
           mkdir -p /tmp/portfolio/src/content/build-logs
-          cp build-logs/* /tmp/portfolio/src/content/build-logs/
+          
+          # Only copy files that do NOT already exist in portfolio
+          COPIED=0
+          for f in build-logs/*; do
+            BASENAME=$(basename "$f")
+            if [ ! -f "/tmp/portfolio/src/content/build-logs/$BASENAME" ]; then
+              cp "$f" "/tmp/portfolio/src/content/build-logs/$BASENAME"
+              echo "Copied new file: $BASENAME"
+              COPIED=1
+            else
+              echo "Skipped (already exists): $BASENAME"
+            fi
+          done
+          
+          if [ "$COPIED" -eq 0 ]; then
+            echo "No new files to sync"; exit 0
+          fi
+          
           cd /tmp/portfolio
           git config user.name "Build Log Bot"
           git config user.email "bot@jidonglab.com"
@@ -48,10 +65,7 @@ jobs:
           git add posts/
           git commit -m "draft: ${{ github.event.repository.name }} 작업기" || exit 0
           git push origin "$BRANCH"
-          gh pr create \
-            --title "📝 블로그 초안: ${{ github.event.repository.name }}" \
-            --body "로컬 Claude Code로 생성된 초안. blog-writing 스킬로 다듬은 뒤 merge." \
-            --base main --head "$BRANCH"
+          gh pr create             --title "📝 블로그 초안: ${{ github.event.repository.name }}"             --body "로컬 Claude Code로 생성된 초안. blog-writing 스킬로 다듬은 뒤 merge."             --base main --head "$BRANCH"
 
   send-summary:
     runs-on: ubuntu-latest
