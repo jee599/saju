@@ -7,8 +7,7 @@ if [[ "$LAST_MSG" == auto:* ]] || [[ "$LAST_MSG" == docs:* ]]; then
   exit 0
 fi
 
-CODE_CHANGES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null \
-  | grep -v '\.md$' | grep -v 'build-logs/' | grep -v '\.github/' | wc -l)
+CODE_CHANGES=$(git diff --name-only HEAD~1 HEAD 2>/dev/null   | grep -v "\.md\$" | grep -v "build-logs/" | grep -v "\.github/" | wc -l)
 if [ "$CODE_CHANGES" -eq 0 ]; then
   exit 0
 fi
@@ -17,10 +16,47 @@ fi
 
 mkdir -p build-logs
 
-gtimeout 180 /Users/jidong/.local/bin/claude -p \
-  "최근 커밋을 분석하고 .claude/commands/build-log.md 형식대로 \
-   build-logs/ 에 한국어/영어 빌드 로그를 생성해줘. STATUS.md도 갱신해줘." \
-  || echo "⚠️ 빌드 로그 생성 스킵"
+gtimeout 180 /Users/jidong/.local/bin/claude -p   "최근 커밋을 분석하고 build-logs/ 에 한국어/영어 빌드 로그를 생성해줘.
+STATUS.md도 갱신해줘.
+
+형식 규칙:
+- frontmatter: title, project, date, lang, pair, tags
+- 본문은 일기 스타일 (~다 체)
+- 문단마다 빈 줄로 분리. 한 문장 = 한 아이디어
+- 인라인 코드 참조는 코드블록으로 분리
+- 커밋 로그는 반드시 이 HTML 형식:
+
+<hr class="section-break">
+<div class="commit-log">
+<div class="commit-row"><span class="hash">해시7자</span> <span class="msg">커밋 메시지</span></div>
+</div>
+
+- 변경 요약은 반드시 이 HTML 형식:
+
+<div class="change-summary">
+<table>
+<thead><tr><th>항목</th><th>Before</th><th>After</th></tr></thead>
+<tbody>
+<tr><td class="label">항목명</td><td class="before">이전</td><td class="after">이후</td></tr>
+</tbody>
+</table>
+</div>
+
+- 기능 리스트가 있으면:
+
+<ul class="feature-list">
+<li><span class="feat-title">기능명</span><span class="feat-desc">설명</span></li>
+</ul>
+
+- 통계가 있으면:
+
+<div class="callout-stats">
+<div class="stat-grid">
+<div class="stat-item"><span class="stat-value">값</span><span class="stat-label">라벨</span></div>
+</div>
+</div>
+
+절대 뭘 했나/어떻게 구현했나/문체 구조를 사용하지 마."   || echo "⚠️ 빌드 로그 생성 스킵"
 
 # ── 블로그 초안 생성 (커밋 5개 이상일 때만) ──
 
@@ -29,16 +65,7 @@ if [ "$COMMIT_COUNT" -ge 5 ]; then
   echo "📝 커밋 ${COMMIT_COUNT}개 감지. 블로그 초안 생성 중..."
   mkdir -p blog-drafts
 
-  gtimeout 240 /Users/jidong/.local/bin/claude -p \
-    "build-logs/ 의 최근 한국어 빌드 로그들과 git log를 바탕으로 \
-     블로그 초안을 작성해줘. \
-     문체: ~다 체. 첫 문장은 숫자/핵심 팩트. 6000자 이상. 불릿 금지. \
-     구조: 문제→배경→딥다이브→결과. \
-     DEV.to frontmatter 포함. published: false. tags 최대 4개 소문자. \
-     앵커 태그(ai,webdev,beginners,productivity) 1개 이상. \
-     한국어 초안만. \
-     파일: blog-drafts/$(date +%Y-%m-%d)-draft-ko.md 로 저장." \
-    || echo "⚠️ 블로그 초안 생성 스킵"
+  gtimeout 240 /Users/jidong/.local/bin/claude -p     "build-logs/ 의 최근 한국어 빌드 로그들과 git log를 바탕으로      블로그 초안을 작성해줘.      문체: ~다 체. 첫 문장은 숫자/핵심 팩트. 6000자 이상. 불릿 금지.      구조: 문제→배경→딥다이브→결과.      DEV.to frontmatter 포함. published: false. tags 최대 4개 소문자.      앵커 태그(ai,webdev,beginners,productivity) 1개 이상.      한국어 초안만.      파일: blog-drafts/$(date +%Y-%m-%d)-draft-ko.md 로 저장."     || echo "⚠️ 블로그 초안 생성 스킵"
 fi
 
 # ── 생성된 파일 커밋 ──
