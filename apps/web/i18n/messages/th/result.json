@@ -79,6 +79,8 @@
     "metal": "ทอง",
     "water": "น้ำ"
   },
+  "stemSource": "เทียนกาน{label} ({char})",
+  "branchSource": "ตี้จือ{label} ({char})",
   "elementSources": "แหล่งที่มาธาตุ:",
   "elementSourceCount": "{count}",
   "yinYang": "สมดุลหยิน-หยาง",

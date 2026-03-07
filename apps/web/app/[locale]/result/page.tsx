@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "../../../i18n/navigation";
 import { Suspense, useMemo, useEffect, useState, useRef } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import dynamic from "next/dynamic";
 import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, ELEMENT_EMOJI } from "@saju/engine-saju";
@@ -35,6 +35,7 @@ const STEM_POLARITY: Record<string, "yang" | "yin"> = {
 
 function ResultContent() {
   const t = useTranslations("result");
+  const locale = useLocale();
   const params = useSearchParams();
   const router = useRouter();
   const name = params.get("name") ?? t("defaultUser");
@@ -162,8 +163,8 @@ function ResultContent() {
     for (const m of marks) {
       const stemEl = STEM_TO_ELEMENT[m.stem];
       const branchEl = BRANCH_TO_ELEMENT[m.branch];
-      if (stemEl) sources[stemEl].push(`${m.label}간(${m.stem})`);
-      if (branchEl) sources[branchEl].push(`${m.label}지(${m.branch})`);
+      if (stemEl) sources[stemEl].push(t("stemSource", { label: m.label, char: m.stem }));
+      if (branchEl) sources[branchEl].push(t("branchSource", { label: m.label, char: m.branch }));
     }
 
     return sources;
@@ -206,7 +207,7 @@ function ResultContent() {
         {/* 사주팔자 테이블 */}
         <section className="glassCard" style={{ marginTop: 16 }}>
           <h3 style={{ textAlign: "center", marginBottom: 12 }}>{t("fourPillars")}</h3>
-          <FourPillarsTable pillars={pillars} dayMaster={mainEl} t={t} />
+          <FourPillarsTable pillars={pillars} dayMaster={mainEl} t={t} locale={locale} />
         </section>
 
         {/* 오행 시각화 */}

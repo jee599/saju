@@ -71,6 +71,8 @@
   "elementsNative": {
     "wood": "나무", "fire": "불", "earth": "흙", "metal": "쇠", "water": "물"
   },
+  "stemSource": "{label}간({char})",
+  "branchSource": "{label}지({char})",
   "elementSources": "오행 출처:",
   "elementSourceCount": "{count}개",
   "yinYang": "음양 밸런스",

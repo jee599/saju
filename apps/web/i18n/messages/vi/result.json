@@ -79,6 +79,8 @@
     "metal": "Kim",
     "water": "Thủy"
   },
+  "stemSource": "Thiên can {label} ({char})",
+  "branchSource": "Địa chi {label} ({char})",
   "elementSources": "Nguồn ngũ hành:",
   "elementSourceCount": "{count} nguồn",
   "yinYang": "Cân bằng âm dương",

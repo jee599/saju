@@ -49,6 +49,8 @@
   "elementsNative": {
     "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水"
   },
+  "stemSource": "{label}干({char})",
+  "branchSource": "{label}支({char})",
   "elementSources": "五行の出典:",
   "elementSourceCount": "{count}個",
   "yinYang": "陰陽バランス",

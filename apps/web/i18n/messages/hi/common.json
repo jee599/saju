@@ -7,28 +7,28 @@
   },
   "brand": "FortuneLab",
   "nav": {
-    "label": "Main Menu",
-    "daily": "Today's Fortune",
-    "saju": "Kundli",
-    "palm": "Palm Reading",
-    "naming": "Name Analysis",
-    "face": "Face Reading",
-    "dream": "Dream Guide",
-    "tarot": "Tarot"
+    "label": "मुख्य मेनू",
+    "daily": "आज का राशिफल",
+    "saju": "कुंडली",
+    "palm": "हस्तरेखा",
+    "naming": "नाम विश्लेषण",
+    "face": "मुख विश्लेषण",
+    "dream": "स्वप्न मार्गदर्शन",
+    "tarot": "टैरो"
   },
   "skipLink": "मुख्य सामग्री पर जाएं",
   "footer": {
     "title": "FortuneLab",
-    "description": "Ancient Chinese astrology reimagined with AI technology.",
-    "disclaimer": "Not intended as medical, legal, or financial advice.",
-    "terms": "Terms of Service",
-    "privacy": "Privacy Policy",
-    "refund": "Refund Policy",
-    "legal": "Disclaimer"
+    "description": "प्राचीन चीनी ज्योतिष को AI तकनीक से पुनर्कल्पित किया गया।",
+    "disclaimer": "चिकित्सा, कानूनी या वित्तीय सलाह के रूप में अभिप्रेत नहीं है।",
+    "terms": "सेवा की शर्तें",
+    "privacy": "गोपनीयता नीति",
+    "refund": "वापसी नीति",
+    "legal": "अस्वीकरण"
   },
   "elements": {
     "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },
-    "native": { "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water" },
+    "native": { "wood": "काष्ठ", "fire": "अग्नि", "earth": "पृथ्वी", "metal": "धातु", "water": "जल" },
     "emoji": { "wood": "🌿", "fire": "🔥", "earth": "⛰️", "metal": "⚙️", "water": "🌊" }
   }
 }

@@ -49,6 +49,8 @@
   "elementsNative": {
     "wood": "Wood", "fire": "Fire", "earth": "Earth", "metal": "Metal", "water": "Water"
   },
+  "stemSource": "{label} Stem ({char})",
+  "branchSource": "{label} Branch ({char})",
   "elementSources": "Element sources:",
   "elementSourceCount": "{count}",
   "yinYang": "Yin-Yang Balance",

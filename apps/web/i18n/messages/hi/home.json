@@ -1,45 +1,45 @@
 {
   "hero": {
-    "eyebrow": "FortuneLab — Kundli by AI",
-    "title": "Your Kundli is Big Data",
+    "eyebrow": "FortuneLab — AI कुंडली",
+    "title": "आपकी कुंडली बिग डेटा है",
     "copies": [
-      "MBTI has 16 types. Your Kundli has 518,400 unique combinations.",
-      "Astrologers charge thousands. AI reads your chart for free.",
-      "Add your birth time for a Kundli that is truly yours.",
-      "Every reading feels different? That's your Dasha cycle shifting."
+      "MBTI में 16 प्रकार हैं। आपकी कुंडली में 518,400 अनूठे संयोजन हैं।",
+      "ज्योतिषी हज़ारों लेते हैं। AI मुफ़्त में आपकी कुंडली पढ़ता है।",
+      "जन्म समय जोड़ें और सच में अपनी कुंडली पाएं।",
+      "हर बार अलग परिणाम लगता है? यह आपकी दशा बदल रही है।"
     ],
     "landingTitle": "भाग्य बिग डेटा है",
     "landingSub": "518,400 भाग्य का विस्तृत विश्लेषण"
   },
   "form": {
-    "step1Label": "Name",
-    "namePlaceholder": "Enter your name",
-    "nameAria": "Name",
-    "step2Label": "Date of Birth",
-    "solar": "Solar",
-    "lunar": "Lunar",
-    "yearAria": "Birth year",
-    "yearPlaceholder": "Year",
+    "step1Label": "नाम",
+    "namePlaceholder": "अपना नाम दर्ज करें",
+    "nameAria": "नाम",
+    "step2Label": "जन्म तिथि",
+    "solar": "सौर",
+    "lunar": "चंद्र",
+    "yearAria": "जन्म वर्ष",
+    "yearPlaceholder": "वर्ष",
     "yearSuffix": "",
-    "monthAria": "Birth month",
-    "monthPlaceholder": "Month",
+    "monthAria": "जन्म माह",
+    "monthPlaceholder": "माह",
     "monthSuffix": "",
-    "dayAria": "Birth day",
-    "dayPlaceholder": "Day",
+    "dayAria": "जन्म दिन",
+    "dayPlaceholder": "दिन",
     "daySuffix": "",
-    "step3Label": "Birth Time",
-    "skipTime": "Don't know \u2192",
+    "step3Label": "जन्म समय",
+    "skipTime": "पता नहीं →",
     "selectTime": "समय चुनें",
-    "unknownTime": "Unknown",
+    "unknownTime": "अज्ञात",
     "cityLabel": "जन्म शहर",
     "cityPlaceholder": "अपना शहर दर्ज करें",
-    "unknownTimeDesc": "When birth time is unavailable",
-    "step4Label": "Gender",
-    "male": "Male",
-    "female": "Female",
-    "analyzing": "Analysing your chart...",
-    "confirm": "Confirm",
-    "startFree": "Read My Kundli Free"
+    "unknownTimeDesc": "जन्म समय उपलब्ध न होने पर",
+    "step4Label": "लिंग",
+    "male": "पुरुष",
+    "female": "महिला",
+    "analyzing": "आपकी कुंडली का विश्लेषण हो रहा है...",
+    "confirm": "पुष्टि करें",
+    "startFree": "मुफ़्त कुंडली पढ़ें"
   },
   "branches": [
     { "label": "Zi Hour (子)", "time": "23:00~01:00" },
@@ -56,89 +56,89 @@
     { "label": "Hai Hour (亥)", "time": "21:00~23:00" }
   ],
   "engine": {
-    "heading": "Ancient Wisdom, Reimagined by AI",
-    "subheading": "Get the depth of a seasoned Jyotishi without the appointment. Classical Kundli principles meet modern AI — precise, instant, and always available.",
+    "heading": "प्राचीन ज्ञान, AI द्वारा पुनर्कल्पित",
+    "subheading": "बिना अपॉइंटमेंट के अनुभवी ज्योतिषी जैसी गहराई पाएं। शास्त्रीय कुंडली सिद्धांत और आधुनिक AI — सटीक, तत्काल, सदैव उपलब्ध।",
     "pillars": [
       {
         "icon": "📐",
-        "title": "Precision",
-        "subtitle": "Astronomically accurate chart calculation",
-        "desc": "Validated against 139 gold-standard test cases from births between 1930 and 2010 with 100% accuracy. Automatic solar term boundary correction eliminates calculation errors at the source."
+        "title": "सटीकता",
+        "subtitle": "खगोलीय रूप से सटीक गणना",
+        "desc": "1930 से 2010 के बीच जन्मों के 139 गोल्ड-स्टैंडर्ड टेस्ट केसों पर 100% सटीकता से सत्यापित। स्वचालित सौर पर्व सीमा सुधार गणना त्रुटियों को जड़ से समाप्त करता है।"
       },
       {
         "icon": "📜",
-        "title": "Authenticity",
-        "subtitle": "Grounded in 5 classical source texts",
-        "desc": "Rooted in centuries-tested Chinese astrology classics, systematically interpreted by modern AI. The same principles that have guided millions of readings — now accessible to everyone."
+        "title": "प्रामाणिकता",
+        "subtitle": "5 शास्त्रीय स्रोत ग्रंथों पर आधारित",
+        "desc": "सदियों से परखे गए चीनी ज्योतिष शास्त्रों पर आधारित, AI द्वारा व्यवस्थित व्याख्या। वही सिद्धांत जिन्होंने लाखों रीडिंग का मार्गदर्शन किया — अब सबके लिए सुलभ।"
       },
       {
         "icon": "⚡",
-        "title": "Instant Access",
-        "subtitle": "Full AI analysis in under 1 second",
-        "desc": "From chart calculation and elemental balance to Yong Shen determination — AI completes everything in under 1 second. Check your Kundli anytime, no pandit required."
+        "title": "तत्काल पहुंच",
+        "subtitle": "1 सेकंड से कम में पूर्ण AI विश्लेषण",
+        "desc": "चार्ट गणना और तत्व संतुलन से लेकर योंग शेन निर्धारण तक — AI सब कुछ 1 सेकंड से कम में पूरा करता है। कभी भी अपनी कुंडली देखें, किसी पंडित की ज़रूरत नहीं।"
       }
     ],
-    "cta": "View My Reading"
+    "cta": "मेरी रीडिंग देखें"
   },
   "pricing": {
-    "heading": "Start for Free",
-    "subheading": "Core analysis is completely free. Unlock the full Kundli report with Premium whenever you are ready.",
+    "heading": "मुफ़्त में शुरू करें",
+    "subheading": "मूल विश्लेषण पूरी तरह मुफ़्त है। जब चाहें प्रीमियम से पूरी कुंडली रिपोर्ट अनलॉक करें।",
     "free": {
-      "badge": "Free",
-      "title": "Core Reading",
+      "badge": "मुफ़्त",
+      "title": "मूल रीडिंग",
       "price": "₹0",
       "features": [
-        "AI personality & character analysis",
-        "Five-element balance visualisation",
-        "Day Master (日干) card",
-        "Yin-Yang ratio"
+        "AI व्यक्तित्व और स्वभाव विश्लेषण",
+        "पंच तत्व संतुलन दृश्य",
+        "डे मास्टर (日干) कार्ड",
+        "यिन-यांग अनुपात"
       ]
     },
     "premium": {
-      "badge": "Premium",
-      "title": "Full Kundli Report",
+      "badge": "प्रीमियम",
+      "title": "पूर्ण कुंडली रिपोर्ट",
       "price": "₹199",
       "features": [
-        "Everything in the free reading",
-        "20,000+ character AI narrative report",
-        "9 life sections (personality, career, relationships, finance, health & more)",
-        "10-year Dasha timeline"
+        "मुफ़्त रीडिंग की सभी सुविधाएं",
+        "20,000+ अक्षरों की AI विवरणात्मक रिपोर्ट",
+        "9 जीवन खंड (व्यक्तित्व, करियर, संबंध, वित्त, स्वास्थ्य और अधिक)",
+        "10-वर्षीय दशा समयरेखा"
       ],
-      "cta": "Start for Free"
+      "cta": "मुफ़्त में शुरू करें"
     }
   },
   "faq": {
-    "heading": "Frequently Asked Questions",
+    "heading": "अक्सर पूछे जाने वाले प्रश्न",
     "items": [
       {
-        "q": "What system does FortuneLab use for Kundli analysis?",
-        "a": "FortuneLab uses the Chinese Bazi (Eight Characters) system, which analyses four pillars — year, month, day, and hour of birth — to map the flow of one's destiny. It references five classical source texts validated over centuries, making it a rigorous Eastern counterpart to Vedic Jyotish."
+        "q": "FortuneLab कुंडली विश्लेषण के लिए कौन सी प्रणाली उपयोग करता है?",
+        "a": "FortuneLab चीनी बाज़ी (अष्टाक्षर) प्रणाली का उपयोग करता है, जो चार स्तंभों — जन्म वर्ष, माह, दिन और घंटा — का विश्लेषण करके भाग्य का मानचित्रण करती है। यह सदियों से सत्यापित पांच शास्त्रीय स्रोत ग्रंथों पर आधारित है।"
       },
       {
-        "q": "How is this different from a traditional Vedic Kundli?",
-        "a": "Vedic Jyotish uses planetary positions and house placements, while Bazi maps destiny through the interplay of the five elements (Wood, Fire, Earth, Metal, Water) derived from your exact birth date and time. Both systems are complementary; Bazi excels at personality and life-cycle timing."
+        "q": "यह पारंपरिक वैदिक कुंडली से कैसे अलग है?",
+        "a": "वैदिक ज्योतिष ग्रहों की स्थिति और भाव का उपयोग करता है, जबकि बाज़ी पांच तत्वों (काष्ठ, अग्नि, पृथ्वी, धातु, जल) की परस्पर क्रिया से भाग्य का मानचित्रण करता है। दोनों प्रणालियां पूरक हैं; बाज़ी व्यक्तित्व और जीवन-चक्र समय निर्धारण में उत्कृष्ट है।"
       },
       {
-        "q": "How does the AI analyse my chart?",
-        "a": "Our calendar engine first calculates your four pillars and solar term boundaries with astronomical precision. An advanced AI model (Claude/GPT) then applies classical interpretive frameworks to generate a personalised, narrative report — in seconds."
+        "q": "AI मेरी कुंडली का विश्लेषण कैसे करता है?",
+        "a": "हमारा कैलेंडर इंजन पहले खगोलीय सटीकता से आपके चार स्तंभों और सौर पर्व सीमाओं की गणना करता है। फिर एक उन्नत AI मॉडल शास्त्रीय व्याख्या ढांचे लागू करके सेकंडों में व्यक्तिगत विवरणात्मक रिपोर्ट तैयार करता है।"
       },
       {
-        "q": "What if I don't know my exact birth time?",
-        "a": "You can still get a meaningful reading using just your birth date. The hour pillar will be missing, which slightly reduces precision. We recommend checking your birth certificate or asking a family elder for best results."
+        "q": "अगर मुझे अपना सही जन्म समय नहीं पता तो?",
+        "a": "आप केवल जन्म तिथि से भी सार्थक रीडिंग पा सकते हैं। घंटा स्तंभ अनुपलब्ध होगा, जिससे सटीकता थोड़ी कम होगी। सर्वोत्तम परिणामों के लिए अपना जन्म प्रमाण पत्र या परिवार के बड़ों से पूछें।"
       },
       {
-        "q": "Is my personal data safe?",
-        "a": "We use only your date of birth and gender. Your name is used solely for display in the report. Free readings require no login, and all data is automatically deleted after 90 days."
+        "q": "क्या मेरा व्यक्तिगत डेटा सुरक्षित है?",
+        "a": "हम केवल आपकी जन्म तिथि और लिंग का उपयोग करते हैं। आपका नाम केवल रिपोर्ट में प्रदर्शन के लिए है। मुफ़्त रीडिंग के लिए लॉगिन आवश्यक नहीं, और सभी डेटा 90 दिनों बाद स्वचालित रूप से हटा दिया जाता है।"
       },
       {
-        "q": "Does a Bazi chart predict good or bad luck?",
-        "a": "Bazi does not label a chart as inherently lucky or unlucky — it maps innate strengths, growth areas, and the rhythm of life cycles (similar to the concept of Dasha periods in Jyotish). This service provides probabilistic insights and should not be used as the sole basis for medical, legal, or financial decisions."
+        "q": "क्या बाज़ी कुंडली अच्छे या बुरे भाग्य की भविष्यवाणी करती है?",
+        "a": "बाज़ी किसी कुंडली को स्वाभाविक रूप से भाग्यशाली या अभागा नहीं बताती — यह जन्मजात शक्तियों, विकास क्षेत्रों और जीवन चक्रों की लय का मानचित्रण करती है (ज्योतिष में दशा अवधि की अवधारणा के समान)। यह सेवा संभाव्य अंतर्दृष्टि प्रदान करती है और चिकित्सा, कानूनी या वित्तीय निर्णयों का एकमात्र आधार नहीं होनी चाहिए।"
       }
     ]
   },
   "finalCta": {
-    "heading": "Discover What Your Birth Chart Reveals",
-    "subheading": "Start for free and receive your personalised Kundli report — analysed by AI in seconds.",
-    "cta": "Read My Kundli Free"
+    "heading": "जानें आपकी जन्म कुंडली क्या कहती है",
+    "subheading": "मुफ़्त में शुरू करें और AI द्वारा सेकंडों में विश्लेषित अपनी व्यक्तिगत कुंडली रिपोर्ट प्राप्त करें।",
+    "cta": "मुफ़्त कुंडली पढ़ें"
   }
 }

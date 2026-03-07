@@ -79,6 +79,8 @@
     "metal": "金",
     "water": "水"
   },
+  "stemSource": "{label}干({char})",
+  "branchSource": "{label}支({char})",
   "elementSources": "五行来源:",
   "elementSourceCount": "{count}个",
   "yinYang": "阴阳平衡",

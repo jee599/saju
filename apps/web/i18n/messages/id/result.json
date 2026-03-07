@@ -49,6 +49,8 @@
   "elementsNative": {
     "wood": "Kayu", "fire": "Api", "earth": "Tanah", "metal": "Logam", "water": "Air"
   },
+  "stemSource": "Batang {label} ({char})",
+  "branchSource": "Cabang {label} ({char})",
   "elementSources": "Sumber elemen:",
   "elementSourceCount": "{count}",
   "yinYang": "Keseimbangan Yin-Yang",

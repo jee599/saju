@@ -17,7 +17,7 @@ const STEM_POLARITY: Record<string, "yang" | "yin"> = {
   "己": "yin", "庚": "yang", "辛": "yin", "壬": "yang", "癸": "yin",
 };
 
-export default function FourPillarsTable({ pillars, dayMaster, t }: { pillars: FourPillars; dayMaster: Element; t: (key: string) => string }) {
+export default function FourPillarsTable({ pillars, dayMaster, t, locale }: { pillars: FourPillars; dayMaster: Element; t: (key: string) => string; locale: string }) {
   const cols = [
     { label: t("pillarsTable.cols.0"), sub: t("pillarsTable.colsSub.0"), pillar: pillars.hour, idx: 0 },
     { label: t("pillarsTable.cols.1"), sub: t("pillarsTable.colsSub.1"), pillar: pillars.day, idx: 1 },
@@ -63,6 +63,7 @@ export default function FourPillarsTable({ pillars, dayMaster, t }: { pillars: F
             );
           })}
         </tr>
+        {locale === "ko" && (
         <tr className="pillarRowKr">
           <td className="pillarRowLabel"></td>
           {cols.map((col) => (
@@ -71,6 +72,7 @@ export default function FourPillarsTable({ pillars, dayMaster, t }: { pillars: F
             </td>
           ))}
         </tr>
+        )}
       </tbody>
     </table>
     </div>
