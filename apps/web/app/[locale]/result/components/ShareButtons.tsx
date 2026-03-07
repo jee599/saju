@@ -134,7 +134,7 @@ export default function ShareButtons({ element, elementKey, name }: ShareButtons
   const t = useTranslations("share");
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [shareUrl, setShareUrl] = useState("");
-  const [downloading, setDownloading] = useState(false);
+  const [downloadingChannel, setDownloadingChannel] = useState<ShareChannel | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const mountedRef = useRef(true);
 
@@ -181,9 +181,9 @@ export default function ShareButtons({ element, elementKey, name }: ShareButtons
     }
 
     if (channel === "instagram" || channel === "tiktok") {
-      setDownloading(true);
+      setDownloadingChannel(channel);
       const ok = await downloadStoryImage(name, elementKey, locale);
-      setDownloading(false);
+      setDownloadingChannel(null);
       if (ok) {
         showToast(t("copiedForApp", { app: t(`channels.${channel}`) }));
         await copyToClipboard(shareUrl);
@@ -198,6 +198,7 @@ export default function ShareButtons({ element, elementKey, name }: ShareButtons
       const ogImageUrl = `${baseUrl}/api/og?name=${encodeURIComponent(name.slice(0, 20))}&element=${elementKey}&locale=${locale}&type=result`;
       const ok = await shareKakao(shareUrl, shareText, t("desc"), ogImageUrl);
       if (!ok) {
+        // Kakao SDK not available — fallback to copy link
         const copied = await copyToClipboard(shareUrl);
         showToast(t(copied ? "copied" : "copyFailed"));
       }
@@ -225,7 +226,7 @@ export default function ShareButtons({ element, elementKey, name }: ShareButtons
               key={ch}
               className="shareBtn"
               onClick={() => handleShare(ch)}
-              disabled={downloading && (ch === "instagram" || ch === "tiktok")}
+              disabled={downloadingChannel === ch}
               aria-label={t(`channels.${meta.labelKey}`)}
             >
               <span className="shareBtnIcon">
