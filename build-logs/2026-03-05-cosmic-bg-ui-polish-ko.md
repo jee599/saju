@@ -7,35 +7,78 @@ pair: "2026-03-05-cosmic-bg-ui-polish-en"
 tags: [threejs, css, favicon, ui-polish]
 ---
 
-## 뭘 했나
+Three.js 배경을 넣었더니 텍스트가 다 뭉개졌다.
 
-Three.js CosmicBackground를 도입한 직후, 배경 위에서 텍스트와 카드가 흐릿하게 보이는 가독성 문제가 4개 연속으로 터졌다. 별자리 선 제거, 카드 불투명도 강화, 사주 四柱 테이블 대비 강화, 파비콘 추가까지 커밋 4개로 마무리했다.
+4번 연속 고쳤다.
 
-## 어떻게 구현했나
 
-Three.js 배경이 들어오면서 기존 CSS 변수들이 반투명으로 설계되어 있었던 게 문제였다. `--bg-card`, `--bg-card-glass`, `.glassCard` 배경색이 거의 투명에 가까워서 3D 별빛 위에서 텍스트가 뭉개졌다.
+## 별자리 선부터 잘랐다
 
-먼저 별자리 선(constellation lines)을 제거했다. 3개 별자리에 36줄 코드를 썼지만 실제 화면에서 opacity 0.12라 거의 안 보이면서 렌더링 부담만 줬다. `> "별자리 선이 너무 옅어서 시각적 노이즈가 되고 있다. 삭제해줘."` 한 줄로 끝났다.
+3개 별자리에 36줄 코드를 썼는데, 실제 화면에서 `opacity: 0.12`라 거의 안 보인다.
 
-카드 배경 불투명도는 CSS 변수 4개를 `rgba(13,11,20,0.72)` 계열로 올렸다. 사주 테이블은 더 세밀했는데, 천간/지지 한자에 `text-shadow` glow를 넣고, 행 구분선을 추가하고, highlight 열 대비를 끌어올리는 작업을 `globals.css` 한 파일에서 처리했다.
+렌더링 부담만 주고 시각적 노이즈가 되길래 통째로 삭제했다.
 
-파비콘은 Next.js App Router가 `app/icon.svg`를 자동 인식하는 관례를 활용했다. 별 문자(☆)에 보라→시안 그라디언트를 적용한 SVG 10줄로 완성했다. 별도 설정 없이 배포 즉시 반영된다.
+> "별자리 선이 너무 옅어서 시각적 노이즈가 되고 있다. 삭제해줘."
 
-## 커밋 로그
+한 줄이면 끝. **36줄 → 0줄.**
 
-- `cc721f1` fix(ui): remove constellation lines from CosmicBackground
-- `4aec609` fix(ui): increase card background opacity for readability over 3D background
-- `b5a348d` fix(ui): enhance Four Pillars table readability and color emphasis
-- `ae7f7eb` feat(ui): add favicon (SVG star icon with gradient)
+과감하게 잘라야 할 때가 있다.
 
-## 결과
 
-| 항목 | Before | After |
-|------|--------|-------|
-| 별자리 코드 | 36줄 | 0줄 |
-| 카드 배경 불투명도 | ~10% | ~72% |
-| 파비콘 | 없음 | SVG 10줄 |
+## 카드가 투명했다
 
-## 문체
+`--bg-card`, `--bg-card-glass`, `.glassCard` 배경색이 거의 투명이었다.
 
-작업 자체보다 Claude Code 활용 흐름이 흥미로웠다. 비주얼 문제는 스크린샷을 붙이면 한 번에 정확히 잡는다. `globals.css`가 커져도 "이 파일에서 테이블 관련 CSS만 찾아서 수정" 같은 지시가 통했다. 파비콘처럼 프레임워크 관례를 알아야 하는 작업도 "Next.js App Router 방식으로"라는 한 마디로 올바른 경로까지 안내받았다.
+CSS 변수를 처음 잡을 때 반투명으로 설계했는데, 3D 별빛 위에서는 텍스트가 읽히질 않았다.
+
+CSS 변수 4개를 `rgba(13,11,20,0.72)` 계열로 올렸다.
+
+
+## 사주 테이블은 더 세밀했다
+
+천간/지지 한자에 `text-shadow` glow를 넣었다.
+
+행 구분선을 추가하고, highlight 열 대비를 끌어올렸다.
+
+`globals.css` 한 파일에서 다 처리했는데, Claude한테 "이 파일에서 테이블 관련 CSS만 찾아서 수정"이라고 범위를 좁혀주니 정확히 잡았다.
+
+
+## 파비콘 추가
+
+Next.js App Router는 `app/icon.svg` 파일을 자동 인식한다.
+
+별도 설정이 필요 없다.
+
+```svg
+<!-- app/icon.svg -->
+<svg>
+  <circle fill="url(#grad)"/>
+  <text>☆</text>
+  <!-- 보라→시안 그라디언트, 총 10줄 -->
+</svg>
+```
+
+"Next.js App Router 방식으로 파비콘 추가해줘"라는 한 마디로 올바른 경로까지 안내받았다.
+
+
+<hr class="section-break">
+
+<div class="commit-log">
+<div class="commit-row"><span class="hash">cc721f1</span> <span class="msg">fix(ui): remove constellation lines</span></div>
+<div class="commit-row"><span class="hash">4aec609</span> <span class="msg">fix(ui): increase card background opacity</span></div>
+<div class="commit-row"><span class="hash">b5a348d</span> <span class="msg">fix(ui): enhance Four Pillars table readability</span></div>
+<div class="commit-row"><span class="hash">ae7f7eb</span> <span class="msg">feat(ui): add favicon (SVG star icon)</span></div>
+</div>
+
+<div class="change-summary">
+<table>
+<thead><tr><th>항목</th><th>Before</th><th>After</th></tr></thead>
+<tbody>
+<tr><td class="label">별자리 코드</td><td class="before">36줄</td><td class="after">0줄</td></tr>
+<tr><td class="label">카드 불투명도</td><td class="before">~10%</td><td class="after">~72%</td></tr>
+<tr><td class="label">파비콘</td><td class="before">없음</td><td class="after">SVG 10줄</td></tr>
+</tbody>
+</table>
+</div>
+
+비주얼 문제는 스크린샷을 붙이면 한 번에 정확히 잡힌다.
