@@ -32,8 +32,8 @@ model Order {
   currency        String    @default("KRW")
   countryCode     String    @default("kr")
   locale          String    @default("ko")
-  paymentProvider String? // "toss" | "stripe" | "razorpay"
-  paymentId       String? // External payment ID (e.g. Stripe session ID)
+  paymentProvider String? // "toss" | "paddle"
+  paymentId       String? // External payment ID (e.g. Paddle transaction ID)
   status          String    @default("created")
   email           String?
   emailSentAt     DateTime? @map("email_sent_at")

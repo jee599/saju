@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     const country = getCountryByLocale(locale);
     const localePath = `/${locale}`;
 
-    // Locale / IP-country mismatch logging (mirrors stripe/create behaviour)
+    // Locale / IP-country mismatch logging
     const cfCountry = req.headers.get('cf-ipcountry');
     if (cfCountry && cfCountry.toLowerCase() !== country.code.toLowerCase()) {
       console.warn(

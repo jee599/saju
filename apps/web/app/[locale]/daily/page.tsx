@@ -1,6 +1,7 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "../../../i18n/navigation";
 import { Suspense, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/navigation";
