@@ -32,7 +32,7 @@
 
   /* 텍스트 */
   --t1: #f0eef5;
-  --t2: #a5a0b8;
+  --t2: #b8b3cc;
   --t3: #6b6680;
 
   /* 보더 */
@@ -887,7 +887,7 @@ p, li, label, input, select, button, textarea {
 .sajuLoadingPct {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #D4AF37;
+  color: #E5C158;
   text-align: center;
   line-height: 1;
 }
@@ -1380,7 +1380,7 @@ p, li, label, input, select, button, textarea {
 
 @media (max-width: 480px) {
   .fourPillarsTable { min-width: 0; }
-  .fourPillarsTableWrap { overflow-x: hidden; }
+  .fourPillarsTableWrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .pillarChar { font-size: 1.1rem; }
   .fourPillarsTable th,
   .fourPillarsTable td { padding: 6px 3px; }
@@ -1550,7 +1550,7 @@ p, li, label, input, select, button, textarea {
 .personalityHeading {
   font-size: 1rem;
   font-weight: 700;
-  color: #D4AF37;
+  color: #E5C158;
   margin: 20px 0 8px;
   padding-bottom: 4px;
   border-bottom: 1px solid rgba(34, 211, 238, 0.2);
@@ -4022,6 +4022,7 @@ body:has(.loadingAnalysis) .siteHeader:hover .topNav {
   .cCta {
     font-size: 0.7rem;
     padding: 10px;
+    min-height: 44px;
   }
   .cGenderPill {
     font-size: 0.62rem;
@@ -4057,13 +4058,14 @@ select option {
   html, body { overflow-x: hidden; }
   .cLegalLinks { opacity: 1; }
   .topNav {
-    opacity: 0 !important;
-    pointer-events: none !important;
     max-width: 100%;
     width: 100%;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 4px 0;
   }
   .fourPillarsTableWrap { overflow-x: auto; }
   .fourPillarsTable { min-width: 320px; }
@@ -4101,4 +4103,27 @@ body:has(.constellationPage) .siteHeader {
 }
 body:has(.constellationPage) #main-content {
   padding-top: 0 !important;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 18, 30, 0.92);
+  border: 1px solid var(--glass-border);
+  color: var(--t1);
+  padding: 10px 24px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  z-index: 200;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: toastIn 0.3s ease;
+  pointer-events: none;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }

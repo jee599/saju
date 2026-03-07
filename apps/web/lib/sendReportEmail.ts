@@ -139,7 +139,7 @@ export async function sendReportEmail(params: SendReportEmailParams): Promise<{ 
     const html = buildHtml(params);
 
     const { error } = await getResend().emails.send({
-      from: "FortuneLab <noreply@fortunelab.store>",
+      from: process.env.RESEND_FROM_EMAIL ?? "FortuneLab <noreply@fortunelab.store>",
       to: params.to,
       subject: `${params.userName}님의 사주 분석 리포트가 완성되었습니다`,
       html,

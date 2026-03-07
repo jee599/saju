@@ -244,7 +244,8 @@ export async function POST(req: Request) {
 
       // 8. 이메일 발송 (첫 리포트)
       if (order.email && !order.emailSentAt) {
-        const reportUrl = `https://fortunelab.store/report/${order.id}?token=${generateViewToken(order.id)}`;
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://fortunelab.store";
+        const reportUrl = `${baseUrl}/report/${order.id}?token=${generateViewToken(order.id)}`;
         sendReportEmail({
           to: order.email,
           userName: input.name,

@@ -122,7 +122,7 @@ function DailyContent() {
 
         {!showResult ? (
           <section className="glassCard" style={{ marginTop: 16 }}>
-            <h3>{t("inputTitle")}</h3>
+            <h2 style={{ fontSize: "1.1rem" }}>{t("inputTitle")}</h2>
             <div className="form" style={{ maxWidth: 360, margin: "16px auto 0" }}>
               <div className="formGroup">
                 <label htmlFor="daily-name">{t("nameLabel")}</label>

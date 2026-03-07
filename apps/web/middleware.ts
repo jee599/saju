@@ -18,6 +18,7 @@ const RATE_LIMITED_PATHS = [
   "/api/checkout/stripe/create",
   "/api/checkout/paddle/create",
   "/api/fortune/mock",
+  "/api/events",
 ];
 
 function getClientIp(request: NextRequest): string {

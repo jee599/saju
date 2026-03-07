@@ -15,7 +15,7 @@ function getViewTokenSecret(): string {
 /** Generate a view token from orderId + server secret for IDOR protection */
 export function generateViewToken(orderId: string): string {
   const secret = getViewTokenSecret();
-  return createHmac("sha256", secret).update(orderId).digest("hex").slice(0, 32);
+  return createHmac("sha256", secret).update(orderId).digest("hex");
 }
 
 /** Constant-time verification of a view token */

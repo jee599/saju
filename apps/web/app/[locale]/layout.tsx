@@ -170,12 +170,12 @@ export default async function LocaleLayout({ children, params }: { children: Rea
               <p className="footerTitle">{t("footer.title")}</p>
               <p className="muted">{t("footer.description")}</p>
               <p className="muted">{t("footer.disclaimer")}</p>
-              <div className="footerLinks">
+              <nav className="footerLinks" aria-label="Legal">
                 <Link href="/terms">{t("footer.terms")}</Link>
                 <Link href="/privacy">{t("footer.privacy")}</Link>
                 <Link href="/refund">{t("footer.refund")}</Link>
                 <Link href="/disclaimer">{t("footer.legal")}</Link>
-              </div>
+              </nav>
             </div>
           </footer>
         </NextIntlClientProvider>

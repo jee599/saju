@@ -46,9 +46,9 @@ describe("generateViewToken", () => {
     expect(token1).not.toBe(token2);
   });
 
-  it("returns a 32-character hex string", () => {
+  it("returns a 64-character hex string", () => {
     const token = generateViewToken("order_test");
-    expect(token).toMatch(/^[0-9a-f]{32}$/);
+    expect(token).toMatch(/^[0-9a-f]{64}$/);
   });
 });
 
