@@ -4174,7 +4174,7 @@ body:has(.constellationPage) #main-content {
 
 .shareButtons {
   display: flex;
-  gap: 8px;
+  gap: 16px;
   justify-content: center;
   flex-wrap: wrap;
 }
@@ -4183,28 +4183,28 @@ body:has(.constellationPage) #main-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 10px 12px;
-  min-width: 60px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm);
+  gap: 6px;
+  padding: 0;
+  min-width: 56px;
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition: transform 0.1s;
   color: var(--t1);
 }
 
 .shareBtn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
 }
 
 .shareBtn:active {
-  transform: scale(0.95);
+  transform: scale(0.93);
 }
 
 .shareBtn:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 4px;
+  border-radius: 8px;
 }
 
 .shareBtn:disabled {
@@ -4213,17 +4213,29 @@ body:has(.constellationPage) #main-content {
 }
 
 .shareBtn:disabled:hover {
-  background: transparent;
   transform: none;
 }
 
 .shareBtnIcon {
-  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  font-size: 1.3rem;
   line-height: 1;
+  transition: background 0.15s;
+}
+
+.shareBtn:hover .shareBtnIcon {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .shareBtnLabel {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--t2);
   white-space: nowrap;
 }

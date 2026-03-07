@@ -189,13 +189,6 @@ function ResultContent() {
           </p>
         </section>
 
-        {/* 공유 버튼 — Day Master 바로 아래 */}
-        <ShareButtons
-          element={t(`elements.${mainEl}`)}
-          elementKey={mainEl}
-          name={name}
-        />
-
         {/* 음력 변환 실패 경고 */}
         {lunarError && (
           <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(255,180,0,0.12)", borderRadius: 8, border: "1px solid rgba(255,180,0,0.25)" }}>
