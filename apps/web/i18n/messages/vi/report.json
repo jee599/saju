@@ -9,5 +9,6 @@
   "tocAria": "Mục lục báo cáo",
   "jumpNavAria": "Điều hướng nhanh báo cáo",
   "checklist": "Danh sách hành động",
-  "fetchFail": "Không thể tải báo cáo"
+  "fetchFail": "Không thể tải báo cáo",
+  "retry": "Thử lại"
 }

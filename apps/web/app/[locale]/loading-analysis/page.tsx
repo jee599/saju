@@ -398,7 +398,7 @@ function LoadingContent() {
       trackAnalyticsError("loading_free_error", errMsg);
       setIsGenerating(false);
     }
-  }, [isFreeFlow, freeName, freeBirthDate, freeBirthTime, freeGender, freeCalendarType, locale, router, t]);
+  }, [isFreeFlow, freeName, freeBirthDate, freeBirthTime, freeGender, freeCalendarType, locale, router, t, elapsedSec]);
 
   useEffect(() => {
     if (isFreeFlow) callFreeGenerate();
@@ -475,7 +475,7 @@ function LoadingContent() {
       trackAnalyticsError("loading_paid_error", errMsg);
       setIsGenerating(false);
     }
-  }, [orderId, router, t]);
+  }, [orderId, router, t, elapsedSec]);
 
   useEffect(() => {
     if (orderId) callConfirm();

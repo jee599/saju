@@ -215,7 +215,14 @@ export default function ReportPage() {
           <ButtonLink href="/" variant="ghost">{t("backHome")}</ButtonLink>
         </div>
 
-        {error ? <StatusBox title={t("error")} description={error} tone="error" /> : null}
+        {error ? (
+          <>
+            <StatusBox title={t("error")} description={error} tone="error" />
+            <div className="buttonRow" style={{ marginTop: 12 }}>
+              <button className="btn btn-primary" onClick={() => { setError(null); if (orderId) { (async () => { try { const res = await webApi.report(orderId, token); setData(res); } catch (e) { setError(e instanceof Error ? e.message : t("fetchFail")); } })(); } }}>{t("retry")}</button>
+            </div>
+          </>
+        ) : null}
 
         {!data ? (
           <p className="muted">{t("loading")}</p>

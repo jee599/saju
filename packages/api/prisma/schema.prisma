@@ -42,6 +42,9 @@ model Order {
 
   request FortuneRequest @relation(fields: [requestId], references: [id])
   reports Report[]
+
+  @@index([status, createdAt])
+  @@index([countryCode, createdAt])
 }
 
 // ── Report (리포트) ─────────────────────────────────────

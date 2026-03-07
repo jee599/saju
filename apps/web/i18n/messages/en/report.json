@@ -9,5 +9,6 @@
   "tocAria": "Report table of contents",
   "jumpNavAria": "Quick navigation for report",
   "checklist": "Action Checklist",
-  "fetchFail": "Failed to load report"
+  "fetchFail": "Failed to load report",
+  "retry": "Retry"
 }

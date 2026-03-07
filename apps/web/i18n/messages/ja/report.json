@@ -9,5 +9,6 @@
   "tocAria": "レポート目次",
   "jumpNavAria": "レポートへのクイック移動",
   "checklist": "実行チェックリスト",
-  "fetchFail": "レポートの取得に失敗しました"
+  "fetchFail": "レポートの取得に失敗しました",
+  "retry": "再試行"
 }

@@ -9,5 +9,6 @@
   "tocAria": "报告目录",
   "jumpNavAria": "报告快速跳转",
   "checklist": "行动清单",
-  "fetchFail": "报告加载失败"
+  "fetchFail": "报告加载失败",
+  "retry": "重试"
 }

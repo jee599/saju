@@ -35,7 +35,7 @@ function CompatContent() {
   }, [myDateParam, partnerDateParam, hasParams]);
 
   const shareUrl = typeof window !== "undefined"
-    ? `${window.location.origin}/?tab=compat`
+    ? `${window.location.origin}${window.location.pathname}`
     : "";
 
   const handleShare = () => {

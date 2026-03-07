@@ -167,7 +167,7 @@ function ResultContent() {
     }
 
     return sources;
-  }, [analysis]);
+  }, [analysis, t]);
 
   if (!birthDate || !analysis) {
     return <div className="loadingScreen"><p className="muted">{t("noBirthDate")}</p></div>;

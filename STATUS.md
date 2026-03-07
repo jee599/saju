@@ -3,44 +3,44 @@
 ## 기획
 
 한국 사주(四柱 — 생년월일시를 기반으로 운명을 읽는 전통 점술) AI 리포트 판매 앱.
-한국·일본·동남아 다국어 지원. 결제는 Toss(한국), Stripe(글로벌), Paddle(글로벌 대안) 3중 구조.
+한국·일본·동남아 다국어 지원. 결제는 Toss(한국) + Paddle(글로벌) 2원 구조.
 목표: 런칭 후 첫 유료 전환 달성.
 
 
 ## 아키텍처 현황
 
 ```
-User → Next.js (apps/web)
-  → /api/checkout/{toss|stripe|paddle}/create  → DB(Prisma/Supabase) + 결제 SDK
-  → /api/checkout/{toss|stripe|paddle}/webhook → 주문 확정
-  → /api/report/preview                         → Claude AI (LLM)
-  → /api/fortune/mock                           → Claude AI (LLM)
-middleware.ts → Rate Limit (5회/일, IP 기반, Supabase 백엔드)
+User -> Next.js (apps/web)
+  -> /api/checkout/{toss|paddle}/create   -> DB(Prisma/Supabase) + 결제 SDK
+  -> /api/checkout/paddle/webhook         -> 주문 확정
+  -> /api/report/preview                  -> Claude AI (LLM)
+  -> /api/fortune/mock                    -> Claude AI (LLM)
+middleware.ts -> Rate Limit (5회/일, IP 기반, in-memory + DB 로깅)
 ```
 
 
 ## 완료 (최근 10개)
 
-- i18n Link/router 통일: 8개 파일에서 next/link, next/navigation → i18n navigation 전환
+- Stripe 코드 완전 제거, Paddle 전환 완료 (결제 2원화: Toss + Paddle)
+- QA 2차: log-rate-limit 보호, rate limit 확대, 한국어 레이블 i18n
+- QA 3차: --t3 색상 대비 개선, report retry, compatibility shareUrl, DB 인덱스
+- daily/page.tsx useRouter i18n 수정, admin/logout auth 수정
+- i18n Link/router 통일: 8개 파일에서 next/link, next/navigation -> i18n navigation 전환
 - 레이트 리밋 모니터링: 429 발생 시 DB 로깅 + admin 대시보드 Rate Limit 탭
 - CSS focus-visible inset 수정 (overflow:hidden 클리핑 방지)
 - Resend DNS 레코드 Vercel DNS에 추가 (이메일 인증 완료)
-- Paddle 1차 통합 (환경변수 `NEXT_PUBLIC_PAYMENT_PROVIDER=paddle` 전환)
 - Rate limiting 구현 (middleware.ts, LLM 엔드포인트 5회/일)
 - Playwright E2E 스모크 (8개 로케일, desktop + iPhone 12)
-- 런칭 전 감사 보고서 작성 (CLAUDE_AUDIT_LAUNCH_READINESS_2026-03-05.md)
-- husky pre-push 훅: Claude CLI 자동 빌드 로그 생성
-- GitHub Actions post-push: 포트폴리오/블로그 레포 자동 동기화 + 이메일 알림
 
 
 ## 진행중
 
-없음 — 런칭 직전 대기 상태.
+없음 — 빌드 프리징 상태.
 
 
 ## 남은 것
 
-- Paddle 웹훅 실 결제 테스트 (sandbox → production 전환)
+- Paddle 웹훅 실 결제 테스트 (sandbox -> production 전환)
 - 첫 유료 전환 달성 후 수익화 지표 트래킹
 
 
@@ -58,7 +58,7 @@ middleware.ts → Rate Limit (5회/일, IP 기반, Supabase 백엔드)
 
 ## 기술 결정 로그
 
-- **결제 3중 구조**: Toss(한국) + Stripe(글로벌) + Paddle(글로벌 대안). 런타임 환경변수로 전환. 기존 코드 삭제 없이 추가.
+- **결제 2원 구조**: Toss(한국) + Paddle(글로벌). Stripe/Razorpay 코드 완전 제거 (2026-03-07).
 - **Rate limit 백엔드**: Supabase Postgres 선택 (이미 사용 중, 추가 비용 없음, 감사 로그 내장).
 - **E2E 위치**: `e2e_temp/` — CI 통합 전 임시 로컬 실행용.
 - **husky pre-push timeout**: `gtimeout 180` (pre-push) / `240` (fallback) — Claude CLI 빌드 로그 생성 시간 필요. 실패 시 push는 계속.
