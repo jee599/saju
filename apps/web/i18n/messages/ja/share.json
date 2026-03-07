@@ -1,0 +1,25 @@
+{
+  "title": "結果をシェア",
+  "desc": "友達に四柱推命の結果をシェアしましょう",
+  "text": "{name}の五行は{element}！あなたは？",
+  "copied": "リンクをコピーしました",
+  "copyFailed": "コピーに失敗しました。URLを手動でコピーしてください。",
+  "copiedForApp": "リンクをコピーしました。{app}に貼り付けてください！",
+  "landing": {
+    "heading": "{name}さんは{element}の人！",
+    "sub": "あなたの五行も無料で調べましょう",
+    "cta": "無料で占う",
+    "meta": "{name}さんの五行は{element}！あなたは？"
+  },
+  "channels": {
+    "kakao": "KakaoTalk",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "SMS",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "copy": "リンクコピー"
+  }
+}

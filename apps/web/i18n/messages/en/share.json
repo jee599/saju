@@ -1,0 +1,25 @@
+{
+  "title": "Share Your Result",
+  "desc": "Share your element reading with friends",
+  "text": "{name}'s element is {element}! What's yours?",
+  "copied": "Link copied!",
+  "copyFailed": "Copy failed. Please copy the URL manually.",
+  "copiedForApp": "Link copied! Paste it in {app}.",
+  "landing": {
+    "heading": "{name} is a {element} person!",
+    "sub": "Discover your element for free",
+    "cta": "Start Free Reading",
+    "meta": "{name}'s element is {element}! What's yours?"
+  },
+  "channels": {
+    "kakao": "KakaoTalk",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "Text",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "copy": "Copy Link"
+  }
+}

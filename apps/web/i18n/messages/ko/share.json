@@ -1,0 +1,25 @@
+{
+  "title": "결과 공유하기",
+  "desc": "친구에게 사주 분석을 공유해 보세요",
+  "text": "{name}의 오행은 {element}! 당신의 오행은?",
+  "copied": "링크가 복사되었습니다",
+  "copyFailed": "복사에 실패했습니다. 직접 주소를 복사해 주세요.",
+  "copiedForApp": "링크가 복사되었습니다. {app}에 붙여넣기 하세요!",
+  "landing": {
+    "heading": "{name}님은 {element}의 사람이에요!",
+    "sub": "나의 오행도 무료로 알아보세요",
+    "cta": "무료 사주 분석 시작",
+    "meta": "{name}님의 오행은 {element}! 당신의 오행은?"
+  },
+  "channels": {
+    "kakao": "카카오톡",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "문자",
+    "instagram": "인스타그램",
+    "tiktok": "틱톡",
+    "copy": "링크 복사"
+  }
+}

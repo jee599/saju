@@ -1,0 +1,25 @@
+{
+  "title": "Bagikan Hasil",
+  "desc": "Bagikan analisis elemen kamu kepada teman",
+  "text": "Elemen {name} adalah {element}! Bagaimana dengan kamu?",
+  "copied": "Tautan disalin",
+  "copyFailed": "Gagal menyalin. Silakan salin URL secara manual.",
+  "copiedForApp": "Tautan disalin. Tempelkan di {app}!",
+  "landing": {
+    "heading": "{name} berelemen {element}!",
+    "sub": "Temukan elemenmu secara gratis",
+    "cta": "Mulai Gratis",
+    "meta": "Elemen {name} adalah {element}! Bagaimana dengan kamu?"
+  },
+  "channels": {
+    "kakao": "KakaoTalk",
+    "line": "LINE",
+    "whatsapp": "WhatsApp",
+    "zalo": "Zalo",
+    "twitter": "X",
+    "sms": "SMS",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "copy": "Salin Tautan"
+  }
+}

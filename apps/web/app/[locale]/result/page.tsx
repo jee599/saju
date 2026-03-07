@@ -14,6 +14,7 @@ import { track, trackFunnel, trackScrollDepth, createPageTimer, trackPageEvent, 
 const ElementRadar = dynamic(() => import("./components/ElementRadar"), { ssr: false });
 const ElementCycle = dynamic(() => import("./components/ElementCycle"), { ssr: false });
 const FourPillarsTable = dynamic(() => import("./components/FourPillarsTable"), { ssr: false });
+const ShareButtons = dynamic(() => import("./components/ShareButtons"), { ssr: false });
 
 // ── 천간/지지 → 오행 매핑 ──
 const STEM_TO_ELEMENT: Record<string, Element> = {
@@ -50,12 +51,6 @@ function ResultContent() {
   const maxScrollRef = useRef(0);
   const [analysis, setAnalysis] = useState<{ pillars: FourPillars; elements: ReturnType<typeof calculateFourPillars>["elements"] } | null>(null);
   const [lunarError, setLunarError] = useState(false);
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  useEffect(() => {
-    return () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); };
-  }, []);
 
   useEffect(() => {
     if (!birthDate) {
@@ -181,7 +176,6 @@ function ResultContent() {
 
   return (
     <div className="page">
-      {toastMsg && <div className="toast" role="status" aria-live="polite">{toastMsg}</div>}
       <div className="container">
         {/* 메인 오행 카드 */}
         <section className={`glassCard dayMasterCard ${mainEl}`}>
@@ -194,6 +188,13 @@ function ResultContent() {
             {t(`dayMaster.traits.${mainEl}`)}
           </p>
         </section>
+
+        {/* 공유 버튼 — Day Master 바로 아래 */}
+        <ShareButtons
+          element={t(`elements.${mainEl}`)}
+          elementKey={mainEl}
+          name={name}
+        />
 
         {/* 음력 변환 실패 경고 */}
         {lunarError && (
@@ -327,31 +328,12 @@ function ResultContent() {
           </div>
         </section>
 
-        {/* 공유 */}
-        <section className="glassCard" style={{ marginTop: 16, textAlign: "center" }}>
-          <h3>{t("shareTitle")}</h3>
-          <p className="muted" style={{ marginTop: 4, marginBottom: 12, fontSize: "0.85rem" }}>{t("shareDesc")}</p>
-          <div className="buttonRow" style={{ justifyContent: "center", gap: 10 }}>
-            <button
-              className="btn btn-secondary"
-              onClick={() => {
-                const url = window.location.href;
-                const text = t("shareText", { element: t(`elements.${mainEl}`) });
-                if (navigator.share) {
-                  navigator.share({ title: text, url }).catch(() => {});
-                } else {
-                  navigator.clipboard.writeText(url).catch(() => {});
-                  setToastMsg(t("shareCopied"));
-                  if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-                  toastTimerRef.current = setTimeout(() => setToastMsg(null), 2500);
-                }
-                track("share_click", { channel: "native", content_type: "result" });
-              }}
-            >
-              {t("shareCta")}
-            </button>
-          </div>
-        </section>
+        {/* 하단 공유 버튼 (두 번째 터치포인트) */}
+        <ShareButtons
+          element={t(`elements.${mainEl}`)}
+          elementKey={mainEl}
+          name={name}
+        />
 
         {/* 스티키 CTA */}
         <div className="stickyCta" role="complementary" aria-label="Unlock full report">
