@@ -21,20 +21,16 @@ middleware.ts → Rate Limit (5회/일, IP 기반, Supabase 백엔드)
 
 ## 완료 (최근 10개)
 
+- i18n Link/router 통일: 8개 파일에서 next/link, next/navigation → i18n navigation 전환
+- 레이트 리밋 모니터링: 429 발생 시 DB 로깅 + admin 대시보드 Rate Limit 탭
+- CSS focus-visible inset 수정 (overflow:hidden 클리핑 방지)
+- Resend DNS 레코드 Vercel DNS에 추가 (이메일 인증 완료)
 - Paddle 1차 통합 (환경변수 `NEXT_PUBLIC_PAYMENT_PROVIDER=paddle` 전환)
 - Rate limiting 구현 (middleware.ts, LLM 엔드포인트 5회/일)
 - Playwright E2E 스모크 (8개 로케일, desktop + iPhone 12)
 - 런칭 전 감사 보고서 작성 (CLAUDE_AUDIT_LAUNCH_READINESS_2026-03-05.md)
 - husky pre-push 훅: Claude CLI 자동 빌드 로그 생성
 - GitHub Actions post-push: 포트폴리오/블로그 레포 자동 동기화 + 이메일 알림
-- Vercel 배포 정상화 (framework preset, root directory, env vars)
-- i18n 전체 카피 폴리시 (BaZi 점/물결 제거, 구두점 통일)
-- 모바일 UI 오버플로 수정 (nav/footer 소형 화면)
-- 별자리 배경 constellation 선 추가 (three.js)
-- CSS aurora/star 배경 → Three.js CosmicBackground 전환 (z-index 버그 4개 해결, 51줄 삭제)
-- husky pre-push 타임아웃 60s → 180/240s 증가
-- loading-analysis UI 개선: Three.js 배경 투과, 슬라이드 화살표, localStorage 스마트 예상 시간
-- CosmicBackground 가독성 4연타 픽스: 별자리 선 제거, 카드 불투명도 강화, 사주 테이블 대비, 파비콘 추가
 
 
 ## 진행중
@@ -45,14 +41,12 @@ middleware.ts → Rate Limit (5회/일, IP 기반, Supabase 백엔드)
 ## 남은 것
 
 - Paddle 웹훅 실 결제 테스트 (sandbox → production 전환)
-- ko 로케일 링크 prefix 정책 확정 (default-locale no-prefix vs 강제 prefix)
-- 관리자 대시보드 레이트 리밋 모니터링
 - 첫 유료 전환 달성 후 수익화 지표 트래킹
 
 
 ## 이슈
 
-- ko 로케일: 내부 링크에 `/ko` prefix 없는 URL 다수 (`/daily`, `/palm` 등). 기능 오류는 아니나 정책 확정 필요.
+없음.
 
 
 ## 메모
