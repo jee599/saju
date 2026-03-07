@@ -103,7 +103,10 @@ function DailyContent() {
   }, [inputDate, birthTime, showResult, todayStr, t]);
 
   const handleSubmit = () => {
-    if (inputDate) setShowResult(true);
+    if (inputDate) {
+      setInputName((n) => n.trim());
+      setShowResult(true);
+    }
   };
 
   const luckStars = (luck: number) => {
@@ -120,13 +123,14 @@ function DailyContent() {
           <p className="muted" style={{ marginTop: 4 }}>{t("subtitle", { date: todayStr })}</p>
         </section>
 
+        <div aria-live="polite">
         {!showResult ? (
           <section className="glassCard" style={{ marginTop: 16 }}>
             <h2 style={{ fontSize: "1.1rem" }}>{t("inputTitle")}</h2>
             <div className="form" style={{ maxWidth: 360, margin: "16px auto 0" }}>
               <div className="formGroup">
                 <label htmlFor="daily-name">{t("nameLabel")}</label>
-                <input id="daily-name" type="text" className="input" placeholder={t("namePlaceholder")} value={inputName} onChange={(e) => setInputName(e.target.value)} />
+                <input id="daily-name" type="text" className="input" placeholder={t("namePlaceholder")} value={inputName} onChange={(e) => setInputName(e.target.value)} autoFocus />
               </div>
               <div className="formGroup">
                 <label htmlFor="daily-birthDate">{t("birthDateLabel")}</label>
@@ -137,7 +141,7 @@ function DailyContent() {
               </button>
             </div>
           </section>
-        ) : result ? (
+        ) : result && (
           <>
             <section className={`glassCard dayMasterCard ${result.dayMaster}`} style={{ marginTop: 16, textAlign: "center" }}>
               <div className="dayMasterEmoji" style={{ fontSize: "2.5rem" }}>{ELEMENT_EMOJI[result.dayMaster]}</div>
@@ -189,12 +193,13 @@ function DailyContent() {
             </section>
 
             <div style={{ textAlign: "center", marginTop: 12 }}>
-              <button className="btn btn-secondary" onClick={() => setShowResult(false)}>
+              <button className="btn btn-secondary" onClick={() => { setShowResult(false); setInputName(""); setInputDate(""); }}>
                 {t("tryAnother")}
               </button>
             </div>
           </>
-        ) : null}
+        )}
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,9 @@
 "use client";
 
-import Link from "next/link";
-
-
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "../../../i18n/navigation";
 import { track, trackCheckoutStart, trackFunnel, trackError as trackAnalyticsError, createPageTimer, trackPageEvent, trackLanding } from "../../../lib/analytics";
 import { getCountryByLocale } from "@saju/shared";
 
@@ -22,6 +20,7 @@ function PaywallContent() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const checkoutInFlight = useRef(false);
   const pageTimerRef = useRef<ReturnType<typeof createPageTimer> | null>(null);
 
   const country = getCountryByLocale(locale);
@@ -37,11 +36,13 @@ function PaywallContent() {
   }, []);
 
   const handleCheckout = async (ctaPosition: "top" | "middle" | "sticky" = "top") => {
+    if (checkoutInFlight.current) return;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       setError(t("emailError"));
       return;
     }
+    checkoutInFlight.current = true;
     setLoading(true);
     setError("");
     trackCheckoutStart(ctaPosition);
@@ -133,6 +134,7 @@ function PaywallContent() {
       trackAnalyticsError("checkout_error", errMsg);
     } finally {
       setLoading(false);
+      checkoutInFlight.current = false;
     }
   };
 
@@ -191,7 +193,7 @@ function PaywallContent() {
                 className={`input ${error ? "inputError" : ""}`}
                 placeholder="email@example.com"
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); setError(""); }}
+                onChange={(e) => { setEmail(e.target.value); if (error) setError(""); }}
                 aria-label={t("emailLabel")}
                 aria-invalid={!!error}
                 aria-describedby={error ? "paywall-email-error" : undefined}
@@ -211,7 +213,7 @@ function PaywallContent() {
 
           <p className="muted" style={{ marginTop: 16, fontSize: "0.8rem", textAlign: "center" }}>
             {t("afterPurchase")}
-            <br />{t("refundLink", { link: "" })}<Link href={`/${locale}/refund`} style={{ color: "var(--accent)" }}>{t("refundLinkText")}</Link>
+            <br />{t("refundLink", { link: "" })}<Link href="/refund" style={{ color: "var(--accent)" }}>{t("refundLinkText")}</Link>
           </p>
         </section>
       </div>

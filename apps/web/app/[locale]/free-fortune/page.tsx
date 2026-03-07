@@ -23,6 +23,7 @@ function FreeFortunContent() {
   };
 
   const handleSubmit = () => {
+    if (!birthDate) return;
     track("input_complete");
     const q = new URLSearchParams({
       name, birthDate, gender, calendarType,
@@ -44,6 +45,7 @@ function FreeFortunContent() {
                 <div className="formGroup">
                   <label htmlFor="ff-name">{t("nameLabel")}</label>
                   <input
+                    id="ff-name"
                     className="input"
                     placeholder={t("namePlaceholder")}
                     value={name}
@@ -53,6 +55,7 @@ function FreeFortunContent() {
                 <div className="formGroup">
                   <label htmlFor="ff-birthDate">{t("birthDateLabel")}</label>
                   <input
+                    id="ff-birthDate"
                     type="date"
                     className="input"
                     value={birthDate}
@@ -78,6 +81,7 @@ function FreeFortunContent() {
                 <div className="formGroup">
                   <label htmlFor="ff-birthTime">{t("birthTimeLabel")}</label>
                   <input
+                    id="ff-birthTime"
                     type="time"
                     className="input"
                     value={birthTime}
@@ -105,7 +109,7 @@ function FreeFortunContent() {
                 <button className="btn btn-ghost btn-lg" onClick={() => setStep(1)}>
                   {t("prev")}
                 </button>
-                <button className="btn btn-primary btn-lg" onClick={handleSubmit} style={{ flex: 1 }}>
+                <button className="btn btn-primary btn-lg" onClick={handleSubmit} disabled={!birthDate} style={{ flex: 1 }}>
                   {t("startAnalysis")}
                 </button>
               </div>

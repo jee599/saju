@@ -41,9 +41,9 @@ function CompatContent() {
     if (!result) return;
     const text = t("shareText", { score: String(result.score), url: shareUrl });
     if (navigator.share) {
-      navigator.share({ title: t("shareTitle"), text });
+      navigator.share({ title: t("shareTitle"), text }).catch(() => {});
     } else {
-      navigator.clipboard.writeText(text);
+      navigator.clipboard.writeText(text).catch(() => {});
     }
     track("share_click", { channel: "copy", content_type: "compatibility" });
   };

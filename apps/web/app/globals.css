@@ -188,7 +188,7 @@ p, li, label, input, select, button, textarea {
 .siteHeader {
   position: sticky;
   top: 0;
-  z-index: 70;
+  z-index: 80;
   background: transparent !important;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -569,7 +569,8 @@ p, li, label, input, select, button, textarea {
   transition: background 0.2s, color 0.2s;
 }
 
-.tabBtn:hover { background: rgba(167, 139, 250, 0.06); }
+.tabBtn:hover { background: rgba(167, 139, 250, 0.06); color: var(--t1); }
+.tabBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .tabBtn.active {
   background: rgba(167, 139, 250, 0.12);
@@ -612,7 +613,11 @@ p, li, label, input, select, button, textarea {
 .input:focus, .select:focus, .textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.15);
+  box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.25);
+}
+.input:focus-visible, .select:focus-visible, .textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .input:disabled, .select:disabled, .textarea:disabled {
@@ -626,6 +631,10 @@ p, li, label, input, select, button, textarea {
   border-color: rgba(212, 132, 138, 0.7);
   background: rgba(212, 132, 138, 0.05);
 }
+.inputError:focus, .selectError:focus, .textareaError:focus {
+  border-color: var(--error);
+  box-shadow: 0 0 0 4px rgba(224, 107, 117, 0.2);
+}
 
 .errorText {
   margin-top: 6px;
@@ -634,7 +643,7 @@ p, li, label, input, select, button, textarea {
   font-weight: 650;
 }
 
-.formHelp { margin-top: 6px; font-size: 0.9rem; color: var(--t3); }
+.formHelp { margin-top: 6px; font-size: 0.9rem; color: var(--t2); }
 
 /* ── Pricing ──────────────────────────────────────── */
 
@@ -645,7 +654,7 @@ p, li, label, input, select, button, textarea {
   border: 1px solid var(--glass-border);
   background: var(--bg-card);
   padding: 18px;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .pricingCard:hover {
@@ -2495,6 +2504,10 @@ p, li, label, input, select, button, textarea {
   border-color: rgba(167, 139, 250, 0.3);
   background: rgba(167, 139, 250, 0.08);
 }
+.pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 .pill.selected {
   border-color: rgba(167, 139, 250, 0.4);
@@ -2565,6 +2578,10 @@ p, li, label, input, select, button, textarea {
 .branchPill:hover {
   border-color: rgba(167, 139, 250, 0.3);
   background: rgba(167, 139, 250, 0.08);
+}
+.branchPill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .branchPill.selected {

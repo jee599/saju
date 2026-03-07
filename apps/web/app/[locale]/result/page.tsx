@@ -49,6 +49,11 @@ function ResultContent() {
   const [analysis, setAnalysis] = useState<{ pillars: FourPillars; elements: ReturnType<typeof calculateFourPillars>["elements"] } | null>(null);
   const [lunarError, setLunarError] = useState(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => {
+    return () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); };
+  }, []);
 
   useEffect(() => {
     if (!birthDate) {
@@ -62,12 +67,16 @@ function ResultContent() {
     pageTimerRef.current = createPageTimer("result");
     setTimeout(() => setVisible(true), 100);
 
-    const cached = sessionStorage.getItem("free_personality");
-    const cachedKey = sessionStorage.getItem("free_personality_key");
-    const currentKey = `${name}_${birthDate}_${birthTime}_${gender}_${calendarType}`;
-    if (cached && cachedKey === currentKey) {
-      setPersonalityText(cached);
-    } else {
+    try {
+      const cached = sessionStorage.getItem("free_personality");
+      const cachedKey = sessionStorage.getItem("free_personality_key");
+      const currentKey = `${name}_${birthDate}_${birthTime}_${gender}_${calendarType}`;
+      if (cached && cachedKey === currentKey) {
+        setPersonalityText(cached);
+      } else {
+        setPersonalityError(t("personalityError"));
+      }
+    } catch {
       setPersonalityError(t("personalityError"));
     }
   }, [birthDate, birthTime, name, gender, calendarType, router, t]);
@@ -91,6 +100,7 @@ function ResultContent() {
   // Compute four pillars analysis; lunar conversion is async (dynamic import)
   useEffect(() => {
     if (!birthDate) return;
+    let cancelled = false;
     const parts = birthDate.split("-").map(Number);
     let y = parts[0] ?? 2000;
     let m = parts[1] ?? 1;
@@ -107,6 +117,7 @@ function ResultContent() {
     const safeMinute = isNaN(minute) ? 0 : minute;
 
     const compute = (sy: number, sm: number, sd: number) => {
+      if (cancelled) return;
       const result = calculateFourPillars({ year: sy, month: sm, day: sd, hour: safeHour, minute: safeMinute });
       setAnalysis({ pillars: result.pillars, elements: result.elements });
     };
@@ -116,12 +127,14 @@ function ResultContent() {
       convertLunarToSolar(y, m, d)
         .then((solar) => compute(solar.year, solar.month, solar.day))
         .catch(() => {
+          if (cancelled) return;
           setLunarError(true);
-          compute(y, m, d); // fallback to treating as solar
+          compute(y, m, d);
         });
     } else {
       compute(y, m, d);
     }
+    return () => { cancelled = true; };
   }, [birthDate, birthTime, calendarType]);
 
   const paywallParams = useMemo(() => new URLSearchParams({
@@ -325,9 +338,10 @@ function ResultContent() {
                 if (navigator.share) {
                   navigator.share({ title: text, url }).catch(() => {});
                 } else {
-                  navigator.clipboard.writeText(url);
+                  navigator.clipboard.writeText(url).catch(() => {});
                   setToastMsg(t("shareCopied"));
-                  setTimeout(() => setToastMsg(null), 2500);
+                  if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+                  toastTimerRef.current = setTimeout(() => setToastMsg(null), 2500);
                 }
                 track("share_click", { channel: "native", content_type: "result" });
               }}

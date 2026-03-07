@@ -18,7 +18,11 @@ export default function CosmicBackground() {
 
   useEffect(() => {
     if (!mountRef.current) return;
+    let disposed = false;
     const container = mountRef.current;
+
+    try {
+
     const w = window.innerWidth;
     const h = window.innerHeight;
 
@@ -119,6 +123,7 @@ export default function CosmicBackground() {
     window.addEventListener("resize", onResize);
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", onResize);
       if (renderer.domElement.parentElement === container) {
@@ -129,6 +134,11 @@ export default function CosmicBackground() {
       starTex.dispose();
       renderer.dispose();
     };
+
+    } catch {
+      // WebGL not supported — graceful degradation to empty background
+      return undefined;
+    }
   }, []);
 
   return (

@@ -366,9 +366,11 @@ function LoadingContent() {
 
       const json = await res.json();
       if (json.ok && json.data?.section?.text) {
-        const currentKey = `${freeName}_${freeBirthDate}_${freeBirthTime}_${freeGender}_${freeCalendarType}`;
-        sessionStorage.setItem("free_personality", json.data.section.text);
-        sessionStorage.setItem("free_personality_key", currentKey);
+        try {
+          const currentKey = `${freeName}_${freeBirthDate}_${freeBirthTime}_${freeGender}_${freeCalendarType}`;
+          sessionStorage.setItem("free_personality", json.data.section.text);
+          sessionStorage.setItem("free_personality_key", currentKey);
+        } catch {}
       }
 
       setDone(true);
