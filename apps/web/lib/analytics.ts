@@ -14,7 +14,9 @@ type FunnelEvent =
   | "paywall_view"
   | "checkout_start"
   | "purchase_complete"
-  | "share_click";
+  | "share_click"
+  | "share_land"
+  | "share_convert";
 
 interface AnalyticsProps {
   [key: string]: string | number | boolean | undefined;

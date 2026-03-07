@@ -88,13 +88,13 @@ async function downloadStoryImage(name: string, element: string, locale: string)
     const res = await fetch(url);
     if (!res.ok) return false;
     const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
+    a.href = blobUrl;
     a.download = `fortunelab-${element}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    const blobUrl = a.href;
     setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
     return true;
   } catch {
@@ -102,8 +102,19 @@ async function downloadStoryImage(name: string, element: string, locale: string)
   }
 }
 
+const KAKAO_CTA: Record<string, string> = {
+  ko: "나도 해보기",
+  en: "Try it free",
+  ja: "無料で占う",
+  zh: "免费试试",
+  th: "ลองเลย",
+  vi: "Thử miễn phí",
+  id: "Coba gratis",
+  hi: "मुफ़्त में आज़माएं",
+};
+
 /** Initialize and share via Kakao SDK */
-async function shareKakao(shareUrl: string, title: string, description: string, imageUrl: string): Promise<boolean> {
+async function shareKakao(shareUrl: string, title: string, description: string, imageUrl: string, locale: string): Promise<boolean> {
   try {
     const w = window as unknown as { Kakao?: { isInitialized: () => boolean; init: (key: string) => void; Share: { sendDefault: (params: unknown) => void } } };
     if (!w.Kakao) return false;
@@ -121,7 +132,7 @@ async function shareKakao(shareUrl: string, title: string, description: string, 
         link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
       },
       buttons: [
-        { title: "나도 해보기", link: { mobileWebUrl: shareUrl, webUrl: shareUrl } },
+        { title: KAKAO_CTA[locale] ?? KAKAO_CTA.en, link: { mobileWebUrl: shareUrl, webUrl: shareUrl } },
       ],
     });
     return true;
@@ -197,7 +208,7 @@ export default function ShareButtons({ element, elementKey, name, traits }: Shar
     if (channel === "kakao") {
       const baseUrl = window.location.origin;
       const ogImageUrl = `${baseUrl}/api/og?name=${encodeURIComponent(name.slice(0, 20))}&element=${elementKey}&locale=${locale}&type=result`;
-      const ok = await shareKakao(shareUrl, shareText, t("desc"), ogImageUrl);
+      const ok = await shareKakao(shareUrl, shareText, t("desc"), ogImageUrl, locale);
       if (!ok) {
         // Kakao SDK not available — fallback to copy link
         const copied = await copyToClipboard(shareUrl);

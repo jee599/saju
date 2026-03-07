@@ -104,6 +104,8 @@ const FONT_URLS: Record<string, string> = {
   zh: "https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-sc@latest/chinese-simplified-700-normal.woff2",
   th: "https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-thai@latest/thai-700-normal.woff2",
   hi: "https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-devanagari@latest/devanagari-700-normal.woff2",
+  vi: "https://cdn.jsdelivr.net/fontsource/fonts/noto-sans@latest/latin-ext-700-normal.woff2",
+  id: "https://cdn.jsdelivr.net/fontsource/fonts/noto-sans@latest/latin-ext-700-normal.woff2",
 };
 
 async function loadFont(locale: string): Promise<ArrayBuffer | null> {
