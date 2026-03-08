@@ -4894,47 +4894,54 @@ body:has(.constellationPage) #main-content {
   white-space: nowrap;
 }
 
-/* ── SectionScoreBar ─────────────────────────────── */
+/* ── SectionFortuneCard ─────────────────────────── */
 
-.scoreBarRow {
+.fortuneCard {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+
+.fortuneCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.fortuneCardHeader {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
 }
 
-.scoreBarIcon {
+.fortuneCardIcon {
   font-size: 1.1rem;
   flex-shrink: 0;
-  width: 24px;
-  text-align: center;
 }
 
-.scoreBarLabel {
-  font-size: 0.85rem;
-  color: var(--t1);
-  min-width: 60px;
-  flex-shrink: 0;
-}
-
-.scoreBarTrack {
-  flex: 1;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.scoreBarFill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.8s var(--ease-smooth);
-}
-
-.scoreBarValue {
-  font-size: 0.78rem;
+.fortuneCardLabel {
+  font-size: 0.9rem;
   font-weight: 600;
-  min-width: 28px;
-  text-align: right;
+  color: var(--t1);
+  flex: 1;
+}
+
+.fortuneCardElement {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.fortuneCardTrend {
+  font-size: 0.9rem;
+  font-weight: 700;
   flex-shrink: 0;
+}
+
+.fortuneCardKeyword {
+  font-size: 0.82rem;
+  color: var(--t3);
+  margin-top: 6px;
+  padding-left: 28px;
+  line-height: 1.5;
 }
