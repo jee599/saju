@@ -106,15 +106,14 @@ export default async function SeoLandingPage({
   const t = await getTranslations({ locale, namespace: "seo" });
 
   const faqItems: Array<{ q: string; a: string }> = [];
-  // Read FAQ items — seo.json stores them as array
-  for (let i = 0; i < 5; i++) {
-    try {
-      const q = t(`pages.${key}.faq.${i}.q`);
-      const a = t(`pages.${key}.faq.${i}.a`);
-      if (q && a) faqItems.push({ q, a });
-    } catch {
-      break;
-    }
+  // Read FAQ items — seo.json stores them as array; stop when key returns raw path
+  for (let i = 0; i < 10; i++) {
+    const qKey = `pages.${key}.faq.${i}.q`;
+    const q = t(qKey);
+    // next-intl returns the raw key path when not found
+    if (q === qKey || q.startsWith("seo.")) break;
+    const a = t(`pages.${key}.faq.${i}.a`);
+    faqItems.push({ q, a });
   }
 
   // FAQPage schema.org JSON-LD
