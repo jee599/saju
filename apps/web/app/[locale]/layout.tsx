@@ -4,6 +4,7 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Link } from "../../i18n/navigation";
 import { locales } from "../../i18n/config";
+import { getCountryByLocale } from "@saju/shared";
 import { GtagScript } from "./components/GtagScript";
 import LanguageSelector from "./components/LanguageSelector";
 import CosmicBackgroundLoader from "./components/CosmicBackgroundLoader";
@@ -111,6 +112,13 @@ export default async function LocaleLayout({ children, params }: { children: Rea
   const t = await getTranslations({ locale, namespace: "common" });
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://fortunelab.store";
 
+  const country = getCountryByLocale(locale);
+  // Zero-decimal currencies store whole units; 2-decimal currencies store cents
+  const zeroDecimalCurrencies = ["KRW", "JPY", "VND", "IDR"];
+  const price = zeroDecimalCurrencies.includes(country.currency)
+    ? country.pricing.saju.premium.toString()
+    : (country.pricing.saju.premium / 100).toFixed(2);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -121,8 +129,8 @@ export default async function LocaleLayout({ children, params }: { children: Rea
     operatingSystem: "Web",
     offers: {
       "@type": "Offer",
-      price: "4.99",
-      priceCurrency: "USD",
+      price,
+      priceCurrency: country.currency,
     },
     creator: {
       "@type": "Organization",

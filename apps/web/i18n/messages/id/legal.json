@@ -81,5 +81,21 @@
       "title": "Tanggung Jawab Pengguna",
       "body": "Keputusan akhir dan tanggung jawab pelaksanaan ada pada pengguna. Layanan ini beroperasi dalam lingkup penyediaan informasi referensi."
     }
+  },
+  "youthPolicy": {
+    "title": "Kebijakan Perlindungan Remaja",
+    "eyebrow": "Youth Policy",
+    "s1": {
+      "title": "1. Tujuan",
+      "body": "FortuneLab menerapkan langkah-langkah perlindungan agar remaja dapat menggunakan layanan dengan aman dan bertanggung jawab."
+    },
+    "s2": {
+      "title": "2. Pembatasan Penggunaan",
+      "body": "Pembelian berbayar hanya tersedia untuk pengguna berusia 14 tahun ke atas. Konten ramalan hanya bersifat referensi dan tidak boleh dijadikan dasar pengambilan keputusan."
+    },
+    "s3": {
+      "title": "3. Pemberitahuan untuk Orang Tua",
+      "body": "Pembelian oleh pengguna di bawah 14 tahun memerlukan persetujuan orang tua atau wali. Untuk pertanyaan terkait pembelian oleh anak di bawah umur, silakan hubungi contact@fortunelab.store."
+    }
   }
 }

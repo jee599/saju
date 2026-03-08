@@ -27,7 +27,7 @@ export default function ComingSoon({ feature }: { feature: string }) {
       const res = await fetch("/api/email/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, feature }),
+        body: JSON.stringify({ email, source: "coming_soon" as const }),
       });
       if (!res.ok) throw new Error(t("registerFail"));
     } catch {

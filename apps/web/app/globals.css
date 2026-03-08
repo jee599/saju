@@ -3961,11 +3961,32 @@ body:has(.constellationPage) {
   font-weight: 600;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--cta-from), var(--cta-to));
+  background: linear-gradient(135deg, var(--cta-from) 0%, var(--cta-to) 50%, var(--accent-cyan) 100%);
+  background-size: 200% 200%;
   color: #fff;
   cursor: pointer;
   transition: opacity 0.2s, transform 0.12s;
   will-change: transform;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 20px var(--cta-glow);
+}
+
+.cCta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.12) 45%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.12) 55%,
+    transparent 65%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .cCta:disabled {
@@ -4027,13 +4048,13 @@ body:has(.loadingAnalysis) .siteHeader:hover .topNav {
     font-size: clamp(0.75rem, 1.2vw, 0.9rem);
   }
   .constellationSub {
-    font-size: clamp(0.52rem, 0.7vw, 0.6rem);
+    font-size: clamp(0.62rem, 0.8vw, 0.7rem);
   }
   .cLabel {
-    font-size: 0.58rem;
+    font-size: 0.72rem;
   }
   .cSelect, .cInput {
-    font-size: 0.65rem;
+    font-size: 0.78rem;
     padding: 8px 10px;
   }
   .cCta {

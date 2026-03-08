@@ -81,5 +81,21 @@
       "title": "Trách nhiệm của Người dùng",
       "body": "Quyết định cuối cùng và trách nhiệm thực hiện thuộc về người dùng. Dịch vụ này hoạt động trong phạm vi cung cấp thông tin tham khảo."
     }
+  },
+  "youthPolicy": {
+    "title": "Chính sách Bảo vệ Thanh thiếu niên",
+    "eyebrow": "Youth Policy",
+    "s1": {
+      "title": "1. Mục đích",
+      "body": "FortuneLab thực hiện các biện pháp bảo vệ để thanh thiếu niên có thể sử dụng dịch vụ một cách an toàn và lành mạnh."
+    },
+    "s2": {
+      "title": "2. Hạn chế Sử dụng",
+      "body": "Thanh toán trả phí chỉ dành cho người dùng từ 14 tuổi trở lên. Nội dung tử vi chỉ mang tính chất tham khảo, không nên được sử dụng làm cơ sở cho việc ra quyết định."
+    },
+    "s3": {
+      "title": "3. Thông báo cho Phụ huynh",
+      "body": "Thanh toán của người dùng dưới 14 tuổi cần có sự đồng ý của phụ huynh hoặc người giám hộ. Mọi thắc mắc liên quan đến thanh toán của người chưa thành niên, vui lòng liên hệ contact@fortunelab.store."
+    }
   }
 }

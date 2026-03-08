@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { ButtonLink, GlassCard, PageContainer, SectionTitle } from "../components/ui";
 
 const variants = [
@@ -8,6 +9,11 @@ const variants = [
 ] as const;
 
 export default function VariantsPage() {
+  // Internal A/B test page — block public access in production
+  if (process.env.NODE_ENV !== "development") {
+    redirect("/");
+  }
+
   return (
     <PageContainer>
       <GlassCard>

@@ -81,5 +81,21 @@
       "title": "User Responsibility",
       "body": "Final judgment and responsibility for actions rest with the user. This service operates within the scope of providing reference information."
     }
+  },
+  "youthPolicy": {
+    "title": "Youth Protection Policy",
+    "eyebrow": "Youth Policy",
+    "s1": {
+      "title": "1. Purpose",
+      "body": "FortuneLab implements protective measures to ensure that minors can use our services safely and responsibly."
+    },
+    "s2": {
+      "title": "2. Usage Restrictions",
+      "body": "Paid purchases are available only to users aged 14 and above. Fortune and destiny content is provided for reference purposes only and should not be used as a basis for decision-making."
+    },
+    "s3": {
+      "title": "3. Guardian Notice",
+      "body": "Purchases by users under the age of 14 require parental or guardian consent. For inquiries regarding minor purchases, please contact contact@fortunelab.store."
+    }
   }
 }
