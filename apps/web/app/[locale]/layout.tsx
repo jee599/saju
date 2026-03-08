@@ -7,9 +7,10 @@ import { locales } from "../../i18n/config";
 import { getCountryByLocale } from "@saju/shared";
 import { GtagScript } from "./components/GtagScript";
 import LanguageSelector from "./components/LanguageSelector";
+import NavDropdown from "./components/NavDropdown";
 import CosmicBackgroundLoader from "./components/CosmicBackgroundLoader";
 
-const AURORA_FONTS_URL = "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap";
+const AURORA_FONTS_URL = "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Italiana&display=swap";
 
 function getLocaleFonts(locale: string) {
   switch (locale) {
@@ -176,12 +177,8 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                 <nav className="topNav" aria-label={t("nav.label")}>
                   <Link href="/daily">{t("nav.daily")}</Link>
                   <Link href="/#hero">{t("nav.saju")}</Link>
-                  <Link href="/palm">{t("nav.palm")}</Link>
-                  <Link href="/name">{t("nav.naming")}</Link>
-                  <Link href="/face">{t("nav.face")}</Link>
-                  <Link href="/dream">{t("nav.dream")}</Link>
-                  <Link href="/tarot">{t("nav.tarot")}</Link>
                 </nav>
+                <NavDropdown />
                 <LanguageSelector />
               </div>
             </div>

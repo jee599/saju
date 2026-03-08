@@ -9,6 +9,7 @@ import { useRouter } from "../../../i18n/navigation";
 import { Suspense } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { trackFunnel, trackTiming, trackError as trackAnalyticsError, createPageTimer, trackPageEvent } from "../../../lib/analytics";
+import { PageSkeleton } from "../components/Skeleton";
 
 /* ──────────────────────────────────────────────────
    오행 상수 (비주얼 전용 — hanja, color, emoji)
@@ -669,9 +670,8 @@ function LoadingContent() {
 }
 
 export default function LoadingAnalysisPage() {
-  const t = useTranslations("loading");
   return (
-    <Suspense fallback={<div className="loadingScreen"><p className="muted">{t("preparing")}</p></div>}>
+    <Suspense fallback={<PageSkeleton />}>
       <LoadingContent />
     </Suspense>
   );

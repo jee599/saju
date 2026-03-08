@@ -62,7 +62,7 @@ export const ELEMENT_KR_NATIVE: Record<Element, string> = { wood: "나무", fire
 export const ELEMENT_EMOJI: Record<Element, string> = { wood: "🌿", fire: "🔥", earth: "⛰️", metal: "⚙️", water: "🌊" };
 
 /** Stem → element mapping (천간 → 오행) */
-const STEM_ELEMENT: Record<string, Element> = {
+export const STEM_ELEMENT: Record<string, Element> = {
   "甲": "wood", "乙": "wood",
   "丙": "fire", "丁": "fire",
   "戊": "earth", "己": "earth",
@@ -71,7 +71,7 @@ const STEM_ELEMENT: Record<string, Element> = {
 };
 
 /** Branch → element mapping (지지 → 오행) */
-const BRANCH_ELEMENT: Record<string, Element> = {
+export const BRANCH_ELEMENT: Record<string, Element> = {
   "寅": "wood", "卯": "wood",
   "巳": "fire", "午": "fire",
   "辰": "earth", "未": "earth", "戌": "earth", "丑": "earth",
@@ -80,7 +80,7 @@ const BRANCH_ELEMENT: Record<string, Element> = {
 };
 
 /** Stem yin/yang (양간: 甲丙戊庚壬, 음간: 乙丁己辛癸) */
-const STEM_POLARITY: Record<string, "yang" | "yin"> = {
+export const STEM_POLARITY: Record<string, "yang" | "yin"> = {
   "甲": "yang", "乙": "yin",
   "丙": "yang", "丁": "yin",
   "戊": "yang", "己": "yin",

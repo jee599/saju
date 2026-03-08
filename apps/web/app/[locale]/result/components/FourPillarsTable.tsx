@@ -1,21 +1,10 @@
 "use client";
 
 import type { Element, FourPillars } from "@saju/engine-saju";
+import { STEM_ELEMENT, BRANCH_ELEMENT, STEM_POLARITY } from "@saju/engine-saju";
 
-const STEM_TO_ELEMENT: Record<string, Element> = {
-  "甲": "wood", "乙": "wood", "丙": "fire", "丁": "fire",
-  "戊": "earth", "己": "earth", "庚": "metal", "辛": "metal",
-  "壬": "water", "癸": "water",
-};
-const BRANCH_TO_ELEMENT: Record<string, Element> = {
-  "寅": "wood", "卯": "wood", "巳": "fire", "午": "fire",
-  "辰": "earth", "未": "earth", "戌": "earth", "丑": "earth",
-  "申": "metal", "酉": "metal", "亥": "water", "子": "water",
-};
-const STEM_POLARITY: Record<string, "yang" | "yin"> = {
-  "甲": "yang", "乙": "yin", "丙": "yang", "丁": "yin", "戊": "yang",
-  "己": "yin", "庚": "yang", "辛": "yin", "壬": "yang", "癸": "yin",
-};
+const STEM_TO_ELEMENT = STEM_ELEMENT;
+const BRANCH_TO_ELEMENT = BRANCH_ELEMENT;
 
 export default function FourPillarsTable({ pillars, dayMaster, t, locale }: { pillars: FourPillars; dayMaster: Element; t: (key: string) => string; locale: string }) {
   const cols = [

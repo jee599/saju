@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Paddle, Environment, EventName } from '@paddle/paddle-node-sdk';
+import { EventName } from '@paddle/paddle-node-sdk';
 import { prisma } from '@saju/api/db';
-
-function getPaddle() {
-  const key = process.env.PADDLE_API_KEY;
-  if (!key) throw new Error('PADDLE_API_KEY is not set');
-  const isProd = process.env.PADDLE_ENVIRONMENT === 'production';
-  return new Paddle(key, { environment: isProd ? Environment.production : Environment.sandbox });
-}
+import { getPaddle } from '../../../../../lib/paddle';
 
 export async function POST(req: Request) {
   const webhookSecret = process.env.PADDLE_WEBHOOK_SECRET;

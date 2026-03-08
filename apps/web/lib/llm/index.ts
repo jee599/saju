@@ -1,9 +1,9 @@
 /**
- * Backward-compatibility shim — all logic has moved to ./llm/ sub-modules.
- * Existing imports from this file continue to work unchanged.
+ * Re-exports everything from LLM sub-modules for backward compatibility.
  */
+
+// client
 export {
-  // client
   callLlm,
   estimateCostUsd,
   logLlmUsage,
@@ -11,9 +11,14 @@ export {
   hasGeminiKey,
   withRetry,
   sleep,
-  // parser
-  safeJsonParse,
-  // prompts
+} from "./client";
+export type { LlmUsage, LlmResult } from "./client";
+
+// parser
+export { safeJsonParse } from "./parser";
+
+// prompts
+export {
   convertLunarInputToSolar,
   sanitizeName,
   sanitizeInputForPrompt,
@@ -25,10 +30,11 @@ export {
   getReportTexts,
   buildPaidReportPrompt,
   LANGUAGE_NAMES,
-  // reportBuilder
+} from "./prompts";
+
+// reportBuilder
+export {
   normalizeToReportDetail,
   generateFreePersonality,
   generateChunkedReport,
-} from "./llm/index";
-
-export type { LlmUsage, LlmResult } from "./llm/index";
+} from "./reportBuilder";

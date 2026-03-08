@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { generatePreview, isValidFortuneInput } from '../../../../lib/mockEngine';
-import { logRateLimit } from '../../../../lib/rateLimitLog';
 import type { FortuneInput } from '../../../../lib/types';
 
 export async function POST(req: Request) {
@@ -13,10 +12,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fire-and-forget rate limit DB logging
-    // Use x-forwarded-for (set by reverse proxy) — x-client-ip is client-spoofable
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-    logRateLimit({ ip, endpoint: "/api/report/preview" });
+    // Rate limiting is handled by middleware (DB-backed via RateLimitLog)
 
     return NextResponse.json({ ok: true, data: generatePreview(input) });
   } catch (err) {

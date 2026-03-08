@@ -2,13 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { locales, defaultLocale } from "./i18n/config";
+import { getClientIp } from "./lib/ip";
 
 // ── Rate limiting (API only) ──
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 5;
-const DAY_MS = 24 * 60 * 60 * 1000;
-let lastCleanup = Date.now();
-const CLEANUP_INTERVAL = 60 * 60 * 1000; // 1 hour
 
 const RATE_LIMITED_PATHS = [
   "/api/report/preview",
@@ -22,14 +19,6 @@ const RATE_LIMITED_PATHS = [
   "/api/email/subscribe",
 ];
 
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "127.0.0.1"
-  );
-}
-
 // ── Intl middleware ──
 const intlMiddleware = createIntlMiddleware({
   locales,
@@ -38,7 +27,7 @@ const intlMiddleware = createIntlMiddleware({
   localePrefix: "as-needed",
 });
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // API routes: rate limiting only, no locale routing
@@ -48,52 +37,45 @@ export function middleware(request: NextRequest) {
     }
 
     const ip = getClientIp(request);
-    const key = `${ip}:${pathname}`;
-    const now = Date.now();
+    const origin = request.nextUrl.origin;
 
-    // Periodic cleanup of expired entries to prevent memory leak
-    if (now - lastCleanup > CLEANUP_INTERVAL) {
-      lastCleanup = now;
-      for (const [k, v] of rateLimitMap) {
-        if (now > v.resetAt) rateLimitMap.delete(k);
-      }
-    }
-
-    let entry = rateLimitMap.get(key);
-    if (!entry || now > entry.resetAt) {
-      entry = { count: 0, resetAt: now + DAY_MS };
-      rateLimitMap.set(key, entry);
-    }
-    entry.count++;
-
-    if (entry.count > RATE_LIMIT) {
-      // Fire-and-forget: log blocked request to DB for monitoring
-      const origin = request.nextUrl.origin;
-      fetch(`${origin}/api/internal/log-rate-limit`, {
+    try {
+      // Query DB via internal endpoint (Edge middleware cannot use Prisma)
+      const res = await fetch(`${origin}/api/internal/check-rate-limit`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-internal-caller": "middleware" },
-        body: JSON.stringify({ ip, endpoint: pathname }),
-      }).catch(() => {});
+        headers: {
+          "Content-Type": "application/json",
+          "x-internal-caller": "middleware",
+        },
+        body: JSON.stringify({ ip, endpoint: pathname, limit: RATE_LIMIT }),
+      });
 
-      return NextResponse.json(
-        { ok: false, error: { code: "RATE_LIMITED", message: "Rate limit exceeded. Please try again tomorrow." } },
-        {
-          status: 429,
-          headers: {
-            "X-RateLimit-Limit": String(RATE_LIMIT),
-            "X-RateLimit-Remaining": "0",
-            "X-RateLimit-Reset": String(Math.ceil(entry.resetAt / 1000)),
-            "Retry-After": String(Math.ceil((entry.resetAt - now) / 1000)),
-          },
-        }
-      );
+      const data = await res.json();
+
+      if (data.ok && !data.allowed) {
+        return NextResponse.json(
+          { ok: false, error: { code: "RATE_LIMITED", message: "Rate limit exceeded. Please try again tomorrow." } },
+          {
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": String(RATE_LIMIT),
+              "X-RateLimit-Remaining": "0",
+              "X-RateLimit-Reset": String(data.resetAt),
+              "Retry-After": String(Math.max(1, data.resetAt - Math.ceil(Date.now() / 1000))),
+            },
+          }
+        );
+      }
+
+      const response = NextResponse.next();
+      response.headers.set("X-RateLimit-Limit", String(RATE_LIMIT));
+      response.headers.set("X-RateLimit-Remaining", String(Math.max(0, RATE_LIMIT - (data.count ?? 0))));
+      response.headers.set("X-RateLimit-Reset", String(data.resetAt ?? 0));
+      return response;
+    } catch {
+      // On failure, allow the request (fail open)
+      return NextResponse.next();
     }
-
-    const response = NextResponse.next();
-    response.headers.set("X-RateLimit-Limit", String(RATE_LIMIT));
-    response.headers.set("X-RateLimit-Remaining", String(Math.max(0, RATE_LIMIT - entry.count)));
-    response.headers.set("X-RateLimit-Reset", String(Math.ceil(entry.resetAt / 1000)));
-    return response;
   }
 
   // Admin routes: skip locale routing

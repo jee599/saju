@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, ELEMENT_EMOJI } from "@saju/engine-saju";
 import type { Element } from "@saju/engine-saju";
+import { PageSkeleton } from "../components/Skeleton";
 
 // 오행 상성 관계
 const ELEMENT_RELATIONS: Record<Element, { generates: Element; overcomes: Element; generatedBy: Element; overcomeBy: Element }> = {
@@ -207,9 +208,8 @@ function DailyContent() {
 }
 
 export default function DailyPage() {
-  const t = useTranslations("daily");
   return (
-    <Suspense fallback={<div className="loadingScreen"><p className="muted">{t("loading")}</p></div>}>
+    <Suspense fallback={<PageSkeleton />}>
       <DailyContent />
     </Suspense>
   );

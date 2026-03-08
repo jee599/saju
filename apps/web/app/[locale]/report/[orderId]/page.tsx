@@ -3,10 +3,15 @@
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
 import { trackFunnel, trackScrollDepth, trackServerEvent, createPageTimer, trackPageEvent, trackLanding } from "../../../../lib/analytics";
 import type { GetReportResponse } from "../../../../lib/types";
 import { webApi } from "../../../../lib/api";
 import { ButtonLink, GlassCard, PageContainer, StatusBox } from "../../components/ui";
+import { calculateFourPillars } from "@saju/engine-saju";
+import type { Element } from "@saju/engine-saju";
+
+const ShareButtons = dynamic(() => import("../../result/components/ShareButtons"), { ssr: false });
 
 function splitParagraphs(text: string): string[] {
   return text
@@ -124,6 +129,7 @@ function SectionText({ text }: { text: string }) {
 
 export default function ReportPage() {
   const t = useTranslations("report");
+  const tResult = useTranslations("result");
   const { orderId } = useParams<{ orderId: string }>();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? undefined;
@@ -206,6 +212,24 @@ export default function ReportPage() {
     [report]
   );
 
+  // Compute dominant element from input for share buttons
+  const dominantElement = useMemo((): Element | null => {
+    if (!data?.input?.birthDate) return null;
+    try {
+      const parts = data.input.birthDate.split("-").map(Number);
+      const y = parts[0] ?? 2000;
+      const m = parts[1] ?? 1;
+      const d = parts[2] ?? 1;
+      const timeParts = data.input.birthTime?.split(":").map(Number);
+      const hour = timeParts?.[0] ?? 12;
+      const minute = timeParts?.[1] ?? 0;
+      const result = calculateFourPillars({ year: y, month: m, day: d, hour, minute });
+      return result.elements.dominant;
+    } catch {
+      return null;
+    }
+  }, [data?.input]);
+
   return (
     <PageContainer>
       <GlassCard>
@@ -270,6 +294,15 @@ export default function ReportPage() {
               )}
 
               <p className="muted reportDisclaimer">{report.disclaimer}</p>
+
+              {dominantElement && data?.input?.name && (
+                <ShareButtons
+                  element={tResult(`elements.${dominantElement}`)}
+                  elementKey={dominantElement}
+                  name={data.input.name}
+                  traits={tResult(`dayMaster.traits.${dominantElement}`)}
+                />
+              )}
             </section>
           </div>
         )}

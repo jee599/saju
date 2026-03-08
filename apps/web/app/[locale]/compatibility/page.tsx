@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, calculateCompatibility, ELEMENT_EMOJI } from "@saju/engine-saju";
 import { track } from "../../../lib/analytics";
+import { PageSkeleton } from "../components/Skeleton";
 
 function CompatContent() {
   const t = useTranslations("compat");
@@ -141,9 +142,8 @@ function CompatContent() {
 }
 
 export default function CompatibilityPage() {
-  const t = useTranslations("compat");
   return (
-    <Suspense fallback={<div className="loadingScreen"><p className="muted">{t("loading")}</p></div>}>
+    <Suspense fallback={<PageSkeleton />}>
       <CompatContent />
     </Suspense>
   );

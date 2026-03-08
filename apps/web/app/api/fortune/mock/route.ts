@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { generateFortune, isValidFortuneInput } from '../../../../lib/mockEngine';
-import { logRateLimit } from '../../../../lib/rateLimitLog';
 import type { FortuneInput } from '../../../../lib/types';
 
 export async function POST(req: Request) {
@@ -13,9 +12,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fire-and-forget rate limit DB logging
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? req.headers.get("x-real-ip") ?? "unknown";
-    logRateLimit({ ip, endpoint: "/api/fortune/mock" });
+    // Rate limiting is handled by middleware (DB-backed via RateLimitLog)
 
     return NextResponse.json({ ok: true, data: generateFortune(input) });
   } catch (err) {

@@ -15,12 +15,13 @@ User -> Next.js (apps/web)
   -> /api/checkout/paddle/webhook         -> 주문 확정
   -> /api/report/preview                  -> Claude AI (LLM)
   -> /api/fortune/mock                    -> Claude AI (LLM)
-middleware.ts -> Rate Limit (5회/일, IP 기반, in-memory + DB 로깅)
+middleware.ts -> Rate Limit (5회/일, IP 기반, DB 기반 via internal API)
 ```
 
 
 ## 완료 (최근 10개)
 
+- 오행 매핑 상수 3중 중복 제거, getPaddle() 유틸 추출, 유료 리포트 ShareButtons 추가
 - Stripe 코드 완전 제거, Paddle 전환 완료 (결제 2원화: Toss + Paddle)
 - QA 2차: log-rate-limit 보호, rate limit 확대, 한국어 레이블 i18n
 - QA 3차: --t3 색상 대비 개선, report retry, compatibility shareUrl, DB 인덱스

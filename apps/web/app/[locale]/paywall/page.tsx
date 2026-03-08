@@ -7,6 +7,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link } from "../../../i18n/navigation";
 import { track, trackCheckoutStart, trackFunnel, trackError as trackAnalyticsError, createPageTimer, trackPageEvent, trackLanding } from "../../../lib/analytics";
 import { getCountryByLocale } from "@saju/shared";
+import { PageSkeleton } from "../components/Skeleton";
 
 function PaywallContent() {
   const t = useTranslations("paywall");
@@ -108,29 +109,24 @@ function PaywallContent() {
 
   return (
     <div className="page">
-      <div className="container" style={{ paddingBottom: 100 }}>
+      <div className="container paywallContainerPadded">
         {/* Price anchoring — enhanced */}
-        <div style={{ textAlign: "center", marginBottom: 16 }}>
-          <p style={{ fontSize: "1.1rem", color: "var(--t2)", lineHeight: 1.6 }}>
-            <span style={{ textDecoration: "line-through", opacity: 0.5, fontSize: "1.05rem" }}>{t("priceAnchor")}</span>
+        <div className="paywallPriceAnchor">
+          <p className="paywallPriceAnchorText">
+            <span className="paywallPriceStrike">{t("priceAnchor")}</span>
             <br />
-            <span style={{ color: "var(--accent-gold)", fontWeight: 700, fontSize: "1.2rem" }}>{t("priceAnchorTo", { price: priceLabel })}</span>
-            <span style={{
-              display: "inline-block", marginLeft: 8, padding: "2px 8px",
-              fontSize: "0.72rem", fontWeight: 700, borderRadius: 6,
-              background: "rgba(251, 191, 36, 0.15)", color: "var(--accent-gold)",
-              border: "1px solid rgba(251, 191, 36, 0.3)",
-            }}>-90%</span>
+            <span className="paywallPriceHighlight">{t("priceAnchorTo", { price: priceLabel })}</span>
+            <span className="paywallDiscountBadge">-60%</span>
           </p>
         </div>
 
         <section className="glassCard">
-          <h2 style={{ textAlign: "center", fontSize: "1.2rem" }}>{t("heading", { name })}</h2>
-          <p className="muted" style={{ textAlign: "center", marginTop: 4 }}>
+          <h2 className="paywallHeading">{t("heading", { name })}</h2>
+          <p className="muted paywallSubheading">
             {t("subheading")}
           </p>
 
-          <div style={{ marginTop: 20, textAlign: "left" }}>
+          <div className="paywallSectionsList">
             <ul className="flatList compactList">
               {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <li key={i}>{t(`sections.${i}`)}</li>
@@ -139,25 +135,21 @@ function PaywallContent() {
           </div>
 
           {/* Trust badges with icons */}
-          <div style={{
-            display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14,
-            marginTop: 20, padding: "14px 0",
-            borderTop: "1px solid var(--glass-border)", borderBottom: "1px solid var(--glass-border)",
-          }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.78rem", color: "var(--t2)" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+          <div className="paywallTrustBadges">
+            <span className="paywallTrustItem">
+              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
               {t("trustSecure")}
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.78rem", color: "var(--t2)" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+            <span className="paywallTrustItem">
+              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
               {t("trustRefund")}
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.78rem", color: "var(--t2)" }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+            <span className="paywallTrustItem">
+              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
               </svg>
               {t("trustEmail")}
@@ -165,17 +157,17 @@ function PaywallContent() {
           </div>
 
           {/* Social proof with star rating */}
-          <div style={{ textAlign: "center", marginTop: 12 }}>
-            <span style={{ color: "#fbbf24", fontSize: "0.9rem", letterSpacing: "1px" }}>&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span style={{ fontSize: "0.82rem", color: "var(--t2)", marginLeft: 6, fontWeight: 600 }}>4.8</span>
-            <span style={{ fontSize: "0.78rem", color: "var(--t3)", margin: "0 6px" }}>&middot;</span>
-            <span style={{ fontSize: "0.82rem", color: "var(--accent-gold)", fontWeight: 500 }}>
+          <div className="paywallSocialProof">
+            <span className="paywallStars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span className="paywallRating">4.8</span>
+            <span className="paywallDot">&middot;</span>
+            <span className="paywallProofText">
               {t("socialProof", { count: t("socialProofCount") })}
             </span>
           </div>
 
           {/* Email + checkout */}
-          <div className="form" style={{ maxWidth: "min(400px, 100%)", margin: "20px auto 0" }}>
+          <div className="form paywallForm">
             <div className="formGroup">
               <label htmlFor="paywall-email">{t("emailLabel")}</label>
               <input
@@ -206,9 +198,9 @@ function PaywallContent() {
             </div>
           </div>
 
-          <p className="muted" style={{ marginTop: 16, fontSize: "0.8rem", textAlign: "center" }}>
+          <p className="muted paywallAfterPurchase">
             {t("afterPurchase")}
-            <br />{t("refundLink", { link: "" })}<Link href="/refund" style={{ color: "var(--accent)" }}>{t("refundLinkText")}</Link>
+            <br />{t("refundLink", { link: "" })}<Link href="/refund" className="paywallRefundLink">{t("refundLinkText")}</Link>
           </p>
         </section>
       </div>
@@ -230,9 +222,8 @@ function PaywallContent() {
 }
 
 export default function PaywallPage() {
-  const t = useTranslations("paywall");
   return (
-    <Suspense fallback={<div className="loadingScreen"><p className="muted">{t("loading")}</p></div>}>
+    <Suspense fallback={<PageSkeleton />}>
       <PaywallContent />
     </Suspense>
   );

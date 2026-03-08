@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "../../../i18n/navigation";
 import { useTranslations } from "next-intl";
 import { track } from "../../../lib/analytics";
+import { PageSkeleton } from "../components/Skeleton";
 
 function FreeFortunContent() {
   const t = useTranslations("misc.freeFortune");
@@ -123,9 +124,8 @@ function FreeFortunContent() {
 }
 
 export default function FreeFortuPage() {
-  const t = useTranslations("misc.freeFortune");
   return (
-    <Suspense fallback={<div className="loadingScreen"><p className="muted">{t("loading")}</p></div>}>
+    <Suspense fallback={<PageSkeleton />}>
       <FreeFortunContent />
     </Suspense>
   );
