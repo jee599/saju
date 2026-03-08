@@ -5,6 +5,7 @@
   "emailError": "请输入正确的邮箱地址。",
   "submitBtn": "查找报告",
   "loading": "搜索中...",
+  "noResultsTitle": "未找到报告",
   "noResults": "未找到该邮箱的购买记录。请确认邮箱后重试。",
   "resultTitle": "您的报告",
   "viewReport": "查看报告",

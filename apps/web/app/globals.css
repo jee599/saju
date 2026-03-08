@@ -139,24 +139,24 @@ h1, h2, h3, p { margin: 0; }
 
 h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5.5vw, 3.2rem);
-  font-weight: 400;
-  letter-spacing: 0.02em;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
   line-height: 1.2;
   color: var(--t1);
 }
 
 h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3.6vw, 2.2rem);
-  font-weight: 400;
+  font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+  font-weight: 700;
   letter-spacing: 0.01em;
   line-height: 1.3;
   color: var(--t1);
 }
 
 h3 {
-  font-size: clamp(1rem, 2.8vw, 1.2rem);
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
   font-weight: 600;
   letter-spacing: -0.2px;
   line-height: 1.4;
@@ -180,6 +180,7 @@ p, li, label, input, select, button, textarea {
 }
 
 .muted { color: var(--t2); }
+.text-muted { color: var(--t3, #8B8498); }
 .mt-sm { margin-top: 14px; }
 .mt-md { margin-top: 20px; }
 
@@ -405,6 +406,145 @@ p, li, label, input, select, button, textarea {
 }
 
 .glassCard + .glassCard { margin-top: 36px; }
+
+/* ── Onboarding Carousel ─────────────────────────── */
+
+.onb-carousel {
+  width: var(--container);
+  margin: 32px auto 0;
+  overflow: hidden;
+  position: relative;
+  animation: fadeInUp 0.6s var(--ease-smooth) both;
+}
+
+.onb-track {
+  display: flex;
+  transition: transform 0.4s var(--ease-smooth);
+  will-change: transform;
+  touch-action: pan-y;
+}
+
+.onb-slide {
+  min-width: 100%;
+  flex-shrink: 0;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+.onb-slide .glassCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(24px, 4vw, 36px);
+  margin-top: 0;
+}
+
+.onb-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.onb-emoji-lg {
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+.onb-sparkle {
+  animation: onbPulse 2s ease-in-out infinite;
+}
+
+.onb-pillars {
+  display: flex;
+  gap: 6px;
+  margin-left: 12px;
+}
+
+.onb-pillars span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 44px;
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.onb-elements {
+  display: flex;
+  gap: 10px;
+  font-size: 2rem;
+}
+
+.onb-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--t1);
+  margin-bottom: 8px;
+}
+
+.onb-text {
+  font-size: 0.92rem;
+  color: var(--t2);
+  line-height: 1.6;
+  max-width: 420px;
+}
+
+.onb-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding-bottom: 4px;
+}
+
+.onb-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.onb-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s var(--ease-smooth), transform 0.3s var(--ease-smooth);
+}
+
+.onb-dot.active {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+
+.onb-skip {
+  background: none;
+  border: none;
+  color: var(--t3);
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+
+.onb-skip:hover {
+  color: var(--t1);
+}
+
+@keyframes onbPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.15); }
+}
 
 /* ── Hero ─────────────────────────────────────────── */
 
@@ -2287,8 +2427,27 @@ p, li, label, input, select, button, textarea {
   font-size: 0.9rem;
 }
 
+.loadingErrorActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .loadingError .btn {
   margin-top: 4px;
+}
+
+.loadingErrorSupport {
+  font-size: 0.8rem;
+  color: var(--t3);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+}
+
+.loadingErrorSupport:hover {
+  color: var(--t1);
 }
 
 /* ── Compatibility ────────────────────────────────── */
@@ -3818,6 +3977,24 @@ body:has(.constellationPage) {
   color: var(--t2);
 }
 
+/* ── Form Progress Bar ── */
+.cFormProgress {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.cFormProgressFill {
+  height: 100%;
+  background: var(--accent-gold);
+  border-radius: 2px;
+  transition: width 0.35s ease;
+  min-width: 0;
+}
+
 /* ── Compact Form ── */
 .cForm {
   text-align: left;
@@ -4515,3 +4692,249 @@ body:has(.constellationPage) #main-content {
 }
 
 .footerSeoLinks a:hover { opacity: 1; }
+
+/* ── Gold CTA Button (Paywall) ────────────────────── */
+
+.btn-cta-gold {
+  color: #ffffff;
+  background: linear-gradient(135deg, #D4AF37 0%, #C49B30 100%);
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-height: 52px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: box-shadow 0.3s var(--ease-smooth), transform 0.2s var(--ease-smooth), filter 0.3s var(--ease-smooth);
+}
+
+.btn-cta-gold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 65%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.btn-cta-gold:hover {
+  box-shadow: 0 0 32px rgba(212, 175, 55, 0.5), 0 4px 16px rgba(212, 175, 55, 0.25);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* Subtle pulse for sticky CTA — draws attention without being annoying */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+  50% { box-shadow: 0 0 28px rgba(212, 175, 55, 0.45), 0 0 48px rgba(212, 175, 55, 0.15); }
+}
+
+.stickyCta .btn-cta-gold {
+  animation: ctaPulse 3s ease-in-out infinite;
+}
+
+.stickyCta .btn-cta-gold:hover {
+  animation: none;
+  box-shadow: 0 0 32px rgba(212, 175, 55, 0.5), 0 4px 16px rgba(212, 175, 55, 0.25);
+}
+
+/* ── Empty State ─────────────────────────────────── */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.emptyStateIcon {
+  font-size: 2.5rem;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.emptyStateTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--t1);
+}
+
+.emptyStateMsg {
+  font-size: 0.9rem;
+  color: var(--t3, #8B8498);
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+/* ── Page Transition ─────────────────────────────── */
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: pageFadeIn 300ms ease-out both;
+}
+
+/* ── OhangRadarChart ─────────────────────────────── */
+
+.ohangRadarPolygon {
+  transition: all 0.6s var(--ease-smooth);
+}
+
+/* ── FortuneTimeline ─────────────────────────────── */
+
+.ftWrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 16px 0 8px;
+}
+.ftWrapper::-webkit-scrollbar { display: none; }
+
+.ftTrack {
+  display: flex;
+  align-items: flex-start;
+  min-width: max-content;
+  padding: 0 24px;
+}
+
+.ftNodeGroup {
+  display: flex;
+  align-items: flex-start;
+}
+
+.ftLine {
+  width: 32px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 18px;
+  flex-shrink: 0;
+}
+
+.ftNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-width: 72px;
+  flex-shrink: 0;
+}
+
+.ftGlow {
+  position: absolute;
+  top: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid;
+  animation: ftPulse 2s ease-in-out infinite;
+}
+
+@keyframes ftPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.ftDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.ftNodeCurrent .ftDot {
+  width: 18px;
+  height: 18px;
+}
+
+.ftAge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--t2);
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+.ftKeywords {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.ftTag {
+  font-size: 0.68rem;
+  color: var(--t3);
+  padding: 1px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* ── SectionScoreBar ─────────────────────────────── */
+
+.scoreBarRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.scoreBarIcon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  width: 24px;
+  text-align: center;
+}
+
+.scoreBarLabel {
+  font-size: 0.85rem;
+  color: var(--t1);
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.scoreBarTrack {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s var(--ease-smooth);
+}
+
+.scoreBarValue {
+  font-size: 0.78rem;
+  font-weight: 600;
+  min-width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}

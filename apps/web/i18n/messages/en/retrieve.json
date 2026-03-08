@@ -5,6 +5,7 @@
   "emailError": "Please enter a valid email address.",
   "submitBtn": "Find Reports",
   "loading": "Searching...",
+  "noResultsTitle": "No Reports Found",
   "noResults": "No reports found for this email. Please check the email address and try again.",
   "resultTitle": "Your Reports",
   "viewReport": "View Report",

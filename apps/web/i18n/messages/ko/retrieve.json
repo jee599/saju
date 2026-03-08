@@ -5,6 +5,7 @@
   "emailError": "올바른 이메일 형식을 입력해주세요.",
   "submitBtn": "리포트 찾기",
   "loading": "검색 중...",
+  "noResultsTitle": "리포트를 찾을 수 없습니다",
   "noResults": "해당 이메일로 구매된 리포트가 없습니다. 이메일 주소를 확인 후 다시 시도해주세요.",
   "resultTitle": "내 리포트",
   "viewReport": "리포트 보기",

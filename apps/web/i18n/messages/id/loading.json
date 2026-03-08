@@ -233,5 +233,8 @@
   "progressAria": "Kemajuan analisis",
   "errorPending": "Pembayaran masih diproses. Silakan coba lagi nanti.",
   "errorNotPaid": "Pembayaran belum selesai. Silakan selesaikan pembayaran dan coba lagi.",
-  "errorVerification": "Verifikasi pembayaran gagal. Silakan periksa pembayaran dan hubungi dukungan."
+  "errorVerification": "Verifikasi pembayaran gagal. Silakan periksa pembayaran dan hubungi dukungan.",
+  "retryOther": "Coba metode pembayaran lain",
+  "contactSupport": "Hubungi dukungan",
+  "supportEmail": "help@fortunelab.store"
 }

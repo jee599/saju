@@ -21,32 +21,30 @@ middleware.ts -> Rate Limit (5회/일, IP 기반, DB 기반 via internal API)
 
 ## 완료 (최근 10개)
 
-- API 통합 테스트 35개 추가 (checkout create/confirm, report generate/preview/get), console.error → 구조화된 logger 전환
-- SEO 랜딩 페이지 4개 (free-saju, zodiac-2026, birth-chart, compatibility-test) x 8개 로케일, FAQPage JSON-LD, sitemap, footer 내부 링크
-- 궁합 paywall 페이지 + CTA 추가, 리포트 찾기(retrieve) 페이지/API 추가, 8개 로케일 i18n
-- 오행 매핑 상수 3중 중복 제거, getPaddle() 유틸 추출, 유료 리포트 ShareButtons 추가
-- Stripe 코드 완전 제거, Paddle 전환 완료 (결제 2원화: Toss + Paddle)
-- QA 2차: log-rate-limit 보호, rate limit 확대, 한국어 레이블 i18n
-- QA 3차: --t3 색상 대비 개선, report retry, compatibility shareUrl, DB 인덱스
-- daily/page.tsx useRouter i18n 수정, admin/logout auth 수정
-- i18n Link/router 통일: 8개 파일에서 next/link, next/navigation -> i18n navigation 전환
-- 레이트 리밋 모니터링: 429 발생 시 DB 로깅 + admin 대시보드 Rate Limit 탭
-- CSS focus-visible inset 수정 (overflow:hidden 클리핑 방지)
-- Resend DNS 레코드 Vercel DNS에 추가 (이메일 인증 완료)
-- Rate limiting 구현 (middleware.ts, LLM 엔드포인트 5회/일)
-- Playwright E2E 스모크 (8개 로케일, desktop + iPhone 12)
+- QA 4차: SEO FAQ raw key 노출 수정, 궁합 paywall productCode/partnerDate 수정, 결제에러 double .json() 수정, JSON-LD XSS 방어, retrieve rate limit 순서 수정, retarget sessionId 충돌 방지, Enter key 폼 제출, console.* → logger.* 통일
+- 가짜 소셜프루프 전면 제거 (★4.8, 2500+ 사용자, 할인뱃지, 가격앵커) + 결제 실패 로컬라이즈 에러 메시지
+- Abandoned checkout retarget email cron 배포 (6시간 간격, 8개 로케일)
+- API 통합 테스트 35개 추가, console.error → 구조화된 logger 전환
+- SEO 랜딩 페이지 4개 x 8개 로케일, FAQPage JSON-LD, sitemap
+- 궁합 paywall + 리포트 찾기(retrieve) 페이지/API, 8개 로케일 i18n
+- 오행 매핑 상수 3중 중복 제거, getPaddle() 유틸 추출, ShareButtons
+- Stripe 완전 제거, Paddle 전환 완료 (결제 2원화: Toss + Paddle)
+- QA 3차: --t3 색상 대비, report retry, DB 인덱스
+- Rate limiting 구현 (middleware.ts, DB 기반, 5회/일)
 
 
 ## 진행중
 
-- Abandoned checkout retarget email cron 구현 완료 (코드 리뷰/배포 대기)
+- 홈페이지 온보딩 캐러셀 추가 (첫 방문자용, 3슬라이드, 8개 로케일 i18n)
+- loading-analysis 페이지 리팩토링 완료 (hook/component 분리, elapsedSec useRef 성능 수정)
+- 폼 진행 바 + 결제 실패 복구 UX 추가 (완료, 커밋 대기)
 
 
 ## 남은 것
 
 - Paddle 웹훅 실 결제 테스트 (sandbox -> production 전환)
 - 첫 유료 전환 달성 후 수익화 지표 트래킹
-- 궁합 paywall: productCode "compat" 분리 + 궁합 전용 리포트 생성 로직 (LLM 프롬프트)
+- 궁합 전용 리포트 생성 로직 (LLM 프롬프트 — productCode "compat" 분리는 완료)
 
 
 ## 이슈

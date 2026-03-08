@@ -233,5 +233,8 @@
   "progressAria": "分析进度",
   "errorPending": "支付仍在处理中，请稍后再试。",
   "errorNotPaid": "支付未完成，请完成支付后重试。",
-  "errorVerification": "支付验证失败，请检查支付记录并联系客服。"
+  "errorVerification": "支付验证失败，请检查支付记录并联系客服。",
+  "retryOther": "尝试其他支付方式",
+  "contactSupport": "联系客服",
+  "supportEmail": "help@fortunelab.store"
 }

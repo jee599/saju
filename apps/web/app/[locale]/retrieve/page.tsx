@@ -112,8 +112,12 @@ function RetrieveContent() {
 
         {/* Results */}
         {results !== null && results.length === 0 && (
-          <section className="glassCard" style={{ marginTop: 16, textAlign: "center" }}>
-            <p className="muted">{t("noResults")}</p>
+          <section className="glassCard" style={{ marginTop: 16 }}>
+            <div className="emptyState">
+              <span className="emptyStateIcon">🔍</span>
+              <p className="emptyStateTitle">{t("noResultsTitle")}</p>
+              <p className="emptyStateMsg">{t("noResults")}</p>
+            </div>
           </section>
         )}
 

@@ -14,6 +14,26 @@ export type LlmUsage = {
 
 export type LlmResult = { text: string; usage?: LlmUsage; durationMs?: number };
 
+interface OpenAIResponse {
+  choices?: { message?: { content?: string } }[];
+  usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
+}
+
+interface GeminiResponse {
+  candidates?: { content?: { parts?: { text?: string }[] } }[];
+  usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number; totalTokenCount?: number };
+}
+
+interface AnthropicResponse {
+  content?: { text?: string }[];
+  usage?: {
+    input_tokens?: number;
+    output_tokens?: number;
+    cache_creation_input_tokens?: number;
+    cache_read_input_tokens?: number;
+  };
+}
+
 const requireEnv = (key: string): string => {
   const v = process.env[key];
   if (!v) throw new Error(`Missing env: ${key}`);
@@ -31,8 +51,8 @@ export const withRetry = async <T>(fn: () => Promise<T>, maxRetries = 3, baseDel
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
-    } catch (err: any) {
-      const msg = err?.message ?? "";
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "";
       const statusMatch = msg.match(/error:\s*(\d{3})/);
       const status = statusMatch ? parseInt(statusMatch[1]) : 0;
 
@@ -70,7 +90,7 @@ const callLlmOnce = async (params: {
     const modelId = openaiModel ?? process.env.OPENAI_MODEL ?? "gpt-5-mini";
     const useTemp = modelId.includes("mini") ? undefined : temperature;
     const startMs = Date.now();
-    const body: any = {
+    const body: Record<string, unknown> = {
       model: modelId,
       max_completion_tokens: maxTokens,
       messages: [
@@ -94,7 +114,7 @@ const callLlmOnce = async (params: {
     }
     const gptDuration = Date.now() - startMs;
     if (!resp.ok) throw new Error(`OpenAI error: ${resp.status} ${resp.statusText} ${await resp.text().catch(() => "")}`);
-    const json = (await resp.json()) as any;
+    const json = (await resp.json()) as OpenAIResponse;
     const text = json?.choices?.[0]?.message?.content;
     if (typeof text !== "string") throw new Error("OpenAI: missing text");
     const usage = json?.usage
@@ -138,7 +158,7 @@ const callLlmOnce = async (params: {
     }
     const durationMs = Date.now() - startMs;
     if (!resp.ok) throw new Error(`Gemini error: ${resp.status} ${resp.statusText} ${await resp.text().catch(() => "")}`);
-    const json = (await resp.json()) as any;
+    const json = (await resp.json()) as GeminiResponse;
     const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (typeof text !== "string") throw new Error("Gemini: missing text");
     const usage = json?.usageMetadata
@@ -179,7 +199,7 @@ const callLlmOnce = async (params: {
   }
   const durationMs = Date.now() - startMs;
   if (!resp.ok) throw new Error(`Anthropic error: ${resp.status} ${resp.statusText} ${await resp.text().catch(() => "")}`);
-  const json = (await resp.json()) as any;
+  const json = (await resp.json()) as AnthropicResponse;
   const text = json?.content?.[0]?.text;
   if (typeof text !== "string") throw new Error("Anthropic: missing text");
   const usage = json?.usage

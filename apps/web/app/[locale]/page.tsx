@@ -5,6 +5,7 @@ import { useRouter } from "../../i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "../../i18n/navigation";
 import { track, trackFunnel, trackFormStep, trackChoice, trackPageEvent, createPageTimer, trackLanding } from "../../lib/analytics";
+import OnboardingCarousel from "./components/OnboardingCarousel";
 
 /* ─── helpers ─── */
 
@@ -106,6 +107,18 @@ export default function HomePage() {
   const hasDate = year !== "" && month !== "" && day !== "";
   const hasGender = gender !== "";
 
+  // Progress bar: count filled fields out of total
+  const totalFields = 6; // year, month, day, hour, gender, name
+  const filledFields = [
+    year !== "",
+    month !== "",
+    day !== "",
+    hour !== "",
+    hasGender,
+    hasName,
+  ].filter(Boolean).length;
+  const progressPct = Math.round((filledFields / totalFields) * 100);
+
   // Track form steps
   useEffect(() => {
     if (hasName && !trackedStepsRef.current.has("name")) {
@@ -165,28 +178,44 @@ export default function HomePage() {
 
       <section id="hero" className="constellationHero">
         <div className="heroMain constellationHeroMain">
-          <h1 className="constellationTitle">{t("hero.landingTitle")}</h1>
+          <h1 id="hero-title" className="constellationTitle">{t("hero.landingTitle")}</h1>
           <p className="constellationSub">{t("hero.landingSub")}</p>
           <form
             className="cForm"
+            role="form"
+            aria-labelledby="hero-title"
             onSubmit={(e) => {
               e.preventDefault();
               handleAnalyze();
             }}
           >
+            {/* Progress bar */}
+            <div className="cFormProgress">
+              <div
+                className="cFormProgressFill"
+                style={{ width: `${progressPct}%` }}
+                role="progressbar"
+                aria-valuenow={progressPct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              />
+            </div>
+
             {/* ① 생년월일 — 항상 표시 */}
             <div className="cRow">
               <label className="cLabel" htmlFor="birthYear">{t("form.step2Label")}</label>
               <div className="cDateRow">
-                <select id="birthYear" name="birthYear" className="cSelect cSelectYear" value={year} onChange={(e) => setYear(e.target.value)}>
+                <select id="birthYear" name="birthYear" className="cSelect cSelectYear" value={year} onChange={(e) => setYear(e.target.value)} aria-required="true">
                   <option value="">{t("form.yearPlaceholder")}</option>
                   {YEARS.map((y) => <option key={y} value={y}>{y}{t("form.yearSuffix")}</option>)}
                 </select>
-                <select id="birthMonth" name="birthMonth" className="cSelect" value={month} onChange={(e) => setMonth(e.target.value)}>
+                <label className="sr-only" htmlFor="birthMonth">{t("form.monthPlaceholder")}</label>
+                <select id="birthMonth" name="birthMonth" className="cSelect" value={month} onChange={(e) => setMonth(e.target.value)} aria-required="true">
                   <option value="">{t("form.monthPlaceholder")}</option>
                   {MONTHS.map((m) => <option key={m} value={m}>{m}{t("form.monthSuffix")}</option>)}
                 </select>
-                <select id="birthDay" name="birthDay" className="cSelect" value={day} onChange={(e) => setDay(e.target.value)}>
+                <label className="sr-only" htmlFor="birthDay">{t("form.dayPlaceholder")}</label>
+                <select id="birthDay" name="birthDay" className="cSelect" value={day} onChange={(e) => setDay(e.target.value)} aria-required="true">
                   <option value="">{t("form.dayPlaceholder")}</option>
                   {availableDays.map((d) => <option key={d} value={d}>{d}{t("form.daySuffix")}</option>)}
                 </select>
@@ -220,13 +249,13 @@ export default function HomePage() {
 
             {/* ③ 성별 — 시간 선택 후 */}
             <div className={`cRow cReveal ${hasTime ? "cVisible" : ""}`}>
-              <label className="cLabel">{t("form.step4Label")}</label>
-              <div className="cGenderPills">
+              <label className="cLabel" id="gender-label">{t("form.step4Label")}</label>
+              <div className="cGenderPills" role="radiogroup" aria-labelledby="gender-label">
                 {([
                   { label: t("form.male"), value: "male" as const },
                   { label: t("form.female"), value: "female" as const },
                 ]).map((opt) => (
-                  <button key={opt.value} type="button" className={`cMiniPill cGenderPill ${gender === opt.value ? "active" : ""}`} onClick={() => setGender(opt.value)}>
+                  <button key={opt.value} type="button" role="radio" aria-checked={gender === opt.value} className={`cMiniPill cGenderPill ${gender === opt.value ? "active" : ""}`} onClick={() => setGender(opt.value)}>
                     {opt.label}
                   </button>
                 ))}
@@ -243,6 +272,7 @@ export default function HomePage() {
                 placeholder={t("form.namePlaceholder")}
                 name="name"
                 autoComplete="name"
+                aria-required="true"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -258,6 +288,8 @@ export default function HomePage() {
           </form>
         </div>
       </section>
+
+      <OnboardingCarousel />
 
       <nav className="cLegalLinks">
         <Link href="/terms">{tc("footer.terms")}</Link>

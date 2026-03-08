@@ -5,6 +5,7 @@
   "emailError": "Harap masukkan alamat email yang valid.",
   "submitBtn": "Cari Laporan",
   "loading": "Mencari...",
+  "noResultsTitle": "Laporan Tidak Ditemukan",
   "noResults": "Tidak ditemukan laporan untuk email ini. Periksa kembali email dan coba lagi.",
   "resultTitle": "Laporan Anda",
   "viewReport": "Lihat Laporan",

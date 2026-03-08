@@ -197,7 +197,7 @@ function CompatPaywallContent() {
             </div>
             <div className="buttonRow">
               <button
-                className="btn btn-primary btn-lg btn-full"
+                className="btn btn-cta-gold btn-lg btn-full"
                 onClick={() => handleCheckout("top")}
                 disabled={loading}
               >
@@ -217,7 +217,7 @@ function CompatPaywallContent() {
       <div className="stickyCta paywallStickyCta">
         <div className="stickyCtaInner">
           <button
-            className="btn btn-primary btn-lg btn-full"
+            className="btn btn-cta-gold btn-lg btn-full"
             onClick={() => handleCheckout("sticky")}
             disabled={loading}
           >

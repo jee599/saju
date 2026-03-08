@@ -5,6 +5,7 @@
   "emailError": "Vui lòng nhập địa chỉ email hợp lệ.",
   "submitBtn": "Tìm báo cáo",
   "loading": "Đang tìm kiếm...",
+  "noResultsTitle": "Không tìm thấy báo cáo",
   "noResults": "Không tìm thấy báo cáo cho email này. Vui lòng kiểm tra lại email và thử lại.",
   "resultTitle": "Báo cáo của bạn",
   "viewReport": "Xem báo cáo",

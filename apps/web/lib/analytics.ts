@@ -32,7 +32,7 @@ export function track(event: FunnelEvent | string, props?: AnalyticsProps): void
     }
     return;
   }
-  const gtag = (window as any).gtag;
+  const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
   if (typeof gtag === "function") {
     gtag("event", event, props);
   }

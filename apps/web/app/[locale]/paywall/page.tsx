@@ -117,7 +117,7 @@ function PaywallContent() {
           </p>
 
           <div className="paywallSectionsList">
-            <ul className="flatList compactList">
+            <ul className="flatList compactList" aria-label={t("heading", { name })}>
               {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <li key={i}>{t(`sections.${i}`)}</li>
               ))}
@@ -125,21 +125,21 @@ function PaywallContent() {
           </div>
 
           {/* Trust badges with icons */}
-          <div className="paywallTrustBadges">
-            <span className="paywallTrustItem">
-              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="paywallTrustBadges" role="list" aria-label="Trust badges">
+            <span className="paywallTrustItem" role="listitem">
+              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
               {t("trustSecure")}
             </span>
-            <span className="paywallTrustItem">
-              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <span className="paywallTrustItem" role="listitem">
+              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
               {t("trustRefund")}
             </span>
-            <span className="paywallTrustItem">
-              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <span className="paywallTrustItem" role="listitem">
+              <svg className="paywallTrustIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
               </svg>
               {t("trustEmail")}
@@ -170,9 +170,10 @@ function PaywallContent() {
             </div>
             <div className="buttonRow">
               <button
-                className="btn btn-primary btn-lg btn-full"
+                className="btn btn-cta-gold btn-lg btn-full"
                 onClick={() => handleCheckout("top")}
                 disabled={loading}
+                aria-label={loading ? t("checkoutLoading") : t("checkoutBtn", { price: priceLabel })}
               >
                 {loading ? t("checkoutLoading") : t("checkoutBtn", { price: priceLabel })}
               </button>
@@ -190,9 +191,10 @@ function PaywallContent() {
       <div className="stickyCta">
         <div className="stickyCtaInner">
           <button
-            className="btn btn-primary btn-lg btn-full"
+            className="btn btn-cta-gold btn-lg btn-full"
             onClick={() => handleCheckout("sticky")}
             disabled={loading}
+            aria-label={loading ? t("checkoutLoading") : t("checkoutBtn", { price: priceLabel })}
           >
             {loading ? t("checkoutLoading") : t("checkoutBtn", { price: priceLabel })}
           </button>
