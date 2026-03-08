@@ -116,7 +116,6 @@ function PaywallContent() {
             <span className="paywallPriceStrike">{t("priceAnchor")}</span>
             <br />
             <span className="paywallPriceHighlight">{t("priceAnchorTo", { price: priceLabel })}</span>
-            <span className="paywallDiscountBadge">-60%</span>
           </p>
         </div>
 
