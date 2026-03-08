@@ -1,6 +1,4 @@
 {
-  "priceAnchor": "หมอดู เริ่มต้นที่ 500฿",
-  "priceAnchorTo": "วิเคราะห์ด้วย AI {price}",
   "heading": "วิเคราะห์ดวงชะตา Four Pillars แบบครบถ้วนของ {name}",
   "subheading": "การวิเคราะห์ AI เชิงลึก 9 หมวด",
   "sections": [
@@ -17,8 +15,6 @@
   "trustSecure": "🔒 ชำระเงินปลอดภัย",
   "trustRefund": "↩️ รับประกันคืนเงินภายใน 24 ชั่วโมง",
   "trustEmail": "📧 ส่งรายงานทางอีเมล",
-  "socialProof": "มีผู้ใช้กว่า {count} คนทำการวิเคราะห์แล้ว",
-  "socialProofCount": "2,500+",
   "emailLabel": "อีเมล (เราจะส่งรายงานไปที่นี่ด้วย)",
   "emailError": "กรุณากรอกอีเมลให้ถูกต้อง",
   "checkoutLoading": "กำลังสร้างคำสั่งซื้อของคุณ...",

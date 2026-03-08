@@ -1,0 +1,17 @@
+{
+  "title": "找回报告",
+  "desc": "丢失了报告链接？输入购买时使用的邮箱即可找回。",
+  "emailLabel": "购买时使用的邮箱地址",
+  "emailError": "请输入正确的邮箱地址。",
+  "submitBtn": "查找报告",
+  "loading": "搜索中...",
+  "noResults": "未找到该邮箱的购买记录。请确认邮箱后重试。",
+  "resultTitle": "您的报告",
+  "viewReport": "查看报告",
+  "orderDate": "下单时间",
+  "productSaju": "八字分析",
+  "productCompat": "合婚分析",
+  "error": "发生错误，请重试。",
+  "rateLimited": "请求过于频繁，请稍后再试。",
+  "footerLink": "找不到报告？"
+}

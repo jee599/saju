@@ -1,6 +1,4 @@
 {
-  "priceAnchor": "算命师：一次300元起",
-  "priceAnchorTo": "AI分析 {price}",
   "heading": "{name}的完整八字分析",
   "subheading": "9大板块AI深度解析",
   "sections": [
@@ -17,8 +15,6 @@
   "trustSecure": "🔒 安全支付",
   "trustRefund": "↩️ 24小时退款保障",
   "trustEmail": "📧 报告发送至邮箱",
-  "socialProof": "已有{count}多人完成了四柱分析",
-  "socialProofCount": "2,500+",
   "emailLabel": "邮箱（报告也将发送至此邮箱）",
   "emailError": "请输入正确的邮箱地址。",
   "checkoutLoading": "正在创建订单...",

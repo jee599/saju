@@ -7,7 +7,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = defaultLocale;
   }
 
-  const [common, home, result, paywall, loading, report, daily, compat, misc, legal, share] = await Promise.all([
+  const [common, home, result, paywall, loading, report, daily, compat, misc, legal, share, compatPaywall, retrieve, seo] = await Promise.all([
     import(`./messages/${locale}/common.json`),
     import(`./messages/${locale}/home.json`),
     import(`./messages/${locale}/result.json`),
@@ -19,6 +19,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
     import(`./messages/${locale}/misc.json`),
     import(`./messages/${locale}/legal.json`),
     import(`./messages/${locale}/share.json`),
+    import(`./messages/${locale}/compatPaywall.json`),
+    import(`./messages/${locale}/retrieve.json`),
+    import(`./messages/${locale}/seo.json`),
   ]);
 
   return {
@@ -35,6 +38,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
       misc: misc.default,
       legal: legal.default,
       share: share.default,
+      compatPaywall: compatPaywall.default,
+      retrieve: retrieve.default,
+      seo: seo.default,
     },
   };
 });

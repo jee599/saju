@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@saju/api/db';
 import type { FortuneInput, GetReportResponse, ReportDetail, OrderSummary } from '../../../../lib/types';
 import { verifyViewToken } from '../../../../lib/viewToken';
+import { logger } from '../../../../lib/logger';
 
 /**
  * 단일 리포트 조회 API.
@@ -91,7 +92,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ orderId: string
     const headers = { 'Cache-Control': 'private, max-age=3600, stale-while-revalidate=86400' };
     return NextResponse.json({ ok: true, data }, { headers });
   } catch (err) {
-    console.error('[report/get]', err);
+    logger.error('[report/get]', { error: err });
     return NextResponse.json(
       { ok: false, error: { code: 'INTERNAL_ERROR', message: '리포트 조회 중 오류가 발생했습니다.' } },
       { status: 500 }

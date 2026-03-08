@@ -1,0 +1,33 @@
+{
+  "heading": "Unlock Your Detailed Compatibility Report",
+  "subheading": "Go beyond the free score — discover the full story of your relationship.",
+  "sections": [
+    "Element Synergy — How your Five Elements interact in depth",
+    "Communication Style — How you naturally connect and clash",
+    "Love & Romance — Romantic chemistry and long-term potential",
+    "Conflict Patterns — Where tensions arise and how to resolve them",
+    "Life Goals Alignment — Shared values and future direction",
+    "Practical Tips — Actionable advice for a stronger bond"
+  ],
+  "priceAnchor": "Relationship coach $150+/hr",
+  "priceAnchorTo": "AI compatibility analysis {price}",
+  "trustSecure": "Secure payment",
+  "trustRefund": "24-hour refund guarantee",
+  "trustEmail": "Report delivered by email",
+  "socialProof": "Over {count} couples have completed their analysis",
+  "socialProofCount": "800+",
+  "emailLabel": "Email (we'll send your report here too)",
+  "emailError": "Please enter a valid email address.",
+  "checkoutLoading": "Creating your order...",
+  "checkoutBtn": "Pay {price}",
+  "afterPurchase": "Your detailed compatibility report will be available immediately after purchase.",
+  "refundLink": "See our refund policy {link}",
+  "refundLinkText": "details",
+  "createFail": "Failed to create order",
+  "noOrderId": "No order ID received.",
+  "noCheckoutUrl": "Failed to create payment session.",
+  "checkoutError": "An error occurred during checkout.",
+  "ctaTitle": "Want the full compatibility breakdown?",
+  "ctaDesc": "Get a detailed AI analysis of your relationship dynamics, communication style, and practical tips — all in one report.",
+  "ctaButton": "Unlock Full Report — {price}"
+}

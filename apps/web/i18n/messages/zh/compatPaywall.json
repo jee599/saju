@@ -1,0 +1,33 @@
+{
+  "heading": "解锁详细合婚报告",
+  "subheading": "不止于免费评分 — 深入了解你们的关系全貌。",
+  "sections": [
+    "五行互动 — 两人五行如何深度交互",
+    "沟通方式 — 自然的连接与摩擦点",
+    "恋爱与浪漫 — 恋爱化学反应与长期可能",
+    "冲突模式 — 紧张产生的根源与化解之道",
+    "人生目标 — 共同价值观与未来方向",
+    "实用建议 — 让关系更加稳固的具体tips"
+  ],
+  "priceAnchor": "婚恋咨询 300元/次起",
+  "priceAnchorTo": "AI合婚分析 {price}",
+  "trustSecure": "安全支付",
+  "trustRefund": "24小时退款保障",
+  "trustEmail": "报告发送至邮箱",
+  "socialProof": "已有{count}多对完成了合婚分析",
+  "socialProofCount": "800+",
+  "emailLabel": "邮箱（报告也将发送至此邮箱）",
+  "emailError": "请输入正确的邮箱地址。",
+  "checkoutLoading": "正在创建订单...",
+  "checkoutBtn": "支付 {price}",
+  "afterPurchase": "支付完成后可立即查看详细合婚报告。",
+  "refundLink": "退款政策请查看{link}。",
+  "refundLinkText": "详情",
+  "createFail": "订单创建失败",
+  "noOrderId": "未收到订单ID。",
+  "noCheckoutUrl": "创建支付会话失败。",
+  "checkoutError": "支付过程中发生错误。",
+  "ctaTitle": "想看完整的合婚分析吗？",
+  "ctaDesc": "关系互动、沟通风格、实用建议一网打尽 — AI深度分析你们的合婚报告。",
+  "ctaButton": "解锁完整报告 — {price}"
+}

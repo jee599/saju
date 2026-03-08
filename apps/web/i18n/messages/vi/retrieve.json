@@ -1,0 +1,17 @@
+{
+  "title": "Tìm lại Báo cáo",
+  "desc": "Mất link báo cáo? Nhập email đã dùng khi thanh toán để tìm lại.",
+  "emailLabel": "Email đã dùng khi thanh toán",
+  "emailError": "Vui lòng nhập địa chỉ email hợp lệ.",
+  "submitBtn": "Tìm báo cáo",
+  "loading": "Đang tìm kiếm...",
+  "noResults": "Không tìm thấy báo cáo cho email này. Vui lòng kiểm tra lại email và thử lại.",
+  "resultTitle": "Báo cáo của bạn",
+  "viewReport": "Xem báo cáo",
+  "orderDate": "Ngày đặt hàng",
+  "productSaju": "Phân tích Tứ Trụ",
+  "productCompat": "Phân tích hợp duyên",
+  "error": "Đã xảy ra lỗi. Vui lòng thử lại.",
+  "rateLimited": "Quá nhiều yêu cầu. Vui lòng thử lại sau.",
+  "footerLink": "Không tìm thấy báo cáo?"
+}

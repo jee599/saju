@@ -1,6 +1,4 @@
 {
-  "priceAnchor": "Fortune teller $100+/hr",
-  "priceAnchorTo": "AI analysis {price}",
   "heading": "Your Complete Four Pillars Analysis, {name}",
   "subheading": "Detailed AI Analysis in 9 Sections",
   "sections": [
@@ -17,8 +15,6 @@
   "trustSecure": "🔒 Secure payment",
   "trustRefund": "↩️ 24-hour refund guarantee",
   "trustEmail": "📧 Report delivered by email",
-  "socialProof": "Over {count} people have completed their analysis",
-  "socialProofCount": "2,500+",
   "emailLabel": "Email (we'll also send your report here)",
   "emailError": "Please enter a valid email address.",
   "checkoutLoading": "Creating your order...",

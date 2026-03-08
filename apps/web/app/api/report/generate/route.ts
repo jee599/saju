@@ -4,6 +4,7 @@ import type { FortuneInput, ReportDetail } from '../../../../lib/types';
 import { countReportChars } from '../../../../lib/reportLength';
 import { sendReportEmail } from '../../../../lib/sendReportEmail';
 import { generateViewToken } from '../../../../lib/viewToken';
+import { logger } from '../../../../lib/logger';
 import {
   findExistingReport,
   formatExistingReportResponse,
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   } catch (err) {
-    console.error('[report/generate]', err);
+    logger.error('[report/generate]', { error: err });
     return NextResponse.json(
       { ok: false, error: { code: 'GENERATION_FAILED', message: 'Report generation failed.' } },
       { status: 500 }
@@ -164,7 +165,7 @@ async function handlePaidReport(body: any) {
           await prisma.order.update({ where: { id: order.id }, data: { emailSentAt: new Date() } }).catch(() => {});
         }
       })
-      .catch((err) => console.error('[report/generate] Email error:', err));
+      .catch((err) => logger.error('[report/generate] Email error', { error: err }));
   }
 
   return formatNewReportResponse({

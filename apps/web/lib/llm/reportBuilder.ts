@@ -3,6 +3,7 @@
  */
 import type { FortuneInput, ModelReportDetail, ProductCode, ReportModel, ReportDetail } from "../types";
 import { buildLengthInfo, countReportChars } from "../reportLength";
+import { logger } from "../logger";
 import { getCountryByLocale } from "@saju/shared";
 import type { LlmUsage } from "./client";
 import { callLlm, estimateCostUsd, logLlmUsage, sleep } from "./client";
@@ -297,12 +298,12 @@ export const generateChunkedReport = async (params: {
     try {
       return await callAndParseChunk(chunk);
     } catch (err) {
-      console.warn(`[chunked] first attempt failed for ${chunk.map(c => c.key).join("/")}, retrying...`, err instanceof Error ? err.message : err);
+      logger.warn(`[chunked] first attempt failed for ${chunk.map(c => c.key).join("/")}`, { error: err });
       try {
         await sleep(1000);
         return await callAndParseChunk(chunk);
       } catch (retryErr) {
-        console.error(`[chunked] retry also failed for ${chunk.map(c => c.key).join("/")}`, retryErr instanceof Error ? retryErr.message : retryErr);
+        logger.error(`[chunked] retry also failed for ${chunk.map(c => c.key).join("/")}`, { error: retryErr });
         return { sections: [], usage: undefined, durationMs: 0 };
       }
     }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { generatePreview, isValidFortuneInput } from '../../../../lib/mockEngine';
 import type { FortuneInput } from '../../../../lib/types';
+import { logger } from '../../../../lib/logger';
 
 export async function POST(req: Request) {
   try {
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true, data: generatePreview(input) });
   } catch (err) {
-    console.error('[report/preview]', err);
+    logger.error('[report/preview]', { error: err });
     return NextResponse.json(
       { ok: false, error: { code: 'INTERNAL_ERROR', message: '서버에 일시적인 오류가 발생했습니다.' } },
       { status: 500 }

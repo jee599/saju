@@ -1,0 +1,17 @@
+{
+  "title": "Find Your Report",
+  "desc": "Lost your report link? Enter your email to find your purchased reports.",
+  "emailLabel": "Email address used at checkout",
+  "emailError": "Please enter a valid email address.",
+  "submitBtn": "Find Reports",
+  "loading": "Searching...",
+  "noResults": "No reports found for this email. Please check the email address and try again.",
+  "resultTitle": "Your Reports",
+  "viewReport": "View Report",
+  "orderDate": "Ordered",
+  "productSaju": "Four Pillars Analysis",
+  "productCompat": "Compatibility Analysis",
+  "error": "An error occurred. Please try again.",
+  "rateLimited": "Too many requests. Please try again later.",
+  "footerLink": "Lost your report?"
+}

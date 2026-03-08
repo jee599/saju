@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@saju/api/db';
 import { getPaddle } from '../../../../lib/paddle';
+import { logger } from '../../../../lib/logger';
 
 
 /**
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, data: { orderId: order.id } });
 
   } catch (err) {
-    console.error('[checkout/confirm]', err);
+    logger.error('[checkout/confirm]', { error: err });
     return NextResponse.json(
       { ok: false, error: { code: 'INTERNAL_ERROR', message: 'Checkout confirmation failed.' } },
       { status: 500 }

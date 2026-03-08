@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server';
 import { EventName } from '@paddle/paddle-node-sdk';
 import { prisma } from '@saju/api/db';
 import { getPaddle } from '../../../../../lib/paddle';
+import { logger } from '../../../../../lib/logger';
 
 export async function POST(req: Request) {
   const webhookSecret = process.env.PADDLE_WEBHOOK_SECRET;
   if (!webhookSecret) {
-    console.error('[paddle/webhook] PADDLE_WEBHOOK_SECRET is not configured');
+    logger.error('[paddle/webhook] PADDLE_WEBHOOK_SECRET is not configured');
     return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
   }
 
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
   try {
     event = await paddle.webhooks.unmarshal(body, webhookSecret, signature);
   } catch (err) {
-    console.error('[paddle/webhook] Signature verification failed:', err);
+    logger.error('[paddle/webhook] Signature verification failed', { error: err });
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
@@ -48,11 +49,11 @@ export async function POST(req: Request) {
           console.log(`[paddle/webhook] Order ${orderId} confirmed via Paddle`);
         }
       } catch (err) {
-        console.error(`[paddle/webhook] Failed to confirm order ${orderId}:`, err);
+        logger.error(`[paddle/webhook] Failed to confirm order ${orderId}`, { error: err });
         return NextResponse.json({ error: 'Internal error' }, { status: 500 });
       }
     } else {
-      console.warn('[paddle/webhook] transaction.completed received without orderId in customData');
+      logger.warn('[paddle/webhook] transaction.completed received without orderId in customData');
     }
   }
 

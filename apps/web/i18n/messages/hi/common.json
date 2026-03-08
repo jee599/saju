@@ -24,7 +24,8 @@
     "terms": "सेवा की शर्तें",
     "privacy": "गोपनीयता नीति",
     "refund": "वापसी नीति",
-    "legal": "अस्वीकरण"
+    "legal": "अस्वीकरण",
+    "retrieve": "रिपोर्ट नहीं मिल रही?"
   },
   "elements": {
     "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },

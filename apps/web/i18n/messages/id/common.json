@@ -24,7 +24,8 @@
     "terms": "Syarat Layanan",
     "privacy": "Kebijakan Privasi",
     "refund": "Kebijakan Pengembalian",
-    "legal": "Sanggahan"
+    "legal": "Sanggahan",
+    "retrieve": "Laporan hilang?"
   },
   "elements": {
     "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },

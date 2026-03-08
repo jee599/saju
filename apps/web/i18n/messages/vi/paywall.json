@@ -1,6 +1,4 @@
 {
-  "priceAnchor": "Thầy bói từ 500.000₫",
-  "priceAnchorTo": "Phân tích AI {price}",
   "heading": "Phân tích Tứ Trụ toàn diện cho {name}",
   "subheading": "Phân tích AI chuyên sâu 9 chủ đề",
   "sections": [
@@ -17,8 +15,6 @@
   "trustSecure": "🔒 Thanh toán an toàn",
   "trustRefund": "↩️ Bảo đảm hoàn tiền trong 24 giờ",
   "trustEmail": "📧 Gửi báo cáo qua email",
-  "socialProof": "Hơn {count} người đã hoàn thành phân tích",
-  "socialProofCount": "2.500+",
   "emailLabel": "Email (chúng tôi cũng sẽ gửi báo cáo đến đây)",
   "emailError": "Vui lòng nhập địa chỉ email hợp lệ.",
   "checkoutLoading": "Đang tạo đơn hàng của bạn...",

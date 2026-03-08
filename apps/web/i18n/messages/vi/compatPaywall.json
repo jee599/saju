@@ -1,0 +1,33 @@
+{
+  "heading": "Mở khóa Báo cáo Hợp duyên Chi tiết",
+  "subheading": "Không chỉ điểm số miễn phí — khám phá toàn bộ câu chuyện mối quan hệ.",
+  "sections": [
+    "Ngũ Hành tương tác — Ngũ Hành của hai bạn tương tác sâu thế nào",
+    "Phong cách giao tiếp — Điểm kết nối và mâu thuẫn tự nhiên",
+    "Tình yêu & Lãng mạn — Hóa học tình cảm và tiềm năng dài hạn",
+    "Mô hình xung đột — Căng thẳng nảy sinh ở đâu và cách giải quyết",
+    "Mục tiêu cuộc sống — Giá trị chung và hướng đi tương lai",
+    "Lời khuyên thực tế — Bí quyết cụ thể để gắn kết bền chặt hơn"
+  ],
+  "priceAnchor": "Tư vấn tình cảm từ 500.000₫",
+  "priceAnchorTo": "Phân tích AI {price}",
+  "trustSecure": "Thanh toán an toàn",
+  "trustRefund": "Bảo đảm hoàn tiền trong 24 giờ",
+  "trustEmail": "Gửi báo cáo qua email",
+  "socialProof": "Hơn {count} cặp đôi đã hoàn thành phân tích",
+  "socialProofCount": "800+",
+  "emailLabel": "Email (chúng tôi cũng sẽ gửi báo cáo đến đây)",
+  "emailError": "Vui lòng nhập địa chỉ email hợp lệ.",
+  "checkoutLoading": "Đang tạo đơn hàng của bạn...",
+  "checkoutBtn": "Thanh toán {price}",
+  "afterPurchase": "Bạn có thể xem toàn bộ báo cáo ngay sau khi thanh toán.",
+  "refundLink": "Xem chính sách hoàn tiền {link}.",
+  "refundLinkText": "tại đây",
+  "createFail": "Tạo đơn hàng thất bại",
+  "noOrderId": "Không nhận được mã đơn hàng.",
+  "noCheckoutUrl": "Không thể tạo phiên thanh toán.",
+  "checkoutError": "Đã xảy ra lỗi trong quá trình thanh toán.",
+  "ctaTitle": "Muốn xem phân tích hợp duyên đầy đủ?",
+  "ctaDesc": "Tương tác mối quan hệ, phong cách giao tiếp và lời khuyên thực tế — AI phân tích chi tiết cho bạn.",
+  "ctaButton": "Mở khóa báo cáo — {price}"
+}

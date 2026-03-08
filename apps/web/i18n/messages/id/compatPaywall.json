@@ -1,0 +1,33 @@
+{
+  "heading": "Buka Laporan Kecocokan Lengkap",
+  "subheading": "Lebih dari skor gratis — temukan cerita lengkap hubungan Anda.",
+  "sections": [
+    "Sinergi Lima Elemen — Bagaimana Lima Elemen kalian berinteraksi secara mendalam",
+    "Gaya Komunikasi — Cara alami kalian terhubung dan berbenturan",
+    "Cinta & Romantis — Kimia asmara dan potensi jangka panjang",
+    "Pola Konflik — Di mana ketegangan muncul dan cara mengatasinya",
+    "Keselarasan Tujuan Hidup — Nilai bersama dan arah masa depan",
+    "Tips Praktis — Saran konkret untuk ikatan yang lebih kuat"
+  ],
+  "priceAnchor": "Konsultan pasangan Rp300.000+",
+  "priceAnchorTo": "Analisis AI {price}",
+  "trustSecure": "Pembayaran aman",
+  "trustRefund": "Jaminan pengembalian dana 24 jam",
+  "trustEmail": "Laporan dikirim lewat email",
+  "socialProof": "Lebih dari {count} pasangan telah menyelesaikan analisis",
+  "socialProofCount": "800+",
+  "emailLabel": "Email (kami juga akan mengirim laporan ke sini)",
+  "emailError": "Harap masukkan alamat email yang valid.",
+  "checkoutLoading": "Sedang membuat pesanan Anda...",
+  "checkoutBtn": "Bayar {price}",
+  "afterPurchase": "Laporan lengkap dapat Anda lihat segera setelah pembayaran.",
+  "refundLink": "Lihat kebijakan pengembalian dana {link}.",
+  "refundLinkText": "di sini",
+  "createFail": "Gagal membuat pesanan",
+  "noOrderId": "ID pesanan tidak diterima.",
+  "noCheckoutUrl": "Gagal membuat sesi pembayaran.",
+  "checkoutError": "Terjadi kesalahan saat pembayaran.",
+  "ctaTitle": "Ingin analisis kecocokan yang lebih lengkap?",
+  "ctaDesc": "Dinamika hubungan, gaya komunikasi, dan tips praktis — semua dianalisis AI dalam satu laporan.",
+  "ctaButton": "Buka laporan lengkap — {price}"
+}

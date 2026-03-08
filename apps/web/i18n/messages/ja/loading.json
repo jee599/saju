@@ -230,5 +230,8 @@
     }
   ],
   "ohangSliderAria": "五行紹介スライダー",
-  "progressAria": "分析進捗"
+  "progressAria": "分析進捗",
+  "errorPending": "決済処理中です。しばらくしてから再度お試しください。",
+  "errorNotPaid": "決済が完了していません。決済後に再度お試しください。",
+  "errorVerification": "決済確認に失敗しました。決済内容を確認し、サポートにお問い合わせください。"
 }

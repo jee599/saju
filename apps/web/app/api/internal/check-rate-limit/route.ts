@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@saju/api/db";
+import { logger } from "../../../../lib/logger";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
       resetAt: Math.ceil((Date.now() + DAY_MS) / 1000),
     });
   } catch (e) {
-    console.error("[check-rate-limit]", e);
+    logger.error("[check-rate-limit]", { error: e });
     // On DB failure, allow the request (fail open)
     return NextResponse.json({
       ok: true,

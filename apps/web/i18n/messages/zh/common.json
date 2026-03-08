@@ -24,7 +24,8 @@
     "terms": "服务条款",
     "privacy": "隐私政策",
     "refund": "退款政策",
-    "legal": "免责声明"
+    "legal": "免责声明",
+    "retrieve": "找不到报告？"
   },
   "elements": {
     "hanja": { "wood": "木", "fire": "火", "earth": "土", "metal": "金", "water": "水" },

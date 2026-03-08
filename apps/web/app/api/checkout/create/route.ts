@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { isValidFortuneInput, getCountryByLocale } from '@saju/shared';
 import { prisma } from '@saju/api/db';
 import type { CheckoutCreateRequest, OrderSummary } from '../../../../lib/types';
+import { logger } from '../../../../lib/logger';
 
 /**
  * Generic checkout/create — used for Korean Toss (test mode) and fallback.
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true, data: { order: orderSummary } });
   } catch (err) {
-    console.error('[checkout/create]', err);
+    logger.error('[checkout/create]', { error: err });
     return NextResponse.json(
       { ok: false, error: { code: 'INTERNAL_ERROR', message: 'Checkout creation failed.' } },
       { status: 500 }

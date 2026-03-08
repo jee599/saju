@@ -2,6 +2,10 @@
   "framework": "nextjs",
   "crons": [
     {
+      "path": "/api/cron/retarget",
+      "schedule": "0 */6 * * *"
+    },
+    {
       "path": "/api/cron/cleanup-reports",
       "schedule": "0 0 * * *"
     }

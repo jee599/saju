@@ -230,5 +230,8 @@
     }
   ],
   "ohangSliderAria": "Thanh trượt giới thiệu Ngũ Hành",
-  "progressAria": "Tiến độ phân tích"
+  "progressAria": "Tiến độ phân tích",
+  "errorPending": "Thanh toán đang được xử lý. Vui lòng thử lại sau.",
+  "errorNotPaid": "Thanh toán chưa hoàn tất. Vui lòng thanh toán và thử lại.",
+  "errorVerification": "Xác minh thanh toán thất bại. Vui lòng kiểm tra và liên hệ hỗ trợ."
 }

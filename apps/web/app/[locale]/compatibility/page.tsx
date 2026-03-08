@@ -3,16 +3,25 @@
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "../../../i18n/navigation";
 import { Suspense, useMemo, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "../../../i18n/navigation";
 import { calculateFourPillars, calculateCompatibility, ELEMENT_EMOJI } from "@saju/engine-saju";
 import { track } from "../../../lib/analytics";
+import { getCountryByLocale } from "@saju/shared";
 import { PageSkeleton } from "../components/Skeleton";
 
 function CompatContent() {
   const t = useTranslations("compat");
+  const tPaywall = useTranslations("compatPaywall");
+  const locale = useLocale();
   const params = useSearchParams();
   const router = useRouter();
+  const country = getCountryByLocale(locale);
+  const compatPricing = country.pricing.compatibility;
+  const zeroDecimalCurrencies = ["KRW", "JPY", "VND", "IDR"];
+  const compatPriceLabel = compatPricing
+    ? `${country.currencySymbol}${zeroDecimalCurrencies.includes(country.currency) ? compatPricing.premium.toLocaleString() : (compatPricing.premium / 100).toFixed(2)}`
+    : country.priceLabel;
   const myDateParam = params.get("my");
   const partnerDateParam = params.get("partner");
 
@@ -135,6 +144,19 @@ function CompatContent() {
               {t("detailButton")}
             </Link>
           </div>
+        </section>
+
+        {/* Compatibility paywall upsell CTA */}
+        <section className="glassCard" style={{ marginTop: 24, textAlign: "center" }}>
+          <h3 style={{ marginBottom: 8 }}>{tPaywall("ctaTitle")}</h3>
+          <p className="muted" style={{ marginBottom: 20 }}>{tPaywall("ctaDesc")}</p>
+          <Link
+            href={`/compatibility/paywall?my=${myDateParam}&partner=${partnerDateParam}`}
+            className="btn btn-primary btn-lg btn-full"
+            onClick={() => track("compat_paywall_cta_click")}
+          >
+            {tPaywall("ctaButton", { price: compatPriceLabel })}
+          </Link>
         </section>
       </div>
     </div>

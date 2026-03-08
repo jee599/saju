@@ -1,0 +1,100 @@
+{
+  "pages": {
+    "free-saju": {
+      "slug": "free-saju",
+      "title": "Free Four Pillars Reading | AI Birth Chart - FortuneLab",
+      "description": "Get your free AI-powered Four Pillars (Saju) reading. 518,400 unique destiny combinations analyzed by AI. Discover your elemental balance and fortune now.",
+      "h1": "Free AI Four Pillars Reading",
+      "intro": "Enter your birth date and time to receive an AI-powered Four Pillars (Saju) analysis. Based on traditional East Asian astrology, our AI examines your elemental balance, personality traits, and fortune flow across 518,400 possible combinations.",
+      "faq": [
+        {
+          "q": "What does the free reading include?",
+          "a": "The free analysis covers your Four Pillars chart, Five Elements distribution, Day Master personality profile, and a summary of your current year's fortune. For detailed 10-year luck cycle analysis, upgrade to the premium report."
+        },
+        {
+          "q": "Do I need to know my exact birth time?",
+          "a": "You can still get a reading without your birth time. However, the Hour Pillar will be missing, which may reduce accuracy of certain aspects."
+        },
+        {
+          "q": "How accurate is the AI analysis?",
+          "a": "Our AI is trained on traditional Four Pillars theory (Saju Myeongri). Results are for entertainment and self-reflection — not medical, legal, or financial advice."
+        },
+        {
+          "q": "Is my personal data safe?",
+          "a": "Your birth information is used only for analysis. No account registration is required, and we do not sell personal data to third parties."
+        }
+      ],
+      "ctaText": "Start Free Reading"
+    },
+    "zodiac-2026": {
+      "slug": "zodiac-2026",
+      "title": "2026 Fortune by Zodiac | Year of the Horse - FortuneLab",
+      "description": "Discover your 2026 fortune based on the Chinese zodiac. AI analysis for all 12 animal signs in the Year of the Fire Horse.",
+      "h1": "2026 Fortune by Chinese Zodiac",
+      "intro": "2026 is the Year of the Fire Horse (Byeongo, 丙午年). With strong Fire energy, this year favors bold action and transformation. Our AI analyzes how each of the 12 zodiac animals will fare in wealth, health, and relationships throughout 2026.",
+      "faq": [
+        {
+          "q": "Which zodiac signs are luckiest in 2026?",
+          "a": "The Fire Horse year tends to favor Wood signs (Tiger, Rabbit) due to the Wood-feeds-Fire cycle. However, a complete birth chart analysis gives far more accurate predictions than zodiac sign alone."
+        },
+        {
+          "q": "Is a zodiac-only reading enough?",
+          "a": "Your zodiac sign (Year Branch) is just one of eight characters in your full birth chart. For a comprehensive reading, enter your complete birth date and time."
+        },
+        {
+          "q": "When does the 2026 fortune year begin?",
+          "a": "In traditional East Asian astrology, the new year starts at Lichun (Start of Spring), around February 4th — not January 1st."
+        }
+      ],
+      "ctaText": "Check My 2026 Fortune"
+    },
+    "birth-chart": {
+      "slug": "birth-chart",
+      "title": "Birth Chart Analysis | AI Four Pillars Reading - FortuneLab",
+      "description": "AI-powered birth chart (Saju) analysis. Discover your Heavenly Stems, Earthly Branches, Five Elements balance, and 10-year luck cycles.",
+      "h1": "AI Birth Chart Analysis",
+      "intro": "Your birth chart consists of four pillars — Year, Month, Day, and Hour — each with a Heavenly Stem and Earthly Branch, totaling eight characters. FortuneLab's AI interprets these eight characters to reveal your innate personality, career aptitude, relationships, and wealth potential.",
+      "faq": [
+        {
+          "q": "What is a Four Pillars birth chart?",
+          "a": "Four Pillars (Saju) uses four time pillars (year, month, day, hour) of your birth. Each pillar has a Heavenly Stem and Earthly Branch, creating eight characters that map your destiny according to traditional East Asian philosophy."
+        },
+        {
+          "q": "What is Five Elements analysis?",
+          "a": "The Five Elements (Wood, Fire, Earth, Metal, Water) analysis examines the balance of energies in your chart to understand your constitution, temperament, and areas needing supplementation."
+        },
+        {
+          "q": "What's the difference between Major Luck and Annual Luck?",
+          "a": "Major Luck (Daeun) cycles last 10 years and represent major life phases. Annual Luck (Seun) changes yearly. Reading both together reveals optimal timing for life decisions."
+        },
+        {
+          "q": "What's included in the premium report?",
+          "a": "Beyond the basic analysis, the premium report includes detailed 10-year Major Luck interpretation, monthly fortune breakdown, career aptitude analysis, and health insights."
+        }
+      ],
+      "ctaText": "Analyze My Birth Chart"
+    },
+    "compatibility-test": {
+      "slug": "compatibility-test",
+      "title": "Compatibility Test | AI Saju Matching - FortuneLab",
+      "description": "AI-powered compatibility analysis using Four Pillars astrology. Check elemental harmony, Day Master compatibility, and relationship score.",
+      "h1": "AI Compatibility Test",
+      "intro": "Enter both birth dates and times to get an AI-powered compatibility reading. Our analysis examines Five Elements harmony, Day Master compatibility, and overall energetic balance between two people for a comprehensive relationship assessment.",
+      "faq": [
+        {
+          "q": "What information is needed for compatibility?",
+          "a": "You need both people's birth dates and genders. Adding birth times will improve accuracy by including the Hour Pillar in the analysis."
+        },
+        {
+          "q": "Does a low score mean a bad relationship?",
+          "a": "Not at all. Compatibility scores reflect energetic harmony, not relationship quality. Lower scores often highlight areas where partners can complement and strengthen each other."
+        },
+        {
+          "q": "Can I check compatibility beyond romantic partners?",
+          "a": "Yes! Four Pillars compatibility applies to all relationships — romantic partners, family members, friends, and business partners."
+        }
+      ],
+      "ctaText": "Start Compatibility Test"
+    }
+  }
+}

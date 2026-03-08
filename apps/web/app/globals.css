@@ -4440,3 +4440,78 @@ body:has(.constellationPage) #main-content {
 .paywallRefundLink {
   color: var(--accent);
 }
+
+/* ── SEO Landing Pages ── */
+
+.seoH1 {
+  font-family: var(--font-display, "Italiana", serif);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.3;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.seoIntro {
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 1.8;
+  color: var(--t2);
+}
+
+.seoFaq { margin-top: 16px; }
+
+.seoFaqTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--t1);
+}
+
+.seoFaqList { display: flex; flex-direction: column; gap: 16px; }
+
+.seoFaqItem {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 16px;
+}
+.seoFaqItem:last-child { border-bottom: none; padding-bottom: 0; }
+
+.seoFaqItem dt {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--t1);
+  margin-bottom: 8px;
+}
+
+.seoFaqItem dd {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--t2);
+  margin: 0;
+}
+
+.seoCta {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.footerSeoLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+}
+
+.footerSeoLinks a {
+  font-size: 0.8rem;
+  color: var(--accent);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.footerSeoLinks a:hover { opacity: 1; }

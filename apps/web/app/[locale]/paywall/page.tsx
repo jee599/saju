@@ -110,15 +110,6 @@ function PaywallContent() {
   return (
     <div className="page">
       <div className="container paywallContainerPadded">
-        {/* Price anchoring — enhanced */}
-        <div className="paywallPriceAnchor">
-          <p className="paywallPriceAnchorText">
-            <span className="paywallPriceStrike">{t("priceAnchor")}</span>
-            <br />
-            <span className="paywallPriceHighlight">{t("priceAnchorTo", { price: priceLabel })}</span>
-          </p>
-        </div>
-
         <section className="glassCard">
           <h2 className="paywallHeading">{t("heading", { name })}</h2>
           <p className="muted paywallSubheading">
@@ -155,15 +146,6 @@ function PaywallContent() {
             </span>
           </div>
 
-          {/* Social proof with star rating */}
-          <div className="paywallSocialProof">
-            <span className="paywallStars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-            <span className="paywallRating">4.8</span>
-            <span className="paywallDot">&middot;</span>
-            <span className="paywallProofText">
-              {t("socialProof", { count: t("socialProofCount") })}
-            </span>
-          </div>
 
           {/* Email + checkout */}
           <div className="form paywallForm">

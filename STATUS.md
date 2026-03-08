@@ -21,6 +21,9 @@ middleware.ts -> Rate Limit (5회/일, IP 기반, DB 기반 via internal API)
 
 ## 완료 (최근 10개)
 
+- API 통합 테스트 35개 추가 (checkout create/confirm, report generate/preview/get), console.error → 구조화된 logger 전환
+- SEO 랜딩 페이지 4개 (free-saju, zodiac-2026, birth-chart, compatibility-test) x 8개 로케일, FAQPage JSON-LD, sitemap, footer 내부 링크
+- 궁합 paywall 페이지 + CTA 추가, 리포트 찾기(retrieve) 페이지/API 추가, 8개 로케일 i18n
 - 오행 매핑 상수 3중 중복 제거, getPaddle() 유틸 추출, 유료 리포트 ShareButtons 추가
 - Stripe 코드 완전 제거, Paddle 전환 완료 (결제 2원화: Toss + Paddle)
 - QA 2차: log-rate-limit 보호, rate limit 확대, 한국어 레이블 i18n
@@ -36,13 +39,14 @@ middleware.ts -> Rate Limit (5회/일, IP 기반, DB 기반 via internal API)
 
 ## 진행중
 
-없음 — 빌드 프리징 상태.
+- Abandoned checkout retarget email cron 구현 완료 (코드 리뷰/배포 대기)
 
 
 ## 남은 것
 
 - Paddle 웹훅 실 결제 테스트 (sandbox -> production 전환)
 - 첫 유료 전환 달성 후 수익화 지표 트래킹
+- 궁합 paywall: productCode "compat" 분리 + 궁합 전용 리포트 생성 로직 (LLM 프롬프트)
 
 
 ## 이슈

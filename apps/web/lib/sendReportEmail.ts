@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { logger } from "./logger";
 
 interface ReportSection {
   key: string;
@@ -131,7 +132,7 @@ function escapeHtml(str: string): string {
 
 export async function sendReportEmail(params: SendReportEmailParams): Promise<{ success: boolean; error?: string }> {
   if (!process.env.RESEND_API_KEY) {
-    console.warn("[email] RESEND_API_KEY not set, skipping email");
+    logger.warn("[email] RESEND_API_KEY not set, skipping email");
     return { success: false, error: "RESEND_API_KEY not set" };
   }
 
@@ -146,14 +147,14 @@ export async function sendReportEmail(params: SendReportEmailParams): Promise<{ 
     });
 
     if (error) {
-      console.error("[email] Resend error:", error);
+      logger.error("[email] Resend error", { error });
       return { success: false, error: error.message };
     }
 
     console.log("[email] Report sent successfully");
     return { success: true };
   } catch (err) {
-    console.error("[email] Failed:", err);
+    logger.error("[email] Failed", { error: err });
     return { success: false, error: err instanceof Error ? err.message : "unknown" };
   }
 }

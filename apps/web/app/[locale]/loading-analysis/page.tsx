@@ -435,9 +435,13 @@ function LoadingContent() {
 
       if (!confirmRes || !confirmRes.ok) {
         const body = await confirmRes?.json().catch(() => null);
-        // Reset confirmCalled so retry button works if needed
         confirmCalled.current = false;
-        throw new Error(body?.error?.message ?? t("confirmFail"));
+        const code = body?.error?.code;
+        const errorKey = code === "PAYMENT_PENDING" ? "errorPending"
+          : code === "PAYMENT_NOT_PAID" ? "errorNotPaid"
+          : code === "PAYMENT_VERIFICATION_REQUIRED" ? "errorVerification"
+          : null;
+        throw new Error(errorKey ? t(errorKey) : t("confirmFail"));
       }
 
       let personalityText: string | undefined;

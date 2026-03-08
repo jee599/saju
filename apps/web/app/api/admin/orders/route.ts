@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@saju/api/db";
 import { checkAdminAuth } from "../_auth";
+import { logger } from "../../../../lib/logger";
 
 export async function GET(request: Request) {
   const authErr = checkAdminAuth(request);
@@ -64,7 +65,7 @@ export async function GET(request: Request) {
       },
     });
   } catch (err) {
-    console.error("[admin/orders]", err);
+    logger.error("[admin/orders]", { error: err });
     return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
   }
 }

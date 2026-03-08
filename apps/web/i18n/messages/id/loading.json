@@ -230,5 +230,8 @@
     }
   ],
   "ohangSliderAria": "Slider pengenalan Lima Elemen",
-  "progressAria": "Kemajuan analisis"
+  "progressAria": "Kemajuan analisis",
+  "errorPending": "Pembayaran masih diproses. Silakan coba lagi nanti.",
+  "errorNotPaid": "Pembayaran belum selesai. Silakan selesaikan pembayaran dan coba lagi.",
+  "errorVerification": "Verifikasi pembayaran gagal. Silakan periksa pembayaran dan hubungi dukungan."
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@saju/api/db";
+import { logger } from "../../../lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
     await prisma.eventLog.createMany({ data: batch });
     return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("[events] Error:", err);
+    logger.error("[events]", { error: err });
     // Always return 200 to prevent client retries
     return NextResponse.json({ ok: true });
   }

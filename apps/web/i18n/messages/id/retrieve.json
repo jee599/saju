@@ -1,0 +1,17 @@
+{
+  "title": "Cari Laporan Anda",
+  "desc": "Kehilangan link laporan? Masukkan email yang digunakan saat pembayaran.",
+  "emailLabel": "Alamat email saat pembayaran",
+  "emailError": "Harap masukkan alamat email yang valid.",
+  "submitBtn": "Cari Laporan",
+  "loading": "Mencari...",
+  "noResults": "Tidak ditemukan laporan untuk email ini. Periksa kembali email dan coba lagi.",
+  "resultTitle": "Laporan Anda",
+  "viewReport": "Lihat Laporan",
+  "orderDate": "Tanggal Pesan",
+  "productSaju": "Analisis Four Pillars",
+  "productCompat": "Analisis Kecocokan",
+  "error": "Terjadi kesalahan. Silakan coba lagi.",
+  "rateLimited": "Terlalu banyak permintaan. Silakan coba lagi nanti.",
+  "footerLink": "Laporan hilang?"
+}

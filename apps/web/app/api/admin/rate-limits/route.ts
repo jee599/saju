@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@saju/api/db";
 import { checkAdminAuth } from "../_auth";
+import { logger } from "../../../../lib/logger";
 
 export async function GET(request: Request) {
   const authErr = checkAdminAuth(request);
@@ -45,7 +46,7 @@ export async function GET(request: Request) {
       data: { totalBlocked, topIps, topEndpoints, recentLogs: logs.slice(0, 20) },
     });
   } catch (err) {
-    console.error("[admin/rate-limits]", err);
+    logger.error("[admin/rate-limits]", { error: err });
     return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
   }
 }

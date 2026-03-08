@@ -111,6 +111,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
 
   const messages = await getMessages();
   const t = await getTranslations({ locale, namespace: "common" });
+  const tSeo = await getTranslations({ locale, namespace: "seo" });
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://fortunelab.store";
 
   const country = getCountryByLocale(locale);
@@ -194,6 +195,13 @@ export default async function LocaleLayout({ children, params }: { children: Rea
                 <Link href="/privacy">{t("footer.privacy")}</Link>
                 <Link href="/refund">{t("footer.refund")}</Link>
                 <Link href="/disclaimer">{t("footer.legal")}</Link>
+                <Link href="/retrieve">{t("footer.retrieve")}</Link>
+              </nav>
+              <nav className="footerSeoLinks" aria-label="Fortune">
+                <Link href={`/fortune/${tSeo("pages.free-saju.slug")}`}>{tSeo("pages.free-saju.ctaText")}</Link>
+                <Link href={`/fortune/${tSeo("pages.zodiac-2026.slug")}`}>{tSeo("pages.zodiac-2026.ctaText")}</Link>
+                <Link href={`/fortune/${tSeo("pages.birth-chart.slug")}`}>{tSeo("pages.birth-chart.ctaText")}</Link>
+                <Link href={`/fortune/${tSeo("pages.compatibility-test.slug")}`}>{tSeo("pages.compatibility-test.ctaText")}</Link>
               </nav>
             </div>
           </footer>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@saju/api/db";
 import { setAdminSessionCookie } from "../_auth";
+import { logger } from "../../../../lib/logger";
 
 // NOTE: In-memory rate limiting is unreliable on serverless (each cold start resets the map).
 // It is kept as a first line of defence but supplemented with a DB-based check via RateLimitLog.
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
     }
   } catch (dbErr) {
     // If DB check fails, fall through to in-memory only (best-effort)
-    console.error("[admin/login] DB rate limit check failed:", dbErr);
+    logger.error("[admin/login] DB rate limit check failed", { error: dbErr });
   }
 
   const body = (await req.json().catch(() => ({}))) as { password?: string };
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
     // Log failed attempt to DB (fire-and-forget)
     prisma.rateLimitLog.create({
       data: { ip, endpoint: "admin/login" },
-    }).catch((e: unknown) => console.error("[admin/login] Failed to log rate limit:", e));
+    }).catch((e: unknown) => logger.error("[admin/login] Failed to log rate limit", { error: e }));
 
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }

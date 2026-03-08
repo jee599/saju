@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { Paddle, Environment } from '@paddle/paddle-node-sdk';
 import { isValidFortuneInput, getCountryByLocale } from '@saju/shared';
 import { prisma } from '@saju/api/db';
+import { logger } from '../../../../../lib/logger';
 
 function getPaddle() {
   const key = process.env.PADDLE_API_KEY;
@@ -54,9 +55,9 @@ export async function POST(req: Request) {
     // Locale / IP-country mismatch logging
     const cfCountry = req.headers.get('cf-ipcountry');
     if (cfCountry && cfCountry.toLowerCase() !== country.code.toLowerCase()) {
-      console.warn(
-        `[paddle/create] locale-country mismatch: locale="${locale}" → country="${country.code}", cf-ipcountry="${cfCountry}"`
-      );
+      logger.warn('[paddle/create] locale-country mismatch', {
+        locale, countryCode: country.code, cfIpCountry: cfCountry,
+      });
     }
 
     const fortuneRequest = await prisma.fortuneRequest.create({
@@ -151,7 +152,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (err) {
-    console.error('[paddle/create]', err);
+    logger.error('[paddle/create]', { error: err });
     return NextResponse.json(
       { ok: false, error: { code: 'PADDLE_ERROR', message: 'Failed to create Paddle checkout.' } },
       { status: 500 }

@@ -1,6 +1,4 @@
 {
-  "priceAnchor": "Praktisi mulai dari Rp200.000",
-  "priceAnchorTo": "Analisis AI {price}",
   "heading": "Analisis Four Pillars Lengkap untuk {name}",
   "subheading": "Analisis AI Mendalam 9 Bagian",
   "sections": [
@@ -17,8 +15,6 @@
   "trustSecure": "🔒 Pembayaran aman",
   "trustRefund": "↩️ Jaminan pengembalian dana 24 jam",
   "trustEmail": "📧 Laporan dikirim lewat email",
-  "socialProof": "Lebih dari {count} orang telah menyelesaikan analisis",
-  "socialProofCount": "2.500+",
   "emailLabel": "Email (kami juga akan mengirim laporan ke sini)",
   "emailError": "Harap masukkan alamat email yang valid.",
   "checkoutLoading": "Sedang membuat pesanan Anda...",

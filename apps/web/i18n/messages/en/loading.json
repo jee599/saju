@@ -230,5 +230,8 @@
     }
   ],
   "ohangSliderAria": "Five Elements introduction slider",
-  "progressAria": "Analysis progress"
+  "progressAria": "Analysis progress",
+  "errorPending": "Payment is still processing. Please try again in a moment.",
+  "errorNotPaid": "Payment was not completed. Please complete payment and try again.",
+  "errorVerification": "Payment verification failed. Please check your payment and contact support."
 }

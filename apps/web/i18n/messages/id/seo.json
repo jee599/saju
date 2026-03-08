@@ -1,0 +1,100 @@
+{
+  "pages": {
+    "free-saju": {
+      "slug": "free-saju",
+      "title": "Ramalan Gratis | AI Analisis Bagan Kelahiran - FortuneLab",
+      "description": "Ramalan gratis dengan AI berdasarkan tanggal lahir. 518.400 kombinasi takdir dianalisis AI. Cek keseimbangan elemen dan keberuntunganmu sekarang.",
+      "h1": "Ramalan AI Gratis",
+      "intro": "Cukup masukkan tanggal dan waktu lahir, AI akan menganalisis bagan kelahiranmu. Berdasarkan astrologi tradisional Timur, AI menganalisis keseimbangan lima elemen, kepribadian, dan alur keberuntungan dari 518.400 kombinasi.",
+      "faq": [
+        {
+          "q": "Apa saja yang termasuk dalam ramalan gratis?",
+          "a": "Meliputi bagan kelahiran dasar, distribusi lima elemen, analisis kepribadian, dan ringkasan keberuntungan tahun ini. Laporan premium mencakup analisis siklus keberuntungan 10 tahun yang detail."
+        },
+        {
+          "q": "Tidak tahu waktu lahir, bisa tetap dilihat?",
+          "a": "Bisa, tapi akurasi mungkin sedikit berkurang karena pilar jam tidak tersedia."
+        },
+        {
+          "q": "Seberapa akurat analisis AI?",
+          "a": "AI menganalisis berdasarkan teori astrologi tradisional. Gunakan sebagai referensi saja, bukan dasar keputusan medis, hukum, atau investasi."
+        },
+        {
+          "q": "Apakah data pribadi aman?",
+          "a": "Data tanggal lahir hanya digunakan untuk analisis. Tidak perlu registrasi akun."
+        }
+      ],
+      "ctaText": "Mulai Ramalan Gratis"
+    },
+    "zodiac-2026": {
+      "slug": "zodiac-2026",
+      "title": "Ramalan 2026 Berdasarkan Shio | Tahun Kuda Api - FortuneLab",
+      "description": "AI analisis ramalan 2026 tahun Kuda Api untuk 12 shio. Keberuntungan finansial, kesehatan, dan cinta gratis.",
+      "h1": "Ramalan 2026 untuk 12 Shio",
+      "intro": "Tahun 2026 adalah tahun Kuda Api (丙午年). Energi elemen Api yang kuat menjadikan ini tahun yang cocok untuk tindakan berani dan perubahan. AI menganalisis keberuntungan 12 shio dalam hal keuangan, kesehatan, dan cinta sepanjang 2026.",
+      "faq": [
+        {
+          "q": "Shio mana yang paling beruntung di 2026?",
+          "a": "Tahun Kuda Api menguntungkan shio berelemen Kayu (Macan, Kelinci) karena siklus Kayu menghasilkan Api. Namun ramalan akurat perlu analisis bagan kelahiran lengkap."
+        },
+        {
+          "q": "Cukup lihat ramalan shio saja?",
+          "a": "Shio hanya bagian dari bagan kelahiran. Untuk analisis lebih akurat, masukkan tanggal dan waktu lahir lengkap."
+        },
+        {
+          "q": "Ramalan 2026 mulai berlaku kapan?",
+          "a": "Secara tradisional, tahun baru dimulai dari Lichun (sekitar 4 Februari), bukan 1 Januari."
+        }
+      ],
+      "ctaText": "Cek Ramalan 2026 Saya"
+    },
+    "birth-chart": {
+      "slug": "birth-chart",
+      "title": "Analisis Bagan Kelahiran | AI Empat Pilar - FortuneLab",
+      "description": "AI analisis bagan kelahiran Empat Pilar. Batang Langit, Cabang Bumi, keseimbangan lima elemen, dan siklus keberuntungan 10 tahun.",
+      "h1": "AI Analisis Bagan Kelahiran",
+      "intro": "Bagan kelahiran terdiri dari empat pilar — Tahun, Bulan, Hari, Jam — masing-masing memiliki Batang Langit dan Cabang Bumi, total delapan karakter. AI FortuneLab menganalisis delapan karakter ini untuk mengungkap kepribadian, kecocokan karir, hubungan, dan potensi finansial.",
+      "faq": [
+        {
+          "q": "Apa itu bagan kelahiran Empat Pilar?",
+          "a": "Empat Pilar menggunakan empat momen kelahiran (tahun, bulan, hari, jam). Setiap pilar terdiri dari Batang Langit dan Cabang Bumi, membentuk delapan karakter yang memetakan takdir menurut filosofi Timur."
+        },
+        {
+          "q": "Apa itu analisis Lima Elemen?",
+          "a": "Analisis Lima Elemen (Kayu, Api, Tanah, Logam, Air) memeriksa keseimbangan energi dalam bagan untuk memahami konstitusi, temperamen, dan area yang perlu diperkuat."
+        },
+        {
+          "q": "Apa beda Keberuntungan Besar dan Keberuntungan Tahunan?",
+          "a": "Keberuntungan Besar berubah setiap 10 tahun mewakili fase besar kehidupan. Keberuntungan Tahunan berubah setiap tahun. Membaca keduanya membantu menentukan waktu yang tepat."
+        },
+        {
+          "q": "Apa saja isi laporan premium?",
+          "a": "Selain analisis dasar, termasuk interpretasi detail Keberuntungan Besar 10 tahun, analisis bulanan, kecocokan karir, dan catatan kesehatan."
+        }
+      ],
+      "ctaText": "Mulai Analisis Bagan"
+    },
+    "compatibility-test": {
+      "slug": "compatibility-test",
+      "title": "Tes Kecocokan | AI Analisis Jodoh - FortuneLab",
+      "description": "AI analisis kecocokan dari bagan kelahiran. Cek harmoni elemen, kecocokan bagan, dan skor hubungan.",
+      "h1": "AI Tes Kecocokan",
+      "intro": "Masukkan tanggal dan waktu lahir dua orang, AI akan menganalisis kecocokan berdasarkan bagan kelahiran. Memeriksa hubungan lima elemen, kecocokan bagan, dan harmoni keseluruhan untuk penilaian hubungan yang komprehensif.",
+      "faq": [
+        {
+          "q": "Informasi apa yang diperlukan?",
+          "a": "Diperlukan tanggal lahir dan jenis kelamin kedua orang. Menambahkan waktu lahir akan meningkatkan akurasi."
+        },
+        {
+          "q": "Skor rendah berarti tidak cocok?",
+          "a": "Skor mencerminkan harmoni energi, bukan kualitas hubungan. Skor rendah membantu memahami area saling melengkapi."
+        },
+        {
+          "q": "Bisa cek selain pasangan romantis?",
+          "a": "Ya, analisis kecocokan berlaku untuk semua hubungan — pasangan, keluarga, teman, dan rekan bisnis."
+        }
+      ],
+      "ctaText": "Mulai Tes Kecocokan"
+    }
+  }
+}

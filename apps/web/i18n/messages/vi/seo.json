@@ -1,0 +1,100 @@
+{
+  "pages": {
+    "free-saju": {
+      "slug": "free-saju",
+      "title": "Xem tử vi miễn phí | AI phân tích lá số - FortuneLab",
+      "description": "Xem tử vi miễn phí bằng AI từ ngày giờ sinh. 518,400 tổ hợp mệnh số được AI phân tích. Khám phá ngũ hành và vận mệnh ngay.",
+      "h1": "Xem tử vi miễn phí bằng AI",
+      "intro": "Chỉ cần nhập ngày giờ sinh, AI sẽ phân tích lá số tử vi của bạn. Dựa trên thuật toán phong thủy truyền thống, AI phân tích cân bằng ngũ hành, tính cách nhật chủ và xu hướng vận mệnh từ 518,400 tổ hợp.",
+      "faq": [
+        {
+          "q": "Xem miễn phí bao gồm những gì?",
+          "a": "Bao gồm lá số cơ bản, phân bố ngũ hành, phân tích tính cách nhật chủ và tóm tắt vận mệnh năm nay. Báo cáo premium có phân tích chu kỳ đại vận 10 năm chi tiết."
+        },
+        {
+          "q": "Không biết giờ sinh có xem được không?",
+          "a": "Vẫn xem được nhưng thiếu trụ giờ nên độ chính xác có thể giảm đôi chút."
+        },
+        {
+          "q": "AI phân tích chính xác đến mức nào?",
+          "a": "AI phân tích dựa trên lý thuyết tử vi truyền thống. Kết quả mang tính tham khảo, không nên dùng làm cơ sở cho quyết định y tế, pháp lý hoặc đầu tư."
+        },
+        {
+          "q": "Thông tin cá nhân có an toàn không?",
+          "a": "Thông tin ngày sinh chỉ dùng để phân tích, không cần đăng ký tài khoản."
+        }
+      ],
+      "ctaText": "Bắt đầu xem miễn phí"
+    },
+    "zodiac-2026": {
+      "slug": "zodiac-2026",
+      "title": "Tử vi 2026 theo con giáp | Năm Bính Ngọ - FortuneLab",
+      "description": "AI phân tích tử vi 2026 năm Bính Ngọ cho 12 con giáp. Tài vận, sức khỏe, tình duyên miễn phí.",
+      "h1": "Tử vi năm 2026 theo 12 con giáp",
+      "intro": "Năm 2026 là năm Bính Ngọ (丙午年), năm Ngựa Lửa. Năng lượng hành Hỏa mạnh mẽ, thuận lợi cho hành động quyết đoán và thay đổi. AI phân tích vận mệnh 12 con giáp về tài vận, sức khỏe và tình duyên trong năm 2026.",
+      "faq": [
+        {
+          "q": "Năm 2026 con giáp nào may mắn nhất?",
+          "a": "Năm Bính Ngọ có hành Hỏa mạnh, các con giáp hành Mộc (Dần, Mão) được hưởng lợi từ chu kỳ Mộc sinh Hỏa. Tuy nhiên cần phân tích toàn bộ lá số để có kết quả chính xác."
+        },
+        {
+          "q": "Chỉ xem theo con giáp có đủ không?",
+          "a": "Con giáp (chi năm) chỉ là một phần của lá số. Để có phân tích chính xác hơn, hãy nhập đầy đủ ngày giờ sinh."
+        },
+        {
+          "q": "Tử vi 2026 bắt đầu từ khi nào?",
+          "a": "Theo truyền thống, năm mới tính từ ngày Lập Xuân (khoảng 4 tháng 2), không phải 1 tháng 1."
+        }
+      ],
+      "ctaText": "Xem tử vi 2026 của tôi"
+    },
+    "birth-chart": {
+      "slug": "birth-chart",
+      "title": "Phân tích lá số | AI tử vi tứ trụ - FortuneLab",
+      "description": "AI phân tích lá số tứ trụ. Thiên can, Địa chi, cân bằng ngũ hành, đại vận và lưu niên một cách chi tiết.",
+      "h1": "AI phân tích lá số tử vi",
+      "intro": "Lá số tử vi gồm bốn trụ — Năm, Tháng, Ngày, Giờ — mỗi trụ có Thiên can và Địa chi, tổng cộng tám chữ. AI của FortuneLab phân tích tám chữ này để khám phá tính cách, nghề nghiệp phù hợp, mối quan hệ và tiềm năng tài chính.",
+      "faq": [
+        {
+          "q": "Lá số tứ trụ là gì?",
+          "a": "Tứ trụ sử dụng bốn mốc thời gian khi sinh (năm, tháng, ngày, giờ). Mỗi trụ gồm Thiên can và Địa chi, tạo thành tám chữ để luận giải vận mệnh theo triết học phương Đông."
+        },
+        {
+          "q": "Phân tích ngũ hành là gì?",
+          "a": "Phân tích ngũ hành (Mộc, Hỏa, Thổ, Kim, Thủy) xem xét sự cân bằng năng lượng trong lá số để hiểu thể chất, tính cách và những gì cần bổ sung."
+        },
+        {
+          "q": "Đại vận và lưu niên khác nhau thế nào?",
+          "a": "Đại vận thay đổi mỗi 10 năm, đại diện cho giai đoạn lớn trong đời. Lưu niên thay đổi hàng năm. Kết hợp cả hai giúp nắm bắt thời cơ."
+        },
+        {
+          "q": "Báo cáo premium gồm những gì?",
+          "a": "Ngoài phân tích cơ bản, còn có giải đoán đại vận 10 năm chi tiết, phân tích lưu niên theo tháng, nghề nghiệp phù hợp và lưu ý sức khỏe."
+        }
+      ],
+      "ctaText": "Bắt đầu phân tích lá số"
+    },
+    "compatibility-test": {
+      "slug": "compatibility-test",
+      "title": "Xem hợp tuổi | AI phân tích duyên số - FortuneLab",
+      "description": "AI phân tích hợp tuổi từ lá số tứ trụ. Xem tương hợp ngũ hành, nhật chủ và điểm số mối quan hệ.",
+      "h1": "AI xem hợp tuổi",
+      "intro": "Nhập ngày giờ sinh của hai người, AI sẽ phân tích mức độ tương hợp dựa trên lá số tứ trụ. Xem xét quan hệ tương sinh tương khắc của ngũ hành, tương hợp nhật chủ và sự hài hòa tổng thể.",
+      "faq": [
+        {
+          "q": "Cần thông tin gì để xem hợp tuổi?",
+          "a": "Cần ngày sinh và giới tính của cả hai người. Thêm giờ sinh sẽ cho kết quả chính xác hơn."
+        },
+        {
+          "q": "Điểm thấp có nghĩa là không hợp?",
+          "a": "Điểm số phản ánh sự hài hòa năng lượng, không phải chất lượng mối quan hệ. Điểm thấp giúp hiểu những điểm bổ sung cho nhau."
+        },
+        {
+          "q": "Ngoài tình yêu còn xem gì khác được?",
+          "a": "Có, phân tích hợp tuổi áp dụng cho mọi mối quan hệ — tình yêu, gia đình, bạn bè và đối tác kinh doanh."
+        }
+      ],
+      "ctaText": "Bắt đầu xem hợp tuổi"
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import { logger } from "./logger";
+
 /**
  * Async rate limit DB logger (fire-and-forget).
  * Called from API routes after middleware passes.
@@ -19,6 +21,6 @@ export async function logRateLimit(params: {
       },
     });
   } catch (e) {
-    console.error("[rate-limit-log] failed:", e);
+    logger.error("[rate-limit-log] failed", { error: e });
   }
 }

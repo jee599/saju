@@ -1,6 +1,4 @@
 {
-  "priceAnchor": "占い師：1回 10,000円～",
-  "priceAnchorTo": "AI分析 {price}",
   "heading": "{name}さんの四柱推命 完全分析",
   "subheading": "9セクションの詳細AI分析",
   "sections": [
@@ -17,8 +15,6 @@
   "trustSecure": "🔒 安全な決済",
   "trustRefund": "↩️ 24時間返金保証",
   "trustEmail": "📧 レポートをメールでお届け",
-  "socialProof": "{count}人以上が四柱推命分析を完了しました",
-  "socialProofCount": "2,500+",
   "emailLabel": "メールアドレス（レポートをメールでもお届けします）",
   "emailError": "正しいメールアドレスを入力してください。",
   "checkoutLoading": "ご注文を作成しています...",

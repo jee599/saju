@@ -2,6 +2,7 @@
  * LLM API client — fetch calls to Claude, OpenAI, Gemini with retry logic
  */
 import type { ReportModel } from "../types";
+import { logger } from "../logger";
 
 export type LlmUsage = {
   inputTokens?: number;
@@ -247,7 +248,7 @@ export const logLlmUsage = async (params: {
       },
     });
   } catch (e) {
-    console.error("[llm-usage-log] failed:", e);
+    logger.error("[llm-usage-log] failed", { error: e });
   }
 };
 

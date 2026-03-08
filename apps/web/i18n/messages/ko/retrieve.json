@@ -1,0 +1,17 @@
+{
+  "title": "리포트 찾기",
+  "desc": "리포트 링크를 잃어버리셨나요? 결제 시 사용한 이메일을 입력하세요.",
+  "emailLabel": "결제 시 사용한 이메일 주소",
+  "emailError": "올바른 이메일 형식을 입력해주세요.",
+  "submitBtn": "리포트 찾기",
+  "loading": "검색 중...",
+  "noResults": "해당 이메일로 구매된 리포트가 없습니다. 이메일 주소를 확인 후 다시 시도해주세요.",
+  "resultTitle": "내 리포트",
+  "viewReport": "리포트 보기",
+  "orderDate": "주문일",
+  "productSaju": "사주 분석",
+  "productCompat": "궁합 분석",
+  "error": "오류가 발생했습니다. 다시 시도해주세요.",
+  "rateLimited": "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
+  "footerLink": "리포트를 못 찾겠나요?"
+}

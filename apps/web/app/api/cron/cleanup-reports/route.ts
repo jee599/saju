@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@saju/api/db";
+import { logger } from "../../../../lib/logger";
 
 /**
  * Cron job: Delete free-tier reports older than 90 days.
@@ -50,7 +51,7 @@ export async function GET(req: Request) {
       timestamp: now.toISOString(),
     });
   } catch (err) {
-    console.error("[cron/cleanup-reports]", err);
+    logger.error("[cron/cleanup-reports]", { error: err });
     return NextResponse.json(
       { ok: false, error: { code: "INTERNAL_ERROR", message: "Cleanup failed" } },
       { status: 500 }

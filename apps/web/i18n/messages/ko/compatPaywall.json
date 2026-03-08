@@ -1,0 +1,33 @@
+{
+  "heading": "상세 궁합 리포트 열기",
+  "subheading": "무료 점수를 넘어 — 두 사람 관계의 모든 것을 알아보세요.",
+  "sections": [
+    "오행 시너지 — 두 사람의 오행이 어떻게 상호작용하는지",
+    "소통 방식 — 자연스러운 연결과 갈등 포인트",
+    "연애·로맨스 — 연애 케미와 장기적 가능성",
+    "갈등 패턴 — 긴장이 생기는 지점과 해결 방법",
+    "인생 목표 — 공유하는 가치와 미래 방향",
+    "실전 조언 — 관계를 더 강하게 만드는 구체적 팁"
+  ],
+  "priceAnchor": "커플 상담 1회 100,000원~",
+  "priceAnchorTo": "AI 궁합 분석 {price}",
+  "trustSecure": "안전한 결제",
+  "trustRefund": "24시간 환불 보장",
+  "trustEmail": "이메일 리포트 전송",
+  "socialProof": "{count}쌍 이상이 궁합 분석을 완료했습니다",
+  "socialProofCount": "800+",
+  "emailLabel": "이메일 (리포트를 이메일로도 보내드려요)",
+  "emailError": "올바른 이메일 형식을 입력해주세요.",
+  "checkoutLoading": "주문 생성 중...",
+  "checkoutBtn": "{price} 결제하기",
+  "afterPurchase": "결제 후 즉시 상세 궁합 리포트를 확인할 수 있습니다.",
+  "refundLink": "환불 정책은 {link}에서 확인하세요.",
+  "refundLinkText": "여기",
+  "createFail": "결제 생성 실패",
+  "noOrderId": "주문 ID를 받지 못했습니다.",
+  "noCheckoutUrl": "결제 세션 생성에 실패했습니다.",
+  "checkoutError": "결제 중 오류가 발생했습니다.",
+  "ctaTitle": "상세 궁합 분석이 궁금하신가요?",
+  "ctaDesc": "두 사람의 관계 역학, 소통 방식, 실전 조언까지 — AI가 분석한 상세 궁합 리포트를 받아보세요.",
+  "ctaButton": "상세 리포트 보기 — {price}"
+}
