@@ -187,7 +187,7 @@ function PaywallContent() {
       </div>
 
       {/* Sticky bottom CTA */}
-      <div className="stickyCta paywallStickyCta">
+      <div className="stickyCta">
         <div className="stickyCtaInner">
           <button
             className="btn btn-primary btn-lg btn-full"

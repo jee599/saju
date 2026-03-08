@@ -20,7 +20,8 @@ function RetrieveContent() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<RetrievedOrder[] | null>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       setError(t("emailError"));
@@ -77,7 +78,7 @@ function RetrieveContent() {
             {t("desc")}
           </p>
 
-          <div className="form" style={{ marginTop: 24 }}>
+          <form className="form" style={{ marginTop: 24 }} onSubmit={handleSubmit}>
             <div className="formGroup">
               <label htmlFor="retrieve-email">{t("emailLabel")}</label>
               <input
@@ -99,14 +100,14 @@ function RetrieveContent() {
             </div>
             <div className="buttonRow">
               <button
+                type="submit"
                 className="btn btn-primary btn-lg btn-full"
-                onClick={handleSubmit}
                 disabled={loading}
               >
                 {loading ? t("loading") : t("submitBtn")}
               </button>
             </div>
-          </div>
+          </form>
         </section>
 
         {/* Results */}

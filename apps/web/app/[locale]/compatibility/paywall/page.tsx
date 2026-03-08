@@ -59,6 +59,7 @@ function CompatPaywallContent() {
         birthTime: "",
         gender: "other",
         calendarType: "solar",
+        partnerDate,
       };
 
       if (provider === "paddle") {
@@ -66,7 +67,7 @@ function CompatPaywallContent() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            productCode: "full",
+            productCode: "compat",
             input,
             email: email || undefined,
             locale,
@@ -89,7 +90,7 @@ function CompatPaywallContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          productCode: "full",
+          productCode: "compat",
           input,
           email: email || undefined,
           locale,

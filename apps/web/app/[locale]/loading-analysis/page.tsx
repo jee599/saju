@@ -415,6 +415,7 @@ function LoadingContent() {
       // Retry logic for 409 PAYMENT_PENDING (webhook race condition)
       const MAX_RETRIES = 8;
       let confirmRes: Response | null = null;
+      let confirmBody: Record<string, unknown> | null = null;
       for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
         confirmRes = await fetch("/api/checkout/confirm", {
           method: "POST",
@@ -423,8 +424,8 @@ function LoadingContent() {
         });
 
         if (confirmRes.status === 409) {
-          const body = await confirmRes.json().catch(() => null);
-          if (body?.error?.code === "PAYMENT_PENDING" && attempt < MAX_RETRIES) {
+          confirmBody = await confirmRes.json().catch(() => null);
+          if ((confirmBody as { error?: { code?: string } })?.error?.code === "PAYMENT_PENDING" && attempt < MAX_RETRIES) {
             // Exponential backoff: 1s, 2s, 3s, 4s, 5s, 6s, 7s, 8s
             await new Promise((r) => setTimeout(r, (attempt + 1) * 1000));
             continue;
@@ -434,7 +435,8 @@ function LoadingContent() {
       }
 
       if (!confirmRes || !confirmRes.ok) {
-        const body = await confirmRes?.json().catch(() => null);
+        // Reuse already-parsed body from 409, or parse fresh for other status codes
+        const body = confirmBody ?? await confirmRes?.json().catch(() => null);
         confirmCalled.current = false;
         const code = body?.error?.code;
         const errorKey = code === "PAYMENT_PENDING" ? "errorPending"

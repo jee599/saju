@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         // Idempotency: skip if already confirmed (prevents race with /checkout/confirm)
         const order = await prisma.order.findUnique({ where: { id: orderId } });
         if (order?.status === 'confirmed') {
-          console.log(`[paddle/webhook] Order ${orderId} already confirmed, skipping`);
+          logger.info(`[paddle/webhook] Order ${orderId} already confirmed, skipping`);
         } else {
           await prisma.order.update({
             where: { id: orderId },
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
               paymentId: txn.id,
             },
           });
-          console.log(`[paddle/webhook] Order ${orderId} confirmed via Paddle`);
+          logger.info(`[paddle/webhook] Order ${orderId} confirmed via Paddle`);
         }
       } catch (err) {
         logger.error(`[paddle/webhook] Failed to confirm order ${orderId}`, { error: err });

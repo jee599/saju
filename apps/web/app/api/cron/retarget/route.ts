@@ -50,15 +50,17 @@ export async function GET(req: Request) {
     }
 
     // Check which orders already received a retarget email (via EventLog)
+    // Use "retarget:" prefix to disambiguate from real session IDs
     const orderIds = abandonedOrders.map((o) => o.id);
+    const prefixedIds = orderIds.map((id) => `retarget:${id}`);
     const alreadySent = await prisma.eventLog.findMany({
       where: {
         eventName: "retarget_email_sent",
-        sessionId: { in: orderIds },
+        sessionId: { in: prefixedIds },
       },
       select: { sessionId: true },
     });
-    const alreadySentSet = new Set(alreadySent.map((e) => e.sessionId));
+    const alreadySentSet = new Set(alreadySent.map((e) => e.sessionId.replace("retarget:", "")));
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://fortunelab.store";
     let sent = 0;
@@ -95,10 +97,10 @@ export async function GET(req: Request) {
       });
 
       if (result.success) {
-        // Track in EventLog to prevent duplicate sends (using sessionId to store orderId)
+        // Track in EventLog to prevent duplicate sends (prefixed to disambiguate from real session IDs)
         await prisma.eventLog.create({
           data: {
-            sessionId: order.id,
+            sessionId: `retarget:${order.id}`,
             eventType: "system",
             eventName: "retarget_email_sent",
             properties: JSON.stringify({

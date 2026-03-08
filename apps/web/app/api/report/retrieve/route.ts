@@ -33,14 +33,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Log this request for rate limiting
-    await prisma.rateLimitLog.create({
-      data: {
-        ip,
-        endpoint: '/api/report/retrieve',
-      },
-    });
-
     const body = await req.json();
     const email = body?.email?.trim()?.toLowerCase();
 
@@ -50,6 +42,14 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    // Log this request for rate limiting (after validation so invalid requests don't consume quota)
+    await prisma.rateLimitLog.create({
+      data: {
+        ip,
+        endpoint: '/api/report/retrieve',
+      },
+    });
 
     const orders = await prisma.order.findMany({
       where: {

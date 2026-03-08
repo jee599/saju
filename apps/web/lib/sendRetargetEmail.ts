@@ -162,7 +162,7 @@ export async function sendRetargetEmail(
   params: SendRetargetEmailParams
 ): Promise<{ success: boolean; error?: string }> {
   if (!process.env.RESEND_API_KEY) {
-    console.warn("[retarget] RESEND_API_KEY not set, skipping email");
+    logger.warn("[retarget] RESEND_API_KEY not set, skipping email");
     return { success: false, error: "RESEND_API_KEY not set" };
   }
 
